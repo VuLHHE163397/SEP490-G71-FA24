@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "RVNOCO+j+wMo01nY/eeRZ8US7jwPMiSzQ3/ldwZ8vhQv2njnB/gnISkekz1LMLwMPhXV1JGwDiVGsLZYKFO2HA==",
+  "dgSpecHash": "3I//3XFMld5mQ46lCYMIBlwe1jCfTs3gCv6cfQVc55UXZgpUCByKkrrSsXOBqCozznDPCBlgUFuA7yCzZVCpQw==",
   "success": true,
-  "projectFilePath": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj",
+  "projectFilePath": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Acer\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.27\\microsoft.windowsdesktop.app.ref.6.0.27.nupkg.sha512",
     "C:\\Users\\Acer\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.27\\microsoft.netcore.app.ref.6.0.27.nupkg.sha512",
