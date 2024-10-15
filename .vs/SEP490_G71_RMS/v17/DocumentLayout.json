@@ -40,7 +40,7 @@
               "RelativeDocumentMoniker": "RMS-Client\\Program.cs",
               "ToolTip": "D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\Program.cs",
               "RelativeToolTip": "RMS-Client\\Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABsAAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABsAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-15T08:05:40.207Z",
               "EditorCaption": ""
@@ -55,8 +55,7 @@
               "RelativeToolTip": "RMS_API\\Program.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAACcAAAAKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-29T07:51:32.078Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-29T07:51:32.078Z"
             },
             {
               "$type": "Document",
@@ -68,8 +67,7 @@
               "RelativeToolTip": "RMS-Client\\appsettings.json",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-10-15T08:05:40.241Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-15T08:05:40.241Z"
             },
             {
               "$type": "Document",
