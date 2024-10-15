@@ -14,11 +14,19 @@
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< Updated upstream
       "projectUniqueName": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj",
       "projectName": "RMS-Client",
       "projectPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj",
       "packagesPath": "C:\\Users\\bangc\\.nuget\\packages\\",
       "outputPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\obj\\",
+=======
+      "projectUniqueName": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
+      "projectName": "RMS_Client",
+      "projectPath": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
+      "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
+      "outputPath": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\RMS-Client\\obj\\",
+>>>>>>> Stashed changes
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Visual Studio 2022\\Shared\\NuGetPackages"
