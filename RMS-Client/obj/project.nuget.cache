@@ -1,8 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "8k+iWkknmif+XlortR2+8flsI7pJK1qrloweN945F8VcneHPQs43L7hh51HLbBQvHXYpX+0hzkua4Ezdh+hj3w==",
+  "dgSpecHash": "m8tWx5NNy9j2KVQsa/FLgiMy7pUmpiYDRf6I39vuv3x+xb8mEDlSxW09BOMcWXYQTF3JN+cHOxPSqCfogh46HQ==",
   "success": true,
-  "projectFilePath": "D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj",
+  "projectFilePath": "D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
   "expectedPackageFiles": [],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }

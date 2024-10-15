@@ -14,9 +14,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj",
-      "projectName": "RMS-Client",
-      "projectPath": "D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj",
+      "projectUniqueName": "D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
+      "projectName": "RMS_Client",
+      "projectPath": "D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
       "packagesPath": "C:\\Users\\Phong Vu\\.nuget\\packages\\",
       "outputPath": "D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\obj\\",
       "projectStyle": "PackageReference",
@@ -78,5 +78,13 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }

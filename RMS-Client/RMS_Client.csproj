@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>RMS_Client</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Views\Login\" />
+    <Folder Include="Views\ManageProfile\" />
+    <Folder Include="Views\ManageUser\" />
+    <Folder Include="Views\ManageBuilding\" />
+    <Folder Include="Views\ManageRoom\" />
+    <Folder Include="Views\ManageStatistic\" />
+  </ItemGroup>
+
+</Project>
