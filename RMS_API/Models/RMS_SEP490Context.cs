@@ -20,7 +20,6 @@ namespace RMS_API.Models
         public virtual DbSet<Building> Buildings { get; set; } = null!;
         public virtual DbSet<BuildingStatus> BuildingStatuses { get; set; } = null!;
         public virtual DbSet<District> Districts { get; set; } = null!;
-        public virtual DbSet<FacilitiesOfRoom> FacilitiesOfRooms { get; set; } = null!;
         public virtual DbSet<FacilitiesStatus> FacilitiesStatuses { get; set; } = null!;
         public virtual DbSet<Facility> Facilities { get; set; } = null!;
         public virtual DbSet<MaintainanceRequest> MaintainanceRequests { get; set; } = null!;
@@ -186,33 +185,6 @@ namespace RMS_API.Models
                     .HasConstraintName("FK_Districts_Provinces");
             });
 
-            modelBuilder.Entity<FacilitiesOfRoom>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("FacilitiesOfRoom");
-
-                entity.Property(e => e.FacilityId).HasColumnName("facilityId");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
-
-                entity.Property(e => e.RoomId).HasColumnName("roomId");
-
-                entity.HasOne(d => d.Facility)
-                    .WithMany()
-                    .HasForeignKey(d => d.FacilityId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_FacilitiesOfRoom_Facilities");
-
-                entity.HasOne(d => d.Room)
-                    .WithMany()
-                    .HasForeignKey(d => d.RoomId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_FacilitiesOfRoom_Rooms");
-            });
-
             modelBuilder.Entity<FacilitiesStatus>(entity =>
             {
                 entity.ToTable("FacilitiesStatus");
@@ -233,8 +205,6 @@ namespace RMS_API.Models
                 entity.Property(e => e.Name)
                     .HasMaxLength(255)
                     .HasColumnName("name");
-
-                entity.Property(e => e.Numbers).HasColumnName("numbers");
 
                 entity.HasOne(d => d.FacilityStatus)
                     .WithMany(p => p.Facilities)
@@ -301,8 +271,6 @@ namespace RMS_API.Models
             {
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Address).HasColumnName("address");
-
                 entity.Property(e => e.Area).HasColumnName("area");
 
                 entity.Property(e => e.BuildingId).HasColumnName("buildingId");
@@ -338,6 +306,12 @@ namespace RMS_API.Models
                     .HasForeignKey(d => d.BuildingId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Rooms_Buildings");
+
+                entity.HasOne(d => d.Facility)
+                    .WithMany(p => p.Rooms)
+                    .HasForeignKey(d => d.FacilityId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Rooms_Facilities");
 
                 entity.HasOne(d => d.RooomStatus)
                     .WithMany(p => p.Rooms)
@@ -426,7 +400,6 @@ namespace RMS_API.Models
                 entity.HasOne(d => d.ServiceRecord)
                     .WithMany(p => p.ServicesBills)
                     .HasForeignKey(d => d.ServiceRecordId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ServicesBills_ServicesRecord");
             });
 

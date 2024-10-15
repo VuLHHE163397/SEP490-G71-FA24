@@ -18,7 +18,6 @@ namespace RMS_API.Models
         public double Area { get; set; }
         public string Description { get; set; } = null!;
         public int Floor { get; set; }
-        public string Address { get; set; } = null!;
         public DateTime StartedDate { get; set; }
         public DateTime ExpiredDate { get; set; }
         public int FacilityId { get; set; }
@@ -27,6 +26,7 @@ namespace RMS_API.Models
         public int ServiceId { get; set; }
 
         public virtual Building Building { get; set; } = null!;
+        public virtual Facility Facility { get; set; } = null!;
         public virtual RoomStatus RooomStatus { get; set; } = null!;
         public virtual ICollection<MaintainanceRequest> MaintainanceRequests { get; set; }
         public virtual ICollection<RoomHistory> RoomHistories { get; set; }
