@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "O0VQn/h5KIfh9J9ajydf2Z5ZLEAuRkwW+BimLWkXcwZFHUitRbqjevMPEqyZmNIuEmX0FaFGzJ1+YcdzBYAvLA==",
+  "dgSpecHash": "3I//3XFMld5mQ46lCYMIBlwe1jCfTs3gCv6cfQVc55UXZgpUCByKkrrSsXOBqCozznDPCBlgUFuA7yCzZVCpQw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Acer\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.27\\microsoft.windowsdesktop.app.ref.6.0.27.nupkg.sha512",
+    "C:\\Users\\Acer\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.27\\microsoft.netcore.app.ref.6.0.27.nupkg.sha512",
+    "C:\\Users\\Acer\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.27\\microsoft.aspnetcore.app.ref.6.0.27.nupkg.sha512",
+    "C:\\Users\\Acer\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.27\\microsoft.netcore.app.host.win-x64.6.0.27.nupkg.sha512"
+  ],
   "logs": []
 }
