@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj": {}
+    "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj": {}
   },
   "projects": {
-    "D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj": {
+    "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj",
+        "projectUniqueName": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj",
         "projectName": "RMS-Client",
-        "projectPath": "D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj",
-        "packagesPath": "C:\\Users\\Phong Vu\\.nuget\\packages\\",
-        "outputPath": "D:\\git do an\\SEP490-G71-FA24\\RMS-Client\\obj\\",
+        "projectPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS-Client.csproj",
+        "packagesPath": "C:\\Users\\bangc\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "D:\\Visual Studio 2022\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Phong Vu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\bangc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -39,11 +39,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -68,7 +63,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

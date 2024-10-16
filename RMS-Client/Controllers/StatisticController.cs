@@ -3,9 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RMS_Client.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class StatisticController : ControllerBase
+    public class StatisticController : Controller
     {
+        private readonly ILogger<StatisticController> _logger;
+        public StatisticController(ILogger<StatisticController> logger)
+        {
+            _logger = logger;
+        }
+        public IActionResult ViewStatistic()
+        {
+            return View();
+        }
     }
 }
