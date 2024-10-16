@@ -3,21 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RMS_Client.Controllers
 {
-    //[Route("api/[controller]")]
-    //[ApiController]
-    public class BuildingController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class BuildingController : ControllerBase
     {
-        private readonly ILogger<BuildingController> _logger;
-
-        public BuildingController(ILogger<BuildingController> logger)
-        {
-            _logger = logger;
-        }
-
-        public IActionResult ListBuilding()
-        {
-           return View("~/Views/ManageBuilding/ListBuilding.cshtml");
-        }
-
     }
 }

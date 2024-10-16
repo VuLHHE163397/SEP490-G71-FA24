@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RMS_Client.Controllers
 {
-
-    public class RoomController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class RoomController : ControllerBase
     {
-
     }
 }

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS_API", "RMS_API\RMS_API.csproj", "{B68143CA-0469-46DB-923A-A4848C1A7CB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RMS_API", "RMS_API\RMS_API.csproj", "{B68143CA-0469-46DB-923A-A4848C1A7CB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS-Client", "RMS-Client\RMS-Client.csproj", "{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RMS_Client", "RMS-Client\RMS_Client.csproj", "{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
