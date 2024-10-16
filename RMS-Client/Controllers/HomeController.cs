@@ -13,7 +13,11 @@ namespace RMS_Client.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Home()
+        {
+            return View();
+        }
+        public IActionResult ListRoom()
         {
             return View();
         }

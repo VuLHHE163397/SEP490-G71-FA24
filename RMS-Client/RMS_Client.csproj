@@ -9,12 +9,6 @@
 
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Views\Login\" />
-    <Folder Include="Views\ManageProfile\" />
-    <Folder Include="Views\ManageUser\" />
-    <Folder Include="Views\ManageBuilding\" />
-    <Folder Include="Views\ManageRoom\" />
-    <Folder Include="Views\ManageStatistic\" />
   </ItemGroup>
 
 </Project>
