@@ -83,6 +83,14 @@ out/
 *.scc
 *.bin
 
+*.suo
+*.bin
+*.exe
+*.dtbcache.v2
+*.futdcache.v2
+DocumentLayout.json
+
+
 # Logs
 *.log
 npm-debug.log*
