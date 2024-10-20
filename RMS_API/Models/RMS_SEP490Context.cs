@@ -42,7 +42,7 @@ namespace RMS_API.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var ConnectionString = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetConnectionString("DefaultConnection");
+                var ConnectionString = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetConnectionString("MyDB");
                 optionsBuilder.UseSqlServer(ConnectionString);
             }
         }

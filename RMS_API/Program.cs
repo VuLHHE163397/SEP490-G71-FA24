@@ -1,9 +1,57 @@
+using RMS_API.Models;
+using Microsoft.AspNetCore.OData;
+using Microsoft.EntityFrameworkCore;
+using RMS_API.Models;
+using System;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddControllers().AddOData(opt => opt.Count().Filter().OrderBy().Expand().Select().SetMaxTop(100));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(s =>
+{
+    s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    s.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+});
+builder.Services.AddDbContext<RMS_SEP490Context>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("MyDB");
+    options.UseSqlServer(connectionString);
+});
+
+builder.Services.AddCors(opts =>
+{
+    opts.AddPolicy("CORSPolicy", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed((host) => true));
+});
+
 
 var app = builder.Build();
 
@@ -15,32 +63,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateTime.Now.AddDays(index),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.UseCors("CORSPolicy");
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
-// toi la le hoang vu !!!
-
-// NGUYEN VAN BANG da tung den day

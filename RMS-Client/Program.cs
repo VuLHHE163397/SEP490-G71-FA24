@@ -1,28 +1,45 @@
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using RMS_Client.Services; // Thay đổi thành namespace thực tế của bạn
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Thêm các dịch vụ vào container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient<BuildingService>(); // Đảm bảo thêm dịch vụ BuildingService
+
+// Cấu hình CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Cấu hình pipeline yêu cầu HTTP.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+// Sử dụng CORS
+app.UseCors("AllowAllOrigins");
+
 app.UseRouting();
 
 app.UseAuthorization();
 
+// Cấu hình route mặc định cho ứng dụng.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Home}/{id?}");
+    pattern: "{controller=Home}/{action=Home}/{id?}"); // Đặt controller mặc định là Home và action là Index
 
 app.Run();
-//goat
