@@ -1,4 +1,4 @@
-using RMS_API.Models;
+﻿using RMS_API.Models;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using RMS_API.Models;
@@ -45,6 +45,12 @@ builder.Services.AddDbContext<RMS_SEP490Context>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("MyDB");
     options.UseSqlServer(connectionString);
+});
+
+builder.Services.AddDbContext<RMS_SEP490Context>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("MyDB");
+    options.UseSqlServer(connectionString); // Hoặc bạn có thể sử dụng provider khác nếu cần
 });
 
 builder.Services.AddCors(opts =>

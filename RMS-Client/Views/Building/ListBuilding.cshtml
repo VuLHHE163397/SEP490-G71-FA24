@@ -1,7 +1,7 @@
-﻿@model List<RMS_API.DTOs.BuildingDTO> // Sửa đổi thành namespace thực tế của bạn
+﻿@model List<RMS_API.DTOs.BuildingDTO>
 
 @{
-    ViewData["Title"] = "Danh sách tòa nhà"; // Tiêu đề trang
+    ViewData["Title"] = "Danh sách tòa nhà"; // Page title
 }
 
 <!DOCTYPE html>
@@ -11,19 +11,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" /> <!-- Nếu bạn có file CSS tùy chỉnh -->
     <style>
-        /* Thêm một số kiểu CSS để làm cho bảng đẹp hơn */
-        th {
+        /* Add some styles for the table */
+        th, td {
             text-align: center;
-        }
-
-        td {
-            text-align: center;
-        }
-
-        .btn {
-            margin-right: 5px; /* Khoảng cách giữa các nút */
         }
     </style>
 </head>
@@ -31,9 +22,9 @@
     <div class="container mt-4">
         <h1>@ViewData["Title"]</h1>
 
-        <!-- Nút Create -->
+        <!-- Create button -->
         <div class="mb-3">
-            <a asp-controller="ManageBuilding" asp-action="Create" class="btn btn-primary">Tạo Tòa Nhà Mới</a>
+            <a asp-controller="Building" asp-action="AddBuilding" class="btn btn-primary">Tạo Tòa Nhà Mới</a>
         </div>
 
         <table class="table table-striped">
@@ -45,7 +36,7 @@
                     <th>Số phòng</th>
                     <th>Địa chỉ</th>
                     <th>Trạng thái</th>
-                    <th>Hành động</th> <!-- Thêm cột Hành động -->
+                    <th>Hành động</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,10 +49,9 @@
                             <td>@building.Name</td>
                             <td>@building.TotalFloors</td>
                             <td>@building.NumberOfRooms</td>
-                            <td>@building.Address</td>
+                            <td>@building.AddressDetails</td>
                             <td>@building.BuildingStatus</td>
                             <td>
-                                <!-- Thêm nút chỉnh sửa và xóa -->
                                 <button class="btn btn-warning" onclick="editBuilding(@building.Id)">Sửa</button>
                                 <button class="btn btn-danger" onclick="deleteBuilding(@building.Id)">Xóa</button>
                             </td>
@@ -79,22 +69,19 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         function editBuilding(id) {
-            // Chuyển hướng đến trang chỉnh sửa
-            window.location.href = '/ManageBuilding/Edit/' + id;
+            // Redirect to the edit page
+            window.location.href = '/Building/Edit/' + id;
         }
 
         function deleteBuilding(id) {
             if (confirm('Bạn có chắc chắn muốn xóa tòa nhà này không?')) {
-                // Gửi yêu cầu xóa qua AJAX hoặc chuyển hướng đến trang xóa
                 $.ajax({
-                    url: '/ManageBuilding/Delete/' + id,
+                    url: '/Building/Delete/' + id,
                     type: 'POST',
                     success: function (result) {
-                        // Tải lại trang sau khi xóa thành công
-                        location.reload();
+                        location.reload(); // Reload the page after successful delete
                     },
                     error: function (xhr, status, error) {
                         alert('Có lỗi xảy ra khi xóa tòa nhà: ' + error);

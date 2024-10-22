@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RMS_API.Models;
 using RMS_Client.Services; // Thay đổi thành namespace thực tế của bạn
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,11 @@ builder.Services.AddCors(options =>
                           .AllowAnyMethod()
                           .AllowAnyHeader());
 });
+builder.Services.AddDbContext<RMS_SEP490Context>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("MyDB");
+    options.UseSqlServer(connectionString);
+});
 
 var app = builder.Build();
 
@@ -32,8 +39,13 @@ app.UseStaticFiles();
 
 // Sử dụng CORS
 app.UseCors("AllowAllOrigins");
-
 app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers(); // Đảm bảo rằng bạn đã cấu hình đúng
+});
+
 
 app.UseAuthorization();
 

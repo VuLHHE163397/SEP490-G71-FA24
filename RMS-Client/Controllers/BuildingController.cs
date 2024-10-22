@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RMS_Client.Services; // Đảm bảo sử dụng namespace đúng
-using RMS_API.DTOs; // Sử dụng DTO phù hợp
+
 
 namespace RMS_Client.Controllers
 {
@@ -16,7 +16,7 @@ namespace RMS_Client.Controllers
         // Action để lấy danh sách các tòa nhà
         public async Task<IActionResult> ListBuilding()
         {
-            var buildings = await _buildingService.GetAllBuildingsAsync(); // Gọi dịch vụ
+            var buildings = await _buildingService.GetAllBuildingsAsync(); 
             return View(buildings); // Trả về view với danh sách tòa nhà
         }
     }

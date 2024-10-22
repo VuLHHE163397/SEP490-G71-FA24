@@ -16,7 +16,9 @@
           "Microsoft.EntityFrameworkCore.Tools": "6.0.30",
           "Microsoft.Extensions.Configuration.Json": "6.0.0",
           "Newtonsoft.Json": "13.0.3",
-          "Swashbuckle.AspNetCore": "6.2.3"
+          "Swashbuckle.AspNetCore": "6.2.3",
+          "X.PagedList": "10.5.3",
+          "X.PagedList.Mvc.Core": "10.5.3"
         },
         "runtime": {
           "RMS_API.dll": {}
@@ -719,6 +721,25 @@
             "fileVersion": "4.700.19.56404"
           }
         }
+      },
+      "X.PagedList/10.5.3": {
+        "runtime": {
+          "lib/net6.0/X.PagedList.dll": {
+            "assemblyVersion": "10.5.3.0",
+            "fileVersion": "10.5.3.0"
+          }
+        }
+      },
+      "X.PagedList.Mvc.Core/10.5.3": {
+        "dependencies": {
+          "X.PagedList": "10.5.3"
+        },
+        "runtime": {
+          "lib/net6.0/X.PagedList.Mvc.Core.dll": {
+            "assemblyVersion": "10.5.3.0",
+            "fileVersion": "10.5.3.0"
+          }
+        }
       }
     }
   },
@@ -1252,6 +1273,20 @@
       "sha512": "sha512-CeWTdRNfRaSh0pm2gDTJFwVaXfTq6Xwv/sA887iwPTneW7oMtMlpvDIO+U60+3GWTB7Aom6oQwv5VZVUhQRdPQ==",
       "path": "system.windows.extensions/4.7.0",
       "hashPath": "system.windows.extensions.4.7.0.nupkg.sha512"
+    },
+    "X.PagedList/10.5.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-nE/KRWCHxT3giCmQY6y5i+2auc7eBDSmkT5VMnh5OOyzsp+OzcJOVjQAimKocqR2l+uBptsUyeBbQUPSDilqNQ==",
+      "path": "x.pagedlist/10.5.3",
+      "hashPath": "x.pagedlist.10.5.3.nupkg.sha512"
+    },
+    "X.PagedList.Mvc.Core/10.5.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-k++KfbXi1cfBT+eoIc0bTvE653XUjguSAjklR/VJnsebk2ClP9IXfACZIVXnFIiu+C2wi7iMC2G3WOUNEZDCTw==",
+      "path": "x.pagedlist.mvc.core/10.5.3",
+      "hashPath": "x.pagedlist.mvc.core.10.5.3.nupkg.sha512"
     }
   }
 }

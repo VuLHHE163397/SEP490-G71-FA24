@@ -162,3 +162,5 @@ C:\Users\DEll\Documents\GitHub\SEP490-G71-FA24\RMS_API\obj\Debug\net6.0\RMS_API.
 C:\Users\DEll\Documents\GitHub\SEP490-G71-FA24\RMS_API\obj\Debug\net6.0\RMS_API.genruntimeconfig.cache
 C:\Users\DEll\Documents\GitHub\SEP490-G71-FA24\RMS_API\obj\Debug\net6.0\ref\RMS_API.dll
 C:\Users\DEll\Documents\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\DEll\Documents\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\X.PagedList.dll
+C:\Users\DEll\Documents\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\X.PagedList.Mvc.Core.dll

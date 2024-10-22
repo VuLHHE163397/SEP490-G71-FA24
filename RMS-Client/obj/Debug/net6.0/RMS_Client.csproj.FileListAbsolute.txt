@@ -150,3 +150,5 @@ C:\Users\DEll\Documents\GitHub\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\runti
 C:\Users\DEll\Documents\GitHub\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\RMS_API.dll
 C:\Users\DEll\Documents\GitHub\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\RMS_API.pdb
 C:\Users\DEll\Documents\GitHub\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\RMS_Client.csproj.CopyComplete
+C:\Users\DEll\Documents\GitHub\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\X.PagedList.dll
+C:\Users\DEll\Documents\GitHub\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\X.PagedList.Mvc.Core.dll

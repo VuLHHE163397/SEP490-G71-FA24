@@ -1307,6 +1307,30 @@
             "rid": "win"
           }
         }
+      },
+      "X.PagedList/10.5.3": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/X.PagedList.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/X.PagedList.dll": {}
+        }
+      },
+      "X.PagedList.Mvc.Core/10.5.3": {
+        "type": "package",
+        "dependencies": {
+          "X.PagedList": "10.5.3"
+        },
+        "compile": {
+          "lib/net6.0/X.PagedList.Mvc.Core.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/X.PagedList.Mvc.Core.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       }
     }
   },
@@ -3430,6 +3454,42 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "X.PagedList/10.5.3": {
+      "sha512": "nE/KRWCHxT3giCmQY6y5i+2auc7eBDSmkT5VMnh5OOyzsp+OzcJOVjQAimKocqR2l+uBptsUyeBbQUPSDilqNQ==",
+      "type": "package",
+      "path": "x.pagedlist/10.5.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "README.md",
+        "lib/net6.0/X.PagedList.dll",
+        "lib/net7.0/X.PagedList.dll",
+        "lib/net8.0/X.PagedList.dll",
+        "lib/netstandard2.0/X.PagedList.dll",
+        "lib/netstandard2.1/X.PagedList.dll",
+        "x-pagedlist.png",
+        "x.pagedlist.10.5.3.nupkg.sha512",
+        "x.pagedlist.nuspec"
+      ]
+    },
+    "X.PagedList.Mvc.Core/10.5.3": {
+      "sha512": "k++KfbXi1cfBT+eoIc0bTvE653XUjguSAjklR/VJnsebk2ClP9IXfACZIVXnFIiu+C2wi7iMC2G3WOUNEZDCTw==",
+      "type": "package",
+      "path": "x.pagedlist.mvc.core/10.5.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "README.md",
+        "lib/net6.0/X.PagedList.Mvc.Core.dll",
+        "lib/net7.0/X.PagedList.Mvc.Core.dll",
+        "lib/net8.0/X.PagedList.Mvc.Core.dll",
+        "x-pagedlist.png",
+        "x.pagedlist.mvc.core.10.5.3.nupkg.sha512",
+        "x.pagedlist.mvc.core.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
@@ -3442,7 +3502,9 @@
       "Microsoft.EntityFrameworkCore.Tools >= 6.0.30",
       "Microsoft.Extensions.Configuration.Json >= 6.0.0",
       "Newtonsoft.Json >= 13.0.3",
-      "Swashbuckle.AspNetCore >= 6.2.3"
+      "Swashbuckle.AspNetCore >= 6.2.3",
+      "X.PagedList >= 10.5.3",
+      "X.PagedList.Mvc.Core >= 10.5.3"
     ]
   },
   "packageFolders": {
@@ -3523,6 +3585,14 @@
           "Swashbuckle.AspNetCore": {
             "target": "Package",
             "version": "[6.2.3, )"
+          },
+          "X.PagedList": {
+            "target": "Package",
+            "version": "[10.5.3, )"
+          },
+          "X.PagedList.Mvc.Core": {
+            "target": "Package",
+            "version": "[10.5.3, )"
           }
         },
         "imports": [
