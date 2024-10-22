@@ -151,6 +151,7 @@
             </div>
         </div>
         <!-- Header End -->
+
         <!-- Search Start -->
         <div class="container-xxl py-5 content">
             <div class="container">
@@ -159,21 +160,18 @@
                         <label for="province" class="form-label">Tỉnh/Thành Phố</label>
                         <select id="province" class="form-select" onchange="updateDistricts()">
                             <option value="">Chọn Tỉnh/Thành Phố</option>
-                            <!-- Populate provinces dynamically -->
                         </select>
                     </div>
                     <div class="col-lg-4 mb-3">
                         <label for="district" class="form-label">Quận/Huyện/Thị Xã</label>
                         <select id="district" class="form-select" onchange="updateCommunes()" disabled>
                             <option value="">Chọn Quận/Huyện/Thị Xã</option>
-                            <!-- Populate districts dynamically -->
                         </select>
                     </div>
                     <div class="col-lg-4 mb-3">
                         <label for="commune" class="form-label">Xã/Phường/Thị Trấn</label>
                         <select id="commune" class="form-select" disabled>
                             <option value="">Chọn Xã/Phường/Thị Trấn</option>
-                            <!-- Populate communes dynamically -->
                         </select>
                     </div>
                 </div>
@@ -181,6 +179,7 @@
             </div>
         </div>
         <!-- Search End -->
+
         <!-- Filter Start -->
         <div class="container-xxl py-5">
             <div class="container">
@@ -401,55 +400,76 @@
 
     <!-- Template Javascript -->
     <script src="~/js/main.js"></script>
+   
     <script>
-        async function updateDistricts() {
-            const provinceId = document.getElementById('province').value;
-            const districtSelect = document.getElementById('district');
-            districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện/Thị Xã</option>'; // Reset district dropdown
-            document.getElementById('commune').innerHTML = '<option value="">Chọn Xã/Phường/Thị Trấn</option>'; // Reset commune dropdown
+        // Populate Provinces on load
+        window.onload = function () {
+            fetchProvinces();
+        };
+
+        // Fetch and populate provinces
+        function fetchProvinces() {
+            fetch('/api/address/getProvinces')
+                .then(res => res.json())
+                .then(data => {
+                    let provinceSelect = document.getElementById('province');
+                    data.forEach(province => {
+                        provinceSelect.innerHTML += `<option value="${province.id}">${province.name}</option>`;
+                    });
+                });
+        }
+
+        // Fetch and populate districts based on province selection
+        function updateDistricts() {
+            let provinceId = document.getElementById('province').value;
+            let districtSelect = document.getElementById('district');
+            districtSelect.disabled = true;
             document.getElementById('commune').disabled = true;
 
             if (provinceId) {
-                const response = await fetch(`/api/districts?provinceId=${provinceId}`);
-                const districts = await response.json();
-                districts.forEach(district => {
-                    const option = document.createElement('option');
-                    option.value = district.id;
-                    option.textContent = district.name;
-                    districtSelect.appendChild(option);
-                });
-                districtSelect.disabled = false; // Enable district dropdown
+                fetch(`/api/address/getDistricts/${provinceId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện/Thị Xã</option>';
+                        data.forEach(district => {
+                            districtSelect.innerHTML += `<option value="${district.id}">${district.name}</option>`;
+                        });
+                        districtSelect.disabled = false;
+                    });
             }
         }
 
-        async function updateCommunes() {
-            const districtId = document.getElementById('district').value;
-            const communeSelect = document.getElementById('commune');
-            communeSelect.innerHTML = '<option value="">Chọn Xã/Phường/Thị Trấn</option>'; // Reset commune dropdown
+        // Fetch and populate communes based on district selection
+        function updateCommunes() {
+            let districtId = document.getElementById('district').value;
+            let communeSelect = document.getElementById('commune');
+            communeSelect.disabled = true;
 
             if (districtId) {
-                const response = await fetch(`/api/communes?districtId=${districtId}`);
-                const communes = await response.json();
-                communes.forEach(commune => {
-                    const option = document.createElement('option');
-                    option.value = commune.id;
-                    option.textContent = commune.name;
-                    communeSelect.appendChild(option);
-                });
-                communeSelect.disabled = false; // Enable commune dropdown
+                fetch(`/api/address/getWards/${districtId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        communeSelect.innerHTML = '<option value="">Chọn Xã/Phường/Thị Trấn</option>';
+                        data.forEach(commune => {
+                            communeSelect.innerHTML += `<option value="${commune.id}">${commune.name}</option>`;
+                        });
+                        communeSelect.disabled = false;
+                    });
             }
         }
 
+        // Search function that captures selected values
         function searchRooms() {
-            // Implement the search functionality here
-            const province = document.getElementById('province').value;
-            const district = document.getElementById('district').value;
-            const commune = document.getElementById('commune').value;
+            let provinceId = document.getElementById('province').value;
+            let districtId = document.getElementById('district').value;
+            let communeId = document.getElementById('commune').value;
 
-            // Call your API to search rooms based on the selected values
-            console.log({ province, district, commune });
+            console.log('Searching rooms with:', { provinceId, districtId, communeId });
+
+            // Implement search logic here, such as calling an API or redirecting with query params
         }
     </script>
+
     <!-- Include noUiSlider JavaScript -->
     <script>
         // Price Slider
