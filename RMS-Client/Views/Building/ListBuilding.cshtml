@@ -53,7 +53,7 @@
                             <td>@building.BuildingStatus</td>
                             <td>
                                 <button class="btn btn-warning" onclick="editBuilding(@building.Id)">Sửa</button>
-                                <button class="btn btn-danger" onclick="deleteBuilding(@building.Id)">Xóa</button>
+                                <button class="btn btn-primary"  onclick="viewListRoom(@building.Id)">View List Room</button>
                             </td>
                         </tr>
                     }
@@ -72,23 +72,12 @@
     <script>
         function editBuilding(id) {
             // Redirect to the edit page
-            window.location.href = '/Building/Edit/' + id;
+            window.location.href = '/Building/EditBuilding/' + id ;
         }
 
-        function deleteBuilding(id) {
-            if (confirm('Bạn có chắc chắn muốn xóa tòa nhà này không?')) {
-                $.ajax({
-                    url: '/Building/Delete/' + id,
-                    type: 'POST',
-                    success: function (result) {
-                        location.reload(); // Reload the page after successful delete
-                    },
-                    error: function (xhr, status, error) {
-                        alert('Có lỗi xảy ra khi xóa tòa nhà: ' + error);
-                    }
-                });
-            }
-        }
+        
+
+
     </script>
 </body>
 </html>

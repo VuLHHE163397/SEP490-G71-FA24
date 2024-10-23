@@ -1,1 +1,70 @@
-﻿
+﻿@model RMS_API.DTOs.BuildingDTO
+
+@{
+    ViewData["Title"] = "Edit Building";
+}
+
+<h1>Edit Building</h1>
+
+<form asp-action="UpdateBuilding" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TotalFloors" class="control-label"></label>
+        <input asp-for="TotalFloors" class="form-control" type="number" />
+        <span asp-validation-for="TotalFloors" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="NumberOfRooms" class="control-label"></label>
+        <input asp-for="NumberOfRooms" class="form-control" type="number" />
+        <span asp-validation-for="NumberOfRooms" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BuildingStatus" class="control-label"></label>
+        <select asp-for="BuildingStatus" class="form-control" asp-items="ViewBag.BuildingStatuses"></select>
+        <span asp-validation-for="BuildingStatus" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ProvinceName" class="control-label"></label>
+        <select asp-for="ProvinceName" class="form-control" asp-items="ViewBag.Provinces"></select>
+        <span asp-validation-for="ProvinceName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DistrictName" class="control-label"></label>
+        <select asp-for="DistrictName" class="form-control" asp-items="ViewBag.Districts"></select>
+        <span asp-validation-for="DistrictName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="WardName" class="control-label"></label>
+        <select asp-for="WardName" class="form-control" asp-items="ViewBag.Wards"></select>
+        <span asp-validation-for="WardName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AddressDetails" class="control-label"></label>
+        <textarea asp-for="AddressDetails" class="form-control"></textarea>
+        <span asp-validation-for="AddressDetails" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <a asp-action="GetAllBuildings" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

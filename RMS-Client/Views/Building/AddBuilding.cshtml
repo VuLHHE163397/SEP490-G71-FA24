@@ -1,4 +1,4 @@
-﻿@model RMS_API.DTOs.AddBuidingDTO
+﻿@model RMS_API.DTOs.AddBuildingDTO
 
 @{
     ViewData["Title"] = "Thêm Tòa Nhà Mới";
@@ -60,8 +60,13 @@
                     }
                 </select>
             </div>
+            < <div class="form-group">
+                <label for="AddressDetails">Địa Chỉ</label>
+                <input type="text" class="form-control" id="AddressDetails" name="AddressDetails" required />
+            </div>
             <button type="submit" class="btn btn-primary">Tạo Tòa Nhà</button>
             <a asp-controller="Building" asp-action="ListBuilding" class="btn btn-secondary">Trở Về</a>
+
         </form>
     </div>
 
@@ -96,7 +101,6 @@
             $('#DistrictId').change(function () {
                 var districtName = encodeURIComponent($(this).val());
                 var url = `https://localhost:5001/api/Building/GetWardsByDistrict/${districtName}`;
-                console.log(url);  // Kiểm tra URL
 
                 if (districtName) {
                     $.ajax({
@@ -119,7 +123,6 @@
                 }
             });
 
-            // Xử lý sự kiện submit của form
             $('#addBuildingForm').submit(function (event) {
                 event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
@@ -127,11 +130,13 @@
                     Name: $('#Name').val(),
                     TotalFloors: $('#TotalFloors').val(),
                     NumberOfRooms: $('#NumberOfRooms').val(),
-                    ProvinceName: $('#ProvinceId').val(),
+                    ProvinceName: $('#ProvinceId').val(), // Sử dụng data-id
                     DistrictName: $('#DistrictId').val(),
                     WardName: $('#WardId').val(),
+                    AddressDetails: $('#AddressDetails').val(),
                     BuildingStatus: $('#BuildingStatus').val()
                 };
+                console.log
 
                 $.ajax({
                     url: 'https://localhost:5001/api/Building/AddBuilding',
@@ -152,4 +157,3 @@
 
 </body>
 </html>
-

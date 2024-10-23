@@ -602,3 +602,19 @@
 </body>
 
 </html>
+@* 
+                function deleteBuilding(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa tòa nhà này không?')) {
+                $.ajax({
+                    url: `https://localhost:5001/api/Building/DeleteBuilding/${id}`, // Use backticks for template literal
+                    type: 'DELETE',  // Change to DELETE method
+                    success: function (result) {
+                        alert('Tòa nhà đã được xóa thành công.');  // Notify successful deletion
+                        location.reload(); // Reload the page after successful delete
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Có lỗi xảy ra khi xóa tòa nhà: ' + (xhr.responseText || error));  // Provide more detailed error information
+                    }
+                });
+            }
+        } *@

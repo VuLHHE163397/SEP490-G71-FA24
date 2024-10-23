@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using RMS_API.DTOs;
 using RMS_API.Models;
 
@@ -84,40 +85,86 @@ namespace RMS_API.Controllers
             return Ok(wards);
         }
 
-        /*[HttpPost("AddBuilding")]
-        public async Task<IActionResult> AddBuilding([FromBody] AddBuidingDTO addBuildingDTO)
-        {
-            if (addBuildingDTO == null)
-            {
-                return BadRequest("Dữ liệu không hợp lệ.");
-            }
+   
 
-            // Tạo đối tượng Building từ DTO
-            var building = new Building
-            {
-                Name = addBuildingDTO.Name,
-                TotalFloors = addBuildingDTO.TotalFloors,
-                NumberOfRooms = addBuildingDTO.NumberOfRooms,
-                // Chỉ sử dụng các thuộc tính có trong mô hình
-                BuildingStatus = addBuildingDTO.BuildingStatus,
-                // Nếu không có WardName và DistrictName trong mô hình, bạn có thể bỏ qua chúng
-                // Nếu cần thiết, có thể lưu trữ các giá trị này trong một bảng khác hoặc một cách khác
-            };
+       [HttpPost("AddBuilding")]
+public async Task<IActionResult> AddBuilding([FromBody] AddBuildingDTO buildingDto)
+{
+    if (!ModelState.IsValid)
+    {
+        return BadRequest(ModelState);
+    }
 
-            try
-            {
-                // Thêm tòa nhà vào cơ sở dữ liệu
-                await _context.Buildings.AddAsync(building);
-                await _context.SaveChangesAsync();
+    // Tìm Province
+    var province = await _context.Provinces
+        .FirstOrDefaultAsync(p => p.Name.Equals(buildingDto.ProvinceName));
 
-                return Ok("Tòa nhà đã được thêm thành công.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Có lỗi xảy ra khi thêm tòa nhà: {ex.Message}");
-            }
-        }*/
+    if (province == null)
+    {
+        return BadRequest($"Tinh/Thanh pho '{buildingDto.ProvinceName}' not found.");
+    }
 
+    // Tìm District
+    var district = await _context.Districts
+        .FirstOrDefaultAsync(d => d.Name.Equals(buildingDto.DistrictName) && d.ProvincesId == province.Id);
+
+    if (district == null)
+    {
+        return BadRequest($"District '{buildingDto.DistrictName}' not found in province '{buildingDto.ProvinceName}'.");
+    }
+
+    // Tìm Ward
+    var ward = await _context.Wards
+        .FirstOrDefaultAsync(w => w.Name.Equals(buildingDto.WardName) && w.DistrictId == district.Id);
+
+    if (ward == null)
+    {
+        return BadRequest($"Ward '{buildingDto.WardName}' not found in district '{buildingDto.DistrictName}'.");
+    }
+
+    // Tìm BuildingStatus 
+    var buildingStatus = await _context.BuildingStatuses
+        .FirstOrDefaultAsync(bs => bs.Name.Equals(buildingDto.BuildingStatus));
+
+    if (buildingStatus == null)
+    {
+        return BadRequest($"Building status '{buildingDto.BuildingStatus}' not found.");
+    }
+
+    // Tìm hoặc tạo địa chỉ mới
+    var address = new Address
+    {
+        Information = buildingDto.AddressDetails,
+        DistrictId = district.Id,
+        WardId = ward.Id,
+        ProvinceId = province.Id
+    };
+    _context.Addresses.Add(address);
+    await _context.SaveChangesAsync();
+
+    // Tạo đối tượng Building mới
+    var building = new Building
+    {
+        Name = buildingDto.Name,
+        TotalFloors = buildingDto.TotalFloors,
+        NumberOfRooms = buildingDto.NumberOfRooms,
+        CreatedDate = DateTime.UtcNow,
+        UpdatedDate = DateTime.UtcNow,
+        ProvinceId = province.Id,
+        DistrictId = district.Id,
+        WardId = ward.Id,
+        AddressId = address.Id,
+        BuildingStatusId = buildingStatus.Id,
+        UserId = 2
+        
+    };
+
+    // Thêm tòa nhà vào cơ sở dữ liệu
+    _context.Buildings.Add(building);
+    await _context.SaveChangesAsync();
+
+    return Ok(buildingDto);
+}
 
         [HttpGet("AddBuilding")]
         public IActionResult AddBuilding()
@@ -131,7 +178,60 @@ namespace RMS_API.Controllers
             return View(); // Trả về view cho việc thêm tòa nhà
         }
 
-        // Thêm phương thức GET cho AddBuilding
-        
+        [HttpDelete("DeleteBuilding/{id}")]
+        public async Task<IActionResult> DeleteBuilding(int id)
+        {
+            var building = await _context.Buildings.FirstOrDefaultAsync(b => b.Id == id);
+
+            if (building == null)
+            {
+                return NotFound("Building not found.");
+            }
+
+            
+            _context.Buildings.Remove(building);
+            await _context.SaveChangesAsync();
+
+            return Ok("Building deleted successfully.");
+        }
+
+
+        [HttpGet("GetBuildingById/{id}")]
+        public async Task<IActionResult> GetBuildingById(int id)
+        {
+            var building = await _context.Buildings
+                .Include(b => b.Address)
+                .Include(b => b.BuildingStatus)
+                .Include(b => b.User)
+                .Include(b => b.Province)
+                .Include(b => b.District)
+                .Include(b => b.Ward)
+                .Where(b => b.Id == id)
+                .Select(b => new BuildingDTO
+                {
+                    Id = b.Id,
+                    Name = b.Name,
+                    TotalFloors = b.TotalFloors,
+                    NumberOfRooms = b.NumberOfRooms,
+                    CreatedDate = b.CreatedDate,
+                    UpdatedDate = b.UpdatedDate,
+                    ProvinceName = b.Province.Name,
+                    DistrictName = b.District.Name,
+                    WardName = b.Ward.Name,
+                    AddressDetails = $"{b.Address.Ward.Name}, {b.Address.District.Name}, {b.Address.Province.Name}",
+                    BuildingStatus = b.BuildingStatus.Name
+                })
+                .FirstOrDefaultAsync();
+
+            if (building == null)
+            {
+                return NotFound("Building not found.");
+            }
+
+            return Ok(building);
+        }
+
+
+
     }
 }
