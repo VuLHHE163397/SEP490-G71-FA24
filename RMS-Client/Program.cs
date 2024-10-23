@@ -25,3 +25,4 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Home}/{id?}");
 
 app.Run();
+//dung
