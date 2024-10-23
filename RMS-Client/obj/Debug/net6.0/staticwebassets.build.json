@@ -1,11 +1,23 @@
 {
   "Version": 1,
-  "Hash": "G0FTYBBWvvhxn8ST00gDrU9gJG1AwVpeqp69ZCEWPLk=",
+  "Hash": "GiL5Py7yOdyiZs2HUCqBx1gkvXE7DHe78bYA4mE61Ws=",
   "Source": "RMS_Client",
   "BasePath": "_content/RMS_Client",
   "Mode": "Default",
   "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
+      "Version": 2,
+      "Source": "RMS_API",
+      "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework"
+    }
+  ],
   "DiscoveryPatterns": [
     {
       "Name": "RMS_Client\\wwwroot",

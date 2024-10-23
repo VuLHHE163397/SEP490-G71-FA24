@@ -16,7 +16,7 @@ namespace RMS_Client.Controllers
 
         public IActionResult ListBuilding()
         {
-           return View("~/Views/ManageBuilding/ListBuilding.cshtml");
+           return View();
         }
 
     }
