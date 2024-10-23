@@ -7,24 +7,20 @@
       "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\home\\home.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\fulearning\\fall2024\\datn\\sep490-g71-fa24\\sep490-g71-fa24\\rms-client\\rms_client.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\rms_client.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\fulearning\\fall2024\\datn\\sep490-g71-fa24\\sep490-g71-fa24\\rms_api\\rms_api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\rms_api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\fulearning\\fall2024\\datn\\sep490-g71-fa24\\sep490-g71-fa24\\rms-client\\models\\roomviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\models\\roomviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\fulearning\\fall2024\\datn\\sep490-g71-fa24\\sep490-g71-fa24\\rms-client\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\fulearning\\fall2024\\datn\\sep490-g71-fa24\\sep490-g71-fa24\\rms-client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\fulearning\\fall2024\\datn\\sep490-g71-fa24\\sep490-g71-fa24\\rms_api\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\fulearning\\fall2024\\datn\\sep490-g71-fa24\\sep490-g71-fa24\\rms_api\\models\\dtos\\addresssearchviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\models\\dtos\\addresssearchviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\fulearning\\fall2024\\datn\\sep490-g71-fa24\\sep490-g71-fa24\\rms-client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -46,28 +42,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "RMS_API",
-              "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
-              "RelativeDocumentMoniker": "RMS_API\\RMS_API.csproj",
-              "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
-              "RelativeToolTip": "RMS_API\\RMS_API.csproj",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-10-22T17:06:42.593Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "RMS_Client",
-              "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
-              "RelativeDocumentMoniker": "RMS-Client\\RMS_Client.csproj",
-              "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
-              "RelativeToolTip": "RMS-Client\\RMS_Client.csproj",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-10-22T17:06:37.833Z",
+              "DocumentIndex": 3,
+              "Title": "RoomController.cs",
+              "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\Controllers\\RoomController.cs",
+              "RelativeDocumentMoniker": "RMS_API\\Controllers\\RoomController.cs",
+              "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\Controllers\\RoomController.cs",
+              "RelativeToolTip": "RMS_API\\Controllers\\RoomController.cs",
+              "ViewState": "AQIAABsAAAAAAAAAAAAowAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-23T19:07:53.341Z",
               "EditorCaption": ""
             },
             {
@@ -78,22 +61,35 @@
               "RelativeDocumentMoniker": "RMS-Client\\Program.cs",
               "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\Program.cs",
               "RelativeToolTip": "RMS-Client\\Program.cs",
-              "ViewState": "AQIAAAkAAAAAAAAAAAAAABkAAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-22T16:56:21.29Z",
+              "WhenOpened": "2024-10-23T19:05:37.891Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "HomeController.cs",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\Controllers\\HomeController.cs",
               "RelativeDocumentMoniker": "RMS-Client\\Controllers\\HomeController.cs",
               "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\Controllers\\HomeController.cs",
               "RelativeToolTip": "RMS-Client\\Controllers\\HomeController.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAswB0AAAAAAAAA",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAAwBkAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-22T16:54:02.031Z",
+              "WhenOpened": "2024-10-23T18:57:00.579Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RoomViewModel.cs",
+              "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\Models\\RoomViewModel.cs",
+              "RelativeDocumentMoniker": "RMS-Client\\Models\\RoomViewModel.cs",
+              "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\Models\\RoomViewModel.cs",
+              "RelativeToolTip": "RMS-Client\\Models\\RoomViewModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAqAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-23T18:56:24.184Z",
               "EditorCaption": ""
             },
             {
@@ -104,22 +100,9 @@
               "RelativeDocumentMoniker": "RMS-Client\\Views\\Home\\Home.cshtml",
               "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\Views\\Home\\Home.cshtml",
               "RelativeToolTip": "RMS-Client\\Views\\Home\\Home.cshtml",
-              "ViewState": "AQIAAD4AAAAAAAAAAAAAAAAAAAAAAAAA",
+              "ViewState": "AQIAAHsBAAAAAAAAAAAqwIIBAAByAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-22T16:53:49.081Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "AddressSearchViewModel.cs",
-              "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\Models\\DTOs\\AddressSearchViewModel.cs",
-              "RelativeDocumentMoniker": "RMS_API\\Models\\DTOs\\AddressSearchViewModel.cs",
-              "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\Models\\DTOs\\AddressSearchViewModel.cs",
-              "RelativeToolTip": "RMS_API\\Models\\DTOs\\AddressSearchViewModel.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAA0AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-22T16:53:00.289Z",
+              "WhenOpened": "2024-10-23T18:54:24.523Z",
               "EditorCaption": ""
             }
           ]

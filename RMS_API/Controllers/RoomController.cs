@@ -40,5 +40,19 @@ namespace RMS_API.Controllers
                 .ToListAsync();
             return Ok(wards);
         }
+
+        [HttpGet("ListRoom")]
+        public async Task<ActionResult<IEnumerable<Room>>> GetAvailableRooms()
+        {
+            var rooms = await _context.Rooms
+                .Include(r => r.Building) // Đưa thông tin về Building
+                .Include(b => b.Building.Address) // Đưa thông tin về Address
+                .Include(r => r.RooomStatus) // Đưa thông tin về RoomStatus
+                .Where(r => r.RooomStatusId == 1) // Lọc phòng đang trống
+                .ToListAsync();
+
+            return Ok(rooms);
+        }
+
     }
 }

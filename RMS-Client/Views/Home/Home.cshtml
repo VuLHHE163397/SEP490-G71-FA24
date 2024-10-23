@@ -101,6 +101,59 @@
         .slider {
             margin-top: 20px;
         }
+
+        .room-item {
+            height: 450px; /* Chiều cao cố định cho tất cả các khung ảnh */
+            margin-bottom: 30px; /* Khoảng cách giữa các hàng */
+            display: flex;
+            flex-direction: column; /* Để bố trí các phần tử bên trong theo cột */
+            justify-content: space-between; /* Cân đối khoảng cách giữa các phần tử */
+        }
+
+            .room-item img {
+                height: 200px; /* Chiều cao cố định cho tất cả các hình ảnh */
+                width: 100%; /* Đảm bảo hình ảnh đầy đủ chiều rộng của khung */
+                object-fit: cover; /* Giữ tỷ lệ hình ảnh và cắt bớt nếu cần */
+            }
+
+        .room-status {
+            font-size: 1.2rem;
+            background-color: green;
+            color: azure;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px; /* Padding để căn chỉnh tốt hơn */
+            margin-bottom: auto; /* Đẩy nó lên trên cùng */
+        }
+
+        .room-details {
+            flex-grow: 1; /* Để chiếm không gian còn lại giữa ảnh và các nút */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Cân đối khoảng cách giữa các phần tử */
+        }
+
+            .room-details h5 {
+                font-size: 1.1rem; /* Đảm bảo kích thước đồng nhất cho tiêu đề */
+                color: #333; /* Màu sắc đồng nhất cho tiêu đề */
+                margin: 0; /* Để xóa khoảng cách mặc định */
+            }
+
+        .d-flex {
+            justify-content: space-between; /* Đảm bảo các phần tử bên trong căn chỉnh đều */
+            align-items: center; /* Căn giữa theo chiều dọc */
+        }
+
+            .d-flex small {
+                font-size: 0.9rem; /* Kích thước đồng nhất cho các thông tin nhỏ */
+                color: #555; /* Màu sắc đồng nhất cho thông tin nhỏ */
+            }
+
+        .btn {
+            min-width: 40px; /* Chiều rộng tối thiểu cho nút */
+            height: 40px; /* Chiều cao cố định cho nút */
+        }
+
     </style>
 </head>
 
@@ -129,21 +182,21 @@
                         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                             <div class="navbar-nav mr-auto py-0">
                                 <a asp-controller="Home" asp-action="Home" class="nav-item nav-link active">Trang chủ</a>
-                                <a href="about.html" class="nav-item nav-link">About Us</a>
+
 
                                 <!-- Conditional rendering for roles -->
                                 @if (User.IsInRole("Admin"))
                                 {
-                                    <a href="admin/manage" class="nav-item nav-link">Quản lí</a>
+                                    <a href="Admin/manage" class="nav-item nav-link">Quản lí</a>
                                 }
                                 else if (User.IsInRole("Landlord"))
                                 {
-                                    <a href="landlord/manage" class="nav-item nav-link">Quản lí</a>
+                                    <a href="Landlord/manage" class="nav-item nav-link">Quản lí</a>
                                 }
                             </div>
-                            <a href="#"
+                            <a asp-controller="Home" asp-action="Login"
                                class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block">
-                               Đăng nhập<i class="fa fa-arrow-right ms-3"></i>
+                                Đăng nhập<i class="fa fa-arrow-right ms-3"></i>
                             </a>
                         </div>
                     </nav>
@@ -151,7 +204,6 @@
             </div>
         </div>
         <!-- Header End -->
-
         <!-- Search Start -->
         <div class="container-xxl py-5 content">
             <div class="container">
@@ -179,7 +231,6 @@
             </div>
         </div>
         <!-- Search End -->
-
         <!-- Filter Start -->
         <div class="container-xxl py-5">
             <div class="container">
@@ -243,131 +294,149 @@
             </div>
         </div>
 
-        <!-- Room Start -->
         <div class="container-xxl py-5 content">
             <div class="container">
                 <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                     <h6 class="section-title text-center text-primary text-uppercase">Danh sách phòng</h6>
-                    <h1 class="mb-5">Explore Our <span class="text-primary text-uppercase">Rooms</span></h1>
                 </div>
-                <div class="row g-4">
-                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="row">
+                    <!-- Room Card Start -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                         <div class="room-item shadow rounded overflow-hidden">
                             <div class="position-relative">
-                                <img class="img-fluid" src="~/images/room-1.jpg" alt="">
-                                <small class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">$100/Night</small>
+                                <img class="img-fluid" src="~/images/room1.jpg" alt="Room Image">
                             </div>
-                            <div class="p-4 mt-2">
-                                <div class="d-flex justify-content-between mb-3">
-                                    <h5 class="mb-0">Junior Suite</h5>
-                                    <div class="ps-2">
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                    </div>
-                                </div>
-                                <div class="d-flex mb-3">
-                                    <small class="border-end me-3 pe-3">
-                                        <i class="fa fa-bed text-primary me-2"></i>3
-                                        Bed
-                                    </small>
-                                    <small class="border-end me-3 pe-3">
-                                        <i class="fa fa-bath text-primary me-2"></i>2
-                                        Bath
-                                    </small>
-                                    <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
-                                </div>
-                                <p class="text-body mb-3">
-                                    Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem
-                                    sed diam stet diam sed stet lorem.
-                                </p>
+                            <div class="room-details p-3">
+                                <h5 class="mb-2">
+                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 160 Thôn 9, Thạch Hòa, Thạch Thất, Hà Nội
+                                </h5>
+                                <div class="room-status">Đang trống</div>
                                 <div class="d-flex justify-content-between">
-                                    <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">View Detail</a>
-                                    <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Book Now</a>
+                                    <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>500000 VND</small>
+                                    <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>30 m²</small>
+                                    <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <!-- Room Card End -->
+                    <!-- Thêm 5 phòng khác ở đây -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                         <div class="room-item shadow rounded overflow-hidden">
                             <div class="position-relative">
-                                <img class="img-fluid" src="~/images/room-2.jpg" alt="">
-                                <small class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">$100/Night</small>
+                                <img class="img-fluid" src="~/images/room2.jpg" alt="Room Image">
                             </div>
-                            <div class="p-4 mt-2">
-                                <div class="d-flex justify-content-between mb-3">
-                                    <h5 class="mb-0">Executive Suite</h5>
-                                    <div class="ps-2">
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                    </div>
-                                </div>
-                                <div class="d-flex mb-3">
-                                    <small class="border-end me-3 pe-3">
-                                        <i class="fa fa-bed text-primary me-2"></i>3
-                                        Bed
-                                    </small>
-                                    <small class="border-end me-3 pe-3">
-                                        <i class="fa fa-bath text-primary me-2"></i>2
-                                        Bath
-                                    </small>
-                                    <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
-                                </div>
-                                <p class="text-body mb-3">
-                                    Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem
-                                    sed diam stet diam sed stet lorem.
-                                </p>
+                            <div class="room-details p-3">
+                                <h5 class="mb-2">
+                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 10 Thôn 4, Tân Xã, Thạch Thất, Hà Nội
+                                </h5>
+                                <div class="room-status">Đang trống</div>
                                 <div class="d-flex justify-content-between">
-                                    <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">View Detail</a>
-                                    <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Book Now</a>
+                                    <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>700000 VND</small>
+                                    <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>35 m²</small>
+                                    <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+
+                    <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                         <div class="room-item shadow rounded overflow-hidden">
                             <div class="position-relative">
-                                <img class="img-fluid" src="~/images/room-3.jpg" alt="">
-                                <small class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">$100/Night</small>
+                                <img class="img-fluid" src="~/images/room3.jpg" alt="Room Image">
                             </div>
-                            <div class="p-4 mt-2">
-                                <div class="d-flex justify-content-between mb-3">
-                                    <h5 class="mb-0">Deluxe Suite</h5>
-                                    <div class="ps-2">
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                    </div>
-                                </div>
-                                <div class="d-flex mb-3">
-                                    <small class="border-end me-3 pe-3">
-                                        <i class="fa fa-bed text-primary me-2"></i>3
-                                        Bed
-                                    </small>
-                                    <small class="border-end me-3 pe-3">
-                                        <i class="fa fa-bath text-primary me-2"></i>2
-                                        Bath
-                                    </small>
-                                    <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
-                                </div>
-                                <p class="text-body mb-3">
-                                    Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem
-                                    sed diam stet diam sed stet lorem.
-                                </p>
+                            <div class="room-details p-3">
+                                <h5 class="mb-2">
+                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 35 Thôn 5, Tân Xã, Thạch Thất, Hà Nội
+                                </h5>
+                                <div class="room-status">Đang trống</div>
                                 <div class="d-flex justify-content-between">
-                                    <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">View Detail</a>
-                                    <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Book Now</a>
+                                    <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>600000 VND</small>
+                                    <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>40 m²</small>
+                                    <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="room-item shadow rounded overflow-hidden">
+                            <div class="position-relative">
+                                <img class="img-fluid" src="~/images/room4.jpg" alt="Room Image">
+                            </div>
+                            <div class="room-details p-3">
+                                <h5 class="mb-2">
+                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 110 Thôn 4, Tân Xã, Thạch Thất, Hà Nội
+                                </h5>
+                                <div class="room-status">Đang trống</div>
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>550000 VND</small>
+                                    <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>32 m²</small>
+                                    <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="room-item shadow rounded overflow-hidden">
+                            <div class="position-relative">
+                                <img class="img-fluid" src="~/images/room2.jpg" alt="Room Image">
+                            </div>
+                            <div class="room-details p-3">
+                                <h5 class="mb-2">
+                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 117 Thôn 6, Thạch Hòa, Thạch Thất, Hà Nội
+                                </h5>
+                                <div class="room-status">Đang trống</div>
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>700000 VND</small>
+                                    <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>35 m²</small>
+                                    <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="room-item shadow rounded overflow-hidden">
+                            <div class="position-relative">
+                                <img class="img-fluid" src="~/images/room3.jpg" alt="Room Image">
+                            </div>
+                            <div class="room-details p-3">
+                                <h5 class="mb-2">
+                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 30 Thôn 5, Thạch Hòa, Thạch Thất, Hà Nội
+                                </h5>
+                                <div class="room-status">Đang trống</div>
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>600000 VND</small>
+                                    <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>40 m²</small>
+                                    <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="room-item shadow rounded overflow-hidden">
+                            <div class="position-relative">
+                                <img class="img-fluid" src="~/images/room4.jpg" alt="Room Image">
+                            </div>
+                            <div class="room-details p-3">
+                                <h5 class="mb-2">
+                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 115 Thôn 5, Tân Xã, Thạch Thất, Hà Nội
+                                </h5>
+                                <div class="room-status">Đang trống</div>
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>550000 VND</small>
+                                    <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>32 m²</small>
+                                    <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                   
+                    
+                    <!-- Room Card End -->
                 </div>
             </div>
         </div>
@@ -400,7 +469,7 @@
 
     <!-- Template Javascript -->
     <script src="~/js/main.js"></script>
-   
+
     <script>
         // Populate Provinces on load
         window.onload = function () {
@@ -527,7 +596,7 @@
             // Implement the API call to filter rooms
         }
     </script>
-   
+
 </body>
 
 </html>
