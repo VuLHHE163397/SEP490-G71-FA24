@@ -1260,6 +1260,30 @@
           }
         }
       },
+      "X.PagedList/10.5.3": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/X.PagedList.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/X.PagedList.dll": {}
+        }
+      },
+      "X.PagedList.Mvc.Core/10.5.3": {
+        "type": "package",
+        "dependencies": {
+          "X.PagedList": "10.5.3"
+        },
+        "compile": {
+          "lib/net6.0/X.PagedList.Mvc.Core.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/X.PagedList.Mvc.Core.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "RMS_API/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
@@ -1269,7 +1293,10 @@
           "Microsoft.AspNetCore.OData": "8.2.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.30",
           "Microsoft.Extensions.Configuration.Json": "6.0.0",
-          "Swashbuckle.AspNetCore": "6.2.3"
+          "Newtonsoft.Json": "13.0.3",
+          "Swashbuckle.AspNetCore": "6.2.3",
+          "X.PagedList": "10.5.3",
+          "X.PagedList.Mvc.Core": "10.5.3"
         },
         "compile": {
           "bin/placeholder/RMS_API.dll": {}
@@ -3348,6 +3375,42 @@
         "version.txt"
       ]
     },
+    "X.PagedList/10.5.3": {
+      "sha512": "nE/KRWCHxT3giCmQY6y5i+2auc7eBDSmkT5VMnh5OOyzsp+OzcJOVjQAimKocqR2l+uBptsUyeBbQUPSDilqNQ==",
+      "type": "package",
+      "path": "x.pagedlist/10.5.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "README.md",
+        "lib/net6.0/X.PagedList.dll",
+        "lib/net7.0/X.PagedList.dll",
+        "lib/net8.0/X.PagedList.dll",
+        "lib/netstandard2.0/X.PagedList.dll",
+        "lib/netstandard2.1/X.PagedList.dll",
+        "x-pagedlist.png",
+        "x.pagedlist.10.5.3.nupkg.sha512",
+        "x.pagedlist.nuspec"
+      ]
+    },
+    "X.PagedList.Mvc.Core/10.5.3": {
+      "sha512": "k++KfbXi1cfBT+eoIc0bTvE653XUjguSAjklR/VJnsebk2ClP9IXfACZIVXnFIiu+C2wi7iMC2G3WOUNEZDCTw==",
+      "type": "package",
+      "path": "x.pagedlist.mvc.core/10.5.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "README.md",
+        "lib/net6.0/X.PagedList.Mvc.Core.dll",
+        "lib/net7.0/X.PagedList.Mvc.Core.dll",
+        "lib/net8.0/X.PagedList.Mvc.Core.dll",
+        "x-pagedlist.png",
+        "x.pagedlist.mvc.core.10.5.3.nupkg.sha512",
+        "x.pagedlist.mvc.core.nuspec"
+      ]
+    },
     "RMS_API/1.0.0": {
       "type": "project",
       "path": "../RMS_API/RMS_API.csproj",
@@ -3361,24 +3424,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\bangc\\.nuget\\packages\\": {},
-    "D:\\Visual Studio 2022\\Shared\\NuGetPackages": {}
+    "C:\\Users\\DEll\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
+      "projectUniqueName": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
       "projectName": "RMS_Client",
-      "projectPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
-      "packagesPath": "C:\\Users\\bangc\\.nuget\\packages\\",
-      "outputPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\obj\\",
+      "projectPath": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
+      "packagesPath": "C:\\Users\\DEll\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "D:\\Visual Studio 2022\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\bangc\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\DEll\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3386,15 +3444,14 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
-              "projectPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj"
+            "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
+              "projectPath": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj"
             }
           }
         }
@@ -3433,7 +3490,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   }

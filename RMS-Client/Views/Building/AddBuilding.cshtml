@@ -1,5 +1,159 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model RMS_API.DTOs.AddBuildingDTO
+
 @{
+    ViewData["Title"] = "Thêm Tòa Nhà Mới";
 }
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>@ViewData["Title"]</h1>
+
+        <form id="addBuildingForm">
+            <div class="form-group">
+                <label for="Name">Tên Tòa Nhà</label>
+                <input type="text" class="form-control" id="Name" name="Name" required />
+            </div>
+            <div class="form-group">
+                <label for="TotalFloors">Số Tầng</label>
+                <input type="number" class="form-control" id="TotalFloors" name="TotalFloors" required />
+            </div>
+            <div class="form-group">
+                <label for="NumberOfRooms">Số Phòng</label>
+                <input type="number" class="form-control" id="NumberOfRooms" name="NumberOfRooms" required />
+            </div>
+            <div class="form-group">
+                <label for="ProvinceId">Tỉnh</label>
+                <select class="form-control" id="ProvinceId" name="ProvinceName" required>
+                    <option value="">Chọn Tỉnh/Thành phố</option>
+                    @foreach (var province in ViewBag.Provinces)
+                    {
+                        <option value="@province.Name">@province.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="DistrictId">Quận</label>
+                <select class="form-control" id="DistrictId" name="DistrictName" required>
+                    <option value="">Chọn Quận</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="WardId">Xã</label>
+                <select class="form-control" id="WardId" name="WardName" required>
+                    <option value="">Chọn Xã</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="BuildingStatus">Trạng Thái</label>
+                <select class="form-control" id="BuildingStatus" name="BuildingStatus" required>
+                    @foreach (var status in ViewBag.BuildingStatuses)
+                    {
+                        <option value="@status.Name">@status.Name</option>
+                    }
+                </select>
+            </div>
+            < <div class="form-group">
+                <label for="AddressDetails">Địa Chỉ</label>
+                <input type="text" class="form-control" id="AddressDetails" name="AddressDetails" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Tạo Tòa Nhà</button>
+            <a asp-controller="Building" asp-action="ListBuilding" class="btn btn-secondary">Trở Về</a>
+
+        </form>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#ProvinceId').change(function () {
+                var provinceName = encodeURIComponent($(this).val());
+                var url = `https://localhost:5001/api/Building/GetDistrictsByProvince/${provinceName}`;
+
+                if (provinceName) {
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function (data) {
+                            $('#DistrictId').empty();
+                            $('#DistrictId').append('<option value="">Chọn Quận</option>');
+                            $.each(data, function (index, district) {
+                                $('#DistrictId').append('<option value="' + district.name + '">' + district.name + '</option>');
+                            });
+                        },
+                        error: function () {
+                            alert('Có lỗi xảy ra khi lấy danh sách quận.');
+                        }
+                    });
+                } else {
+                    $('#DistrictId').empty();
+                    $('#DistrictId').append('<option value="">Chọn Quận</option>');
+                }
+            });
+
+            $('#DistrictId').change(function () {
+                var districtName = encodeURIComponent($(this).val());
+                var url = `https://localhost:5001/api/Building/GetWardsByDistrict/${districtName}`;
+
+                if (districtName) {
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function (data) {
+                            $('#WardId').empty();
+                            $('#WardId').append('<option value="">Chọn Xã</option>');
+                            $.each(data, function (index, ward) {
+                                $('#WardId').append('<option value="' + ward.name + '">' + ward.name + '</option>');
+                            });
+                        },
+                        error: function () {
+                            alert('Có lỗi xảy ra khi lấy xã.');
+                        }
+                    });
+                } else {
+                    $('#WardId').empty();
+                    $('#WardId').append('<option value="">Chọn Xã</option>');
+                }
+            });
+
+            $('#addBuildingForm').submit(function (event) {
+                event.preventDefault(); // Ngăn chặn hành động mặc định của form
+
+                var buildingData = {
+                    Name: $('#Name').val(),
+                    TotalFloors: $('#TotalFloors').val(),
+                    NumberOfRooms: $('#NumberOfRooms').val(),
+                    ProvinceName: $('#ProvinceId').val(), // Sử dụng data-id
+                    DistrictName: $('#DistrictId').val(),
+                    WardName: $('#WardId').val(),
+                    AddressDetails: $('#AddressDetails').val(),
+                    BuildingStatus: $('#BuildingStatus').val()
+                };
+                console.log
+
+                $.ajax({
+                    url: 'https://localhost:5001/api/Building/AddBuilding',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(buildingData),
+                    success: function (response) {
+                        alert('Tòa nhà đã được tạo thành công.');
+                        // Có thể chuyển hướng hoặc làm gì đó sau khi thành công
+                    },
+                    error: function (xhr) {
+                        alert('Có lỗi xảy ra: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

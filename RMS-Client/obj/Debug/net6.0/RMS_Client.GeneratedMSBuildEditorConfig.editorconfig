@@ -9,163 +9,161 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = RMS_Client
 build_property.RootNamespace = RMS_Client
-build_property.ProjectDir = D:\GitHub\SEP490-G71-FA24\RMS-Client\
-build_property.EnableComHosting = 
-build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.ProjectDir = C:\Users\DEll\Documents\GitHub\SEP490-G71-FA24\RMS-Client\
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\GitHub\SEP490-G71-FA24\RMS-Client
+build_property.MSBuildProjectDirectory = C:\Users\DEll\Documents\GitHub\SEP490-G71-FA24\RMS-Client
 build_property._RazorSourceGeneratorDebug = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Building/AddBuilding.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Building/AddBuilding.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVpbGRpbmdcQWRkQnVpbGRpbmcuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Building/BuildingDetail.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Building/BuildingDetail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVpbGRpbmdcQnVpbGRpbmdEZXRhaWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Building/EditBuilding.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Building/EditBuilding.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVpbGRpbmdcRWRpdEJ1aWxkaW5nLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Building/ListBuilding.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Building/ListBuilding.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVpbGRpbmdcTGlzdEJ1aWxkaW5nLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Facility/AddFacility.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Facility/AddFacility.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmFjaWxpdHlcQWRkRmFjaWxpdHkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Facility/EditFacility.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Facility/EditFacility.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmFjaWxpdHlcRWRpdEZhY2lsaXR5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Facility/ListFacility.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Facility/ListFacility.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmFjaWxpdHlcTGlzdEZhY2lsaXR5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Home/Home.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Home/Home.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxIb21lLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Home/Index.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Home/ListRoom.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Home/ListRoom.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxMaXN0Um9vbS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Home/Privacy.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Home/RoomDetail.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Home/RoomDetail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSb29tRGV0YWlsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Login/Login.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Login/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cTG9naW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Login/Register.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Login/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cUmVnaXN0ZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Login/ResetPassword.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Login/ResetPassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cUmVzZXRQYXNzd29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Profile/ChangedPassord.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Profile/ChangedPassord.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxDaGFuZ2VkUGFzc29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Profile/EditProfile.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Profile/EditProfile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxFZGl0UHJvZmlsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Profile/ViewProfile.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Profile/ViewProfile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxWaWV3UHJvZmlsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Report/ListReport.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Report/ListReport.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XExpc3RSZXBvcnQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Report/ReportDetail.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Report/ReportDetail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XFJlcG9ydERldGFpbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Room/AddRoom.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Room/AddRoom.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxBZGRSb29tLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Room/EditRoom.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Room/EditRoom.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxFZGl0Um9vbS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Room/ListRoom.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Room/ListRoom.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxMaXN0Um9vbS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Room/RoomDetail.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Room/RoomDetail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxSb29tRGV0YWlsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Room/RoomHistory.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Room/RoomHistory.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxSb29tSGlzdG9yeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Service/AddService.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Service/AddService.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZVxBZGRTZXJ2aWNlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Service/EditService.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Service/EditService.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZVxFZGl0U2VydmljZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Service/ListService.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Service/ListService.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZVxMaXN0U2VydmljZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Service/ServiceRecord.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Service/ServiceRecord.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZVxTZXJ2aWNlUmVjb3JkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Shared/Error.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Statistic/ViewStatistic.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Statistic/ViewStatistic.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhdGlzdGljXFZpZXdTdGF0aXN0aWMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Tennant/AddTennant.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Tennant/AddTennant.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVubmFudFxBZGRUZW5uYW50LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Tennant/ListTennant.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Tennant/ListTennant.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVubmFudFxMaXN0VGVubmFudC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/User/ListUser.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/User/ListUser.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxMaXN0VXNlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/_ViewImports.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/_ViewStart.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Shared/_Layout.cshtml]
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/RMS-Client/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-pgp0dqy36x
