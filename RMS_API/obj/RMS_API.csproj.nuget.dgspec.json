@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {}
+    "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
+    "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
+        "projectUniqueName": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
         "projectName": "RMS_API",
-        "projectPath": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
-        "packagesPath": "C:\\Users\\DEll\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS_API\\obj\\",
+        "projectPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
+        "packagesPath": "C:\\Users\\bangc\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Visual Studio 2022\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\DEll\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\bangc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -108,7 +113,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

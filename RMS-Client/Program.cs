@@ -52,6 +52,6 @@ app.UseAuthorization();
 // Cấu hình route mặc định cho ứng dụng.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Home}/{id?}"); // Đặt controller mặc định là Home và action là Index
+    pattern: "{controller=Statistic}/{action=ViewStatistic}/{id?}"); // Đặt controller mặc định là Home và action là Index
 
 app.Run();

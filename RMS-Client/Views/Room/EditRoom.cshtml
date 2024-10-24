@@ -1,5 +1,83 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<RMS_API.DTOs.BuildingDTO>
+
 @{
+    ViewData["Title"] = "Danh sách tòa nhà"; // Page title
 }
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        /* Add some styles for the table */
+        th, td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>@ViewData["Title"]</h1>
+
+        <!-- Create button -->
+        <div class="mb-3">
+            <a asp-controller="Building" asp-action="AddBuilding" class="btn btn-primary">Tạo Tòa Nhà Mới</a>
+        </div>
+
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Tên</th>
+                    <th>Số tầng</th>
+                    <th>Số phòng</th>
+                    <th>Địa chỉ</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var building in Model)
+                    {
+                        <tr>
+                            <td>@building.Id</td>
+                            <td>@building.Name</td>
+                            <td>@building.TotalFloors</td>
+                            <td>@building.NumberOfRooms</td>
+                            <td>@building.AddressDetails</td>
+                            <td>@building.BuildingStatus</td>
+                            <td>
+                                <button class="btn btn-warning" onclick="editBuilding(@building.Id)">Sửa</button>
+                                <button class="btn btn-primary" onclick="viewListRoom(@building.Id)">View List Room</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center">Không có dữ liệu</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function editBuilding(id) {
+            // Redirect to the edit page
+            window.location.href = '/Building/EditBuilding/' + id;
+        }
+
+
+
+
+    </script>
+</body>
+</html>
