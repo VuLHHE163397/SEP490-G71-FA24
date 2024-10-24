@@ -35,5 +35,6 @@ namespace RMS_API.Controllers
             var room = _context.Rooms.Where(p => p.RooomStatusId == statusId).ToList();
             return Ok(room);
         }
+
     }
 }
