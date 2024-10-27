@@ -231,6 +231,85 @@ public async Task<IActionResult> AddBuilding([FromBody] AddBuildingDTO buildingD
             return Ok(building);
         }
 
+        [HttpPut("EditBuilding/{id}")]
+        public async Task<IActionResult> EditBuilding(int id, [FromBody] AddBuildingDTO buildingDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Find the building by ID
+            var building = await _context.Buildings
+                .Include(b => b.Address)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (building == null)
+            {
+                return NotFound("Building not found.");
+            }
+
+            // Find Province
+            var province = await _context.Provinces
+                .FirstOrDefaultAsync(p => p.Name.Equals(buildingDto.ProvinceName));
+
+            if (province == null)
+            {
+                return BadRequest($"Province '{buildingDto.ProvinceName}' not found.");
+            }
+
+            // Find District
+            var district = await _context.Districts
+                .FirstOrDefaultAsync(d => d.Name.Equals(buildingDto.DistrictName) && d.ProvincesId == province.Id);
+
+            if (district == null)
+            {
+                return BadRequest($"District '{buildingDto.DistrictName}' not found in province '{buildingDto.ProvinceName}'.");
+            }
+
+            // Find Ward
+            var ward = await _context.Wards
+                .FirstOrDefaultAsync(w => w.Name.Equals(buildingDto.WardName) && w.DistrictId == district.Id);
+
+            if (ward == null)
+            {
+                return BadRequest($"Ward '{buildingDto.WardName}' not found in district '{buildingDto.DistrictName}'.");
+            }
+
+            // Find BuildingStatus
+            var buildingStatus = await _context.BuildingStatuses
+                .FirstOrDefaultAsync(bs => bs.Name.Equals(buildingDto.BuildingStatus));
+
+            if (buildingStatus == null)
+            {
+                return BadRequest($"Building status '{buildingDto.BuildingStatus}' not found.");
+            }
+
+            // Update the building details
+            building.Name = buildingDto.Name;
+            building.TotalFloors = buildingDto.TotalFloors;
+            building.NumberOfRooms = buildingDto.NumberOfRooms;
+            building.UpdatedDate = DateTime.UtcNow;
+            building.ProvinceId = province.Id;
+            building.DistrictId = district.Id;
+            building.WardId = ward.Id;
+            building.BuildingStatusId = buildingStatus.Id;
+
+            // Update the address details
+            if (building.Address != null)
+            {
+                building.Address.Information = buildingDto.AddressDetails;
+                building.Address.DistrictId = district.Id;
+                building.Address.WardId = ward.Id;
+                building.Address.ProvinceId = province.Id;
+            }
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            return Ok("Building updated successfully.");
+        }
+
 
 
     }

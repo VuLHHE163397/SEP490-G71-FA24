@@ -13,8 +13,71 @@
     <title>RMS</title>
     <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
-</head>
 
+    <!-- Custom CSS Styles -->
+    <style>
+        /* Sidebar styling */
+        .sidebar-submenu {
+            padding-left: 15px;
+            display: none;
+        }
+
+        .sidebar-sublink {
+            color: #6c757d;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+            .sidebar-sublink:hover {
+                color: #0d6efd;
+            }
+
+        /* Sidebar arrow rotation */
+        .rotate {
+            transform: rotate(180deg);
+            transition: transform 0.3s;
+        }
+
+        /* Table styling */
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Button styles */
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        /* Page wrapper styles */
+        .page-wrapper {
+            display: flex;
+        }
+
+        /* Main content area padding */
+        .body-wrapper {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        /* Header navbar icon */
+        .nav-icon-hover {
+            cursor: pointer;
+        }
+
+        /* Profile image in dropdown */
+        .navbar-nav .dropdown-menu img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
 <body>
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -52,13 +115,31 @@
                         </li>
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-building"></i>
-                                </span>
+                            <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
+                                <span><i class="ti ti-building"></i></span>
                                 <span class="hide-menu">Quản lý tòa nhà</span>
+                                <i class="ti ti-angle-down"></i>
                             </a>
+                            <ul class="sidebar-submenu" style="display: none; list-style-type: none; padding-left: 20px;">
+                                @if (Model != null && Model.Any())
+                                {
+                                    foreach (var building in Model)
+                                    {
+                                        <li class="sidebar-subitem">
+                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-id="@building.Id" class="sidebar-sublink">
+                                                <i class="ti ti-file"></i>
+                                                @building.Name
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                }
+                            </ul>
                         </li>
+
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Room" asp-action="ListRoom" aria-expanded="false">
                                 <span>
@@ -234,7 +315,7 @@
                                         <td>@building.BuildingStatus</td>
                                         <td>
                                             <button class="btn btn-warning" onclick="editBuilding(@building.Id)">Sửa</button>
-                                            <button class="btn btn-primary" onclick="viewListRoom(@building.Id)">View List Room</button>
+                                            
                                         </td>
                                     </tr>
                                 }
@@ -248,23 +329,37 @@
                         </tbody>
                     </table>
                 </div>
-
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>
                     function editBuilding(id) {
-                        // Redirect to the edit page
                         window.location.href = '/Building/EditBuilding/' + id;
                     }
 
+                    
+                        function toggleSubmenu(event) {
+                            event.preventDefault();
+                            var submenu = event.currentTarget.nextElementSibling;
+                            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
+                        }
+                
 
+                    $(document).ready(function () {
+                        if (typeof ApexCharts === 'undefined') {
+                            console.error("ApexCharts is not loaded.");
+                        } else {
+                            console.log("ApexCharts is loaded successfully.");
+                            // Your chart initialization code can go here
+                        }
+                    });
 
 
                 </script>
-
+               
 
 
             </div>
         </div>
+
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -273,6 +368,9 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
+
+   
+
 </body>
 
 </html>
