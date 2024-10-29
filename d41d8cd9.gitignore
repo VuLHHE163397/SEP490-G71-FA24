@@ -287,3 +287,6 @@ __pycache__/
 *.xhtml
 
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore,web
+/.vs
+/.vs
+/.vs/SEP490_G71_RMS

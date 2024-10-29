@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using RMS_Client.Models;
 using System.Diagnostics;
 
@@ -25,6 +26,10 @@ namespace RMS_Client.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+        public IActionResult Login()
+        {
+            return View("~/Views/Login/Login.cshtml");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

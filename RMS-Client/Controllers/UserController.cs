@@ -16,7 +16,7 @@ namespace RMS_Client.Controllers
 
         public IActionResult Login()
         {
-            return View("~/Views/Login/Login.cshtml");
+            return View();
         }
     }
 }

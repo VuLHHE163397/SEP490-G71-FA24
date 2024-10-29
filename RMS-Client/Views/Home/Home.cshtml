@@ -14,15 +14,19 @@
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+    <!-- Include noUiSlider CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.1.0/nouislider.min.css">
+
+    <!-- Include noUiSlider JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.1.0/nouislider.min.js"></script>
 
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- libsraries Stylesheet -->
+    <!-- Libraries Stylesheet -->
     <link href="~/lib/animate/animate.min.css" rel="stylesheet">
     <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="~/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
@@ -32,25 +36,220 @@
 
     <!-- Template Stylesheet -->
     <link href="~/css/style1.css" rel="stylesheet">
+    <style>
+        /* Custom styles for header and footer */
+        .header, .footer {
+            height: 60px;
+            width: 1320px;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center; /* Center content vertically */
+            justify-content: space-between; /* Space out items */
+            padding: 0 20px; /* Add some padding */
+            background-color: #343a40;
+        }
+
+        .room-item {
+            height: 450px; /* Chiều cao cố định cho tất cả các khung ảnh */
+            margin-bottom: 30px; /* Khoảng cách giữa các hàng */
+            display: flex;
+            flex-direction: column; /* Để bố trí các phần tử bên trong theo cột */
+            justify-content: space-between; /* Cân đối khoảng cách giữa các phần tử */
+        }
+
+            .room-item img {
+                height: 200px; /* Chiều cao cố định cho tất cả các hình ảnh */
+                width: 100%; /* Đảm bảo hình ảnh đầy đủ chiều rộng của khung */
+                object-fit: cover; /* Giữ tỷ lệ hình ảnh và cắt bớt nếu cần */
+            }
+
+        .room-status {
+            font-size: 1.2rem;
+            background-color: green;
+            color: azure;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px; /* Padding để căn chỉnh tốt hơn */
+            margin-bottom: auto; /* Đẩy nó lên trên cùng */
+        }
+
+        .room-details {
+            flex-grow: 1; /* Để chiếm không gian còn lại giữa ảnh và các nút */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Cân đối khoảng cách giữa các phần tử */
+        }
+
+            .room-details h5 {
+                font-size: 1.1rem; /* Đảm bảo kích thước đồng nhất cho tiêu đề */
+                color: #333; /* Màu sắc đồng nhất cho tiêu đề */
+                margin: 0; /* Để xóa khoảng cách mặc định */
+            }
+
+        .d-flex {
+            justify-content: space-between; /* Đảm bảo các phần tử bên trong căn chỉnh đều */
+            align-items: center; /* Căn giữa theo chiều dọc */
+        }
+
+            .d-flex small {
+                font-size: 0.9rem; /* Kích thước đồng nhất cho các thông tin nhỏ */
+                color: #555; /* Màu sắc đồng nhất cho thông tin nhỏ */
+            }
+
+        .btn {
+            min-width: 40px; /* Chiều rộng tối thiểu cho nút */
+            height: 40px; /* Chiều cao cố định cho nút */
+        }
+
+        .content {
+            padding-bottom: 70px; /* Ensure body content doesn't overlap with footer */
+        }
+        /* Additional styles for the slider, case buttons, and popup */
+        .slider-container {
+            margin-top: 20px;
+        }
+
+        .case-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+            .case-buttons button {
+                margin: 0 5px;
+                padding: 5px 10px;
+                cursor: pointer;
+                border: 1px solid #ccc;
+                background-color: #f0f0f0;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
+
+                .case-buttons button:hover {
+                    background-color: #ddd;
+                }
+
+        #price-slider {
+            margin: 20px;
+        }
+        /* Additional styles for the slider, case buttons, and popup */
+        .slider-container {
+            margin-top: 20px;
+        }
+
+        .case-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+            .case-buttons button {
+                margin: 0 5px;
+                padding: 6px 8px; /* Tăng padding để ô lớn hơn */
+                cursor: pointer;
+                border: 1px solid #ccc;
+                background-color: #f0f0f0;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
+
+                .case-buttons button:hover {
+                    background-color: cornflowerblue;
+                }
+
+
+        /* Popup modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px; /* Tăng padding để có thêm không gian bên trong */
+            border-radius: 8px;
+            width: 600px; /* Tăng width để cửa sổ lớn hơn */
+            max-width: 95%; /* Cải thiện để cửa sổ không vượt quá màn hình */
+            text-align: center;
+        }
+
+        .close-button {
+            background-color: red;
+            border-radius: 50%;
+            padding: 2px 4px; /* Padding nhỏ để bo tròn vừa đủ */
+            color: white;
+            cursor: pointer;
+            position: absolute; /* Đặt nút ở vị trí tuyệt đối */
+            top: 10px; /* Cách mép trên 10px */
+            right: 10px; /* Cách mép phải 10px */
+            width: 20px; /* Kích thước cố định cho nút */
+            height: 20px; /* Kích thước cố định cho nút */
+            display: flex; /* Sử dụng flexbox để căn giữa chữ X */
+            align-items: center; /* Căn giữa theo chiều dọc */
+            justify-content: center; /* Căn giữa theo chiều ngang */
+        }
+
+        .confirm-button {
+            margin-top: 20px;
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            .confirm-button:hover {
+                background-color: #45a049;
+            }
+
+        .selected-range {
+            margin-top: 10px;
+            font-weight: bold;
+            color: black;
+        }
+
+        .reset-button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: #f44336; /* Red color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            .reset-button:hover {
+                background-color: #e53935; /* Darker red for hover effect */
+            }
+
+    </style>
 </head>
 
 <body>
     <div class="container-xxl bg-white p-0">
-        <!-- Spinner Start -->
-        <div id="spinner"
-            class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <!-- Spinner End -->
 
         <!-- Header Start -->
-        <div class="container-fluid bg-dark px-0">
+        <div class="container-fluid bg-dark px-0 header">
             <div class="row gx-0">
                 <div class="col-lg-3 bg-dark d-none d-lg-block">
                     <a asp-controller="Home" asp-action="Home"
-                        class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
+                       class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
                         <h1 class="m-0 text-primary text-uppercase">RMS</h1>
                     </a>
                 </div>
@@ -61,413 +260,476 @@
                             <h1 class="m-0 text-primary text-uppercase">RMS</h1>
                         </a>
                         <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
-                            data-bs-target="#navbarCollapse">
+                                data-bs-target="#navbarCollapse">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                             <div class="navbar-nav mr-auto py-0">
-                                <a asp-controller="Home" asp-action="Home" class="nav-item nav-link active">Home</a>
-                                <a asp-controller="Statistic" asp-action="ViewStatistic" class="nav-item nav-link">Statistic</a>
-                                <a href="service.html" class="nav-item nav-link">Services</a>
-                                <a href="room.html" class="nav-item nav-link">Rooms</a>
-                                <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                                    <div class="dropdown-menu rounded-0 m-0">
-                                        <a href="booking.html" class="dropdown-item">Booking</a>
-                                        <a href="team.html" class="dropdown-item">Our Team</a>
-                                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                                    </div>
-                                </div>
-                                <a href="contact.html" class="nav-item nav-link">Contact</a>
+                                <a asp-controller="Home" asp-action="Home" class="nav-item nav-link active">Trang chủ</a>
+
+
+                                <!-- Conditional rendering for roles -->
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a href="Admin/manage" class="nav-item nav-link">Quản lí</a>
+                                }
+                                else if (User.IsInRole("Landlord"))
+                                {
+                                    <a href="Landlord/manage" class="nav-item nav-link">Quản lí</a>
+                                }
                             </div>
-                            <a href="User/Login"
-                                class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block">Login<i
-                                    class="fa fa-arrow-right ms-3"></i></a>
+                            <a asp-controller="Home" asp-action="Login"
+                               class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block">
+                                Đăng nhập<i class="fa fa-arrow-right ms-3"></i>
+                            </a>
                         </div>
                     </nav>
                 </div>
             </div>
         </div>
         <!-- Header End -->
-
-
-        <!-- Carousel Start -->
-        <div class="container-fluid p-0 mb-5">
-            <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-
+        <!-- Search Start -->
+        <div class="container-xxl py-5 content">
+            <div class="container">
+                <div class="row mb-4">
+                    <div class="col-lg-4 mb-3">
+                        <label for="province" class="form-label">Tỉnh/Thành Phố</label>
+                        <select id="province" class="form-select" onchange="updateDistricts()">
+                            <option value="">Chọn Tỉnh/Thành Phố</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+                        <label for="district" class="form-label">Quận/Huyện/Thị Xã</label>
+                        <select id="district" class="form-select" onchange="updateCommunes()" disabled>
+                            <option value="">Chọn Quận/Huyện/Thị Xã</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+                        <label for="commune" class="form-label">Xã/Phường/Thị Trấn</label>
+                        <select id="commune" class="form-select" disabled>
+                            <option value="">Chọn Xã/Phường/Thị Trấn</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="carousel-item">
-
-                </div>
+                <button class="btn btn-primary" onclick="searchRooms()">Tìm Kiếm</button>
             </div>
-
         </div>
-    </div>
-    <!-- Carousel End -->
+        <!-- Popup modal for distance filter -->
+        <div class="modal-overlay" id="distance-filter-modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="toggleDistanceModal(false)"> X </span>
+                <h4>Chọn khoảng cách</h4>
 
+                <!-- Case selection buttons for distance -->
+                <div class="case-buttons">
+                    <button onclick="setDistanceSliderCase(0,2 )">Dưới 2 km</button>
+                    <button onclick="setDistanceSliderCase(2, 4)">2 - 4 km</button>
+                    <button onclick="setDistanceSliderCase(4, 6)">4 - 6 km</button>
+                    <button onclick="setDistanceSliderCase(6, 8)">6 - 8 km</button>
+                    <button onclick="setDistanceSliderCase(8, 10)">8 - 10 km</button>
+                    <button onclick="setDistanceSliderCase(10, 20)">Trên 10 km</button>
+                </div>
 
-    <!-- About Start -->
-    <div class="container-xxl py-5">
+                <!-- Slider element for distance -->
+                <div id="distance-slider"></div>
+
+                <!-- Display for the slider min and max values -->
+                <div class="slider-values">
+                    <span id="slider-distance-min-value">0</span> - <span id="slider-distance-max-value">0</span> km
+                </div>
+
+                <!-- Confirm button to apply the selected distance range -->
+                <button class="confirm-button" onclick="confirmDistanceSelection()">Xác nhận</button>
+            </div>
+        </div>
+        <!-- Button that opens the popup and displays the selected range -->
+        <button class="selected-range" id="selected-price-range" onclick="toggleModal(true)">Chọn mức giá</button>
+
+        <!-- Popup modal for price filter -->
+        <div class="modal-overlay" id="price-filter-modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="toggleModal(false)"> X </span>
+                <h4>Chọn mức giá</h4>
+
+                <!-- Case selection buttons -->
+                <div class="case-buttons">
+                    <button onclick="setSliderCase(0, 1000000)">Dưới 1 triệu</button>
+                    <button onclick="setSliderCase(1000000, 2000000)">1 - 2 triệu</button>
+                    <button onclick="setSliderCase(2000000, 4000000)">2 - 4 triệu</button>
+                    <button onclick="setSliderCase(4000000, 6000000)">4 - 6 triệu</button>
+                    <button onclick="setSliderCase(6000000, 8000000)">6 - 8 triệu</button>
+                    <button onclick="setSliderCase(8000000, 10000000)">8 - 10 triệu</button>
+                    <button onclick="setSliderCase(10000000, 20000000)">Trên 10 triệu</button>
+                </div>
+
+                <!-- Slider element -->
+                <div id="price-slider"></div>
+
+                <!-- Display for the slider min and max values -->
+                <div class="slider-values">
+                    <span id="slider-min-value">0</span> - <span id="slider-max-value">0</span> VND
+                </div>
+
+                <!-- Confirm button to apply the selected price range -->
+                <button class="confirm-button" onclick="confirmSelection()">Xác nhận</button>
+            </div>
+        </div>
+        <!-- Button that opens the popup and displays the selected area -->
+        <button class="selected-range" id="selected-area-range" onclick="toggleAreaModal(true)">Chọn diện tích</button>
+
+        <!-- Popup modal for area filter -->
+        <div class="modal-overlay" id="area-filter-modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="toggleAreaModal(false)"> X </span>
+                <h4>Chọn diện tích</h4>
+
+                <!-- Case selection buttons for area -->
+                <div class="case-buttons">
+                    <button onclick="setAreaSliderCase(0, 10)">Dưới 10 m²</button>
+                    <button onclick="setAreaSliderCase(10, 30)">10 - 30 m²</button>
+                    <button onclick="setAreaSliderCase(30, 50)">30 - 50 m²</button>
+                    <button onclick="setAreaSliderCase(50, 70)">50 - 70 m²</button>
+                    <button onclick="setAreaSliderCase(70, 90)">70 - 90 m²</button>
+                    <button onclick="setAreaSliderCase(90, 100)">Trên 90 m²</button>
+                </div>
+
+                <!-- Slider element for area -->
+                <div id="area-slider"></div>
+
+                <!-- Display for the slider min and max values -->
+                <div class="slider-values">
+                    <span id="slider-area-min-value">0</span> - <span id="slider-area-max-value">0</span> m²
+                </div>
+
+                <!-- Confirm button to apply the selected area range -->
+                <button class="confirm-button" onclick="confirmAreaSelection()">Xác nhận</button>
+            </div>
+        </div>
+        <!-- Button that opens the popup and displays the selected distance -->
+        <button class="selected-range" id="selected-distance-range" onclick="toggleDistanceModal(true)">Chọn khoảng cách</button>
+        <!-- Reset button for resetting to default values -->
+        <button class="reset-button" onclick="resetValues()">Đặt lại</button>
         <div class="container">
-            <div class="row g-5 align-items-center">
-                <div class="col-lg-6">
-                    <h6 class="section-title text-start text-primary text-uppercase">About Us</h6>
-                    <h1 class="mb-4">Welcome to <span class="text-primary text-uppercase">Hotelier</span></h1>
-                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et
-                        eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet
-                    </p>
-                    <div class="row g-3 pb-4">
-                        <div class="col-sm-4 wow fadeIn" data-wow-delay="0.1s">
-                            <div class="border rounded p-1">
-                                <div class="border rounded text-center p-4">
-                                    <i class="fa fa-hotel fa-2x text-primary mb-2"></i>
-                                    <h2 class="mb-1" data-toggle="counter-up">1234</h2>
-                                    <p class="mb-0">Rooms</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 wow fadeIn" data-wow-delay="0.3s">
-                            <div class="border rounded p-1">
-                                <div class="border rounded text-center p-4">
-                                    <i class="fa fa-users-cog fa-2x text-primary mb-2"></i>
-                                    <h2 class="mb-1" data-toggle="counter-up">1234</h2>
-                                    <p class="mb-0">Staffs</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 wow fadeIn" data-wow-delay="0.5s">
-                            <div class="border rounded p-1">
-                                <div class="border rounded text-center p-4">
-                                    <i class="fa fa-users fa-2x text-primary mb-2"></i>
-                                    <h2 class="mb-1" data-toggle="counter-up">1234</h2>
-                                    <p class="mb-0">Clients</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a class="btn btn-primary py-3 px-5 mt-2" href="">Explore More</a>
+            <!-- Sort Section -->
+            <div class="sort-section mb-4">
+                <h4>Sắp Xếp</h4>
+                <select class="form-select d-inline-block w-25 me-2">
+                    <option value="price-asc">Giá Tăng Dần</option>
+                    <option value="price-desc">Giá Giảm Dần</option>
+                    <option value="area-asc">Diện Tích Tăng Dần</option>
+                    <option value="area-desc">Diện Tích Giảm Dần</option>
+                    <option value="date-new">Khoảng cách tăng dần</option>
+                    <option value="date-old">Khoảng cách giảm dần</option>
+                </select>
+                <button class="btn btn-primary">Sắp Xếp</button>
+            </div>
+        </div>
+        <!-- Filter Start -->
+        <div class="container-xxl py-5">
+            <!-- Status Filter -->
+            <div class="col-md-4">
+                <h5 class="text-center">Trạng thái phòng</h5>
+                <div>
+                    <input type="checkbox" id="vacant" value="Đang trống">
+                    <label for="vacant">Đang trống</label><br>
+                    <input type="checkbox" id="futureVacant" value="Sắp trống">
+                    <label for="futureVacant">Sắp trống trong tương lai</label><br>
                 </div>
-                <div class="col-lg-6">
-                    <div class="row g-3">
-                        <div class="col-6 text-end">
-                            <img class="img-fluid rounded w-75 wow zoomIn" data-wow-delay="0.1s"
-                                src="~/images/about-1.jpg" style="margin-top: 25%;">
-                        </div>
-                        <div class="col-6 text-start">
-                            <img class="img-fluid rounded w-100 wow zoomIn" data-wow-delay="0.3s"
-                                src="~/images/about-2.jpg">
-                        </div>
-                        <div class="col-6 text-end">
-                            <img class="img-fluid rounded w-50 wow zoomIn" data-wow-delay="0.5s"
-                                src="~/images/about-3.jpg">
-                        </div>
-                        <div class="col-6 text-start">
-                            <img class="img-fluid rounded w-75 wow zoomIn" data-wow-delay="0.7s"
-                                src="~/images/about-4.jpg">
-                        </div>
-                    </div>
-                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button class="btn btn-primary rounded-0 py-2 px-4" type="button" onclick="filterRooms()">Lọc</button>
             </div>
         </div>
     </div>
-    <!-- About End -->
+    <!-- Filter End -->
 
 
-    <!-- Room Start -->
-    <div class="container-xxl py-5">
+    <div class="container-xxl py-5 content">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title text-center text-primary text-uppercase">Our Rooms</h6>
-                <h1 class="mb-5">Explore Our <span class="text-primary text-uppercase">Rooms</span></h1>
+                <h6 class="section-title text-center text-primary text-uppercase">Danh sách phòng</h6>
             </div>
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="row">
+                <!-- Room Card Start -->
+                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="room-item shadow rounded overflow-hidden">
                         <div class="position-relative">
-                            <img class="img-fluid" src="~/images/room-1.jpg" alt="">
-                            <small
-                                class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">$100/Night</small>
+                            <img class="img-fluid" src="~/images/room1.jpg" alt="Room Image">
                         </div>
-                        <div class="p-4 mt-2">
-                            <div class="d-flex justify-content-between mb-3">
-                                <h5 class="mb-0">Junior Suite</h5>
-                                <div class="ps-2">
-                                    <small class="fa fa-star text-primary"></small>
-                                    <small class="fa fa-star text-primary"></small>
-                                    <small class="fa fa-star text-primary"></small>
-                                    <small class="fa fa-star text-primary"></small>
-                                    <small class="fa fa-star text-primary"></small>
-                                </div>
-                            </div>
-                            <div class="d-flex mb-3">
-                                <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i>3
-                                    Bed</small>
-                                <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i>2
-                                    Bath</small>
-                                <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
-                            </div>
-                            <p class="text-body mb-3">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem
-                                sed diam stet diam sed stet lorem.</p>
+                        <div class="room-details p-3">
+                            <h5 class="mb-2">
+                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 160 Thôn 9, Thạch Hòa, Thạch Thất, Hà Nội
+                            </h5>
+                            <div class="room-status">Đang trống</div>
                             <div class="d-flex justify-content-between">
-                                <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">View Detail</a>
-                                <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Book Now</a>
+                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>500000 VND</small>
+                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>30 m²</small>
+                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                <!-- Room Card End -->
+                <!-- Thêm 5 phòng khác ở đây -->
+                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="room-item shadow rounded overflow-hidden">
                         <div class="position-relative">
-                            <img class="img-fluid" src="~/images/room-2.jpg" alt="">
-                            <small
-                                class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">$100/Night</small>
+                            <img class="img-fluid" src="~/images/room2.jpg" alt="Room Image">
                         </div>
-                        <div class="p-4 mt-2">
-                            <div class="d-flex justify-content-between mb-3">
-                                <h5 class="mb-0">Executive Suite</h5>
-                                <div class="ps-2">
-                                    <small class="fa fa-star text-primary"></small>
-                                    <small class="fa fa-star text-primary"></small>
-                                    <small class="fa fa-star text-primary"></small>
-                                    <small class="fa fa-star text-primary"></small>
-                                    <small class="fa fa-star text-primary"></small>
-                                </div>
-                            </div>
-                            <div class="d-flex mb-3">
-                                <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i>3
-                                    Bed</small>
-                                <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i>2
-                                    Bath</small>
-                                <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
-                            </div>
-                            <p class="text-body mb-3">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem
-                                sed diam stet diam sed stet lorem.</p>
+                        <div class="room-details p-3">
+                            <h5 class="mb-2">
+                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 10 Thôn 4, Tân Xã, Thạch Thất, Hà Nội
+                            </h5>
+                            <div class="room-status">Đang trống</div>
                             <div class="d-flex justify-content-between">
-                                <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">View Detail</a>
-                                <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Book Now</a>
+                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>700000 VND</small>
+                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>35 m²</small>
+                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.6s">
+
+                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="room-item shadow rounded overflow-hidden">
                         <div class="position-relative">
-                            <img class="img-fluid" src="~/images/room-3.jpg" alt="">
-                            <small
-                                class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">$100/Night</small>
+                            <img class="img-fluid" src="~/images/room3.jpg" alt="Room Image">
                         </div>
-                        <div class="p-4 mt-2">
-                            <div class="d-flex justify-content-between mb-3">
-                                <h5 class="mb-0">Super Deluxe</h5>
-                                <div class="ps-2">
-                                    <small class="fa fa-star text-primary"></small>
-                                    <small class="fa fa-star text-primary"></small>
-                                    <small class="fa fa-star text-primary"></small>
-                                    <small class="fa fa-star text-primary"></small>
-                                    <small class="fa fa-star text-primary"></small>
-                                </div>
-                            </div>
-                            <div class="d-flex mb-3">
-                                <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i>3
-                                    Bed</small>
-                                <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i>2
-                                    Bath</small>
-                                <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
-                            </div>
-                            <p class="text-body mb-3">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem
-                                sed diam stet diam sed stet lorem.</p>
+                        <div class="room-details p-3">
+                            <h5 class="mb-2">
+                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 35 Thôn 5, Tân Xã, Thạch Thất, Hà Nội
+                            </h5>
+                            <div class="room-status">Đang trống</div>
                             <div class="d-flex justify-content-between">
-                                <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">View Detail</a>
-                                <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Book Now</a>
+                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>600000 VND</small>
+                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>40 m²</small>
+                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
+                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="room-item shadow rounded overflow-hidden">
+                        <div class="position-relative">
+                            <img class="img-fluid" src="~/images/room3.jpg" alt="Room Image">
+                        </div>
+                        <div class="room-details p-3">
+                            <h5 class="mb-2">
+                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 30 Thôn 5, Thạch Hòa, Thạch Thất, Hà Nội
+                            </h5>
+                            <div class="room-status">Đang trống</div>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>600000 VND</small>
+                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>40 m²</small>
+                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="room-item shadow rounded overflow-hidden">
+                        <div class="position-relative">
+                            <img class="img-fluid" src="~/images/room4.jpg" alt="Room Image">
+                        </div>
+                        <div class="room-details p-3">
+                            <h5 class="mb-2">
+                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 115 Thôn 5, Tân Xã, Thạch Thất, Hà Nội
+                            </h5>
+                            <div class="room-status">Đang trống</div>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>550000 VND</small>
+                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>32 m²</small>
+                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Room Card End -->
             </div>
         </div>
     </div>
     <!-- Room End -->
-
-
-    <!-- Service Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title text-center text-primary text-uppercase">Our Services</h6>
-                <h1 class="mb-5">Explore Our <span class="text-primary text-uppercase">Services</span></h1>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <a class="service-item rounded" href="">
-                        <div class="service-icon bg-transparent border rounded p-1">
-                            <div class="w-100 h-100 border rounded d-flex align-items-center justify-content-center">
-                                <i class="fa fa-hotel fa-2x text-primary"></i>
-                            </div>
-                        </div>
-                        <h5 class="mb-3">Rooms & Appartment</h5>
-                        <p class="text-body mb-0">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed
-                            diam stet diam sed stet lorem.</p>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
-                    <a class="service-item rounded" href="">
-                        <div class="service-icon bg-transparent border rounded p-1">
-                            <div class="w-100 h-100 border rounded d-flex align-items-center justify-content-center">
-                                <i class="fa fa-utensils fa-2x text-primary"></i>
-                            </div>
-                        </div>
-                        <h5 class="mb-3">Food & Restaurant</h5>
-                        <p class="text-body mb-0">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed
-                            diam stet diam sed stet lorem.</p>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <a class="service-item rounded" href="">
-                        <div class="service-icon bg-transparent border rounded p-1">
-                            <div class="w-100 h-100 border rounded d-flex align-items-center justify-content-center">
-                                <i class="fa fa-spa fa-2x text-primary"></i>
-                            </div>
-                        </div>
-                        <h5 class="mb-3">Spa & Fitness</h5>
-                        <p class="text-body mb-0">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed
-                            diam stet diam sed stet lorem.</p>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.4s">
-                    <a class="service-item rounded" href="">
-                        <div class="service-icon bg-transparent border rounded p-1">
-                            <div class="w-100 h-100 border rounded d-flex align-items-center justify-content-center">
-                                <i class="fa fa-swimmer fa-2x text-primary"></i>
-                            </div>
-                        </div>
-                        <h5 class="mb-3">Sports & Gaming</h5>
-                        <p class="text-body mb-0">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed
-                            diam stet diam sed stet lorem.</p>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <a class="service-item rounded" href="">
-                        <div class="service-icon bg-transparent border rounded p-1">
-                            <div class="w-100 h-100 border rounded d-flex align-items-center justify-content-center">
-                                <i class="fa fa-glass-cheers fa-2x text-primary"></i>
-                            </div>
-                        </div>
-                        <h5 class="mb-3">Event & Party</h5>
-                        <p class="text-body mb-0">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed
-                            diam stet diam sed stet lorem.</p>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.6s">
-                    <a class="service-item rounded" href="">
-                        <div class="service-icon bg-transparent border rounded p-1">
-                            <div class="w-100 h-100 border rounded d-flex align-items-center justify-content-center">
-                                <i class="fa fa-dumbbell fa-2x text-primary"></i>
-                            </div>
-                        </div>
-                        <h5 class="mb-3">GYM & Yoga</h5>
-                        <p class="text-body mb-0">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed
-                            diam stet diam sed stet lorem.</p>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Service End -->
-
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer wow fadeIn" data-wow-delay="0.1s">
-        <div class="container pb-5">
-            <div class="row g-5">
-                <div class="col-md-6 col-lg-4">
-                    <div class="bg-primary rounded p-4">
-                        <a asp-controller="Home" asp-action="Home">
-                            <h1 class="text-white text-uppercase mb-3">Hotelier</h1>
-                        </a>
-                        <p class="text-white mb-0">
-                            Download <a class="text-dark fw-medium"
-                                href="https://htmlcodex.com/hotel-html-template-pro">Hotelier – Premium Version</a>,
-                            build a professional website for your hotel business and grab the attention of new visitors
-                            upon your site’s launch.
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <h6 class="section-title text-start text-primary text-uppercase mb-4">Contact</h6>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
-                    <div class="d-flex pt-2">
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-5 col-md-12">
-                    <div class="row gy-5 g-4">
-                        <div class="col-md-6">
-                            <h6 class="section-title text-start text-primary text-uppercase mb-4">Company</h6>
-                            <a class="btn btn-link" href="">About Us</a>
-                            <a class="btn btn-link" href="">Contact Us</a>
-                            <a class="btn btn-link" href="">Privacy Policy</a>
-                            <a class="btn btn-link" href="">Terms & Condition</a>
-                            <a class="btn btn-link" href="">Support</a>
-                        </div>
-                        <div class="col-md-6">
-                            <h6 class="section-title text-start text-primary text-uppercase mb-4">Services</h6>
-                            <a class="btn btn-link" href="">Food & Restaurant</a>
-                            <a class="btn btn-link" href="">Spa & Fitness</a>
-                            <a class="btn btn-link" href="">Sports & Gaming</a>
-                            <a class="btn btn-link" href="">Event & Party</a>
-                            <a class="btn btn-link" href="">GYM & Yoga</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="container">
             <div class="copyright">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved.
-
-                        <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                        Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
-                    </div>
-                    <div class="col-md-6 text-center text-md-end">
-                        <div class="footer-menu">
-                            <a href="">Home</a>
-                            <a href="">Cookies</a>
-                            <a href="">Help</a>
-                            <a href="">FQAs</a>
-                        </div>
+                        &copy; <a class="border-bottom" href="#">RMS</a>, All Right Reserved.
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Footer End -->
-
-
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    </div>
 
-    <!-- JavaScript libsraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript Libraries -->
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/wow/wow.min.js"></script>
-    <script src="~/lib/easing/easing.min.js"></script>
-    <script src="~/lib/waypoints/waypoints.min.js"></script>
-    <script src="~/lib/counterup/counterup.min.js"></script>
     <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="~/lib/tempusdominus/js/moment.min.js"></script>
     <script src="~/lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="~/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
-    <!-- Template Javascript -->
-    <script src="~/js/main.js"></script>
+    <!-- JavaScript for noUiSlider and modal control -->
+    <script>
+        // Initialize the noUiSlider
+        const priceSlider = document.getElementById('price-slider');
+
+        noUiSlider.create(priceSlider, {
+            start: [1000000, 3000000], // Default range values
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 20000000
+            },
+            step: 500000, // Step value for slider
+            format: {
+                to: (value) => Math.round(value),
+                from: (value) => Number(value)
+            }
+        });
+
+        // Update the displayed min and max values
+        priceSlider.noUiSlider.on('update', (values) => {
+            document.getElementById('slider-min-value').textContent = values[0];
+            document.getElementById('slider-max-value').textContent = values[1];
+        });
+
+        // Function to set slider to specific case
+        function setSliderCase(min, max) {
+            priceSlider.noUiSlider.set([min, max]);
+        }
+
+        // Function to toggle the modal visibility
+        function toggleModal(show) {
+            const modal = document.getElementById('price-filter-modal');
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
+        // Function to confirm the selection and display it
+        function confirmSelection() {
+            const minValue = priceSlider.noUiSlider.get()[0];
+            const maxValue = priceSlider.noUiSlider.get()[1];
+            document.getElementById('selected-price-range').textContent = `${minValue} - ${maxValue} VND`;
+            toggleModal(false); // Close the modal after confirming
+        }
+        // Initialize the noUiSlider for area selection
+        const areaSlider = document.getElementById('area-slider');
+
+        // Create the area slider
+        noUiSlider.create(areaSlider, {
+            start: [10, 50], // Default range values for area
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 100 // Set maximum value for area as needed
+            },
+            step: 5, // Step value for slider
+            format: {
+                to: (value) => Math.round(value), // Round value for display
+                from: (value) => Number(value) // Convert back to number
+            }
+        });
+
+        // Update the displayed min and max values when the area slider is adjusted
+        areaSlider.noUiSlider.on('update', (values) => {
+            document.getElementById('slider-area-min-value').textContent = `${Math.round(values[0])}`;
+            document.getElementById('slider-area-max-value').textContent = `${Math.round(values[1])}`;
+        });
+
+        // Function to set the area slider to a specific case when a case button is clicked
+        function setAreaSliderCase(min, max) {
+            areaSlider.noUiSlider.set([min, max]);
+        }
+
+        // Function to toggle the area modal visibility
+        function toggleAreaModal(show) {
+            const modal = document.getElementById('area-filter-modal');
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
+        // Function to confirm the selection and display it on the button
+        function confirmAreaSelection() {
+            const minAreaValue = Math.round(areaSlider.noUiSlider.get()[0]);
+            const maxAreaValue = Math.round(areaSlider.noUiSlider.get()[1]);
+            document.getElementById('selected-area-range').textContent = ` ${minAreaValue} - ${maxAreaValue} m²`;
+            toggleAreaModal(false); // Close the modal after confirming
+        }
+        // Initialize the noUiSlider for distance selection
+        const distanceSlider = document.getElementById('distance-slider');
+
+        // Create the distance slider
+        noUiSlider.create(distanceSlider, {
+            start: [0, 5], // Default range values for distance
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 20 // Set maximum value for distance
+            },
+            step: 1, // Step value for slider
+            format: {
+                to: (value) => Math.round(value), // Round value for display
+                from: (value) => Number(value) // Convert back to number
+            }
+        });
+
+        // Update the displayed min and max values when the distance slider is adjusted
+        distanceSlider.noUiSlider.on('update', (values) => {
+            document.getElementById('slider-distance-min-value').textContent = `${Math.round(values[0])}`;
+            document.getElementById('slider-distance-max-value').textContent = `${Math.round(values[1])}`;
+        });
+
+        // Function to set the distance slider to a specific case when a case button is clicked
+        function setDistanceSliderCase(min, max) {
+            distanceSlider.noUiSlider.set([min, max]);
+        }
+
+        // Function to toggle the distance modal visibility
+        function toggleDistanceModal(show) {
+            const modal = document.getElementById('distance-filter-modal');
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
+        // Function to confirm the selection and display it on the button
+        function confirmDistanceSelection() {
+            const minDistanceValue = Math.round(distanceSlider.noUiSlider.get()[0]);
+            const maxDistanceValue = Math.round(distanceSlider.noUiSlider.get()[1]);
+            document.getElementById('selected-distance-range').textContent = `${minDistanceValue} - ${maxDistanceValue} km`;
+            toggleDistanceModal(false); // Close the modal after confirming
+        }
+        // Function to reset all sliders to default values
+        function resetValues() {
+            // Reset price slider to default values
+            priceSlider.noUiSlider.set([1000000, 3000000]); // Default price range
+            document.getElementById('slider-min-value').textContent = '1000000';
+            document.getElementById('slider-max-value').textContent = '3000000';
+            document.getElementById('selected-price-range').textContent = 'Chọn mức giá';
+
+            // Reset area slider to default values
+            areaSlider.noUiSlider.set([10, 50]); // Default area range
+            document.getElementById('slider-area-min-value').textContent = '10';
+            document.getElementById('slider-area-max-value').textContent = '50';
+            document.getElementById('selected-area-range').textContent = 'Chọn diện tích';
+
+            // Reset distance slider to default values
+            distanceSlider.noUiSlider.set([0, 5]); // Default distance range
+            document.getElementById('slider-distance-min-value').textContent = '0';
+            document.getElementById('slider-distance-max-value').textContent = '5';
+            document.getElementById('selected-distance-range').textContent = 'Chọn khoảng cách';
+        }
+
+        // Call the resetValues function when the reset button is clicked
+        document.getElementById('reset-button').addEventListener('click', resetValues);
+
+    </script>
 </body>
 
 </html>
