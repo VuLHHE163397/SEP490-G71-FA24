@@ -56,52 +56,6 @@
             background-color: #343a40;
         }
 
-        .content {
-            padding-bottom: 70px; /* Ensure body content doesn't overlap with footer */
-        }
-        /* Tùy chỉnh cho các chấm tròn trên noUiSlider */
-        .noUi-handle {
-            background: #007bff; /* Màu nền cho chấm tròn */
-            border-radius: 90%; /* Tạo hình tròn */
-            height: 20px; /* Chiều cao của chấm tròn */
-            width: 20px; /* Chiều rộng của chấm tròn */
-            border: 3px solid #ffffff; /* Viền trắng cho chấm tròn */
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Đổ bóng */
-        }
-
-        /* Tùy chỉnh cho thanh trượt */
-        .noUi-connect {
-            background: #007bff; /* Màu nền cho phần kết nối giữa hai chấm tròn */
-        }
-
-        /* Tùy chỉnh cho thanh trượt không kết nối */
-        .noUi-base {
-            background: #e0e0e0; /* Màu nền cho thanh trượt không kết nối */
-        }
-
-        /* Tùy chỉnh cho giá trị hiển thị trên thanh trượt */
-        .noUi-tooltip {
-            background: #007bff; /* Màu nền cho tooltip */
-            color: #ffffff; /* Màu chữ cho tooltip */
-            padding: 5px; /* Khoảng cách bên trong */
-            border-radius: 5px; /* Bo góc tooltip */
-        }
-
-        .filter-section {
-            display: flex;
-            justify-content: space-between;
-            margin: 20px 0;
-        }
-
-        .filter {
-            flex: 1;
-            margin: 0 10px;
-        }
-
-        .slider {
-            margin-top: 20px;
-        }
-
         .room-item {
             height: 450px; /* Chiều cao cố định cho tất cả các khung ảnh */
             margin-bottom: 30px; /* Khoảng cách giữa các hàng */
@@ -153,6 +107,136 @@
             min-width: 40px; /* Chiều rộng tối thiểu cho nút */
             height: 40px; /* Chiều cao cố định cho nút */
         }
+
+        .content {
+            padding-bottom: 70px; /* Ensure body content doesn't overlap with footer */
+        }
+        /* Additional styles for the slider, case buttons, and popup */
+        .slider-container {
+            margin-top: 20px;
+        }
+
+        .case-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+            .case-buttons button {
+                margin: 0 5px;
+                padding: 5px 10px;
+                cursor: pointer;
+                border: 1px solid #ccc;
+                background-color: #f0f0f0;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
+
+                .case-buttons button:hover {
+                    background-color: #ddd;
+                }
+
+        #price-slider {
+            margin: 20px;
+        }
+        /* Additional styles for the slider, case buttons, and popup */
+        .slider-container {
+            margin-top: 20px;
+        }
+
+        .case-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+            .case-buttons button {
+                margin: 0 5px;
+                padding: 6px 8px; /* Tăng padding để ô lớn hơn */
+                cursor: pointer;
+                border: 1px solid #ccc;
+                background-color: #f0f0f0;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
+
+                .case-buttons button:hover {
+                    background-color: cornflowerblue;
+                }
+
+
+        /* Popup modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px; /* Tăng padding để có thêm không gian bên trong */
+            border-radius: 8px;
+            width: 600px; /* Tăng width để cửa sổ lớn hơn */
+            max-width: 95%; /* Cải thiện để cửa sổ không vượt quá màn hình */
+            text-align: center;
+        }
+
+        .close-button {
+            background-color: red;
+            border-radius: 50%;
+            padding: 2px 4px; /* Padding nhỏ để bo tròn vừa đủ */
+            color: white;
+            cursor: pointer;
+            position: absolute; /* Đặt nút ở vị trí tuyệt đối */
+            top: 10px; /* Cách mép trên 10px */
+            right: 10px; /* Cách mép phải 10px */
+            width: 20px; /* Kích thước cố định cho nút */
+            height: 20px; /* Kích thước cố định cho nút */
+            display: flex; /* Sử dụng flexbox để căn giữa chữ X */
+            align-items: center; /* Căn giữa theo chiều dọc */
+            justify-content: center; /* Căn giữa theo chiều ngang */
+        }
+
+        .confirm-button {
+            margin-top: 20px;
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            .confirm-button:hover {
+                background-color: #45a049;
+            }
+
+        .selected-range {
+            margin-top: 10px;
+            font-weight: bold;
+            color: black;
+        }
+
+        .reset-button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: #f44336; /* Red color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            .reset-button:hover {
+                background-color: #e53935; /* Darker red for hover effect */
+            }
 
     </style>
 </head>
@@ -230,54 +314,101 @@
                 <button class="btn btn-primary" onclick="searchRooms()">Tìm Kiếm</button>
             </div>
         </div>
-        <!-- Search End -->
-        <!-- Filter Start -->
-        <div class="container-xxl py-5">
-            <div class="container">
+        <!-- Popup modal for distance filter -->
+        <div class="modal-overlay" id="distance-filter-modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="toggleDistanceModal(false)"> X </span>
+                <h4>Chọn khoảng cách</h4>
 
-                <div class="row g-4">
-                    <!-- Price Filter -->
-                    <div class="col-md-4">
-                        <h5 class="text-center">Giá tiền(VND)</h5>
-                        <div id="priceSlider"></div>
-                        <div class="d-flex justify-content-between">
-                            <span id="minPriceValue">500,000 VND</span>
-                            <span id="maxPriceValue">10,000,000 VND</span>
-                        </div>
-                    </div>
-
-                    <!-- Area Filter -->
-                    <div class="col-md-4">
-                        <h5 class="text-center">Diện tích(m²)</h5>
-                        <div id="areaSlider"></div>
-                        <div class="d-flex justify-content-between">
-                            <span id="minAreaValue">10 m²</span>
-                            <span id="maxAreaValue">100 m²</span>
-                        </div>
-                    </div>
-
-                    <!-- Status Filter -->
-                    <div class="col-md-4">
-                        <h5 class="text-center">Trạng thái phòng</h5>
-                        <div>
-                            <input type="checkbox" id="available" value="Đang cho thuê">
-                            <label for="available">Đang cho thuê</label><br>
-                            <input type="checkbox" id="vacant" value="Đang trống">
-                            <label for="vacant">Đang trống</label><br>
-                            <input type="checkbox" id="maintenance" value="Đang bảo trì">
-                            <label for="maintenance">Đang bảo trì</label><br>
-                            <input type="checkbox" id="futureVacant" value="Sắp trống">
-                            <label for="futureVacant">Sắp trống trong tương lai</label><br>
-                        </div>
-                    </div>
+                <!-- Case selection buttons for distance -->
+                <div class="case-buttons">
+                    <button onclick="setDistanceSliderCase(0,2 )">Dưới 2 km</button>
+                    <button onclick="setDistanceSliderCase(2, 4)">2 - 4 km</button>
+                    <button onclick="setDistanceSliderCase(4, 6)">4 - 6 km</button>
+                    <button onclick="setDistanceSliderCase(6, 8)">6 - 8 km</button>
+                    <button onclick="setDistanceSliderCase(8, 10)">8 - 10 km</button>
+                    <button onclick="setDistanceSliderCase(10, 20)">Trên 10 km</button>
                 </div>
 
-                <div class="text-center mt-4">
-                    <button class="btn btn-primary rounded-0 py-2 px-4" type="button" onclick="filterRooms()">Lọc</button>
+                <!-- Slider element for distance -->
+                <div id="distance-slider"></div>
+
+                <!-- Display for the slider min and max values -->
+                <div class="slider-values">
+                    <span id="slider-distance-min-value">0</span> - <span id="slider-distance-max-value">0</span> km
                 </div>
+
+                <!-- Confirm button to apply the selected distance range -->
+                <button class="confirm-button" onclick="confirmDistanceSelection()">Xác nhận</button>
             </div>
         </div>
-        <!-- Filter End -->
+        <!-- Button that opens the popup and displays the selected range -->
+        <button class="selected-range" id="selected-price-range" onclick="toggleModal(true)">Chọn mức giá</button>
+
+        <!-- Popup modal for price filter -->
+        <div class="modal-overlay" id="price-filter-modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="toggleModal(false)"> X </span>
+                <h4>Chọn mức giá</h4>
+
+                <!-- Case selection buttons -->
+                <div class="case-buttons">
+                    <button onclick="setSliderCase(0, 1000000)">Dưới 1 triệu</button>
+                    <button onclick="setSliderCase(1000000, 2000000)">1 - 2 triệu</button>
+                    <button onclick="setSliderCase(2000000, 4000000)">2 - 4 triệu</button>
+                    <button onclick="setSliderCase(4000000, 6000000)">4 - 6 triệu</button>
+                    <button onclick="setSliderCase(6000000, 8000000)">6 - 8 triệu</button>
+                    <button onclick="setSliderCase(8000000, 10000000)">8 - 10 triệu</button>
+                    <button onclick="setSliderCase(10000000, 20000000)">Trên 10 triệu</button>
+                </div>
+
+                <!-- Slider element -->
+                <div id="price-slider"></div>
+
+                <!-- Display for the slider min and max values -->
+                <div class="slider-values">
+                    <span id="slider-min-value">0</span> - <span id="slider-max-value">0</span> VND
+                </div>
+
+                <!-- Confirm button to apply the selected price range -->
+                <button class="confirm-button" onclick="confirmSelection()">Xác nhận</button>
+            </div>
+        </div>
+        <!-- Button that opens the popup and displays the selected area -->
+        <button class="selected-range" id="selected-area-range" onclick="toggleAreaModal(true)">Chọn diện tích</button>
+
+        <!-- Popup modal for area filter -->
+        <div class="modal-overlay" id="area-filter-modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="toggleAreaModal(false)"> X </span>
+                <h4>Chọn diện tích</h4>
+
+                <!-- Case selection buttons for area -->
+                <div class="case-buttons">
+                    <button onclick="setAreaSliderCase(0, 10)">Dưới 10 m²</button>
+                    <button onclick="setAreaSliderCase(10, 30)">10 - 30 m²</button>
+                    <button onclick="setAreaSliderCase(30, 50)">30 - 50 m²</button>
+                    <button onclick="setAreaSliderCase(50, 70)">50 - 70 m²</button>
+                    <button onclick="setAreaSliderCase(70, 90)">70 - 90 m²</button>
+                    <button onclick="setAreaSliderCase(90, 100)">Trên 90 m²</button>
+                </div>
+
+                <!-- Slider element for area -->
+                <div id="area-slider"></div>
+
+                <!-- Display for the slider min and max values -->
+                <div class="slider-values">
+                    <span id="slider-area-min-value">0</span> - <span id="slider-area-max-value">0</span> m²
+                </div>
+
+                <!-- Confirm button to apply the selected area range -->
+                <button class="confirm-button" onclick="confirmAreaSelection()">Xác nhận</button>
+            </div>
+        </div>
+        <!-- Button that opens the popup and displays the selected distance -->
+        <button class="selected-range" id="selected-distance-range" onclick="toggleDistanceModal(true)">Chọn khoảng cách</button>
+        <!-- Reset button for resetting to default values -->
+        <button class="reset-button" onclick="resetValues()">Đặt lại</button>
         <div class="container">
             <!-- Sort Section -->
             <div class="sort-section mb-4">
@@ -287,176 +418,156 @@
                     <option value="price-desc">Giá Giảm Dần</option>
                     <option value="area-asc">Diện Tích Tăng Dần</option>
                     <option value="area-desc">Diện Tích Giảm Dần</option>
-                    <option value="date-new">Ngày Tạo Mới Nhất</option>
-                    <option value="date-old">Ngày Tạo Cũ Nhất</option>
+                    <option value="date-new">Khoảng cách tăng dần</option>
+                    <option value="date-old">Khoảng cách giảm dần</option>
                 </select>
                 <button class="btn btn-primary">Sắp Xếp</button>
             </div>
         </div>
-
-        <div class="container-xxl py-5 content">
-            <div class="container">
-                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                    <h6 class="section-title text-center text-primary text-uppercase">Danh sách phòng</h6>
-                </div>
-                <div class="row">
-                    <!-- Room Card Start -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="room-item shadow rounded overflow-hidden">
-                            <div class="position-relative">
-                                <img class="img-fluid" src="~/images/room1.jpg" alt="Room Image">
-                            </div>
-                            <div class="room-details p-3">
-                                <h5 class="mb-2">
-                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 160 Thôn 9, Thạch Hòa, Thạch Thất, Hà Nội
-                                </h5>
-                                <div class="room-status">Đang trống</div>
-                                <div class="d-flex justify-content-between">
-                                    <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>500000 VND</small>
-                                    <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>30 m²</small>
-                                    <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Room Card End -->
-                    <!-- Thêm 5 phòng khác ở đây -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="room-item shadow rounded overflow-hidden">
-                            <div class="position-relative">
-                                <img class="img-fluid" src="~/images/room2.jpg" alt="Room Image">
-                            </div>
-                            <div class="room-details p-3">
-                                <h5 class="mb-2">
-                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 10 Thôn 4, Tân Xã, Thạch Thất, Hà Nội
-                                </h5>
-                                <div class="room-status">Đang trống</div>
-                                <div class="d-flex justify-content-between">
-                                    <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>700000 VND</small>
-                                    <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>35 m²</small>
-                                    <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="room-item shadow rounded overflow-hidden">
-                            <div class="position-relative">
-                                <img class="img-fluid" src="~/images/room3.jpg" alt="Room Image">
-                            </div>
-                            <div class="room-details p-3">
-                                <h5 class="mb-2">
-                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 35 Thôn 5, Tân Xã, Thạch Thất, Hà Nội
-                                </h5>
-                                <div class="room-status">Đang trống</div>
-                                <div class="d-flex justify-content-between">
-                                    <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>600000 VND</small>
-                                    <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>40 m²</small>
-                                    <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="room-item shadow rounded overflow-hidden">
-                            <div class="position-relative">
-                                <img class="img-fluid" src="~/images/room4.jpg" alt="Room Image">
-                            </div>
-                            <div class="room-details p-3">
-                                <h5 class="mb-2">
-                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 110 Thôn 4, Tân Xã, Thạch Thất, Hà Nội
-                                </h5>
-                                <div class="room-status">Đang trống</div>
-                                <div class="d-flex justify-content-between">
-                                    <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>550000 VND</small>
-                                    <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>32 m²</small>
-                                    <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="room-item shadow rounded overflow-hidden">
-                            <div class="position-relative">
-                                <img class="img-fluid" src="~/images/room2.jpg" alt="Room Image">
-                            </div>
-                            <div class="room-details p-3">
-                                <h5 class="mb-2">
-                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 117 Thôn 6, Thạch Hòa, Thạch Thất, Hà Nội
-                                </h5>
-                                <div class="room-status">Đang trống</div>
-                                <div class="d-flex justify-content-between">
-                                    <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>700000 VND</small>
-                                    <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>35 m²</small>
-                                    <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="room-item shadow rounded overflow-hidden">
-                            <div class="position-relative">
-                                <img class="img-fluid" src="~/images/room3.jpg" alt="Room Image">
-                            </div>
-                            <div class="room-details p-3">
-                                <h5 class="mb-2">
-                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 30 Thôn 5, Thạch Hòa, Thạch Thất, Hà Nội
-                                </h5>
-                                <div class="room-status">Đang trống</div>
-                                <div class="d-flex justify-content-between">
-                                    <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>600000 VND</small>
-                                    <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>40 m²</small>
-                                    <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="room-item shadow rounded overflow-hidden">
-                            <div class="position-relative">
-                                <img class="img-fluid" src="~/images/room4.jpg" alt="Room Image">
-                            </div>
-                            <div class="room-details p-3">
-                                <h5 class="mb-2">
-                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 115 Thôn 5, Tân Xã, Thạch Thất, Hà Nội
-                                </h5>
-                                <div class="room-status">Đang trống</div>
-                                <div class="d-flex justify-content-between">
-                                    <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>550000 VND</small>
-                                    <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>32 m²</small>
-                                    <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                   
-                    
-                    <!-- Room Card End -->
+        <!-- Filter Start -->
+        <div class="container-xxl py-5">
+            <!-- Status Filter -->
+            <div class="col-md-4">
+                <h5 class="text-center">Trạng thái phòng</h5>
+                <div>
+                    <input type="checkbox" id="vacant" value="Đang trống">
+                    <label for="vacant">Đang trống</label><br>
+                    <input type="checkbox" id="futureVacant" value="Sắp trống">
+                    <label for="futureVacant">Sắp trống trong tương lai</label><br>
                 </div>
             </div>
-        </div>
-        <!-- Room End -->
-        <!-- Footer Start -->
-        <div class="container-fluid bg-dark text-light footer wow fadeIn" data-wow-delay="0.1s">
-            <div class="container">
-                <div class="copyright">
-                    <div class="row">
-                        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                            &copy; <a class="border-bottom" href="#">RMS</a>, All Right Reserved.
-                        </div>
-                    </div>
-                </div>
+            <div class="text-center mt-4">
+                <button class="btn btn-primary rounded-0 py-2 px-4" type="button" onclick="filterRooms()">Lọc</button>
             </div>
         </div>
-        <!-- Footer End -->
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
+    <!-- Filter End -->
+
+
+    <div class="container-xxl py-5 content">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title text-center text-primary text-uppercase">Danh sách phòng</h6>
+            </div>
+            <div class="row">
+                <!-- Room Card Start -->
+                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="room-item shadow rounded overflow-hidden">
+                        <div class="position-relative">
+                            <img class="img-fluid" src="~/images/room1.jpg" alt="Room Image">
+                        </div>
+                        <div class="room-details p-3">
+                            <h5 class="mb-2">
+                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 160 Thôn 9, Thạch Hòa, Thạch Thất, Hà Nội
+                            </h5>
+                            <div class="room-status">Đang trống</div>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>500000 VND</small>
+                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>30 m²</small>
+                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Room Card End -->
+                <!-- Thêm 5 phòng khác ở đây -->
+                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="room-item shadow rounded overflow-hidden">
+                        <div class="position-relative">
+                            <img class="img-fluid" src="~/images/room2.jpg" alt="Room Image">
+                        </div>
+                        <div class="room-details p-3">
+                            <h5 class="mb-2">
+                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 10 Thôn 4, Tân Xã, Thạch Thất, Hà Nội
+                            </h5>
+                            <div class="room-status">Đang trống</div>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>700000 VND</small>
+                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>35 m²</small>
+                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="room-item shadow rounded overflow-hidden">
+                        <div class="position-relative">
+                            <img class="img-fluid" src="~/images/room3.jpg" alt="Room Image">
+                        </div>
+                        <div class="room-details p-3">
+                            <h5 class="mb-2">
+                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 35 Thôn 5, Tân Xã, Thạch Thất, Hà Nội
+                            </h5>
+                            <div class="room-status">Đang trống</div>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>600000 VND</small>
+                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>40 m²</small>
+                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="room-item shadow rounded overflow-hidden">
+                        <div class="position-relative">
+                            <img class="img-fluid" src="~/images/room3.jpg" alt="Room Image">
+                        </div>
+                        <div class="room-details p-3">
+                            <h5 class="mb-2">
+                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 30 Thôn 5, Thạch Hòa, Thạch Thất, Hà Nội
+                            </h5>
+                            <div class="room-status">Đang trống</div>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>600000 VND</small>
+                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>40 m²</small>
+                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="room-item shadow rounded overflow-hidden">
+                        <div class="position-relative">
+                            <img class="img-fluid" src="~/images/room4.jpg" alt="Room Image">
+                        </div>
+                        <div class="room-details p-3">
+                            <h5 class="mb-2">
+                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 115 Thôn 5, Tân Xã, Thạch Thất, Hà Nội
+                            </h5>
+                            <div class="room-status">Đang trống</div>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>550000 VND</small>
+                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>32 m²</small>
+                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Room Card End -->
+            </div>
+        </div>
+    </div>
+    <!-- Room End -->
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light footer wow fadeIn" data-wow-delay="0.1s">
+        <div class="container">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="#">RMS</a>, All Right Reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
 
     <!-- JavaScript Libraries -->
     <script src="~/lib/jquery/jquery.min.js"></script>
@@ -467,136 +578,158 @@
     <script src="~/lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="~/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
-    <!-- Template Javascript -->
-    <script src="~/js/main.js"></script>
-
+    <!-- JavaScript for noUiSlider and modal control -->
     <script>
-        // Populate Provinces on load
-        window.onload = function () {
-            fetchProvinces();
-        };
+        // Initialize the noUiSlider
+        const priceSlider = document.getElementById('price-slider');
 
-        // Fetch and populate provinces
-        function fetchProvinces() {
-            fetch('/api/address/getProvinces')
-                .then(res => res.json())
-                .then(data => {
-                    let provinceSelect = document.getElementById('province');
-                    data.forEach(province => {
-                        provinceSelect.innerHTML += `<option value="${province.id}">${province.name}</option>`;
-                    });
-                });
-        }
-
-        // Fetch and populate districts based on province selection
-        function updateDistricts() {
-            let provinceId = document.getElementById('province').value;
-            let districtSelect = document.getElementById('district');
-            districtSelect.disabled = true;
-            document.getElementById('commune').disabled = true;
-
-            if (provinceId) {
-                fetch(`/api/address/getDistricts/${provinceId}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện/Thị Xã</option>';
-                        data.forEach(district => {
-                            districtSelect.innerHTML += `<option value="${district.id}">${district.name}</option>`;
-                        });
-                        districtSelect.disabled = false;
-                    });
-            }
-        }
-
-        // Fetch and populate communes based on district selection
-        function updateCommunes() {
-            let districtId = document.getElementById('district').value;
-            let communeSelect = document.getElementById('commune');
-            communeSelect.disabled = true;
-
-            if (districtId) {
-                fetch(`/api/address/getWards/${districtId}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        communeSelect.innerHTML = '<option value="">Chọn Xã/Phường/Thị Trấn</option>';
-                        data.forEach(commune => {
-                            communeSelect.innerHTML += `<option value="${commune.id}">${commune.name}</option>`;
-                        });
-                        communeSelect.disabled = false;
-                    });
-            }
-        }
-
-        // Search function that captures selected values
-        function searchRooms() {
-            let provinceId = document.getElementById('province').value;
-            let districtId = document.getElementById('district').value;
-            let communeId = document.getElementById('commune').value;
-
-            console.log('Searching rooms with:', { provinceId, districtId, communeId });
-
-            // Implement search logic here, such as calling an API or redirecting with query params
-        }
-    </script>
-
-    <!-- Include noUiSlider JavaScript -->
-    <script>
-        // Price Slider
-        var priceSlider = document.getElementById('priceSlider');
         noUiSlider.create(priceSlider, {
-            start: [1000000, 2000000],
+            start: [1000000, 3000000], // Default range values
             connect: true,
             range: {
-                'min': 500000,
-                'max': 10000000
+                'min': 0,
+                'max': 20000000
+            },
+            step: 500000, // Step value for slider
+            format: {
+                to: (value) => Math.round(value),
+                from: (value) => Number(value)
             }
         });
 
-        priceSlider.noUiSlider.on('update', function (values, handle) {
-            // Làm tròn giá trị tới hàng trăm nghìn
-            const minValue = Math.round(values[0] / 100000) * 100000;
-            const maxValue = Math.round(values[1] / 100000) * 100000;
-
-            document.getElementById('minPriceValue').innerText = minValue.toLocaleString() + " VND";
-            document.getElementById('maxPriceValue').innerText = maxValue.toLocaleString() + " VND";
+        // Update the displayed min and max values
+        priceSlider.noUiSlider.on('update', (values) => {
+            document.getElementById('slider-min-value').textContent = values[0];
+            document.getElementById('slider-max-value').textContent = values[1];
         });
 
-        // Area Slider
-        var areaSlider = document.getElementById('areaSlider');
-        noUiSlider.create(areaSlider, {
-            start: [10, 100],
-            connect: true,
-            range: {
-                'min': 10,
-                'max': 100
-            }
-        });
-
-        areaSlider.noUiSlider.on('update', function (values, handle) {
-            document.getElementById('minAreaValue').innerText = Math.round(values[0]) + " m²";
-            document.getElementById('maxAreaValue').innerText = Math.round(values[1]) + " m²";
-        });
-
-        // Function to filter rooms
-        function filterRooms() {
-            // Get the values from the sliders and checkboxes
-            var minPrice = priceSlider.noUiSlider.get()[0];
-            var maxPrice = priceSlider.noUiSlider.get()[1];
-            var minArea = areaSlider.noUiSlider.get()[0];
-            var maxArea = areaSlider.noUiSlider.get()[1];
-
-            var status = [];
-            if (document.getElementById('available').checked) status.push(document.getElementById('available').value);
-            if (document.getElementById('vacant').checked) status.push(document.getElementById('vacant').value);
-            if (document.getElementById('maintenance').checked) status.push(document.getElementById('maintenance').value);
-            if (document.getElementById('futureVacant').checked) status.push(document.getElementById('futureVacant').value);
-
-            // Call your API with these parameters
-            console.log('Filtering rooms with:', { minPrice, maxPrice, minArea, maxArea, status });
-            // Implement the API call to filter rooms
+        // Function to set slider to specific case
+        function setSliderCase(min, max) {
+            priceSlider.noUiSlider.set([min, max]);
         }
-    </script>
 
+        // Function to toggle the modal visibility
+        function toggleModal(show) {
+            const modal = document.getElementById('price-filter-modal');
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
+        // Function to confirm the selection and display it
+        function confirmSelection() {
+            const minValue = priceSlider.noUiSlider.get()[0];
+            const maxValue = priceSlider.noUiSlider.get()[1];
+            document.getElementById('selected-price-range').textContent = `${minValue} - ${maxValue} VND`;
+            toggleModal(false); // Close the modal after confirming
+        }
+        // Initialize the noUiSlider for area selection
+        const areaSlider = document.getElementById('area-slider');
+
+        // Create the area slider
+        noUiSlider.create(areaSlider, {
+            start: [10, 50], // Default range values for area
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 100 // Set maximum value for area as needed
+            },
+            step: 5, // Step value for slider
+            format: {
+                to: (value) => Math.round(value), // Round value for display
+                from: (value) => Number(value) // Convert back to number
+            }
+        });
+
+        // Update the displayed min and max values when the area slider is adjusted
+        areaSlider.noUiSlider.on('update', (values) => {
+            document.getElementById('slider-area-min-value').textContent = `${Math.round(values[0])}`;
+            document.getElementById('slider-area-max-value').textContent = `${Math.round(values[1])}`;
+        });
+
+        // Function to set the area slider to a specific case when a case button is clicked
+        function setAreaSliderCase(min, max) {
+            areaSlider.noUiSlider.set([min, max]);
+        }
+
+        // Function to toggle the area modal visibility
+        function toggleAreaModal(show) {
+            const modal = document.getElementById('area-filter-modal');
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
+        // Function to confirm the selection and display it on the button
+        function confirmAreaSelection() {
+            const minAreaValue = Math.round(areaSlider.noUiSlider.get()[0]);
+            const maxAreaValue = Math.round(areaSlider.noUiSlider.get()[1]);
+            document.getElementById('selected-area-range').textContent = ` ${minAreaValue} - ${maxAreaValue} m²`;
+            toggleAreaModal(false); // Close the modal after confirming
+        }
+        // Initialize the noUiSlider for distance selection
+        const distanceSlider = document.getElementById('distance-slider');
+
+        // Create the distance slider
+        noUiSlider.create(distanceSlider, {
+            start: [0, 5], // Default range values for distance
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 20 // Set maximum value for distance
+            },
+            step: 1, // Step value for slider
+            format: {
+                to: (value) => Math.round(value), // Round value for display
+                from: (value) => Number(value) // Convert back to number
+            }
+        });
+
+        // Update the displayed min and max values when the distance slider is adjusted
+        distanceSlider.noUiSlider.on('update', (values) => {
+            document.getElementById('slider-distance-min-value').textContent = `${Math.round(values[0])}`;
+            document.getElementById('slider-distance-max-value').textContent = `${Math.round(values[1])}`;
+        });
+
+        // Function to set the distance slider to a specific case when a case button is clicked
+        function setDistanceSliderCase(min, max) {
+            distanceSlider.noUiSlider.set([min, max]);
+        }
+
+        // Function to toggle the distance modal visibility
+        function toggleDistanceModal(show) {
+            const modal = document.getElementById('distance-filter-modal');
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
+        // Function to confirm the selection and display it on the button
+        function confirmDistanceSelection() {
+            const minDistanceValue = Math.round(distanceSlider.noUiSlider.get()[0]);
+            const maxDistanceValue = Math.round(distanceSlider.noUiSlider.get()[1]);
+            document.getElementById('selected-distance-range').textContent = `${minDistanceValue} - ${maxDistanceValue} km`;
+            toggleDistanceModal(false); // Close the modal after confirming
+        }
+        // Function to reset all sliders to default values
+        function resetValues() {
+            // Reset price slider to default values
+            priceSlider.noUiSlider.set([1000000, 3000000]); // Default price range
+            document.getElementById('slider-min-value').textContent = '1000000';
+            document.getElementById('slider-max-value').textContent = '3000000';
+            document.getElementById('selected-price-range').textContent = 'Chọn mức giá';
+
+            // Reset area slider to default values
+            areaSlider.noUiSlider.set([10, 50]); // Default area range
+            document.getElementById('slider-area-min-value').textContent = '10';
+            document.getElementById('slider-area-max-value').textContent = '50';
+            document.getElementById('selected-area-range').textContent = 'Chọn diện tích';
+
+            // Reset distance slider to default values
+            distanceSlider.noUiSlider.set([0, 5]); // Default distance range
+            document.getElementById('slider-distance-min-value').textContent = '0';
+            document.getElementById('slider-distance-max-value').textContent = '5';
+            document.getElementById('selected-distance-range').textContent = 'Chọn khoảng cách';
+        }
+
+        // Call the resetValues function when the reset button is clicked
+        document.getElementById('reset-button').addEventListener('click', resetValues);
+
+    </script>
 </body>
 
 </html>

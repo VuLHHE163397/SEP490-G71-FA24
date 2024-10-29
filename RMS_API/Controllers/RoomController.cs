@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RMS_API.Models;
 
+
 namespace RMS_API.Controllers
 {
     [Route("api/Room")]
@@ -15,6 +16,7 @@ namespace RMS_API.Controllers
         {
             _context = context;
         }
+
 
         [HttpGet("getProvinces")]
         public async Task<IActionResult> GetProvinces()
@@ -53,6 +55,8 @@ namespace RMS_API.Controllers
 
             return Ok(rooms);
         }
+
+
 
     }
 }
