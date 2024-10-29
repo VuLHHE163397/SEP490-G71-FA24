@@ -1,4 +1,6 @@
-﻿@model IEnumerable<RMS_API.Models.Room>
+﻿@using RMS_API.DTOs
+@model IEnumerable<RMS_API.Models.Room>
+
 <!doctype html>
 <html lang="en">
 
@@ -8,15 +10,78 @@
     <title>RMS</title>
     <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
+    <style>
+
+        /* Sidebar styling */
+        .sidebar-submenu {
+            padding-left: 15px;
+            display: none;
+        }
+
+        .sidebar-sublink {
+            color: #6c757d;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+            .sidebar-sublink:hover {
+                color: #0d6efd;
+            }
+
+        /* Sidebar arrow rotation */
+        .rotate {
+            transform: rotate(180deg);
+            transition: transform 0.3s;
+        }
+
+        /* Table styling */
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Button styles */
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        /* Page wrapper styles */
+        .page-wrapper {
+            display: flex;
+        }
+
+        /* Main content area padding */
+        .body-wrapper {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        /* Header navbar icon */
+        .nav-icon-hover {
+            cursor: pointer;
+        }
+
+        /* Profile image in dropdown */
+        .navbar-nav .dropdown-menu img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+    </style>
 </head>
 
 <body>
-    <!--  Body Wrapper -->
+
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
-        <!-- Sidebar Start -->
+
         <aside class="left-sidebar">
-            <!-- Sidebar scroll-->
+
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a asp-controller="Statistic" asp-action="ViewStatistic" class="text-nowrap logo-img">
@@ -26,7 +91,7 @@
                         <i class="ti ti-x fs-8"></i>
                     </div>
                 </div>
-                <!-- Sidebar navigation-->
+
                 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
                     <ul id="sidebarnav">
                         <li class="nav-small-cap">
@@ -34,10 +99,8 @@
                             <span class="hide-menu">Trang chủ</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
+                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding">
+                                <span><i class="ti ti-layout-dashboard"></i></span>
                                 <span class="hide-menu">Trang chủ</span>
                             </a>
                         </li>
@@ -45,22 +108,33 @@
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">Quản lý</span>
                         </li>
-
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-building"></i>
-                                </span>
-                                <span class="hide-menu">Quản lý tòa nhà</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Room" asp-action="ListRoom" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-home"></i>
-                                </span>
+                            <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
+                                <span><i class="ti ti-layout-dashboard"></i></span>
                                 <span class="hide-menu">Quản lý phòng</span>
+                                <span><i class="ti ti-chevron-down"></i></span>
                             </a>
+                            <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
+                                @{
+                                    var buildingsss = ViewBag.Buildings as List<RMS_API.DTOs.BuildingDTO>;
+                                }
+                                @if (buildingsss != null && buildingsss.Any())
+                                {
+                                    foreach (var buildingss in buildingsss)
+                                    {
+                                        <li class="sidebar-subitem">
+                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
+                                                <i class="ti ti-file"></i>
+                                                @buildingss.Name
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                }
+                            </ul>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="./ui-buttons.html" aria-expanded="false">
@@ -78,6 +152,7 @@
                                 <span class="hide-menu">Dịch vụ</span>
                             </a>
                         </li>
+
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
                                 <span>
@@ -141,14 +216,13 @@
                         </div>
                     </div>
                 </nav>
-                <!-- End Sidebar navigation -->
+
             </div>
-            <!-- End Sidebar scroll-->
+
         </aside>
-        <!--  Sidebar End -->
-        <!--  Main wrapper -->
+
         <div class="body-wrapper">
-            <!--  Header Start -->
+
             <header class="app-header">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
@@ -194,71 +268,82 @@
 
                 </nav>
             </header>
-            <!--  Header End -->
-            <div class="container-fluid booking pb-5 wow fadeIn" data-wow-delay="0.1s">
+
+            <div class="container-fluid">
                 <div class="container">
-                    <div class="text-center wow fadeInUp">
-                        <h1 class="mb-5">Quản Lý Phòng </h1>
+                    <div class="text-center wow fadeInUp mb-5">
+                        <h1>Quản Lý Phòng</h1>
                     </div>
-                    <div class="container">
-                        <div class="bg-white shadow" style="padding: 35px;">
-                            <div class="col-md-10">
-                                <div class="row g-2">
-                                    <div class="col-md-3" style="margin-left: 52px">
-                                        <select id="statusFilter" class="form-select">
-                                            <!option value="" @(ViewBag.StatusId == null ? "selected" : "")>Trạng thái phòng</!option>
-                                            <!option value="1" @(ViewBag.StatusId == 1 ? "selected" : "")>Trống</!option>
-                                            <!option value="2" @(ViewBag.StatusId == 2 ? "selected" : "")>Không trống</!option>
-                                            <!option value="3" @(ViewBag.StatusId == 3 ? "selected" : "")>Đang sửa chữa</!option>
-                                            <!option value="4" @(ViewBag.StatusId == 4 ? "selected" : "")>Sắp hết hạn</!option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3" style="margin-left: 72px">
-                                        <select class="form-select">
-                                            <option selected>Trạng thái phí</option>
-                                            <option value="1">Đã đóng tiền</option>
-                                            <option value="2">Chưa đóng tiền</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3" style="margin-left: 92px">
-                                        <select id="buildingFilter" class="form-select">
-                                            <!option value="" @(ViewBag.BuildingId == null ? "selected" : "")>Tòa nhà</!option>
-                                            <!option value="1" @(ViewBag.BuildingId == 1 ? "selected" : "")>Tòa A</!option>
-                                            <!option value="2" @(ViewBag.BuildingId == 2 ? "selected" : "")>Tòa B</!option>
-                                            <!option value="3" @(ViewBag.BuildingId == 3 ? "selected" : "")>Tòa C</!option>
-                                            <!option value="4" @(ViewBag.BuildingId == 4 ? "selected" : "")>Tòa D</!option>
-                                        </select>
-                                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-3 offset-md-1">
+                            <div id="statusFilter" class="border p-3 rounded">
+                                <div class="form-check">
+                                    <label class="form-check-label" for="statusAll">
+                                        Trạng thái phòng
+                                    </label>
                                 </div>
+                                @foreach (var status in ViewBag.Status)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input status-checkbox" type="checkbox" id="status@status.Id" value="@status.Id"> <!-- Thêm value -->
+                                        <label class="form-check-label" for="status@status.Id">
+                                            @{
+                                                string statusNameInVietnamese;
+                                                switch (status.Name)
+                                                {
+                                                    case "Empty":
+                                                        statusNameInVietnamese = "Trống";
+                                                        break;
+                                                    case "Not Empty":
+                                                        statusNameInVietnamese = "Không trống";
+                                                        break;
+                                                    case "Repairing":
+                                                        statusNameInVietnamese = "Đang sửa chữa";
+                                                        break;
+                                                    case "About to be Empty":
+                                                        statusNameInVietnamese = "Sắp hết hạn";
+                                                        break;
+                                                    default:
+                                                        statusNameInVietnamese = status.Name;
+                                                        break;
+                                                }
+                                            }
+                                            @statusNameInVietnamese
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <select class="form-select">
+                                <option selected>Trạng thái phí</option>
+                                <option>Đã đóng tiền</option>
+                                <option>Chưa đóng tiền</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 offset-md-1 d-flex flex-column align-items-end">
+                            <div class="btn-group-vertical">
+                                <a class="btn btn-success mb-2" style="width: 200px;">
+                                    <i class="ti ti-upload"></i> Nhập phòng từ excel
+                                </a>
+                                <a class="btn btn-success mb-2" style="width: 200px;">
+                                    <i class="ti ti-user"></i> Khách thuê
+                                </a>
+                                <a class="btn btn-warning" style="width: 200px;">
+                                    <i class="ti ti-bed"></i> Thêm Phòng
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Room Start -->
+
+            @* Hiển thị đanh sách phòng *@
+
             <div class="container-xxl py-5">
                 <div class="container">
-                    <div class="bg-white shadow" style="padding: 35px;">
-                        <div class="col-md-10">
-                            <div class="row g-2 d-flex justify-content-between">
-                                <div class="col-md-3">
-                                    <a class="btn btn-success" style="display:inline-block">
-                                        <i class="ti ti-upload" style="margin-right: 5px;"></i> Nhập phòng từ excel
-                                    </a>
-                                </div>
-                                <div class="col-md-3">
-                                    <a class="btn btn-warning" style="display:inline-block">
-                                        <i class="ti ti-bed" style="margin-right: 5px;"></i> Thêm Phòng
-                                    </a>
-                                </div>
-                                <div class="col-md-3">
-                                    <a class="btn btn-success" style="display:inline-block">
-                                        <i class="ti ti-user" style="margin-right: 5px;"></i> Khách thuê
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row g-4 mt-4">
                         @foreach (var room in Model)
                         {
@@ -272,12 +357,10 @@
                                     </div>
                                     <div class="p-4 mt-2">
                                         <div class="row g-3">
-                                            <!-- Price of Room -->
                                             <div class="ti ti-coin">
                                                 Giá phòng: @room.Price VND
                                             </div>
                                             <div class="ti ti-user">
-                                                <!-- Các thông tin khác nếu có -->
                                             </div>
                                         </div>
                                         <div class="d-flex justify-content-between mt-4">
@@ -291,36 +374,17 @@
                     </div>
                 </div>
             </div>
-            <!-- Room End -->
         </div>
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="~/js/sidebarmenu.js"></script>
-        <script src="~/js/app.min.js"></script>
-        <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
-        <script src="~/lib/simplebar/dist/simplebar.js"></script>
-        <script src="~/js/dashboard.js"></script>
-        @*         <script>
-        $(document).ready(function () {
-        // Khi người dùng thay đổi trạng thái phòng
-        $('#statusFilter').change(function () {
-        filterRooms();
-        });
+        <script>
 
-        // Khi người dùng thay đổi tòa nhà
-        $('#buildingFilter').change(function () {
-        filterRooms();
-        });
 
-        function filterRooms() {
-        var statusId = $('#statusFilter').val();
-        var buildingId = $('#buildingFilter').val();
+            function toggleSubmenu(event) {
+                event.preventDefault();
+                var submenu = event.currentTarget.nextElementSibling;
+                submenu.style.display = submenu.style.display === "none" ? "block" : "none";
+            }
 
-        var url = '@Url.Action("ListRoom", "Room")';
-        window.location.href = url + '?statusId=' + statusId + '&buildingId=' + buildingId;
-        }
-        });
-        </script> *@
+        </script>
+
 </body>
-
 </html>

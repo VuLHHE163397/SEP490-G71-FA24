@@ -34,25 +34,36 @@
                             <span class="hide-menu">Trang chủ</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
+                            <a class="sidebar-link" aria-expanded="false" onclick="toggleSubmenu(event)" asp-controller="Building" asp-action="ListBuilding">
+                                <span><i class="ti ti-layout-dashboard"></i></span>
                                 <span class="hide-menu">Trang chủ</span>
+                                <span><i class="ti ti-chevron-down"></i></span>
                             </a>
+                            <ul class="sidebar-submenu" style="display: none; list-style-type: none; padding-left: 20px;">
+                                @{
+                                    var buildings = ViewBag.Buildings as List<RMS_API.DTOs.BuildingDTO>;
+                                }
+                                @if (buildings != null && buildings.Any())
+                                {
+                                    foreach (var building in buildings)
+                                    {
+                                        <li class="sidebar-subitem">
+                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@building.Id" class="sidebar-sublink">
+                                                <i class="ti ti-file"></i>
+                                                @building.Name
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                }
+                            </ul>
                         </li>
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">Quản lý</span>
-                        </li>
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-building"></i>
-                                </span>
-                                <span class="hide-menu">Quản lý tòa nhà</span>
-                            </a>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Room" asp-action="ListRoom" aria-expanded="false">
@@ -78,6 +89,7 @@
                                 <span class="hide-menu">Dịch vụ</span>
                             </a>
                         </li>
+
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
                                 <span>
@@ -205,12 +217,12 @@
                             <div class="col-md-10">
                                 <div class="row g-2">
                                     <div class="col-md-3" style="margin-left: 52px">
-                                        <select class="form-select">
-                                            <option selected>Trạng thái phòng</option>
-                                            <option value="1">Trống</option>
-                                            <option value="2">Không trống</option>
-                                            <option value="3">Đang sửa chữa</option>
-                                            <option value="3">Sắp hết hạn</option>
+                                        <select id="statusFilter" class="form-select">
+                                            <!option value="" @(ViewBag.StatusId == null ? "selected" : "")>Trạng thái phòng</!option>
+                                            <!option value="1" @(ViewBag.StatusId == 1 ? "selected" : "")>Trống</!option>
+                                            <!option value="2" @(ViewBag.StatusId == 2 ? "selected" : "")>Không trống</!option>
+                                            <!option value="3" @(ViewBag.StatusId == 3 ? "selected" : "")>Đang sửa chữa</!option>
+                                            <!option value="4" @(ViewBag.StatusId == 4 ? "selected" : "")>Sắp hết hạn</!option>
                                         </select>
                                     </div>
                                     <div class="col-md-3" style="margin-left: 72px">
@@ -221,12 +233,12 @@
                                         </select>
                                     </div>
                                     <div class="col-md-3" style="margin-left: 92px">
-                                        <select class="form-select">
-                                            <option selected>Tòa nhà</option>
-                                            <option value="1">Tòa A</option>
-                                            <option value="2">Tòa B</option>
-                                            <option value="3">Tòa C</option>
-                                            <option value="4">Tòa D</option>
+                                        <select id="buildingFilter" class="form-select">
+                                            <!option value="" @(ViewBag.BuildingId == null ? "selected" : "")>Tòa nhà</!option>
+                                            <!option value="1" @(ViewBag.BuildingId == 1 ? "selected" : "")>Tòa A</!option>
+                                            <!option value="2" @(ViewBag.BuildingId == 2 ? "selected" : "")>Tòa B</!option>
+                                            <!option value="3" @(ViewBag.BuildingId == 3 ? "selected" : "")>Tòa C</!option>
+                                            <!option value="4" @(ViewBag.BuildingId == 4 ? "selected" : "")>Tòa D</!option>
                                         </select>
                                     </div>
                                 </div>
@@ -234,169 +246,73 @@
                         </div>
                     </div>
                 </div>
-                <!-- Room Start -->
-                <div class="container-xxl py-5">
-                    <div class="container">
-                        <div class="bg-white shadow" style="padding: 35px;">
-                            <div class="col-md-10">
-                                <div class="row g-2 d-flex justify-content-between">
-                                    <div class="col-md-3">
-                                        <a class="btn btn-success" style="display:inline-block">
-                                            <i class="ti ti-upload" style="margin-right: 5px;"></i> Nhập phòng từ excel
-                                        </a>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <a class="btn btn-warning" style="display:inline-block">
-                                            <i class="ti ti-bed" style="margin-right: 5px;"></i> Thêm Phòng
-                                        </a>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <a class="btn btn-success" style="display:inline-block">
-                                            <i class="ti ti-user" style="margin-right: 5px;"></i> Khách thuê
-                                        </a>
-                                    </div>
+            </div>
+            <!-- Room Start -->
+            <div class="container-xxl py-5">
+                <div class="container">
+                    <div class="bg-white shadow" style="padding: 35px;">
+                        <div class="col-md-10">
+                            <div class="row g-2 d-flex justify-content-between">
+                                <div class="col-md-3">
+                                    <a class="btn btn-success" style="display:inline-block">
+                                        <i class="ti ti-upload" style="margin-right: 5px;"></i> Nhập phòng từ excel
+                                    </a>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row g-4 mt-4">
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                                <div class="room-item shadow rounded overflow-hidden">
-                                    <div class="ti ti-home" style="padding: 10px 10px;float:left;width: 60%; font-size:20px">
-                                        1
-                                    </div>
-                                    <div class="position-relative">
-                                        <img class="img-fluid" src="~/images/room-1.jpg" alt="">
-                                    </div>
-                                    <div class="p-4 mt-2">
-                                        <div class="row g-3">
-                                            <div class="ti ti-coin"> </div>
-                                            <div class="ti ti-user"> </div>
-                                        </div>
-
-                                        <div class="d-flex justify-content-between mt-4">
-                                            <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">Chỉnh sửa</a>
-                                            <a class="btn btn-danger py-2 px-4">Xóa Phòng</a>
-                                        </div>
-                                    </div>
+                                <div class="col-md-3">
+                                    <a class="btn btn-warning" style="display:inline-block">
+                                        <i class="ti ti-bed" style="margin-right: 5px;"></i> Thêm Phòng
+                                    </a>
                                 </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                                <div class="room-item shadow rounded overflow-hidden">
-                                    <div class="ti ti-home" style="padding: 10px 10px;float:left;width: 60%; font-size:20px">
-                                        2
-                                    </div>
-                                    <div class="position-relative">
-                                        <img class="img-fluid" src="~/images/room-2.jpg" alt="">
-                                    </div>
-                                    <div class="p-4 mt-2">
-                                        <div class="row g-3">
-                                            <div class="ti ti-coin"> </div>
-                                            <div class="ti ti-user"> </div>
-                                        </div>
-
-                                        <div class="d-flex justify-content-between mt-4">
-                                            <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">Chỉnh sửa</a>
-                                            <a class="btn btn-danger py-2 px-4">Xóa Phòng</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.6s">
-                                <div class="room-item shadow rounded overflow-hidden">
-                                    <div class="ti ti-home" style="padding: 10px 10px;float:left;width: 60%; font-size:20px">
-                                        3
-                                    </div>
-                                    <div class="position-relative">
-                                        <img class="img-fluid" src="~/images/room-3.jpg" alt="">
-                                    </div>
-                                    <div class="p-4 mt-2">
-                                        <div class="row g-3">
-                                            <div class="ti ti-coin"> </div>
-                                            <div class="ti ti-user"> </div>
-                                        </div>
-
-                                        <div class="d-flex justify-content-between mt-4">
-                                            <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">Chỉnh sửa</a>
-                                            <a class="btn btn-danger py-2 px-4">Xóa Phòng</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.6s">
-                                <div class="room-item shadow rounded overflow-hidden">
-                                    <div class="ti ti-home" style="padding: 10px 10px;float:left;width: 60%; font-size:20px">
-                                        4
-                                    </div>
-                                    <div class="position-relative">
-                                        <img class="img-fluid" src="~/images/room-2.jpg" alt="">
-                                    </div>
-                                    <div class="p-4 mt-2">
-                                        <div class="row g-3">
-                                            <div class="ti ti-coin"> </div>
-                                            <div class="ti ti-user"> </div>
-                                        </div>
-
-                                        <div class="d-flex justify-content-between mt-4">
-                                            <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">Chỉnh sửa</a>
-                                            <a class="btn btn-danger py-2 px-4">Xóa Phòng</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                                <div class="room-item shadow rounded overflow-hidden">
-                                    <div class="ti ti-home" style="padding: 10px 10px;float:left;width: 60%; font-size:20px">
-                                        1
-                                    </div>
-                                    <div class="position-relative">
-                                        <img class="img-fluid" src="~/images/room-1.jpg" alt="">
-                                    </div>
-                                    <div class="p-4 mt-2">
-                                        <div class="row g-3">
-                                            <div class="ti ti-coin"> </div>
-                                            <div class="ti ti-user"> </div>
-                                        </div>
-
-                                        <div class="d-flex justify-content-between mt-4">
-                                            <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">Chỉnh sửa</a>
-                                            <a class="btn btn-danger py-2 px-4">Xóa Phòng</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                                <div class="room-item shadow rounded overflow-hidden">
-                                    <div class="ti ti-home" style="padding: 10px 10px;float:left;width: 60%; font-size:20px">
-                                        1
-                                    </div>
-                                    <div class="position-relative">
-                                        <img class="img-fluid" src="~/images/room-1.jpg" alt="">
-                                    </div>
-                                    <div class="p-4 mt-2">
-                                        <div class="row g-3">
-                                            <div class="ti ti-coin"> </div>
-                                            <div class="ti ti-user"> </div>
-                                        </div>
-
-                                        <div class="d-flex justify-content-between mt-4">
-                                            <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">Chỉnh sửa</a>
-                                            <a class="btn btn-danger py-2 px-4">Xóa Phòng</a>
-                                        </div>
-                                    </div>
+                                <div class="col-md-3">
+                                    <a class="btn btn-success" style="display:inline-block">
+                                        <i class="ti ti-user" style="margin-right: 5px;"></i> Khách thuê
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="row g-4 mt-4">
+                        @foreach (var room in Model)
+                        {
+                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                                <div class="room-item shadow rounded overflow-hidden">
+                                    <div class="ti ti-home" style="padding: 10px 10px;float:left;width: 60%; font-size:20px">
+                                        @room.RoomNumber
+                                    </div>
+                                    <div class="position-relative">
+                                        <img class="img-fluid" src="~/images/room-1.jpg" alt="">
+                                    </div>
+                                    <div class="p-4 mt-2">
+                                        <div class="row g-3">
+                                            <!-- Price of Room -->
+                                            <div class="ti ti-coin">
+                                                Giá phòng: @room.Price VND
+                                            </div>
+                                            <div class="ti ti-user">
+                                                <!-- Các thông tin khác nếu có -->
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between mt-4">
+                                            <a class="btn btn-sm btn-primary rounded py-2 px-4">Chỉnh sửa</a>
+                                            <a class="btn btn-danger py-2 px-4">Xóa Phòng</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
                 </div>
-                <!-- Room End -->
             </div>
-            <script src="~/lib/jquery/dist/jquery.min.js"></script>
-            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-            <script src="~/js/sidebarmenu.js"></script>
-            <script src="~/js/app.min.js"></script>
-            <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
-            <script src="~/lib/simplebar/dist/simplebar.js"></script>
-            <script src="~/js/dashboard.js"></script>
+            <!-- Room End -->
+        </div>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/sidebarmenu.js"></script>
+        <script src="~/js/app.min.js"></script>
+        <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
+        <script src="~/lib/simplebar/dist/simplebar.js"></script>
+        <script src="~/js/dashboard.js"></script>
+
 </body>
 
 </html>

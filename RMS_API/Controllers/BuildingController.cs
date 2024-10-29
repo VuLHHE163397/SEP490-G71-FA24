@@ -33,7 +33,7 @@ namespace RMS_API.Controllers
                     Id = b.Id,
                     Name = b.Name,
                     TotalFloors = b.TotalFloors,
-                    NumberOfRooms = b.NumberOfRooms,
+                    NumberOfRooms = (int)b.NumberOfRooms,
                     CreatedDate = b.CreatedDate,
                     UpdatedDate = b.UpdatedDate,
                     ProvinceName = b.Province.Name,
@@ -85,86 +85,86 @@ namespace RMS_API.Controllers
             return Ok(wards);
         }
 
-   
 
-       [HttpPost("AddBuilding")]
-public async Task<IActionResult> AddBuilding([FromBody] AddBuildingDTO buildingDto)
-{
-    if (!ModelState.IsValid)
-    {
-        return BadRequest(ModelState);
-    }
 
-    // Tìm Province
-    var province = await _context.Provinces
-        .FirstOrDefaultAsync(p => p.Name.Equals(buildingDto.ProvinceName));
+        [HttpPost("AddBuilding")]
+        public async Task<IActionResult> AddBuilding([FromBody] AddBuildingDTO buildingDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-    if (province == null)
-    {
-        return BadRequest($"Tinh/Thanh pho '{buildingDto.ProvinceName}' not found.");
-    }
+            // Tìm Province
+            var province = await _context.Provinces
+                .FirstOrDefaultAsync(p => p.Name.Equals(buildingDto.ProvinceName));
 
-    // Tìm District
-    var district = await _context.Districts
-        .FirstOrDefaultAsync(d => d.Name.Equals(buildingDto.DistrictName) && d.ProvincesId == province.Id);
+            if (province == null)
+            {
+                return BadRequest($"Tinh/Thanh pho '{buildingDto.ProvinceName}' not found.");
+            }
 
-    if (district == null)
-    {
-        return BadRequest($"District '{buildingDto.DistrictName}' not found in province '{buildingDto.ProvinceName}'.");
-    }
+            // Tìm District
+            var district = await _context.Districts
+                .FirstOrDefaultAsync(d => d.Name.Equals(buildingDto.DistrictName) && d.ProvincesId == province.Id);
 
-    // Tìm Ward
-    var ward = await _context.Wards
-        .FirstOrDefaultAsync(w => w.Name.Equals(buildingDto.WardName) && w.DistrictId == district.Id);
+            if (district == null)
+            {
+                return BadRequest($"District '{buildingDto.DistrictName}' not found in province '{buildingDto.ProvinceName}'.");
+            }
 
-    if (ward == null)
-    {
-        return BadRequest($"Ward '{buildingDto.WardName}' not found in district '{buildingDto.DistrictName}'.");
-    }
+            // Tìm Ward
+            var ward = await _context.Wards
+                .FirstOrDefaultAsync(w => w.Name.Equals(buildingDto.WardName) && w.DistrictId == district.Id);
 
-    // Tìm BuildingStatus 
-    var buildingStatus = await _context.BuildingStatuses
-        .FirstOrDefaultAsync(bs => bs.Name.Equals(buildingDto.BuildingStatus));
+            if (ward == null)
+            {
+                return BadRequest($"Ward '{buildingDto.WardName}' not found in district '{buildingDto.DistrictName}'.");
+            }
 
-    if (buildingStatus == null)
-    {
-        return BadRequest($"Building status '{buildingDto.BuildingStatus}' not found.");
-    }
+            // Tìm BuildingStatus 
+            var buildingStatus = await _context.BuildingStatuses
+                .FirstOrDefaultAsync(bs => bs.Name.Equals(buildingDto.BuildingStatus));
 
-    // Tìm hoặc tạo địa chỉ mới
-    var address = new Address
-    {
-        Information = buildingDto.AddressDetails,
-        DistrictId = district.Id,
-        WardId = ward.Id,
-        ProvinceId = province.Id
-    };
-    _context.Addresses.Add(address);
-    await _context.SaveChangesAsync();
+            if (buildingStatus == null)
+            {
+                return BadRequest($"Building status '{buildingDto.BuildingStatus}' not found.");
+            }
 
-    // Tạo đối tượng Building mới
-    var building = new Building
-    {
-        Name = buildingDto.Name,
-        TotalFloors = buildingDto.TotalFloors,
-        NumberOfRooms = buildingDto.NumberOfRooms,
-        CreatedDate = DateTime.UtcNow,
-        UpdatedDate = DateTime.UtcNow,
-        ProvinceId = province.Id,
-        DistrictId = district.Id,
-        WardId = ward.Id,
-        AddressId = address.Id,
-        BuildingStatusId = buildingStatus.Id,
-        UserId = 2
-        
-    };
+            // Tìm hoặc tạo địa chỉ mới
+            var address = new Address
+            {
+                Information = buildingDto.AddressDetails,
+                DistrictId = district.Id,
+                WardId = ward.Id,
+                ProvinceId = province.Id
+            };
+            _context.Addresses.Add(address);
+            await _context.SaveChangesAsync();
 
-    // Thêm tòa nhà vào cơ sở dữ liệu
-    _context.Buildings.Add(building);
-    await _context.SaveChangesAsync();
+            // Tạo đối tượng Building mới
+            var building = new Building
+            {
+                Name = buildingDto.Name,
+                TotalFloors = buildingDto.TotalFloors,
+                NumberOfRooms = buildingDto.NumberOfRooms,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow,
+                ProvinceId = province.Id,
+                DistrictId = district.Id,
+                WardId = ward.Id,
+                AddressId = address.Id,
+                BuildingStatusId = buildingStatus.Id,
+                UserId = 2
 
-    return Ok(buildingDto);
-}
+            };
+
+            // Thêm tòa nhà vào cơ sở dữ liệu
+            _context.Buildings.Add(building);
+            await _context.SaveChangesAsync();
+
+            return Ok(buildingDto);
+        }
 
         [HttpGet("AddBuilding")]
         public IActionResult AddBuilding()
@@ -188,7 +188,7 @@ public async Task<IActionResult> AddBuilding([FromBody] AddBuildingDTO buildingD
                 return NotFound("Building not found.");
             }
 
-            
+
             _context.Buildings.Remove(building);
             await _context.SaveChangesAsync();
 
@@ -212,7 +212,7 @@ public async Task<IActionResult> AddBuilding([FromBody] AddBuildingDTO buildingD
                     Id = b.Id,
                     Name = b.Name,
                     TotalFloors = b.TotalFloors,
-                    NumberOfRooms = b.NumberOfRooms,
+                    NumberOfRooms = (int)b.NumberOfRooms,
                     CreatedDate = b.CreatedDate,
                     UpdatedDate = b.UpdatedDate,
                     ProvinceName = b.Province.Name,

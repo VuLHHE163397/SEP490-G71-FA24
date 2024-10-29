@@ -43,13 +43,13 @@ builder.Services.AddSwaggerGen(s =>
 });
 builder.Services.AddDbContext<RMS_SEP490Context>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("MyDB");
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseSqlServer(connectionString);
 });
 
 builder.Services.AddDbContext<RMS_SEP490Context>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("MyDB");
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseSqlServer(connectionString); // Hoặc bạn có thể sử dụng provider khác nếu cần
 });
 
