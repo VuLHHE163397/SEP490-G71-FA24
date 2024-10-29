@@ -47,11 +47,7 @@ builder.Services.AddDbContext<RMS_SEP490Context>(options =>
     options.UseSqlServer(connectionString);
 });
 
-builder.Services.AddDbContext<RMS_SEP490Context>(options =>
-{
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseSqlServer(connectionString); // Hoặc bạn có thể sử dụng provider khác nếu cần
-});
+
 
 builder.Services.AddCors(opts =>
 {
