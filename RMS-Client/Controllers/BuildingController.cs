@@ -19,5 +19,11 @@ namespace RMS_Client.Controllers
             var buildings = await _buildingService.GetAllBuildingsAsync(); 
             return View(buildings); // Trả về view với danh sách tòa nhà
         }
+
+        public async Task<IActionResult> EditBuilding()
+        {
+            
+            return View();
+        }
     }
 }

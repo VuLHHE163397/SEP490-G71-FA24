@@ -118,7 +118,7 @@
                                 <span class="hide-menu">Quản lý phòng</span>
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
-                            <ul class="sidebar-submenu" style="display: none; list-style-type: none; padding-left: 20px;">
+                            <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
                                 @if (Model != null && Model.Any())
                                 {
                                     foreach (var building in Model)
@@ -304,8 +304,8 @@
                                         <td>@building.AddressDetails</td>
                                         <td>@building.BuildingStatus</td>
                                         <td>
-                                            <button class="btn btn-warning" onclick="editBuilding(@building.Id)">Sửa</button>
-
+                                            <button class="btn btn-warning" asp-action="EditBuilding" asp-controller="Building" onclick="editBuilding(@building.Id)">Sửa</button>
+                                            
                                         </td>
                                     </tr>
                                 }
@@ -322,7 +322,8 @@
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>
                     function editBuilding(id) {
-                        window.location.href = '/Building/EditBuilding/' + id;
+                        // Redirect to the edit page for the specific building
+                        window.location.href = `/Building/EditBuilding/${id}`;
                     }
 
 
@@ -341,6 +342,7 @@
                             // Your chart initialization code can go here
                         }
                     });
+
 
                 </script>
 

@@ -232,7 +232,7 @@ namespace RMS_API.Controllers
         }
 
         [HttpPut("EditBuilding/{id}")]
-        public async Task<IActionResult> EditBuilding(int id, [FromBody] AddBuildingDTO buildingDto)
+        public async Task<IActionResult> EditBuilding(int id, [FromBody] BuildingDTO buildingDto)
         {
             if (!ModelState.IsValid)
             {
