@@ -1,11 +1,22 @@
-﻿<!doctype html>
+﻿@page
+@model RMS_Client.Controllers.HomeController
+
+@* @if (Model.ShowAlert)
+{
+    <script>
+        alert('Register failed! Please check your information.');
+    </script>
+} *@
+
+
+<!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Modernize Free</title>
-    <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
+    <title>RMS</title>
+    <link rel="shortcut icon" type="image/png" href="~/images/logos/rms_logo.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
 </head>
 
@@ -19,28 +30,61 @@
                     <div class="col-md-8 col-lg-6 col-xxl-3">
                         <div class="card mb-0">
                             <div class="card-body">
-                                <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
-                                    <img src="~/images/logos/dark-logo.svg" width="180" alt="">
+                                <a href="Home" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                                    <img src="~/images/logos/rms_logo.svg">
+                                    @* <img src="~/images/logos/rms_logo.svg" width="180" alt=""> *@
                                 </a>
-                                <p class="text-center">Your Social Campaigns</p>
+                                <p class="text-center">RMS_Quản lý trọ theo cách của bạn</p>
                                 <form>
                                     <div class="mb-3">
-                                        <label for="exampleInputtext1" class="form-label">Name</label>
+                                        <label for="exampleInputtext1" class="form-label">Tên</label>
                                         <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Email Address</label>
+                                        <label for="exampleInputtext1" class="form-label">Tên đệm</label>
+                                        <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="exampleInputtext1" class="form-label">Họ</label>
+                                        <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="exampleInputtext1" class="form-label">Số điện thoại</label>
+                                        <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="exampleInputEmail1" class="form-label">Email</label>
                                         <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                                     </div>
                                     <div class="mb-4">
-                                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                                        <label for="exampleInputPassword1" class="form-label">Mật khẩu</label>
                                         <input type="password" class="form-control" id="exampleInputPassword1">
                                     </div>
-                                    <a href="./index.html" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign Up</a>
-                                    <div class="d-flex align-items-center justify-content-center">
-                                        <p class="fs-4 mb-0 fw-bold">Already have an Account?</p>
-                                        <a class="text-primary fw-bold ms-2" href="./authentication-login.html">Sign In</a>
+                                    <div class="mb-4">
+                                        <label for="exampleInputPassword2" class="form-label">Xác nhận mật khẩu</label>
+                                        <input type="password" class="form-control" id="exampleInputPassword1">
                                     </div>
+                                    <div class="mb-4">
+                                        <button type="button" class="btn btn-primary">Gửi mã qua email</button>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="exampleInputPin1" class="form-label">Mã xác nhận qua mail</label>
+                                        <div id="verificationCode" class="d-flex justify-content-between">
+                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 1">
+                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 2">
+                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 3">
+                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 4">
+                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 5">
+                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 6">
+                                        </div>
+                                    </div>
+
+                                    <a href="./index.html" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</a>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <p class="fs-4 mb-0 fw-bold">Bạn đã có tài khoản?</p>
+                                        <a class="text-primary fw-bold ms-2" href="Login">Đăng nhập</a>
+                                    </div>
+
                                 </form>
                             </div>
                         </div>
@@ -51,6 +95,59 @@
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function validateEmail(email) {
+             const emailRegex = /^[^\sa]+a[^\sa]+\.[^\sa]+$/;   // a = a cong
+            return emailRegex.test(email);
+        }
+
+        function validatePhone(phone) {
+            const phoneRegex = /^0\d{9}$/;
+            return phoneRegex.test(phone);
+        }
+
+        function validateForm() {
+            const email = document.getElementById("exampleInputEmail1").value;
+            const phone = document.getElementById("exampleInputPhone1").value;
+            if (!validateEmail(email)) {
+                alert("Invalid email format");
+                return false;
+            }
+            if (!validatePhone(phone)) {
+                alert("Invalid phone number format");
+                return false;
+            }
+            return true;
+        }
+
+        function register() {
+            var username = $("#registerUsername").val();
+            var fullname = $("#registerFullname").val();
+            var password = $("#registerPassword").val();
+            var confirmPassword = $("#confirmPassword").val();
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            $.ajax({
+                url: "http://localhost:5109/api/Auth/register",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ Username: username, Fullname: fullname, Password: password }),
+                success: function (response) {
+                    alert("Registration successful!");
+                    $(".Sign-In").css("display", "block");
+                    $(".registration").css("display", "none");
+                },
+                error: function (xhr, status, error) {
+                    alert("Registration failed: " + xhr.responseText);
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

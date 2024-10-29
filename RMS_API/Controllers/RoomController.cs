@@ -6,7 +6,7 @@ using RMS_API.Models;
 
 namespace RMS_API.Controllers
 {
-    [Route("api/Room")]
+    [Route("api/[controller]")]
     [ApiController]
     public class RoomController : ControllerBase
     {
@@ -16,31 +16,25 @@ namespace RMS_API.Controllers
         {
             _context = context;
         }
-
-
-        [HttpGet("getProvinces")]
-        public async Task<IActionResult> GetProvinces()
+        [HttpGet("GetAllRoom")]
+        public IActionResult GetAllRoom()
         {
-            var provinces = await _context.Provinces.ToListAsync();
-            return Ok(provinces);
+            var ro = _context.Rooms.ToList();
+            return Ok(ro);
         }
 
-        [HttpGet("getDistricts/{provinceId}")]
-        public async Task<IActionResult> GetDistricts(int provinceId)
+        [HttpGet("GetRoomByBuilding")]
+        public IActionResult GetRoomByBuilding(int buildingId)
         {
-            var districts = await _context.Districts
-                .Where(d => d.ProvincesId == provinceId)
-                .ToListAsync();
-            return Ok(districts);
+            var room = _context.Rooms.Where(p => p.BuildingId == buildingId).ToList();
+            return Ok(room);
         }
 
-        [HttpGet("getWards/{districtId}")]
-        public async Task<IActionResult> GetWards(int districtId)
+        [HttpGet("GetRoomByStatus")]
+        public IActionResult GetRoomByStatus(int statusId)
         {
-            var wards = await _context.Wards
-                .Where(w => w.DistrictId == districtId)
-                .ToListAsync();
-            return Ok(wards);
+            var room = _context.Rooms.Where(p => p.RooomStatusId == statusId).ToList();
+            return Ok(room);
         }
 
         [HttpGet("ListRoom")]
