@@ -1,11 +1,22 @@
-﻿<!doctype html>
+﻿@page
+@model RMS_Client.Controllers.HomeController
+
+@* @if (Model.ShowAlert)
+{
+    <script>
+        alert('Login failed! Please check your username and password.');
+    </script>
+} *@
+
+
+<!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RMS</title>
-    <link rel="shortcut icon" type="image/png" href="~/images/logos/rms_logo.png" />
+    <link rel="icon" type="image/png" href="~/images/logo.jpg" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
 </head>
 
@@ -20,7 +31,7 @@
                         <div class="card mb-0">
                             <div class="card-body">
                                 <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
-                                    <img src="~/images/logos/rms_logo.svg" width="180" alt="">
+                                    <img src="~/images/logo.jpg7" width="180" alt="">
                                 </a>
                                 <p class="text-center">RMS_Quản lý trọ theo cách của bạn</p>
                                 <form>
@@ -57,5 +68,28 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+<script>
+    function login() {
+        var username = $("#loginUsername").val();
+        var password = $("#loginPassword").val();
+
+        $.ajax({
+            url: "http://localhost:5109/api/Auth/login",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ Username: username, Password: password }),
+            success: function (response) {
+                alert("Login successful!");
+                localStorage.setItem("token", response.token);
+                window.location.href = "views/newsfeed.html";
+            },
+            error: function (xhr, status, error) {
+                alert("Login failed: " + xhr.responseText);
+            }
+        });
+    }
+
+    
+</script>
 
 </html>
