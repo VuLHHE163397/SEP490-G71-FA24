@@ -16,7 +16,7 @@ namespace RMS_API.Models
         public string MidName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
-        public int Phone { get; set; }
+        public string Phone { get; set; } = null!;
         public int UserStatusId { get; set; }
         public int RoleId { get; set; }
 

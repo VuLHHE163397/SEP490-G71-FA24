@@ -20,6 +20,7 @@ namespace RMS_API.Controllers
             _configuration = configuration;
         }
 
+        //action register
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
@@ -34,6 +35,7 @@ namespace RMS_API.Controllers
             return BadRequest(result.Errors);
         }
 
+        //Action login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
@@ -44,7 +46,7 @@ namespace RMS_API.Controllers
             return Ok(new { token });
 
         }
-
+        // Gen token for server, so server can send token to user for checking authentication 
         //private string GenerateJwtToken(User user)
         //{
         //    var claims = new[]
@@ -66,6 +68,9 @@ namespace RMS_API.Controllers
 
         //    return new JwtSecurityTokenHandler().WriteToken(token);
         //}
+
+
+        //Model login
         public class RegisterModel
         {
             [Required]
@@ -85,6 +90,7 @@ namespace RMS_API.Controllers
             public string Password { get; set; }
         }
 
+        //Model 
         public class LoginModel
         {
             [Required]
