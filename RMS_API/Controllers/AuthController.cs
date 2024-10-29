@@ -23,7 +23,7 @@ namespace RMS_API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var user = new User { FirstName = model.Username, LastName = model.Fullname };
+            var user = new User { Email = model.Email, FirstName = model.Firstname };
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
@@ -37,7 +37,7 @@ namespace RMS_API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var user = await _userManager.FindByNameAsync(model.Username);
+            var user = await _userManager.FindByNameAsync(model.Email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password)) return Unauthorized();
             //var token = GenerateJwtToken(user);
             var token = "test";
@@ -70,10 +70,16 @@ namespace RMS_API.Controllers
         {
             [Required]
             [DataType(DataType.Text)]
-            public string Username { get; set; }
+            public string Email { get; set; }
             [Required]
             [DataType(DataType.Text)]
-            public string Fullname { get; set; }
+            public string Firstname { get; set; }
+            [Required]
+            [DataType(DataType.Text)]
+            public string Midname { get; set; }
+            [Required]
+            [DataType(DataType.Text)]
+            public string Lastname { get; set; }
             [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; }
@@ -83,7 +89,7 @@ namespace RMS_API.Controllers
         {
             [Required]
             [DataType(DataType.Text)]
-            public string Username { get; set; }
+            public string Email { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
