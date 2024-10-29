@@ -1,23 +1,23 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using RMS_Client.Services; // Đảm bảo sử dụng namespace đúng
+
 
 namespace RMS_Client.Controllers
 {
-    //[Route("api/[controller]")]
-    //[ApiController]
     public class BuildingController : Controller
     {
-        private readonly ILogger<BuildingController> _logger;
+        private readonly BuildingService _buildingService;
 
-        public BuildingController(ILogger<BuildingController> logger)
+        public BuildingController(BuildingService buildingService)
         {
-            _logger = logger;
+            _buildingService = buildingService;
         }
 
-        public IActionResult ListBuilding()
+        // Action để lấy danh sách các tòa nhà
+        public async Task<IActionResult> ListBuilding()
         {
-           return View("~/Views/ManageBuilding/ListBuilding.cshtml");
+            var buildings = await _buildingService.GetAllBuildingsAsync(); 
+            return View(buildings); // Trả về view với danh sách tòa nhà
         }
-
     }
 }

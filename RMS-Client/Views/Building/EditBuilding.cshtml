@@ -1,5 +1,56 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<!-- Edit Building Modal -->
+<div class="modal fade" id="editBuildingModal" tabindex="-1" aria-labelledby="editBuildingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editBuildingModalLabel">Chỉnh Sửa Tòa Nhà</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editBuildingForm">
+                    <input type="hidden" id="editBuildingId" name="Id" />
+                    <div class="mb-3">
+                        <label for="editName" class="form-label">Tên Tòa Nhà</label>
+                        <input type="text" class="form-control" id="editName" name="Name" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTotalFloors" class="form-label">Số Tầng</label>
+                        <input type="number" class="form-control" id="editTotalFloors" name="TotalFloors" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editNumberOfRooms" class="form-label">Số Phòng</label>
+                        <input type="number" class="form-control" id="editNumberOfRooms" name="NumberOfRooms" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editAddressDetails" class="form-label">Địa Chỉ</label>
+                        <input type="text" class="form-control" id="editAddressDetails" name="AddressDetails" required />
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="updateBuilding()">Lưu Thay Đổi</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function editBuilding(buildingId) {
+        // Fetch building details
+        const response = await fetch(`/GetBuildingById/${buildingId}`);
+        const building = await response.json();
+
+        if (response.ok) {
+            // Populate modal form fields with building data
+            document.getElementById("editBuildingId").value = building.Id;
+            document.getElementById("editName").value = building.Name;
+            document.getElementById("editTotalFloors").value = building.TotalFloors;
+            document.getElementById("editNumberOfRooms").value = building.NumberOfRooms;
+            document.getElementById("editAddressDetails").value = building.AddressDetails;
+
+            // Show the modal
+            const editModal = new bootstrap.Modal(document.getElementById("editBuildingModal"));
+            editModal.show();
+        } else {
+            alert(building); // Display error message if not found
+        }
+    }
+</script>
