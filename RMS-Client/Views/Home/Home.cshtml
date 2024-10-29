@@ -278,10 +278,10 @@
                                     <a href="Landlord/manage" class="nav-item nav-link">Quản lí</a>
                                 }
                             </div>
-                            @* <a href="@Url.Action("Login", "Home")" *@
-                            <a href="Home/Login"
-                                class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block">Login<i
-                                    class="fa fa-arrow-right ms-3"></i></a>
+                            <a asp-controller="Home" asp-action="Login"
+                               class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block">
+                                Đăng nhập<i class="fa fa-arrow-right ms-3"></i>
+                            </a>
                         </div>
                     </nav>
                 </div>
