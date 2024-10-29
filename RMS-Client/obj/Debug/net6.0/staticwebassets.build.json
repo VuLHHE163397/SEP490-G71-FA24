@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "OkE8ZFZwkshMZ+aOyhsrwX+OfxvHrKGN5/oJyd5ZqbQ=",
+  "Hash": "+8xQHIowjocwRXcRdg82bjhyRraeJG/FEFUtk8pdJa0=",
   "Source": "RMS_Client",
   "BasePath": "_content/RMS_Client",
   "Mode": "Default",
@@ -416,6 +416,25 @@
       "OriginalItemSpec": "wwwroot\\images\\carousel-2.jpg"
     },
     {
+      "Identity": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logo.jpg",
+      "SourceId": "RMS_Client",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\",
+      "BasePath": "_content/RMS_Client",
+      "RelativePath": "images/logo.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\logo.jpg"
+    },
+    {
       "Identity": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logos\\dark-logo.svg",
       "SourceId": "RMS_Client",
       "SourceType": "Discovered",
@@ -566,6 +585,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\profile\\user-1.jpg"
+    },
+    {
+      "Identity": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\rms_logo.png",
+      "SourceId": "RMS_Client",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\",
+      "BasePath": "_content/RMS_Client",
+      "RelativePath": "images/rms_logo.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\rms_logo.png"
     },
     {
       "Identity": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\room-1.jpg",

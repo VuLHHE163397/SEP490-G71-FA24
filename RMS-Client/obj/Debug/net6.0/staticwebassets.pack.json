@@ -81,6 +81,10 @@
       "PackagePath": "staticwebassets\\images\\carousel-2.jpg"
     },
     {
+      "Id": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logo.jpg",
+      "PackagePath": "staticwebassets\\images\\logo.jpg"
+    },
+    {
       "Id": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logos\\dark-logo.svg",
       "PackagePath": "staticwebassets\\images\\logos\\dark-logo.svg"
     },
@@ -111,6 +115,10 @@
     {
       "Id": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\profile\\user-1.jpg",
       "PackagePath": "staticwebassets\\images\\profile\\user-1.jpg"
+    },
+    {
+      "Id": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\rms_logo.png",
+      "PackagePath": "staticwebassets\\images\\rms_logo.png"
     },
     {
       "Id": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\room-1.jpg",
