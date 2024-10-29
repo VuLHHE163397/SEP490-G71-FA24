@@ -1,19 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using RMS_Client.Models;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using System.Security.Claims;
-using System.Text;
-using System.Security.Claims;
 
 namespace RMS_Client.Controllers
 {
-    
     public class HomeController : Controller
     {
-       
-        private readonly ILogger<HomeController> _logger;      
+        private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -33,15 +27,9 @@ namespace RMS_Client.Controllers
         {
             return View();
         }
-
         public IActionResult Login()
         {
-            return View("Views/Login/Login.cshtml");
-        }
-
-        public IActionResult Register()
-        {
-            return View("Views/Login/Register.cshtml");
+            return View("~/Views/Login/Login.cshtml");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -49,6 +37,5 @@ namespace RMS_Client.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        
     }
 }
