@@ -22,6 +22,7 @@ namespace RMS_API.Models
         public virtual DbSet<District> Districts { get; set; } = null!;
         public virtual DbSet<FacilitiesStatus> FacilitiesStatuses { get; set; } = null!;
         public virtual DbSet<Facility> Facilities { get; set; } = null!;
+        public virtual DbSet<Image> Images { get; set; } = null!;
         public virtual DbSet<MaintainanceRequest> MaintainanceRequests { get; set; } = null!;
         public virtual DbSet<Province> Provinces { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
@@ -42,8 +43,8 @@ namespace RMS_API.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var ConnectionString = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetConnectionString("DefaultConnection");
-                optionsBuilder.UseSqlServer(ConnectionString);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("server =NVB\\NVB; database = RMS_SEP490;uid=sa;pwd=123456;");
             }
         }
 
@@ -92,7 +93,11 @@ namespace RMS_API.Models
                     .HasColumnType("date")
                     .HasColumnName("createdDate");
 
+                entity.Property(e => e.Distance).HasColumnName("distance");
+
                 entity.Property(e => e.DistrictId).HasColumnName("districtId");
+
+                entity.Property(e => e.LinkEmbedMap).HasColumnName("linkEmbedMap");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(100)
@@ -206,11 +211,37 @@ namespace RMS_API.Models
                     .HasMaxLength(255)
                     .HasColumnName("name");
 
+                entity.Property(e => e.RoomId).HasColumnName("roomId");
+
                 entity.HasOne(d => d.FacilityStatus)
                     .WithMany(p => p.Facilities)
                     .HasForeignKey(d => d.FacilityStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Facilities_FacilitiesStatus");
+
+                entity.HasOne(d => d.Room)
+                    .WithMany(p => p.Facilities)
+                    .HasForeignKey(d => d.RoomId)
+                    .HasConstraintName("FK_Facilities_Rooms");
+            });
+
+            modelBuilder.Entity<Image>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Link).HasColumnName("link");
+
+                entity.Property(e => e.RoomId).HasColumnName("roomID");
+
+                entity.HasOne(d => d.Room)
+                    .WithMany()
+                    .HasForeignKey(d => d.RoomId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_images_Rooms");
             });
 
             modelBuilder.Entity<MaintainanceRequest>(entity =>
@@ -283,8 +314,6 @@ namespace RMS_API.Models
                     .HasColumnType("date")
                     .HasColumnName("expiredDate");
 
-                entity.Property(e => e.FacilityId).HasColumnName("facilityId");
-
                 entity.Property(e => e.Floor).HasColumnName("floor");
 
                 entity.Property(e => e.Price)
@@ -306,12 +335,6 @@ namespace RMS_API.Models
                     .HasForeignKey(d => d.BuildingId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Rooms_Buildings");
-
-                entity.HasOne(d => d.Facility)
-                    .WithMany(p => p.Rooms)
-                    .HasForeignKey(d => d.FacilityId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Rooms_Facilities");
 
                 entity.HasOne(d => d.RooomStatus)
                     .WithMany(p => p.Rooms)
@@ -498,7 +521,10 @@ namespace RMS_API.Models
                     .IsUnicode(false)
                     .HasColumnName("password");
 
-                entity.Property(e => e.Phone).HasColumnName("phone");
+                entity.Property(e => e.Phone)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("phone");
 
                 entity.Property(e => e.RoleId).HasColumnName("roleId");
 
