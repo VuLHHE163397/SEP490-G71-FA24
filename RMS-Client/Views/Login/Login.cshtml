@@ -67,29 +67,30 @@
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function login() {
+            var username = $("#loginUsername").val();
+            var password = $("#loginPassword").val();
+
+            $.ajax({
+                url: "http://localhost:5109/api/Auth/login",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ Username: username, Password: password }),
+                success: function (response) {
+                    alert("Login successful!");
+                    localStorage.setItem("token", response.token);
+                    window.location.href = "views/newsfeed.html";
+                },
+                error: function (xhr, status, error) {
+                    alert("Login failed: " + xhr.responseText);
+                }
+            });
+        }
+
+
+    </script>
 </body>
-<script>
-    function login() {
-        var username = $("#loginUsername").val();
-        var password = $("#loginPassword").val();
 
-        $.ajax({
-            url: "http://localhost:5109/api/Auth/login",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({ Username: username, Password: password }),
-            success: function (response) {
-                alert("Login successful!");
-                localStorage.setItem("token", response.token);
-                window.location.href = "views/newsfeed.html";
-            },
-            error: function (xhr, status, error) {
-                alert("Login failed: " + xhr.responseText);
-            }
-        });
-    }
-
-    
-</script>
 
 </html>
