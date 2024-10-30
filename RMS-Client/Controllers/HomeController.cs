@@ -23,9 +23,9 @@ namespace RMS_Client.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Register()
         {
-            return View();
+            return View("~/Views/Login/Register.cshtml");
         }
         public IActionResult Login()
         {
