@@ -27,15 +27,7 @@ namespace RMS_Client.Controllers
         {
             return View();
         }
-        public IActionResult Login()
-        {
-            return View("~/Views/Login/Login.cshtml");
-        }
-
-        public IActionResult Register()
-        {
-            return View("~/Views/Login/Register.cshtml");
-        }
+        
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
