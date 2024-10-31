@@ -18,26 +18,31 @@
         <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
             <div class="d-flex align-items-center justify-content-center w-100">
                 <div class="row justify-content-center w-100">
-                    <div class="col-md-8 col-lg-6 col-xxl-3">
+                    <div class="col-md-10 col-lg-8 col-xxl-6">
+                        <!-- Adjusted width here -->
                         <div class="card mb-0">
                             <div class="card-body">
                                 <a href="Home" class="text-nowrap logo-img text-center d-block py-3 w-100">
                                     <img src="~/images/logos/rms_logo.svg">
                                 </a>
                                 <p class="text-center">RMS_Quản lý trọ theo cách của bạn</p>
-                                <form id="registerForm">
+                                <form id="registerForm" style="max-width: 1000px; margin: auto;">
+                                    <!-- Adjusted form width here -->
                                     <div class="mb-3">
-                                        <label for="firstName" class="form-label">Tên</label>
-                                        <input type="text" class="form-control" id="firstName">
+                                        <label class="form-label">Tên đầy đủ</label>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" id="firstName" placeholder="Tên">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" id="midName" placeholder="Tên đệm">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" id="lastName" placeholder="Họ">
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="midName" class="form-label">Tên đệm</label>
-                                        <input type="text" class="form-control" id="midName">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="lastName" class="form-label">Họ</label>
-                                        <input type="text" class="form-control" id="lastName">
-                                    </div>
+
                                     <div class="mb-3">
                                         <label for="phone" class="form-label">Số điện thoại</label>
                                         <input type="text" class="form-control" id="phone">
