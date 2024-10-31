@@ -44,7 +44,7 @@ namespace RMS_API.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("server =NVB\\NVB; database = RMS_SEP490;uid=sa;pwd=123456;");
+                optionsBuilder.UseSqlServer("server =(local); database =RMS_SEP490;uid=sa;pwd=123;Trusted_Connection=True;Encrypt=False");
             }
         }
 
@@ -306,9 +306,7 @@ namespace RMS_API.Models
 
                 entity.Property(e => e.BuildingId).HasColumnName("buildingId");
 
-                entity.Property(e => e.Description)
-                    .HasMaxLength(100)
-                    .HasColumnName("description");
+                entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.ExpiredDate)
                     .HasColumnType("date")

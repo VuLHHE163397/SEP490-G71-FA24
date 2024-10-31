@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RMS_API.Models;
 
+
 namespace RMS_API.Controllers
 {
     [Route("api/[controller]")]
@@ -35,6 +36,21 @@ namespace RMS_API.Controllers
             var room = _context.Rooms.Where(p => p.RooomStatusId == statusId).ToList();
             return Ok(room);
         }
+
+        [HttpGet("ListRoom")]
+        public async Task<ActionResult<IEnumerable<Room>>> GetAvailableRooms()
+        {
+            var rooms = await _context.Rooms
+                .Include(r => r.Building) // Đưa thông tin về Building
+                .Include(b => b.Building.Address) // Đưa thông tin về Address
+                .Include(r => r.RooomStatus) // Đưa thông tin về RoomStatus
+                .Where(r => r.RooomStatusId == 1) // Lọc phòng đang trống
+                .ToListAsync();
+
+            return Ok(rooms);
+        }
+
+
 
     }
 }

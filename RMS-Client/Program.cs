@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Thêm các dịch vụ vào container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient();
 builder.Services.AddHttpClient<BuildingService>(); // Đảm bảo thêm dịch vụ BuildingService
 
 // Cấu hình CORS
@@ -35,6 +36,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthorization();
 app.UseStaticFiles();
 
 // Sử dụng CORS
@@ -47,11 +49,10 @@ app.UseEndpoints(endpoints =>
 });
 
 
-app.UseAuthorization();
 
 // Cấu hình route mặc định cho ứng dụng.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Building}/{action=Listbuilding}/{id?}"); // Đặt controller mặc định là Home và action là Index
+    pattern: "{controller=Home}/{action=Home}/{id?}"); // Đặt controller mặc định là Home và action là Index
 
 app.Run();
