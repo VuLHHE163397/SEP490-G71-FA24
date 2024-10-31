@@ -1,4 +1,8 @@
-﻿<!doctype html>
+﻿@model List<RMS_API.DTOs.ServiceDTO>
+@{
+    ViewData["Title"] = "Danh sách dịch vụ"; // Page title
+}
+<!doctype html>
 <html lang="en">
 
 <head>
@@ -193,6 +197,7 @@
                 </nav>
             </header>
             <!--  Header End -->
+
             <div class="container-fluid">
                 <link rel="stylesheet" href="~/css/styles.min.css" />
                 <div class="container-fluid" style="margin-top: 1rem">
@@ -239,55 +244,27 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    1
-                                </td>
-                                <td>
-                                    Điện
-                                </td>
-                                <td>
-                                    3.000
-                                </td>
-                                <td>
-                                    <a href="/Service/EditService" class="btn btn-primary">Sửa</a>
-                                    <button class="btn btn-danger">Xóa</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    2
-                                </td>
-                                <td>
-                                    Nước
-                                </td>
-                                <td>
-                                    50.000
-                                </td>
-                                <td>
-                                    <a href="/Service/EditService" class="btn btn-primary">Sửa</a>
-                                    <button class="btn btn-danger">Xóa</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    3
-                                </td>
-                                <td>
-                                    Mạng
-                                </td>
-                                <td>
-                                    50.000
-                                </td>
-                                <td>
-                                    <a href="/Service/EditService" class="btn btn-primary">Sửa</a>
-                                    <button class="btn btn-danger">Xóa</button>
-                                </td>
-                            </tr>
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var service in Model)
+                                {
+                                    <tr>
+                                        <td>@service.Id</td>
+                                        <td>@service.Name</td>
+                                        <td>@service.Price</td>
+                                        <td>
+                                            <a href="/Service/EditService" class="btn btn-primary">Sửa</a>
+                                            <button class="btn btn-danger">Xóa</button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>

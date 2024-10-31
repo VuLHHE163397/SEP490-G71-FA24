@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RMS_API.DTOs;
 using RMS_API.Models;
 
 namespace RMS_API.Controllers
@@ -14,5 +16,31 @@ namespace RMS_API.Controllers
         {
             _context = context;
         }
+
+
+
+        [HttpGet("GetAllService")]
+        public async Task<ActionResult<IEnumerable<ServiceDTO>>> GetAllServices()
+        {
+            var services = await _context.Services
+                .Select(s => new ServiceDTO
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Price = s.Price
+                })
+                .ToListAsync();
+
+            return Ok(services);
+        }
+
+
+
+
+
+
+
     }
 }
+
+
