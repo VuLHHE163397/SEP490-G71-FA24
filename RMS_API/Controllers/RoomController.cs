@@ -37,20 +37,23 @@ namespace RMS_API.Controllers
             return Ok(room);
         }
 
-        [HttpGet("ListRoom")]
-        public async Task<ActionResult<IEnumerable<Room>>> GetAvailableRooms()
+        [HttpGet("GetActiveRooms")]
+        public IActionResult GetActiveRooms()
         {
-            var rooms = await _context.Rooms
-                .Include(r => r.Building) // Đưa thông tin về Building
-                .Include(b => b.Building.Address) // Đưa thông tin về Address
-                .Include(r => r.RooomStatus) // Đưa thông tin về RoomStatus
-                .Where(r => r.RooomStatusId == 1) // Lọc phòng đang trống
-                .ToListAsync();
+            var rooms = _context.Rooms
+                .Where(r => r.RooomStatusId == 1) // Lọc các phòng có trạng thái đang hoạt động
+                .Select(r => new
+                {
+                    Distance = r.Building.Distance,
+                    Address = $"{r.Building.Address.Information}, {r.Building.Address.Ward.Name}, {r.Building.Address.District.Name}, {r.Building.Address.Province.Name}",
+                    Price = r.Price,
+                    Area = r.Area,
+                    RoomStatusName = r.RooomStatus.Name
+                })
+                .ToList();
 
             return Ok(rooms);
         }
-
-
 
     }
 }

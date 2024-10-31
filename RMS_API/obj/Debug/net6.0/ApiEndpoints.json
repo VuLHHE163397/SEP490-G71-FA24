@@ -154,6 +154,16 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "GetActiveRooms",
+    "RelativePath": "api/Room/GetActiveRooms",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "GetAllRoom",
     "RelativePath": "api/Room/GetAllRoom",
     "HttpMethod": "GET",
@@ -193,42 +203,6 @@
       }
     ],
     "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "GetAvailableRooms",
-    "RelativePath": "api/Room/ListRoom",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[RMS_API.Models.Room, RMS_API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json;odata.metadata=minimal;odata.streaming=true",
-          "application/json;odata.metadata=minimal;odata.streaming=false",
-          "application/json;odata.metadata=minimal",
-          "application/json;odata.metadata=full;odata.streaming=true",
-          "application/json;odata.metadata=full;odata.streaming=false",
-          "application/json;odata.metadata=full",
-          "application/json;odata.metadata=none;odata.streaming=true",
-          "application/json;odata.metadata=none;odata.streaming=false",
-          "application/json;odata.metadata=none",
-          "application/json;odata.streaming=true",
-          "application/json;odata.streaming=false",
-          "application/json",
-          "application/xml",
-          "application/json",
-          "text/plain",
-          "application/octet-stream",
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomStatusController",
