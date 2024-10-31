@@ -44,7 +44,6 @@
         }
 
         .footer {
-            position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
@@ -52,8 +51,33 @@
             display: flex;
             align-items: center; /* Center content vertically */
             justify-content: space-between; /* Space out items */
-            padding: 0 20px; /* Add some padding */
+            padding: 0px; /* Add some padding */
             background-color: #343a40;
+            margin-top:30px;
+        }
+
+        .small-label {
+            font-size: 0.9em;
+        }
+        /* Thu hẹp khoảng cách giữa các thẻ chọn */
+        .select-container {
+            flex: 1;
+        }
+
+            .select-container .form-select-sm {
+                width: 90%; /* Đảm bảo mỗi thẻ chiếm toàn bộ không gian cột */
+                font-size: 1rem;
+                padding: 0.3rem 0.5rem;
+            }
+
+        .row.mb-2.align-items-center .gap-2 {
+            gap: 8px; /* Đảm bảo khoảng cách giữa các phần tử */
+        }
+
+        .selected-range {
+            min-width: 150px;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.5rem;
         }
 
         .room-item {
@@ -116,26 +140,7 @@
             margin-top: 20px;
         }
 
-        .case-buttons {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-
-            .case-buttons button {
-                margin: 0 5px;
-                padding: 5px 10px;
-                cursor: pointer;
-                border: 1px solid #ccc;
-                background-color: #f0f0f0;
-                border-radius: 5px;
-                transition: background-color 0.3s ease;
-            }
-
-                .case-buttons button:hover {
-                    background-color: #ddd;
-                }
-
+       
         #price-slider {
             margin: 20px;
         }
@@ -147,7 +152,7 @@
         .case-buttons {
             display: flex;
             justify-content: center;
-            margin-bottom: 10px;
+            margin-bottom: 30px;
         }
 
             .case-buttons button {
@@ -215,23 +220,23 @@
         }
 
             .confirm-button:hover {
-                background-color: #45a049;
+                background-color: aquamarine;
             }
 
         .selected-range {
             margin-top: 10px;
-            font-weight: bold;
+            font-weight: normal;
             color: black;
         }
 
         .reset-button {
             margin-top: 10px;
-            padding: 8px 16px;
-            background-color: #f44336; /* Red color */
-            color: white;
+            background-color: orange;
+            color: black;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 1rem; /* Match font size */
         }
 
             .reset-button:hover {
@@ -266,8 +271,6 @@
                         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                             <div class="navbar-nav mr-auto py-0">
                                 <a asp-controller="Home" asp-action="Home" class="nav-item nav-link active">Trang chủ</a>
-
-
                                 <!-- Conditional rendering for roles -->
                                 @if (User.IsInRole("Admin"))
                                 {
@@ -278,11 +281,12 @@
                                     <a href="Landlord/manage" class="nav-item nav-link">Quản lí</a>
                                 }
                             </div>
-                            <a asp-controller="Home" asp-action="Login"
-                               class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block">
-                                Đăng nhập<i class="fa fa-arrow-right ms-3"></i>
-                            </a>
+                          
                         </div>
+                        <a asp-controller="Home" asp-action="Login"
+                           class="nav-item nav-link active">
+                            Đăng nhập<i class="fa fa-arrow-right ms-3"></i>
+                        </a>
                     </nav>
                 </div>
             </div>
@@ -290,68 +294,211 @@
         <!-- Header End -->
         <!-- Search Start -->
         <div class="container-xxl py-5 content">
-            <div class="container">
-                <div class="row mb-4">
-                    <div class="col-lg-4 mb-3">
-                        <label for="province" class="form-label">Tỉnh/Thành Phố</label>
-                        <select id="province" class="form-select" onchange="updateDistricts()">
-                            <option value="">Chọn Tỉnh/Thành Phố</option>
-                        </select>
+            <h2 style="margin-left:550px" class="section-title text-center text-primary text-uppercase">Tìm phòng</h2>
+            <div class="container" style="border: 2px solid green; padding: 15px; border-radius: 5px;">
+                <!-- Search and Filter Options -->
+                <div class="row mb-2 align-items-center">
+                    <!-- Location Filters (Left Side) -->
+                    <div class="col-lg-8 d-flex gap-2 align-items-center">
+                        <div class="select-container">
+                            <label for="province" class="form-label small-label">Tỉnh/Thành Phố</label>
+                            <select id="province" class="form-select form-select-sm" onchange="updateDistricts()">
+                                <option value="">Tỉnh/Thành Phố</option>
+                            </select>
+                        </div>
+                        <div class="select-container">
+                            <label for="district" class="form-label small-label">Quận/Huyện/Thị Xã</label>
+                            <select id="district" class="form-select form-select-sm" onchange="updateCommunes()" disabled>
+                                <option value="">Quận/Huyện/Thị Xã</option>
+                            </select>
+                        </div>
+                        <div class="select-container">
+                            <label for="commune" class="form-label small-label">Xã/Phường/Thị Trấn</label>
+                            <select id="commune" class="form-select form-select-sm" disabled>
+                                <option value="">Xã/Phường/Thị Trấn</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-lg-4 mb-3">
-                        <label for="district" class="form-label">Quận/Huyện/Thị Xã</label>
-                        <select id="district" class="form-select" onchange="updateCommunes()" disabled>
-                            <option value="">Chọn Quận/Huyện/Thị Xã</option>
-                        </select>
-                    </div>
-                    <div class="col-lg-4 mb-3">
-                        <label for="commune" class="form-label">Xã/Phường/Thị Trấn</label>
-                        <select id="commune" class="form-select" disabled>
-                            <option value="">Chọn Xã/Phường/Thị Trấn</option>
-                        </select>
+
+                    <!-- Room Status Filter and Buttons (Right Side) -->
+                    <div style="margin-top:20px"class="col-lg-4 d-flex flex-column align-items-end gap-3 ms-auto">
+                        <!-- Filter Buttons -->
+                        <div class="d-flex gap-2">
+                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-distance-range" onclick="toggleDistanceModal(true)">Chọn khoảng cách</button>
+                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-price-range" onclick="toggleModal(true)">Chọn mức giá</button>
+                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-area-range" onclick="toggleAreaModal(true)">Chọn diện tích</button>
+                            <button class="reset-button" onclick="resetValues()">Đặt lại</button>
+                        </div>
                     </div>
                 </div>
-                <button class="btn btn-primary" onclick="searchRooms()">Tìm Kiếm</button>
+                <!-- Room Status Filter -->
+                <div style="margin-top:30px;margin-right:40px" class="text-end mb-3">
+                    <h6>Trạng thái phòng</h6>
+                    <div>
+                        <input type="checkbox" id="vacant" value="Đang trống">
+                        <label for="vacant">Đang trống</label><br>
+                        <input type="checkbox" id="futureVacant" value="Sắp trống">
+                        <label style="margin-right:9px" for="futureVacant">Sắp trống</label><br>
+                    </div>
+                </div>
+                <!-- Search Button -->
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary btnsearch" type="button" onclick="searchRooms()">Tìm kiếm</button>
+                </div>
             </div>
+            <!-- Sort Section (Right Side and Higher Up) -->
+            <div style="margin-top:30px;margin-right:40px" class="row mb-4">
+                <div class="col-lg-4 offset-lg-8 text-end mt-4">
+                    <!-- Added mt-4 for top margin -->
+                    <div class="sort-section">
+                        <select class="form-select d-inline-block w-50 me-2">
+                            <option value="price-asc">Giá Tăng Dần</option>
+                            <option value="price-desc">Giá Giảm Dần</option>
+                            <option value="area-asc">Diện Tích Tăng Dần</option>
+                            <option value="area-desc">Diện Tích Giảm Dần</option>
+                            <option value="date-new">Khoảng cách tăng dần</option>
+                            <option value="date-old">Khoảng cách giảm dần</option>
+                        </select>
+                        <button class="btn btn-primary">Sắp Xếp</button>
+                    </div>
+                </div>
+            </div>
+            <div class="container-xxl py-5 content">
+                <div class="container">
+                    <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                        <h1 class="section-title text-center text-primary text-uppercase">Danh sách phòng</h1>
+                    </div>
+                    <div class="row">
+                        <!-- Room Card Start -->
+                        <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="room-item shadow rounded overflow-hidden">
+                                <div class="position-relative">
+                                    <img class="img-fluid" src="~/images/room1.jpg" alt="Room Image">
+                                </div>
+                                <div class="room-details p-3">
+                                    <h5 class="mb-2">
+                                        <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 160 Thôn 9, Thạch Hòa, Thạch Thất, Hà Nội
+                                    </h5>
+                                    <div class="room-status">Đang trống</div>
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>500000 VND</small>
+                                        <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>30 m²</small>
+                                        <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Room Card End -->
+                        <!-- Thêm 5 phòng khác ở đây -->
+                        <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="room-item shadow rounded overflow-hidden">
+                                <div class="position-relative">
+                                    <img class="img-fluid" src="~/images/room2.jpg" alt="Room Image">
+                                </div>
+                                <div class="room-details p-3">
+                                    <h5 class="mb-2">
+                                        <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 10 Thôn 4, Tân Xã, Thạch Thất, Hà Nội
+                                    </h5>
+                                    <div class="room-status">Đang trống</div>
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>700000 VND</small>
+                                        <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>35 m²</small>
+                                        <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="room-item shadow rounded overflow-hidden">
+                                <div class="position-relative">
+                                    <img class="img-fluid" src="~/images/room3.jpg" alt="Room Image">
+                                </div>
+                                <div class="room-details p-3">
+                                    <h5 class="mb-2">
+                                        <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 35 Thôn 5, Tân Xã, Thạch Thất, Hà Nội
+                                    </h5>
+                                    <div class="room-status">Đang trống</div>
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>600000 VND</small>
+                                        <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>40 m²</small>
+                                        <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="room-item shadow rounded overflow-hidden">
+                                <div class="position-relative">
+                                    <img class="img-fluid" src="~/images/room3.jpg" alt="Room Image">
+                                </div>
+                                <div class="room-details p-3">
+                                    <h5 class="mb-2">
+                                        <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 30 Thôn 5, Thạch Hòa, Thạch Thất, Hà Nội
+                                    </h5>
+                                    <div class="room-status">Đang trống</div>
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>600000 VND</small>
+                                        <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>40 m²</small>
+                                        <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="room-item shadow rounded overflow-hidden">
+                                <div class="position-relative">
+                                    <img class="img-fluid" src="~/images/room4.jpg" alt="Room Image">
+                                </div>
+                                <div class="room-details p-3">
+                                    <h5 class="mb-2">
+                                        <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 115 Thôn 5, Tân Xã, Thạch Thất, Hà Nội
+                                    </h5>
+                                    <div class="room-status">Đang trống</div>
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>550000 VND</small>
+                                        <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>32 m²</small>
+                                        <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Room End -->
         </div>
-        <!-- Popup modal for distance filter -->
+
+        <!-- Popup Modals for Filters -->
+        <!-- Distance Filter Modal -->
         <div class="modal-overlay" id="distance-filter-modal">
             <div class="modal-content">
-                <span class="close-button" onclick="toggleDistanceModal(false)"> X </span>
+                <span class="close-button" onclick="toggleDistanceModal(false)">X</span>
                 <h4>Chọn khoảng cách</h4>
-
-                <!-- Case selection buttons for distance -->
                 <div class="case-buttons">
-                    <button onclick="setDistanceSliderCase(0,2 )">Dưới 2 km</button>
+                    <button onclick="setDistanceSliderCase(0, 2)">Dưới 2 km</button>
                     <button onclick="setDistanceSliderCase(2, 4)">2 - 4 km</button>
                     <button onclick="setDistanceSliderCase(4, 6)">4 - 6 km</button>
                     <button onclick="setDistanceSliderCase(6, 8)">6 - 8 km</button>
                     <button onclick="setDistanceSliderCase(8, 10)">8 - 10 km</button>
                     <button onclick="setDistanceSliderCase(10, 20)">Trên 10 km</button>
                 </div>
-
-                <!-- Slider element for distance -->
                 <div id="distance-slider"></div>
-
-                <!-- Display for the slider min and max values -->
                 <div class="slider-values">
                     <span id="slider-distance-min-value">0</span> - <span id="slider-distance-max-value">0</span> km
                 </div>
-
-                <!-- Confirm button to apply the selected distance range -->
                 <button class="confirm-button" onclick="confirmDistanceSelection()">Xác nhận</button>
             </div>
         </div>
-        <!-- Button that opens the popup and displays the selected range -->
-        <button class="selected-range" id="selected-price-range" onclick="toggleModal(true)">Chọn mức giá</button>
 
-        <!-- Popup modal for price filter -->
+        <!-- Price Filter Modal -->
         <div class="modal-overlay" id="price-filter-modal">
             <div class="modal-content">
-                <span class="close-button" onclick="toggleModal(false)"> X </span>
+                <span class="close-button" onclick="toggleModal(false)">X</span>
                 <h4>Chọn mức giá</h4>
-
-                <!-- Case selection buttons -->
                 <div class="case-buttons">
                     <button onclick="setSliderCase(0, 1000000)">Dưới 1 triệu</button>
                     <button onclick="setSliderCase(1000000, 2000000)">1 - 2 triệu</button>
@@ -361,29 +508,19 @@
                     <button onclick="setSliderCase(8000000, 10000000)">8 - 10 triệu</button>
                     <button onclick="setSliderCase(10000000, 20000000)">Trên 10 triệu</button>
                 </div>
-
-                <!-- Slider element -->
                 <div id="price-slider"></div>
-
-                <!-- Display for the slider min and max values -->
                 <div class="slider-values">
                     <span id="slider-min-value">0</span> - <span id="slider-max-value">0</span> VND
                 </div>
-
-                <!-- Confirm button to apply the selected price range -->
                 <button class="confirm-button" onclick="confirmSelection()">Xác nhận</button>
             </div>
         </div>
-        <!-- Button that opens the popup and displays the selected area -->
-        <button class="selected-range" id="selected-area-range" onclick="toggleAreaModal(true)">Chọn diện tích</button>
 
-        <!-- Popup modal for area filter -->
+        <!-- Area Filter Modal -->
         <div class="modal-overlay" id="area-filter-modal">
             <div class="modal-content">
-                <span class="close-button" onclick="toggleAreaModal(false)"> X </span>
+                <span class="close-button" onclick="toggleAreaModal(false)">X</span>
                 <h4>Chọn diện tích</h4>
-
-                <!-- Case selection buttons for area -->
                 <div class="case-buttons">
                     <button onclick="setAreaSliderCase(0, 10)">Dưới 10 m²</button>
                     <button onclick="setAreaSliderCase(10, 30)">10 - 30 m²</button>
@@ -392,166 +529,17 @@
                     <button onclick="setAreaSliderCase(70, 90)">70 - 90 m²</button>
                     <button onclick="setAreaSliderCase(90, 100)">Trên 90 m²</button>
                 </div>
-
-                <!-- Slider element for area -->
                 <div id="area-slider"></div>
-
-                <!-- Display for the slider min and max values -->
                 <div class="slider-values">
                     <span id="slider-area-min-value">0</span> - <span id="slider-area-max-value">0</span> m²
                 </div>
-
-                <!-- Confirm button to apply the selected area range -->
                 <button class="confirm-button" onclick="confirmAreaSelection()">Xác nhận</button>
             </div>
         </div>
-        <!-- Button that opens the popup and displays the selected distance -->
-        <button class="selected-range" id="selected-distance-range" onclick="toggleDistanceModal(true)">Chọn khoảng cách</button>
-        <!-- Reset button for resetting to default values -->
-        <button class="reset-button" onclick="resetValues()">Đặt lại</button>
-        <div class="container">
-            <!-- Sort Section -->
-            <div class="sort-section mb-4">
-                <h4>Sắp Xếp</h4>
-                <select class="form-select d-inline-block w-25 me-2">
-                    <option value="price-asc">Giá Tăng Dần</option>
-                    <option value="price-desc">Giá Giảm Dần</option>
-                    <option value="area-asc">Diện Tích Tăng Dần</option>
-                    <option value="area-desc">Diện Tích Giảm Dần</option>
-                    <option value="date-new">Khoảng cách tăng dần</option>
-                    <option value="date-old">Khoảng cách giảm dần</option>
-                </select>
-                <button class="btn btn-primary">Sắp Xếp</button>
-            </div>
-        </div>
-        <!-- Filter Start -->
-        <div class="container-xxl py-5">
-            <!-- Status Filter -->
-            <div class="col-md-4">
-                <h5 class="text-center">Trạng thái phòng</h5>
-                <div>
-                    <input type="checkbox" id="vacant" value="Đang trống">
-                    <label for="vacant">Đang trống</label><br>
-                    <input type="checkbox" id="futureVacant" value="Sắp trống">
-                    <label for="futureVacant">Sắp trống trong tương lai</label><br>
-                </div>
-            </div>
-            <div class="text-center mt-4">
-                <button class="btn btn-primary rounded-0 py-2 px-4" type="button" onclick="filterRooms()">Lọc</button>
-            </div>
-        </div>
     </div>
-    <!-- Filter End -->
 
 
-    <div class="container-xxl py-5 content">
-        <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title text-center text-primary text-uppercase">Danh sách phòng</h6>
-            </div>
-            <div class="row">
-                <!-- Room Card Start -->
-                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="room-item shadow rounded overflow-hidden">
-                        <div class="position-relative">
-                            <img class="img-fluid" src="~/images/room1.jpg" alt="Room Image">
-                        </div>
-                        <div class="room-details p-3">
-                            <h5 class="mb-2">
-                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 160 Thôn 9, Thạch Hòa, Thạch Thất, Hà Nội
-                            </h5>
-                            <div class="room-status">Đang trống</div>
-                            <div class="d-flex justify-content-between">
-                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>500000 VND</small>
-                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>30 m²</small>
-                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Room Card End -->
-                <!-- Thêm 5 phòng khác ở đây -->
-                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="room-item shadow rounded overflow-hidden">
-                        <div class="position-relative">
-                            <img class="img-fluid" src="~/images/room2.jpg" alt="Room Image">
-                        </div>
-                        <div class="room-details p-3">
-                            <h5 class="mb-2">
-                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 10 Thôn 4, Tân Xã, Thạch Thất, Hà Nội
-                            </h5>
-                            <div class="room-status">Đang trống</div>
-                            <div class="d-flex justify-content-between">
-                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>700000 VND</small>
-                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>35 m²</small>
-                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="room-item shadow rounded overflow-hidden">
-                        <div class="position-relative">
-                            <img class="img-fluid" src="~/images/room3.jpg" alt="Room Image">
-                        </div>
-                        <div class="room-details p-3">
-                            <h5 class="mb-2">
-                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 35 Thôn 5, Tân Xã, Thạch Thất, Hà Nội
-                            </h5>
-                            <div class="room-status">Đang trống</div>
-                            <div class="d-flex justify-content-between">
-                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>600000 VND</small>
-                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>40 m²</small>
-                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="room-item shadow rounded overflow-hidden">
-                        <div class="position-relative">
-                            <img class="img-fluid" src="~/images/room3.jpg" alt="Room Image">
-                        </div>
-                        <div class="room-details p-3">
-                            <h5 class="mb-2">
-                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 30 Thôn 5, Thạch Hòa, Thạch Thất, Hà Nội
-                            </h5>
-                            <div class="room-status">Đang trống</div>
-                            <div class="d-flex justify-content-between">
-                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>600000 VND</small>
-                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>40 m²</small>
-                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="room-item shadow rounded overflow-hidden">
-                        <div class="position-relative">
-                            <img class="img-fluid" src="~/images/room4.jpg" alt="Room Image">
-                        </div>
-                        <div class="room-details p-3">
-                            <h5 class="mb-2">
-                                <i class="fa fa-map-marker-alt text-primary me-2"></i>Số 115 Thôn 5, Tân Xã, Thạch Thất, Hà Nội
-                            </h5>
-                            <div class="room-status">Đang trống</div>
-                            <div class="d-flex justify-content-between">
-                                <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>550000 VND</small>
-                                <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>32 m²</small>
-                                <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Room Card End -->
-            </div>
-        </div>
-    </div>
-    <!-- Room End -->
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer wow fadeIn" data-wow-delay="0.1s">
         <div class="container">
@@ -584,7 +572,7 @@
         const priceSlider = document.getElementById('price-slider');
 
         noUiSlider.create(priceSlider, {
-            start: [1000000, 3000000], // Default range values
+            start: [1000000, 5000000], // Default range values
             connect: true,
             range: {
                 'min': 0,
@@ -626,7 +614,7 @@
 
         // Create the area slider
         noUiSlider.create(areaSlider, {
-            start: [10, 50], // Default range values for area
+            start: [20, 50], // Default range values for area
             connect: true,
             range: {
                 'min': 0,
@@ -668,7 +656,7 @@
 
         // Create the distance slider
         noUiSlider.create(distanceSlider, {
-            start: [0, 5], // Default range values for distance
+            start: [2, 5], // Default range values for distance
             connect: true,
             range: {
                 'min': 0,

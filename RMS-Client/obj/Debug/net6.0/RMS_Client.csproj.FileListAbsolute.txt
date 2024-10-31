@@ -60,10 +60,10 @@ D:\GitHub\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\RMS_Client.pdb
 D:\GitHub\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\RMS_Client.genruntimeconfig.cache
 D:\GitHub\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\ref\RMS_Client.dll
 D:\GitHub\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
-D:\FULearning\FALL2024\DATN\SEP490-G71-FA24\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\appsettings.Development.json
 D:\FULearning\FALL2024\DATN\SEP490-G71-FA24\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\RMS_API.deps.json
 D:\FULearning\FALL2024\DATN\SEP490-G71-FA24\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\RMS_API.runtimeconfig.json
 D:\FULearning\FALL2024\DATN\SEP490-G71-FA24\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\RMS_API.exe
+D:\FULearning\FALL2024\DATN\SEP490-G71-FA24\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\appsettings.Development.json
 D:\FULearning\FALL2024\DATN\SEP490-G71-FA24\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\RMS_Client.staticwebassets.runtime.json
 D:\FULearning\FALL2024\DATN\SEP490-G71-FA24\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\RMS_Client.exe
 D:\FULearning\FALL2024\DATN\SEP490-G71-FA24\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\appsettings.json
