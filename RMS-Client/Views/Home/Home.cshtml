@@ -280,9 +280,15 @@
                                 {
                                     <a href="Landlord/manage" class="nav-item nav-link">Quản lí</a>
                                 }
-                            </div>
-                          
+                            </div>                       
                         </div>
+                        <!-- Favorite Count Icon in Header -->
+                        <a href="#" class="btn btn-outline-danger rounded-circle position-relative">
+                            <i class="fa fa-heart"></i>
+                            <span id="favoriteCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                0
+                            </span>
+                        </a>
                         <a asp-controller="Home" asp-action="Login"
                            class="nav-item nav-link active">
                             Đăng nhập<i class="fa fa-arrow-right ms-3"></i>
@@ -383,7 +389,9 @@
                                     <div class="d-flex justify-content-between">
                                         <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>500000 VND</small>
                                         <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>30 m²</small>
-                                        <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                                        <a href="#" class="btn btn-outline-danger rounded-circle" onclick="addToFavorites(this)" data-room-id="1">
+                                            <i class="fa fa-heart"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -403,7 +411,10 @@
                                     <div class="d-flex justify-content-between">
                                         <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>700000 VND</small>
                                         <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>35 m²</small>
-                                        <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                                        <a href="#" class="btn btn-outline-danger rounded-circle" onclick="addToFavorites(this)" data-room-id="2">
+                                            <i class="fa fa-heart"></i>
+                                        </a>
+
                                     </div>
                                 </div>
                             </div>
@@ -422,7 +433,9 @@
                                     <div class="d-flex justify-content-between">
                                         <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>600000 VND</small>
                                         <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>40 m²</small>
-                                        <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                                        <a href="#" class="btn btn-outline-danger rounded-circle" onclick="addToFavorites(this)" data-room-id="3">
+                                            <i class="fa fa-heart"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -442,7 +455,9 @@
                                     <div class="d-flex justify-content-between">
                                         <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>600000 VND</small>
                                         <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>40 m²</small>
-                                        <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                                        <a href="#" class="btn btn-outline-danger rounded-circle" onclick="addToFavorites(this)" data-room-id="4">
+                                            <i class="fa fa-heart"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -461,7 +476,9 @@
                                     <div class="d-flex justify-content-between">
                                         <small class="text-muted"><i class="fa fa-dollar-sign text-primary me-2"></i>550000 VND</small>
                                         <small class="text-muted"><i class="fa fa-expand text-primary me-2"></i>32 m²</small>
-                                        <a href="#" class="btn btn-outline-danger rounded-circle"><i class="fa fa-heart"></i></a>
+                                        <a href="#" class="btn btn-outline-danger rounded-circle" onclick="addToFavorites(this)" data-room-id="5">
+                                            <i class="fa fa-heart"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -717,6 +734,42 @@
         // Call the resetValues function when the reset button is clicked
         document.getElementById('reset-button').addEventListener('click', resetValues);
 
+        // Function to get favorites from cookies
+        function getFavorites() {
+            const favorites = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('favorites='))
+                ?.split('=')[1];
+            return favorites ? JSON.parse(decodeURIComponent(favorites)) : [];
+        }
+
+        // Function to set favorites in cookies
+        function setFavorites(favorites) {
+            document.cookie = 'favorites=' + encodeURIComponent(JSON.stringify(favorites)) + '; path=/';
+        }
+        // Function to add a room to favorites
+        function addToFavorites(element) {
+            const roomId = element.getAttribute("data-room-id");
+            let favorites = getFavorites();
+
+            // Kiểm tra nếu phòng chưa có trong danh sách yêu thích
+            if (!favorites.includes(roomId)) {
+                favorites.push(roomId);
+                setFavorites(favorites);
+                updateFavoriteCount();
+            } else {
+                alert("Phòng này đã có trong danh sách yêu thích.");
+            }
+        }
+
+        // Function to update the favorite count in the header
+        function updateFavoriteCount() {
+            const favorites = getFavorites();
+            document.getElementById('favoriteCount').innerText = favorites.length;
+        }
+
+        // Initialize the favorite count on page load
+        document.addEventListener('DOMContentLoaded', updateFavoriteCount);
     </script>
 </body>
 
