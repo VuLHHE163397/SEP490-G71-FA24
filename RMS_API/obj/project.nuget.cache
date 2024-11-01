@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "G6+0kCa64+8TXQkDJ6K1rUP1AFBWpsN1J3gRB3W74cYA0qSxRihyVbwDzqowYgza6RvIUJSgyuEXE/SI/HelSA==",
+  "dgSpecHash": "fc4G3LOin/3YMR8K2H9XvR4Kpa13w0DMjo8I+zp5uMJFBKmNomWSbDTdBbfZ5ol0TPbfKvWx2ec58995GILbcw==",
   "success": true,
   "projectFilePath": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
   "expectedPackageFiles": [
@@ -55,7 +55,7 @@
     "C:\\Users\\DEll\\.nuget\\packages\\microsoft.spatial\\7.16.0\\microsoft.spatial.7.16.0.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
-    "C:\\Users\\DEll\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\DEll\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.2.3\\swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",
@@ -78,9 +78,7 @@
     "C:\\Users\\DEll\\.nuget\\packages\\system.text.encoding.codepages\\4.7.0\\system.text.encoding.codepages.4.7.0.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\system.text.encodings.web\\6.0.0\\system.text.encodings.web.6.0.0.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\system.text.json\\6.0.0\\system.text.json.6.0.0.nupkg.sha512",
-    "C:\\Users\\DEll\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512",
-    "C:\\Users\\DEll\\.nuget\\packages\\x.pagedlist\\10.5.3\\x.pagedlist.10.5.3.nupkg.sha512",
-    "C:\\Users\\DEll\\.nuget\\packages\\x.pagedlist.mvc.core\\10.5.3\\x.pagedlist.mvc.core.10.5.3.nupkg.sha512"
+    "C:\\Users\\DEll\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
   ],
   "logs": []
 }

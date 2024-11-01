@@ -396,15 +396,15 @@ h1 {
                                 }
                             </select>
                         </div>
-                         <div class="form-group">
+                        <div class="form-group">
                             <label for="AddressDetails">Địa Chỉ</label>
                             <input type="text" class="form-control" id="AddressDetails" name="AddressDetails" required />
                         </div>
                         <button type="submit" class="btn btn-primary">Tạo Tòa Nhà</button>
                         <a asp-controller="Building" asp-action="ListBuilding" class="btn btn-secondary">Trở Về</a>
-
                     </form>
                 </div>
+
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>
                     $(document).ready(function () {
@@ -459,19 +459,31 @@ h1 {
                         });
 
                         $('#addBuildingForm').submit(function (event) {
-                            event.preventDefault(); // Ngăn chặn hành động mặc định của form
+                            event.preventDefault(); // Prevent default form action
+
+                            // Validate TotalFloors and NumberOfRooms
+                            var totalFloors = parseInt($('#TotalFloors').val(), 10);
+                            var numberOfRooms = parseInt($('#NumberOfRooms').val(), 10);
+
+                            if (totalFloors < 1 || totalFloors > 100) {
+                                alert('Số tầng phải là số dương.');
+                                return;
+                            }
+                            if (numberOfRooms < 1 || numberOfRooms > 500) {
+                                alert('Số phòng phải phải là số dương.');
+                                return;
+                            }
 
                             var buildingData = {
                                 Name: $('#Name').val(),
-                                TotalFloors: $('#TotalFloors').val(),
-                                NumberOfRooms: $('#NumberOfRooms').val(),
-                                ProvinceName: $('#ProvinceId').val(), // Sử dụng data-id
+                                TotalFloors: totalFloors,
+                                NumberOfRooms: numberOfRooms,
+                                ProvinceName: $('#ProvinceId').val(),
                                 DistrictName: $('#DistrictId').val(),
                                 WardName: $('#WardId').val(),
                                 AddressDetails: $('#AddressDetails').val(),
                                 BuildingStatus: $('#BuildingStatus').val()
                             };
-                            console.log
 
                             $.ajax({
                                 url: 'https://localhost:5001/api/Building/AddBuilding',
@@ -480,7 +492,7 @@ h1 {
                                 data: JSON.stringify(buildingData),
                                 success: function (response) {
                                     alert('Tòa nhà đã được tạo thành công.');
-                                    // Có thể chuyển hướng hoặc làm gì đó sau khi thành công
+                                    // You can redirect or perform another action here if needed
                                 },
                                 error: function (xhr) {
                                     alert('Có lỗi xảy ra: ' + xhr.responseText);
@@ -488,19 +500,16 @@ h1 {
                             });
                         });
                     });
+
                     function toggleSubmenu(event) {
                         event.preventDefault();
                         var submenu = event.currentTarget.nextElementSibling;
                         submenu.style.display = submenu.style.display === "none" ? "block" : "none";
                     }
-
-
                 </script>
-
-
-
-
             </div>
+
+
         </div>
 
     </div>

@@ -1,29 +1,50 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RMS_Client.Services; // Đảm bảo sử dụng namespace đúng
-
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
+using Newtonsoft.Json;
+using RMS_API.DTOs;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace RMS_Client.Controllers
 {
+
     public class BuildingController : Controller
     {
-        private readonly BuildingService _buildingService;
 
-        public BuildingController(BuildingService buildingService)
+        private readonly HttpClient _client = null;
+        private readonly string BuildingApiUri = "https://localhost:7056/api/Building";
+        private readonly string GetBuildingById = "https://localhost:7056/api/Building/GetBuildingById";
+
+        public BuildingController()
         {
-            _buildingService = buildingService;
+            _client = new HttpClient();
+            var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+            _client.DefaultRequestHeaders.Accept.Add(contentType);
         }
-
-        // Action để lấy danh sách các tòa nhà
-        public async Task<IActionResult> ListBuilding()
+        
+            public async Task<IActionResult> ListBuilding()
         {
-            var buildings = await _buildingService.GetAllBuildingsAsync(); 
-            return View(buildings); // Trả về view với danh sách tòa nhà
+            string apiUrlBuilding = BuildingApiUri + "/GetAllBuildings";
+            var buildings = new List<BuildingDTO>();
+            var responseBuilding = await _client.GetAsync(apiUrlBuilding);
+            if (responseBuilding.IsSuccessStatusCode)
+            {
+                var json = await responseBuilding.Content.ReadAsStringAsync();
+                buildings = JsonConvert.DeserializeObject<List<BuildingDTO>>(json);
+            }
+            return View(buildings);
         }
-
-        public async Task<IActionResult> EditBuilding()
+        public async Task<IActionResult> EditBuilding(int? id)
         {
-            
-            return View();
+            string apiUrlGetBuildingById = GetBuildingById + "/id";
+            var buildings = new BuildingDTO();
+            var res = await _client.GetAsync(apiUrlGetBuildingById);
+            if (res.IsSuccessStatusCode)
+            {
+                var json = await res.Content.ReadAsStringAsync();
+                buildings = JsonConvert.DeserializeObject<BuildingDTO>(json);
+            }
+            return View(buildings);
         }
     }
 }

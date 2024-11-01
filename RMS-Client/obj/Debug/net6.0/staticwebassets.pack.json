@@ -53,32 +53,12 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\about-1.jpg",
-      "PackagePath": "staticwebassets\\images\\about-1.jpg"
-    },
-    {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\about-2.jpg",
-      "PackagePath": "staticwebassets\\images\\about-2.jpg"
-    },
-    {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\about-3.jpg",
-      "PackagePath": "staticwebassets\\images\\about-3.jpg"
-    },
-    {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\about-4.jpg",
-      "PackagePath": "staticwebassets\\images\\about-4.jpg"
-    },
-    {
       "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\backgrounds\\rocket.png",
       "PackagePath": "staticwebassets\\images\\backgrounds\\rocket.png"
     },
     {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\carousel-1.jpg",
-      "PackagePath": "staticwebassets\\images\\carousel-1.jpg"
-    },
-    {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\carousel-2.jpg",
-      "PackagePath": "staticwebassets\\images\\carousel-2.jpg"
+      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logo.jpg",
+      "PackagePath": "staticwebassets\\images\\logo.jpg"
     },
     {
       "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logos\\dark-logo.svg",
@@ -113,52 +93,28 @@
       "PackagePath": "staticwebassets\\images\\profile\\user-1.jpg"
     },
     {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\room-1.jpg",
-      "PackagePath": "staticwebassets\\images\\room-1.jpg"
+      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\rms_logo.png",
+      "PackagePath": "staticwebassets\\images\\rms_logo.png"
     },
     {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\room-2.jpg",
-      "PackagePath": "staticwebassets\\images\\room-2.jpg"
+      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\room1.jpg",
+      "PackagePath": "staticwebassets\\images\\room1.jpg"
     },
     {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\room-3.jpg",
-      "PackagePath": "staticwebassets\\images\\room-3.jpg"
+      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\room2.jpg",
+      "PackagePath": "staticwebassets\\images\\room2.jpg"
     },
     {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\team-1.jpg",
-      "PackagePath": "staticwebassets\\images\\team-1.jpg"
+      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\room3.jpg",
+      "PackagePath": "staticwebassets\\images\\room3.jpg"
     },
     {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\team-2.jpg",
-      "PackagePath": "staticwebassets\\images\\team-2.jpg"
+      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\room4.jpg",
+      "PackagePath": "staticwebassets\\images\\room4.jpg"
     },
     {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\team-3.jpg",
-      "PackagePath": "staticwebassets\\images\\team-3.jpg"
-    },
-    {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\team-4.jpg",
-      "PackagePath": "staticwebassets\\images\\team-4.jpg"
-    },
-    {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\testimonial-1.jpg",
-      "PackagePath": "staticwebassets\\images\\testimonial-1.jpg"
-    },
-    {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\testimonial-2.jpg",
-      "PackagePath": "staticwebassets\\images\\testimonial-2.jpg"
-    },
-    {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\testimonial-3.jpg",
-      "PackagePath": "staticwebassets\\images\\testimonial-3.jpg"
-    },
-    {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\testimonial-4.jpg",
-      "PackagePath": "staticwebassets\\images\\testimonial-4.jpg"
-    },
-    {
-      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\video.jpg",
-      "PackagePath": "staticwebassets\\images\\video.jpg"
+      "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\room5.jpg",
+      "PackagePath": "staticwebassets\\images\\room5.jpg"
     },
     {
       "Id": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\js\\app.min.js",
