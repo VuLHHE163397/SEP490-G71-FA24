@@ -1,7 +1,6 @@
 ﻿using RMS_API.Models;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
-using RMS_API.Models;
 using System;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

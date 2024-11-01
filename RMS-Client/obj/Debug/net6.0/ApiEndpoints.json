@@ -154,6 +154,22 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "GetRoomDetail",
+    "RelativePath": "api/Room/detail/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "GetActiveRooms",
     "RelativePath": "api/Room/GetActiveRooms",
     "HttpMethod": "GET",
