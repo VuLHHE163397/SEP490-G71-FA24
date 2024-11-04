@@ -1,0 +1,72 @@
+﻿@model RMS_API.DTOs.RoomDTO
+
+<div class="container">
+    <h4 class="text-primary">Thêm phòng mới</h4>
+    <form asp-action="CreateRoom" method="post">
+        <!-- Cập nhật lại thành asp-action="CreateRoom" -->
+        <div class="form-group">
+            <label for="RoomNumber">Số phòng</label>
+            <input asp-for="RoomNumber" class="form-control" required />
+            <span asp-validation-for="RoomNumber" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="Price">Giá phòng</label>
+            <input asp-for="Price" type="number" class="form-control" required />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="Area">Diện tích</label>
+            <input asp-for="Area" type="number" class="form-control" required />
+            <span asp-validation-for="Area" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="Description">Mô tả</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="Floor">Tầng</label>
+            <input asp-for="Floor" type="number" class="form-control" required />
+            <span asp-validation-for="Floor" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="BuildingId">Tòa nhà</label>
+            <select asp-for="BuildingId" class="form-control" required>
+                <option value="">Chọn tòa nhà</option>
+                @foreach (var building in ViewBag.Buildings)
+                {
+                    <option value="@building.Id">@building.Name</option>
+                }
+            </select>
+            <span asp-validation-for="BuildingId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="RoomStatusId">Trạng thái phòng</label>
+            <select asp-for="RoomStatusId" class="form-control" required>
+                <option value="">Chọn trạng thái</option>
+                @foreach (var status in ViewBag.Status)
+                {
+                    <option value="@status.Id">@status.Name</option>
+                }
+            </select>
+            <span asp-validation-for="RoomStatusId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ServiceId">ServiceId</label>
+            <input asp-for="ServiceId" type="number" class="form-control" required />
+            <span asp-validation-for="ServiceId" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Thêm phòng</button>
+    </form>
+</div>
+
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}

@@ -1,5 +1,8 @@
 ﻿@using RMS_API.DTOs
 @model IEnumerable<RMS_API.Models.Room>
+@{
+    var buildingId = Model.FirstOrDefault()?.BuildingId; // Lấy BuildingId từ phòng đầu tiên, nếu có
+}
 
 <!doctype html>
 <html lang="en">
@@ -276,43 +279,46 @@
                     </div>
                     <div class="row g-4">
                         <div class="col-md-3 offset-md-1">
-                            <div id="statusFilter" class="border p-3 rounded">
-                                <div class="form-check">
-                                    <label class="form-check-label" for="statusAll">
-                                        Trạng thái phòng
-                                    </label>
-                                </div>
-                                @foreach (var status in ViewBag.Status)
-                                {
-                                    <div class="form-check">
-                                        <input class="form-check-input status-checkbox" type="checkbox" id="status@status.Id" value="@status.Id"> <!-- Thêm value -->
-                                        <label class="form-check-label" for="status@status.Id">
-                                            @{
-                                                string statusNameInVietnamese;
-                                                switch (status.Name)
-                                                {
-                                                    case "Empty":
-                                                        statusNameInVietnamese = "Trống";
-                                                        break;
-                                                    case "Not Empty":
-                                                        statusNameInVietnamese = "Không trống";
-                                                        break;
-                                                    case "Repairing":
-                                                        statusNameInVietnamese = "Đang sửa chữa";
-                                                        break;
-                                                    case "About to be Empty":
-                                                        statusNameInVietnamese = "Sắp hết hạn";
-                                                        break;
-                                                    default:
-                                                        statusNameInVietnamese = status.Name;
-                                                        break;
+                            <form method="get" asp-action="ListRoom" id="statusFilterForm">
+                                <input type="hidden" name="buildingId" value="@ViewBag.SelectedBuildingId" />
+
+                                <label>Trạng thái phòng:</label>
+                                <div>
+                                    @foreach (var status in ViewBag.Status as List<RMS_API.Models.RoomStatus>)
+                                    {
+                                        <div>
+                                            <input type="checkbox" name="statusIds" value="@status.Id"
+                                            @(ViewBag.SelectedStatusIds != null && ((List<int>)ViewBag.SelectedStatusIds).Contains(status.Id) ? "checked" : "")
+                                                   onchange="submitFilterForm()" />
+                                            <label>
+                                                @{
+                                                    string statusNameInVietnamese;
+                                                    switch (status.Name)
+                                                    {
+                                                        case "Empty":
+                                                            statusNameInVietnamese = "Trống";
+                                                            break;
+                                                        case "Not Empty":
+                                                            statusNameInVietnamese = "Không trống";
+                                                            break;
+                                                        case "Repairing":
+                                                            statusNameInVietnamese = "Đang sửa chữa";
+                                                            break;
+                                                        case "About to be Empty":
+                                                            statusNameInVietnamese = "Sắp hết hạn";
+                                                            break;
+                                                        default:
+                                                            statusNameInVietnamese = status.Name;
+                                                            break;
+                                                    }
                                                 }
-                                            }
-                                            @statusNameInVietnamese
-                                        </label>
-                                    </div>
-                                }
-                            </div>
+                                                @statusNameInVietnamese
+                                            </label>
+
+                                        </div>
+                                    }
+                                </div>
+                            </form>
                         </div>
 
                         <div class="col-md-3">
@@ -331,8 +337,11 @@
                                 <a class="btn btn-success mb-2" style="width: 200px;">
                                     <i class="ti ti-user"></i> Khách thuê
                                 </a>
-                                <a class="btn btn-warning" style="width: 200px;">
+                                <a class="btn btn-success mb-2" style="width: 200px;" asp-controller="Room" asp-action="CreateRoom" asp-route-buildingId="@buildingId">
                                     <i class="ti ti-bed"></i> Thêm Phòng
+                                </a>
+                                <a class="btn btn-success mb-2" style="width: 200px;">
+                                    <i class="ti ti-file-export"></i> Xuất phòng
                                 </a>
                             </div>
                         </div>
@@ -342,49 +351,78 @@
 
             @* Hiển thị đanh sách phòng *@
 
-            <div class="container-xxl py-5">
-                <div class="container">
-                    <div class="row g-4 mt-4">
-                        @foreach (var room in Model)
+            <table class="table table-striped mt-4">
+                <thead>
+                    <tr>
+                        <th>Số Phòng</th>
+                        <th>Diện tích</th>
+                        <th>Giá phòng</th>
+                        <th>Trạng thái</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var room in Model)
                         {
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                                <div class="room-item shadow rounded overflow-hidden">
-                                    <div class="ti ti-home" style="padding: 10px 10px;float:left;width: 60%; font-size:20px">
-                                        @room.RoomNumber
-                                    </div>
-                                    <div class="position-relative">
-                                        <img class="img-fluid" src="~/images/room1.jpg" alt="">
-                                    </div>
-                                    <div class="p-4 mt-2">
-                                        <div class="row g-3">
-                                            <div class="ti ti-coin">
-                                                Giá phòng: @room.Price VND
-                                            </div>
-                                            <div class="ti ti-user">
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between mt-4">
-                                            <a class="btn btn-sm btn-primary rounded py-2 px-4">Chỉnh sửa</a>
-                                            <a class="btn btn-danger py-2 px-4">Xóa Phòng</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <tr>
+                                <td>@room.RoomNumber</td>
+                                <td>@room.Area</td>
+                                <td>@string.Format("{0:N0} VNĐ", room.Price)</td>
+                                <td>
+                                    @{
+                                        string statusNameVi;
+                                        switch (room.RooomStatusId)
+                                        {
+                                            case 1:
+                                                statusNameVi = "Trống";
+                                                break;
+                                            case 2:
+                                                statusNameVi = "Đã có người";
+                                                break;
+                                            case 3:
+                                                statusNameVi = "Đang sửa chữa";
+                                                break;
+                                            case 4:
+                                                statusNameVi = "Sắp trống";
+                                                break;
+                                            default:
+                                                statusNameVi = room.RooomStatusId.ToString();
+                                                break;
+                                        }
+                                    }
+                                    @statusNameVi
+                                </td>
+                                <td>
+                                    <a asp-controller="Room" asp-action="View" asp-route-id="@room.Id" class="btn btn-info">View</a>
+                                    <a asp-controller="Room" asp-action="Delete" asp-route-id="@room.Id" class="btn btn-danger">Delete</a>
+                                </td>
+                            </tr>
                         }
-                    </div>
-                </div>
-            </div>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No rooms found for this building and status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+
         </div>
-        <script>
+    </div>
+    <script>
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            var submenu = event.currentTarget.nextElementSibling;
+            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
+        }
 
-
-            function toggleSubmenu(event) {
-                event.preventDefault();
-                var submenu = event.currentTarget.nextElementSibling;
-                submenu.style.display = submenu.style.display === "none" ? "block" : "none";
-            }
-
-        </script>
-
+        function submitFilterForm() {
+            document.getElementById("statusFilterForm").submit();
+        }
+    </script>
 </body>
 </html>

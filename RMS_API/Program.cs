@@ -1,7 +1,6 @@
 ﻿using RMS_API.Models;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
-using RMS_API.Models;
 using System;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -47,6 +46,11 @@ builder.Services.AddDbContext<RMS_SEP490Context>(options =>
     options.UseSqlServer(connectionString);
 });
 
+builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+        });
 
 
 builder.Services.AddCors(opts =>

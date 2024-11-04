@@ -39,7 +39,7 @@ namespace RMS_API.Controllers
                     ProvinceName = b.Province.Name,
                     DistrictName = b.District.Name,
                     WardName = b.Ward.Name,
-                    AddressDetails = $"{b.Address.Ward.Name}, {b.Address.District.Name}, {b.Address.Province.Name}",
+                    AddressDetails = $"{b.Address.Information},{b.Address.Ward.Name}, {b.Address.District.Name}, {b.Address.Province.Name}",
                     BuildingStatus = b.BuildingStatus.Name
                 })
                 .ToList();
