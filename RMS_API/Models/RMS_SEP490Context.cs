@@ -227,18 +227,14 @@ namespace RMS_API.Models
 
             modelBuilder.Entity<Image>(entity =>
             {
-                entity.HasNoKey();
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Link).HasColumnName("link");
 
                 entity.Property(e => e.RoomId).HasColumnName("roomID");
 
                 entity.HasOne(d => d.Room)
-                    .WithMany()
+                    .WithMany(p => p.Images)
                     .HasForeignKey(d => d.RoomId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_images_Rooms");
@@ -321,8 +317,6 @@ namespace RMS_API.Models
                 entity.Property(e => e.RoomNumber).HasColumnName("roomNumber");
 
                 entity.Property(e => e.RooomStatusId).HasColumnName("rooomStatusId");
-
-                entity.Property(e => e.ServiceId).HasColumnName("serviceId");
 
                 entity.Property(e => e.StartedDate)
                     .HasColumnType("date")

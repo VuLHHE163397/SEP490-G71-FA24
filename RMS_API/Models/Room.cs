@@ -8,6 +8,7 @@ namespace RMS_API.Models
         public Room()
         {
             Facilities = new HashSet<Facility>();
+            Images = new HashSet<Image>();
             MaintainanceRequests = new HashSet<MaintainanceRequest>();
             RoomHistories = new HashSet<RoomHistory>();
             Tennants = new HashSet<Tennant>();
@@ -23,11 +24,11 @@ namespace RMS_API.Models
         public DateTime? ExpiredDate { get; set; }
         public int BuildingId { get; set; }
         public int RooomStatusId { get; set; }
-        public int? ServiceId { get; set; }
 
         public virtual Building Building { get; set; } = null!;
         public virtual RoomStatus RooomStatus { get; set; } = null!;
         public virtual ICollection<Facility> Facilities { get; set; }
+        public virtual ICollection<Image> Images { get; set; }
         public virtual ICollection<MaintainanceRequest> MaintainanceRequests { get; set; }
         public virtual ICollection<RoomHistory> RoomHistories { get; set; }
         public virtual ICollection<Tennant> Tennants { get; set; }

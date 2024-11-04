@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RMS_API.DTOs;
 using RMS_API.Models;
@@ -16,8 +17,6 @@ namespace RMS_API.Controllers
         {
             _context = context;
         }
-
-
         [HttpGet("GetAllRoom")]
         public IActionResult GetAllRoom()
         {
@@ -39,85 +38,69 @@ namespace RMS_API.Controllers
             return Ok(room);
         }
 
-        [HttpGet("GetAllStatus")]
-        public IActionResult GetAllStatus()
+        [HttpGet("GetActiveRooms")]
+        public IActionResult GetActiveRooms()
         {
-            var ro = _context.RoomStatuses.ToList();
-            return Ok(ro);
-        }
-
-        [HttpGet("GetAllBuilding")]
-        public IActionResult GetAllBuilding()
-        {
-            var bui = _context.Buildings.ToList();
-            return Ok(bui);
-        }
-
-        [HttpGet("ListRoom")]
-        public async Task<ActionResult<IEnumerable<Room>>> GetAvailableRooms()
-        {
-            var rooms = await _context.Rooms
-                .Include(r => r.Building) // Đưa thông tin về Building
-                .Include(b => b.Building.Address) // Đưa thông tin về Address
-                .Include(r => r.RooomStatus) // Đưa thông tin về RoomStatus
-                .Where(r => r.RooomStatusId == 1) // Lọc phòng đang trống
-                .ToListAsync();
+            var rooms = _context.Rooms
+                .Where(r => r.RooomStatusId == 1) // Lọc các phòng có trạng thái đang hoạt động
+                .Select(r => new
+                {   
+                    Id=r.Id,
+                    Distance = r.Building.Distance,
+                    Address = $"{r.Building.Address.Information}, {r.Building.Address.Ward.Name}, {r.Building.Address.District.Name}, {r.Building.Address.Province.Name}",
+                    Price = r.Price,
+                    Area = r.Area,
+                    RoomStatusName = r.RooomStatus.Name,
+                    //Images = r.Images.Select(i => i.Link).ToList()
+                })
+                .ToList();
 
             return Ok(rooms);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddRoom([FromBody] RoomDTO roomDTO)
+        [HttpGet("detail/{id}")]
+        public IActionResult GetRoomDetail(int id)
         {
-            // Kiểm tra sự tồn tại của Building
-            var building = await _context.Buildings.FindAsync(roomDTO.BuildingId);
-            if (building == null)
+            // Lấy thông tin phòng theo ID
+            var room = _context.Rooms
+                .Include(r => r.Building)
+                    .ThenInclude(b => b.Address)
+                .Include(r => r.Building)
+                    .ThenInclude(b => b.Ward)
+                .Include(r => r.Building)
+                    .ThenInclude(b => b.District)
+                .Include(r => r.Building)
+                    .ThenInclude(b => b.Province)
+                .Include(r => r.RooomStatus)
+                .Include(r => r.Building.User) // Lấy thông tin chủ nhà
+                .FirstOrDefault(r => r.Id == id);
+
+            if (room == null)
             {
-                return BadRequest("BuildingId không tồn tại.");
+                return NotFound(); // Không tìm thấy phòng
             }
 
-            // Kiểm tra sự tồn tại của RoomStatus
-            var roomStatus = await _context.RoomStatuses.FindAsync(roomDTO.RoomStatusId);
-            if (roomStatus == null)
+            // Tạo RoomDetailDto từ dữ liệu phòng
+            var roomDetailDto = new RoomDetailDTO
             {
-                return BadRequest("RoomStatusId không tồn tại.");
-            }
-
-            // Kiểm tra RoomNumber trong cùng Building có bị trùng không
-            var existingRoom = await _context.Rooms
-                .FirstOrDefaultAsync(r => r.RoomNumber == roomDTO.RoomNumber && r.BuildingId == roomDTO.BuildingId);
-
-            if (existingRoom != null)
-            {
-                return BadRequest("RoomNumber đã tồn tại trong Building này.");
-            }
-
-            // Kiểm tra RoomNumber bắt đầu bằng số tầng
-            int floorPrefix = int.Parse(roomDTO.RoomNumber.ToString()[0].ToString());
-            if (floorPrefix != roomDTO.Floor)
-            {
-                return BadRequest("RoomNumber phải bắt đầu bằng số tầng.");
-            }
-
-            // Tạo đối tượng Room mới từ DTO
-            var room = new Room
-            {
-                Price = roomDTO.Price,
-                RoomNumber = roomDTO.RoomNumber,
-                Area = roomDTO.Area,
-                Description = roomDTO.Description,
-                Floor = roomDTO.Floor,
-                StartedDate = roomDTO.StartedDate,
-                ExpiredDate = roomDTO.ExpiredDate,
-                BuildingId = roomDTO.BuildingId,
-                RooomStatusId = roomDTO.RoomStatusId,
-                ServiceId = roomDTO.ServiceId
+                FullAddress = $"{room.Building?.Address?.Information ?? "Chưa có địa chỉ chi tiết"}, " +
+                              $"{room.Building?.Ward?.Name ?? "Chưa có phường"}, " +
+                              $"{room.Building?.District?.Name ?? "Chưa có quận"}, " +
+                              $"{room.Building?.Province?.Name ?? "Chưa có tỉnh"}",
+                Price = room.Price,
+                Area = room.Area,
+                Distance = room.Building?.Distance ?? 0,
+                Description = room.Description,
+                RoomStatus = room.RooomStatus?.Name ?? "Trạng thái không xác định",
+                OwnerName = $"{room.Building?.User?.LastName ?? ""} " +
+                            $"{room.Building?.User?.MidName ?? ""} " +
+                            $"{room.Building?.User?.FirstName ?? ""}".Trim(),
+                OwnerPhone = room.Building?.User?.Phone ?? "Số điện thoại không có sẵn",
+                LinkEmbedMap = room.Building?.LinkEmbedMap ?? "Không có liên kết bản đồ",
+                // ImageUrl = room.ImageUrl // Thêm trường ảnh nếu có
             };
 
-            _context.Rooms.Add(room);
-            await _context.SaveChangesAsync(); // Đảm bảo dữ liệu được lưu trước khi trả về
-
-            return Ok(room);
+            return Ok(roomDetailDto);
         }
 
     }

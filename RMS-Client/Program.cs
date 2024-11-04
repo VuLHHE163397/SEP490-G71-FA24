@@ -36,6 +36,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthorization();
 app.UseStaticFiles();
 
 // Sử dụng CORS
@@ -48,11 +49,10 @@ app.UseEndpoints(endpoints =>
 });
 
 
-app.UseAuthorization();
 
 // Cấu hình route mặc định cho ứng dụng.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Building}/{action=ListBuilding}/{id?}"); // Đặt controller mặc định là Home và action là Index
+    pattern: "{controller=Home}/{action=Home}/{id?}"); // Đặt controller mặc định là Home và action là Index
 
 app.Run();
