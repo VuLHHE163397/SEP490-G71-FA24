@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {}
+    "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {}
   },
   "projects": {
-    "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
+    "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
+        "projectUniqueName": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
         "projectName": "RMS_API",
-        "projectPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
-        "packagesPath": "C:\\Users\\bangc\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\obj\\",
+        "projectPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
+        "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
+        "outputPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490-G71-FA24\\RMS_API\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "D:\\Visual Studio 2022\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\bangc\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,7 +22,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -39,6 +34,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -105,7 +105,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
         }
       }
     }
