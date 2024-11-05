@@ -1,7 +1,4 @@
-﻿@model List<RMS_API.DTOs.ServiceDTO>
-@{
-    ViewData["Title"] = "Danh sách dịch vụ"; // Page title
-}
+﻿
 <!doctype html>
 <html lang="en">
 
@@ -220,14 +217,6 @@
                     </div>
                     <div class="d-flex justify-content-between align-item-center" style="margin-top: 0.5rem">
                         <div class="d-flex align-item-center" style="align-items: center">
-                            <span>Xem</span>
-                            <select class="form-select">
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>
-                            <span>Mục</span>
                         </div>
                         <div class="d-flex align-items-center">
                             <span>Tìm:</span>
@@ -243,15 +232,20 @@
                                 <th>Tùy chọn</th>
                             </tr>
                         </thead>
+                        @model List<RMS_API.DTOs.ServiceDTO>
+                        @{
+                            ViewData["Title"] = "Danh sách dịch vụ"; // Page title
+                        }
                         <tbody>
+
                             @if (Model != null && Model.Any())
                             {
-                                foreach (var service in Model)
+                                foreach (var services in Model)
                                 {
                                     <tr>
-                                        <td>@service.Id</td>
-                                        <td>@service.Name</td>
-                                        <td>@service.Price</td>
+                                        <td>@services.Id</td>
+                                        <td>@services.Name</td>
+                                        <td>@services.Price</td>
                                         <td>
                                             <a href="/Service/EditService" class="btn btn-primary">Sửa</a>
                                             <button class="btn btn-danger">Xóa</button>
