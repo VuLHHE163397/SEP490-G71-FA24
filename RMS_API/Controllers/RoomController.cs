@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using RMS_API.DTOs;
 using RMS_API.Models;
 
@@ -44,8 +45,8 @@ namespace RMS_API.Controllers
             var rooms = _context.Rooms
                 .Where(r => r.RooomStatusId == 1) // Lọc các phòng có trạng thái đang hoạt động
                 .Select(r => new
-                {   
-                    Id=r.Id,
+                {
+                    Id = r.Id,
                     Distance = r.Building.Distance,
                     Address = $"{r.Building.Address.Information}, {r.Building.Address.Ward.Name}, {r.Building.Address.District.Name}, {r.Building.Address.Province.Name}",
                     Price = r.Price,
@@ -102,6 +103,6 @@ namespace RMS_API.Controllers
 
             return Ok(roomDetailDto);
         }
-
     }
+
 }

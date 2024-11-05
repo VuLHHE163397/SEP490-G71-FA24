@@ -116,7 +116,7 @@
                             </div>
                         </div>
                         <!-- Favorite Count Icon in Header -->
-                        <a href="#" class="btn btn-outline-danger rounded-circle position-relative">
+                        <a asp-controller="Home" asp-action="ListFavouriteRoom" class="btn btn-outline-danger rounded-circle position-relative">
                             <i class="fa fa-heart"></i>
                             <span id="favoriteCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                 0
@@ -153,7 +153,6 @@
                             <p><strong>Khoảng cách:</strong> @Model.Distance?.ToString("0") km</p>
                             <p><strong>Trạng thái phòng:</strong> @Model.RoomStatus</p>
                             <p><strong>Mô tả chi tiết:</strong> @Model.Description</p>
-
                             @if (!string.IsNullOrEmpty(Model.LinkEmbedMap))
                             {
                                 <h4>Vị trí trên bản đồ</h4>
@@ -166,7 +165,7 @@
 
                     <!-- Right Column (Suggested Rooms) -->
                     <div class="right-column">
-                        <h4>Phòng gợi ý</h4>
+                        <h4>Phòng cùng khu vực</h4>
                         <div>
                             <!-- Add code to dynamically display suggested rooms -->
                             <p>Phòng A - Giá: 2 triệu VND</p>
@@ -208,5 +207,62 @@
 
     <!-- Template Javascript -->
     <script src="~/js/main.js"></script>
+    <script>
+        // Function to get favorites from cookies
+        function getFavorites() {
+            const favorites = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('favorites='))
+                ?.split('=')[1];
+            return favorites ? JSON.parse(decodeURIComponent(favorites)) : [];
+        }
+
+        // Function to set favorites in cookies with an expiration of 7 days
+        function setFavorites(favorites) {
+            const now = new Date();
+            now.setTime(now.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days
+            const expires = "expires=" + now.toUTCString();
+            document.cookie = 'favorites=' + encodeURIComponent(JSON.stringify(favorites)) + '; ' + expires + '; path=/';
+        }
+
+        // Function to update the favorite count in the header
+        function updateFavoriteCount() {
+            const favorites = getFavorites();
+            const favoriteCount = favorites.length;
+            const favoriteCountElement = document.getElementById('favoriteCount');
+            if (favoriteCountElement) {
+                favoriteCountElement.innerText = favoriteCount; // Update favorite count
+            }
+        }
+
+        // Function to toggle favorite status
+        function toggleFavorite(element) {
+            const roomId = element.getAttribute("data-room-id");
+            const roomAddress = element.getAttribute("data-room-address");
+            const roomImage = "~/images/room1.jpg"; // Fixed image path
+
+            let favorites = getFavorites();
+
+            // Check if the room is already in favorites
+            const existingFavoriteIndex = favorites.findIndex(room => room.id === roomId);
+
+            if (existingFavoriteIndex === -1) {
+                // Add to favorites if not already present
+                favorites.push({ id: roomId, image: roomImage, address: roomAddress });
+            } else {
+                // Remove from favorites if already present
+                favorites.splice(existingFavoriteIndex, 1);
+            }
+
+            setFavorites(favorites);
+            updateFavoriteCount();
+        }
+
+        // Initialize favorite count on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateFavoriteCount(); // Display favorite count from cookie when page loads
+        });
+
+    </script>
 </body>
 </html>

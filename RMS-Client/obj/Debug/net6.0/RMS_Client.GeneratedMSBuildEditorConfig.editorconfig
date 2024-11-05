@@ -54,8 +54,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Home/ListRoom.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxMaXN0Um9vbS5jc2h0bWw=
+[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Home/ListFavouriteRoom.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxMaXN0RmF2b3VyaXRlUm9vbS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Home/Privacy.cshtml]
@@ -78,8 +78,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cUmVzZXRQYXNzd29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Profile/ChangedPassord.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxDaGFuZ2VkUGFzc29yZC5jc2h0bWw=
+[D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Profile/ChangedPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxDaGFuZ2VkUGFzc3dvcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/GitHub/SEP490-G71-FA24/RMS-Client/Views/Profile/EditProfile.cshtml]
