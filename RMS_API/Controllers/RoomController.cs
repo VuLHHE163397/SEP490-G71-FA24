@@ -32,6 +32,22 @@ namespace RMS_API.Controllers
             return Ok(room);
         }
 
+        [HttpGet("GetBuildingById")]
+        public IActionResult GetBuildingNameById(int buildingId)
+        {
+            var buildingName = _context.Buildings
+                                       .Where(p => p.Id == buildingId)
+                                       .Select(p => p.Name)
+                                       .FirstOrDefault();
+
+            if (buildingName == null)
+            {
+                return NotFound("Building not found.");
+            }
+
+            return Ok(buildingName);
+        }
+
         [HttpGet("GetRoomByStatus")]
         public IActionResult GetRoomByStatus(int statusId)
         {

@@ -340,7 +340,7 @@
                                 <a class="btn btn-success mb-2" style="width: 200px;" asp-controller="Room" asp-action="CreateRoom" asp-route-buildingId="@buildingId">
                                     <i class="ti ti-bed"></i> Thêm Phòng
                                 </a>
-                                <a asp-action="ExportToExcel" class="btn btn-success mb-2" style="width: 200px;">
+                                <a asp-action="ExportToExcel" asp-route-buildingId="@buildingId" class="btn btn-success mb-2" style="width: 200px;">
                                     <i class="ti ti-file-export"></i> Xuất phòng
                                 </a>
                             </div>

@@ -50,6 +50,6 @@ app.UseAuthorization();
 // Configure default route for controllers.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Home}/{id?}");
+    pattern: "{controller=Building}/{action=ListBuilding}/{id?}");
 
 app.Run();
