@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using OfficeOpenXml.Style;
+using OfficeOpenXml;
 using RMS_API.DTOs;
 using RMS_API.Models;
 using System;
@@ -88,7 +90,7 @@ namespace RMS_Client.Controllers
             //};
 
             // Lấy danh sách tòa nhà
-            string apiUrlBuilding = BuildingApiUri + "/GetAllBuildings";
+            string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";
             HttpResponseMessage buildingResponse = await client.GetAsync(apiUrlBuilding);
             if (buildingResponse.IsSuccessStatusCode)
             {
@@ -110,7 +112,7 @@ namespace RMS_Client.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRoom(RoomDTO roomDTO)
+        public async Task<IActionResult> CreateRoom(RoomLlDTO roomDTO)
         {
             if (ModelState.IsValid)
             {
@@ -138,6 +140,74 @@ namespace RMS_Client.Controllers
 
             // Nếu có lỗi hoặc ModelState không hợp lệ, trả về lại View với dữ liệu đã nhập
             return View(roomDTO);
+        }
+
+        public async Task<IActionResult> ExportToExcel()
+        {
+            var rooms = new List<Room>(); // Lấy danh sách phòng từ database
+            var response = await client.GetAsync(RoomApiUri + "/GetAllRoom");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                rooms = JsonConvert.DeserializeObject<List<Room>>(json);
+            }
+
+            using (var package = new ExcelPackage())
+            {
+                // Tạo một worksheet
+                var worksheet = package.Workbook.Worksheets.Add("Rooms");
+
+                // Tiêu đề cột
+                worksheet.Cells[1, 1].Value = "Room Number";
+                worksheet.Cells[1, 2].Value = "Area (m²)";
+                worksheet.Cells[1, 3].Value = "Floor";
+                worksheet.Cells[1, 4].Value = "Price (VNĐ)";
+                worksheet.Cells[1, 5].Value = "Status";
+
+                // Định dạng tiêu đề
+                using (var range = worksheet.Cells[1, 1, 1, 5])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                    range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                }
+
+                // Điền dữ liệu phòng vào các dòng tiếp theo
+                int row = 2;
+                foreach (var room in rooms)
+                {
+                    worksheet.Cells[row, 1].Value = room.RoomNumber;
+                    worksheet.Cells[row, 2].Value = room.Area;
+                    worksheet.Cells[row, 3].Value = room.Floor;
+                    worksheet.Cells[row, 4].Value = room.Price.ToString("N0") + " VNĐ";
+
+                    // Chuyển đổi trạng thái sang tiếng Việt
+                    string statusNameVi = room.RooomStatusId switch
+                    {
+                        1 => "Trống",
+                        2 => "Đã có người",
+                        3 => "Đang sửa chữa",
+                        4 => "Sắp trống",
+                        _ => room.RooomStatus.Name,
+                    };
+                    worksheet.Cells[row, 5].Value = statusNameVi;
+
+                    row++;
+                }
+
+                // Auto-fit các cột
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                // Tạo file Excel dưới dạng MemoryStream
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+                stream.Position = 0;
+
+                // Trả về file Excel để tải về
+                var fileName = "Rooms_List.xlsx";
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
         }
 
     }

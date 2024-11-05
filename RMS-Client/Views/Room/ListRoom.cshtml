@@ -88,7 +88,7 @@
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a asp-controller="Statistic" asp-action="ViewStatistic" class="text-nowrap logo-img">
-                        <img src="~/images/logos/dark-logo.svg" width="180" alt="" />
+                        <img src="~/images/logo.jpg" width="180" alt="" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
@@ -119,7 +119,7 @@
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
                                 @{
-                                    var buildingsss = ViewBag.Buildings as List<RMS_API.DTOs.BuildingDTO>;
+                                    var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
                                 }
                                 @if (buildingsss != null && buildingsss.Any())
                                 {
@@ -340,7 +340,7 @@
                                 <a class="btn btn-success mb-2" style="width: 200px;" asp-controller="Room" asp-action="CreateRoom" asp-route-buildingId="@buildingId">
                                     <i class="ti ti-bed"></i> Thêm Phòng
                                 </a>
-                                <a class="btn btn-success mb-2" style="width: 200px;">
+                                <a asp-action="ExportToExcel" class="btn btn-success mb-2" style="width: 200px;">
                                     <i class="ti ti-file-export"></i> Xuất phòng
                                 </a>
                             </div>

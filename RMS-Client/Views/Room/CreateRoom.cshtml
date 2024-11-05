@@ -1,4 +1,4 @@
-﻿@model RMS_API.DTOs.RoomDTO
+﻿@model RMS_API.DTOs.RoomLlDTO
 
 <div class="container">
     <h4 class="text-primary">Thêm phòng mới</h4>
@@ -50,11 +50,6 @@
                 }
             </select>
             <span asp-validation-for="RoomStatusId" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="ServiceId">ServiceId</label>
-            <input asp-for="ServiceId" type="number" class="form-control" required />
-            <span asp-validation-for="ServiceId" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary mt-3">Thêm phòng</button>
     </form>
