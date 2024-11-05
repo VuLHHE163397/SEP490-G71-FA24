@@ -322,8 +322,6 @@ namespace RMS_API.Models
 
                 entity.Property(e => e.RooomStatusId).HasColumnName("rooomStatusId");
 
-                entity.Property(e => e.ServiceId).HasColumnName("serviceId");
-
                 entity.Property(e => e.StartedDate)
                     .HasColumnType("date")
                     .HasColumnName("startedDate");

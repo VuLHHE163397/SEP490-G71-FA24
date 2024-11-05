@@ -3496,11 +3496,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
+      "projectUniqueName": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\test\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
       "projectName": "RMS_API",
-      "projectPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
+      "projectPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\test\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
       "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
-      "outputPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\obj\\",
+      "outputPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\test\\SEP490-G71-FA24\\RMS_API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config",

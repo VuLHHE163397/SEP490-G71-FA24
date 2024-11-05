@@ -3411,11 +3411,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
+      "projectUniqueName": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\test\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
       "projectName": "RMS_Client",
-      "projectPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
+      "projectPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\test\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
       "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
-      "outputPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\obj\\",
+      "outputPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\test\\SEP490-G71-FA24\\RMS-Client\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -3432,8 +3432,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
-              "projectPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj"
+            "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\test\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
+              "projectPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\test\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj"
             }
           }
         }
