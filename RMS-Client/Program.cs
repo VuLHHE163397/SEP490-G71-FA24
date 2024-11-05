@@ -7,22 +7,19 @@ using RMS_API.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register services in the container.
+// Thêm các dịch vụ vào container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient();
 
 
-
-
-// Configure CORS to allow all origins, methods, and headers.
+// Cấu hình CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
-        policyBuilder => policyBuilder.AllowAnyOrigin()
-                                      .AllowAnyMethod()
-                                      .AllowAnyHeader());
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
 });
-
-// Configure DbContext with SQL Server connection.
 builder.Services.AddDbContext<RMS_SEP490Context>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -31,7 +28,7 @@ builder.Services.AddDbContext<RMS_SEP490Context>(options =>
 
 var app = builder.Build();
 
-// Configure HTTP request pipeline.
+// Cấu hình pipeline yêu cầu HTTP.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -39,17 +36,22 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthorization();
 app.UseStaticFiles();
 
-// Enable CORS with configured policy.
+// Sử dụng CORS
 app.UseCors("AllowAllOrigins");
-
 app.UseRouting();
-app.UseAuthorization();
 
-// Configure default route for controllers.
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers(); // Đảm bảo rằng bạn đã cấu hình đúng
+});
+
+
+// Cấu hình route mặc định cho ứng dụng.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Building}/{action=ListBuilding}/{id?}");
+    pattern: "{controller=Home}/{action=Home}/{id?}"); // Đặt controller mặc định là Home và action là Index
 
 app.Run();

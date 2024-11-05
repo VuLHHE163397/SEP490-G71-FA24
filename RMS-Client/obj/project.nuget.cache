@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HeU9puosn3mrPubJ5ZfmUxxU68FSR1kTzqspq92ypc42EnXvrqj+cNvFhClQc7SfPMPBEh3uTtIvfmHQMLtfmQ==",
+  "dgSpecHash": "2XZTrBdoh4X7CK6xd+3gAGzkAa3zWjOW0pVO95LBSgLPyKSp+Yx2aNka57YnrDql2RIjBruWsmtdbpWZhmzzQA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
+  "projectFilePath": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\DEll\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.30\\microsoft.aspnetcore.authentication.jwtbearer.6.0.30.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\6.0.30\\microsoft.aspnetcore.cryptography.internal.6.0.30.nupkg.sha512",

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "fc4G3LOin/3YMR8K2H9XvR4Kpa13w0DMjo8I+zp5uMJFBKmNomWSbDTdBbfZ5ol0TPbfKvWx2ec58995GILbcw==",
+  "dgSpecHash": "SZEN0t3ite8vpvEKlsw2pgj6APNyBDLVsjakM3YtnK2iDOCVxsYZFASgBPjG7QAjrKmxmp0mBR62wYgXsWebrg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
+  "projectFilePath": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\DEll\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.30\\microsoft.aspnetcore.authentication.jwtbearer.6.0.30.nupkg.sha512",
