@@ -96,8 +96,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XFJlcG9ydERldGFpbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/SEP490-G71-FA24/RMS-Client/Views/Room/AddRoom.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxBZGRSb29tLmNzaHRtbA==
+[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/SEP490-G71-FA24/RMS-Client/Views/Room/CreateRoom.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxDcmVhdGVSb29tLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/SEP490-G71-FA24/RMS-Client/Views/Room/EditRoom.cshtml]
@@ -106,10 +106,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/SEP490-G71-FA24/RMS-Client/Views/Room/ListRoom.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxMaXN0Um9vbS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/SEP490-G71-FA24/RMS-Client/Views/Room/RoomDetail.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxSb29tRGV0YWlsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/DEll/Documents/GitHub/SEP490-G71-FA24/SEP490-G71-FA24/RMS-Client/Views/Room/RoomHistory.cshtml]

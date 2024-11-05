@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="EPPlus" Version="7.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RMS_API\RMS_API.csproj" />
   </ItemGroup>
 
