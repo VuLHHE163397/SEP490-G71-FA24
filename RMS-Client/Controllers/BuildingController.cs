@@ -1,23 +1,136 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RMS_Client.Services; // Đảm bảo sử dụng namespace đúng
-
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using RMS_API.DTOs;
+using RMS_API.Models;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace RMS_Client.Controllers
 {
+
     public class BuildingController : Controller
     {
-        private readonly BuildingService _buildingService;
 
-        public BuildingController(BuildingService buildingService)
+        private readonly HttpClient _client = null;
+        private readonly string BuildingApiUri = "https://localhost:7056/api/Building";
+        private readonly string GetBuildingById = "https://localhost:7056/api/Building/GetBuildingById";
+        private readonly string GetDistrictsByProvince = "https://localhost:7056/api/Building/GetDistrictsByProvince";
+        private readonly string GetBuildinImformationgById = "https://localhost:7056/api/Building/GetBuildinImformationgById";
+        public BuildingController()
         {
-            _buildingService = buildingService;
+            _client = new HttpClient();
+            var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+            _client.DefaultRequestHeaders.Accept.Add(contentType);
+        }
+        
+            public async Task<IActionResult> ListBuilding()
+        {
+            string apiUrlBuilding = BuildingApiUri + "/GetAllBuildings";
+            var buildings = new List<BuildingDTO>();
+            var responseBuilding = await _client.GetAsync(apiUrlBuilding);
+            if (responseBuilding.IsSuccessStatusCode)
+            {
+                var json = await responseBuilding.Content.ReadAsStringAsync();
+                buildings = JsonConvert.DeserializeObject<List<BuildingDTO>>(json);
+            }
+            return View(buildings);
         }
 
-        // Action để lấy danh sách các tòa nhà
-        public async Task<IActionResult> ListBuilding()
+
+        public async Task<IActionResult> BuildingDetail(int? id)
         {
-            var buildings = await _buildingService.GetAllBuildingsAsync(); 
-            return View(buildings); // Trả về view với danh sách tòa nhà
+            if (id == null)
+            {
+                return BadRequest("Building ID is required");
+            }
+
+
+            string apiUrlGetBuildingById = $"{GetBuildinImformationgById}/{id.Value}";
+            var building = new BuildingDTO();
+
+            try
+            {
+                var res = await _client.GetAsync(apiUrlGetBuildingById);
+                if (res.IsSuccessStatusCode)
+                {
+                    var json = await res.Content.ReadAsStringAsync();
+                    building = JsonConvert.DeserializeObject<BuildingDTO>(json);
+                }
+                else
+                {
+
+                    ModelState.AddModelError(string.Empty, "Unable to retrieve building by id.");
+                    return View(building);
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                return View(building);
+            }
+
+            // Pass the building object to the view
+            return View(building);
         }
+
+
+        public async Task<IActionResult> EditBuilding(int? id)
+        {
+
+
+            if (id == null)
+            {
+                return BadRequest("Building ID is required");
+            }
+
+            
+            string apiUrlGetBuildingById = $"{GetBuildingById}/{id.Value}";
+            var building = new BuildingDTO();
+
+            try
+            {
+                var res = await _client.GetAsync(apiUrlGetBuildingById);
+                if (res.IsSuccessStatusCode)
+                {
+                    var json = await res.Content.ReadAsStringAsync();
+                    building = JsonConvert.DeserializeObject<BuildingDTO>(json);
+                }
+                else
+                {
+                    
+                    ModelState.AddModelError(string.Empty, "Unable to retrieve building by id.");
+                    return View(building);  
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                return View(building);
+            }
+            //lay status building
+            /*string apiUrlStatusBu = GetDistrictsByProvince + "/provinceName";
+            var status = new BuildingStatus();
+            var resp = await _client.GetAsync(apiUrlStatusBu);
+            if (resp.IsSuccessStatusCode)
+            {
+                var json = await resp.Content.ReadAsStringAsync();
+                status = JsonConvert.DeserializeObject<BuildingStatus>(json);
+            }
+            ViewBag.Status = status;
+*/
+            return View(building);
+
+
+
+
+           
+        }
+
+
+        
+
+
     }
 }

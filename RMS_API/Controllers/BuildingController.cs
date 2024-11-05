@@ -34,12 +34,14 @@ namespace RMS_API.Controllers
                     Name = b.Name,
                     TotalFloors = b.TotalFloors,
                     NumberOfRooms = (int)b.NumberOfRooms,
+                    Distance = b.Distance,
+                    LinkEmbedMap = b.LinkEmbedMap,
                     CreatedDate = b.CreatedDate,
                     UpdatedDate = b.UpdatedDate,
                     ProvinceName = b.Province.Name,
                     DistrictName = b.District.Name,
                     WardName = b.Ward.Name,
-                    AddressDetails = $"{b.Address.Ward.Name}, {b.Address.District.Name}, {b.Address.Province.Name}",
+                    AddressDetails = $"{b.Address.Information},{b.Address.Ward.Name}, {b.Address.District.Name}, {b.Address.Province.Name}",
                     BuildingStatus = b.BuildingStatus.Name
                 })
                 .ToList();
@@ -148,6 +150,7 @@ namespace RMS_API.Controllers
                 Name = buildingDto.Name,
                 TotalFloors = buildingDto.TotalFloors,
                 NumberOfRooms = buildingDto.NumberOfRooms,
+                Distance = buildingDto.Distance,
                 CreatedDate = DateTime.UtcNow,
                 UpdatedDate = DateTime.UtcNow,
                 ProvinceId = province.Id,
@@ -155,7 +158,9 @@ namespace RMS_API.Controllers
                 WardId = ward.Id,
                 AddressId = address.Id,
                 BuildingStatusId = buildingStatus.Id,
-                UserId = 2
+                UserId = 2,
+                LinkEmbedMap = buildingDto.LinkEmbedMap
+               
 
             };
 
@@ -194,7 +199,53 @@ namespace RMS_API.Controllers
 
             return Ok("Building deleted successfully.");
         }
+        [HttpGet("EditBuilding")]
+        public IActionResult EditBuilding()
+        {
+            ViewBag.Provinces = _context.Provinces.ToList();
 
+            ViewBag.BuildingStatuses = _context.BuildingStatuses.ToList();
+
+            return View();
+        }
+
+        [HttpGet("GetBuildinImformationgById/{id}")]
+        public async Task<IActionResult> GetBuildinImformationgById(int id)
+        {
+            var building = await _context.Buildings
+               .Include(b => b.Address)
+               .Include(b => b.BuildingStatus)
+               .Include(b => b.User)
+               .Include(b => b.Province)
+               .Include(b => b.District)
+               .Include(b => b.Ward)
+               .Where(b => b.Id == id)
+               .Select(b => new BuildingDTO
+               {
+                   Id = b.Id,
+                   Name = b.Name,
+                   TotalFloors = b.TotalFloors,
+                   Distance = b.Distance,
+                   NumberOfRooms = (int)b.NumberOfRooms,
+                   CreatedDate = b.CreatedDate,
+                   UpdatedDate = b.UpdatedDate,
+                   ProvinceName = b.Province.Name,
+                   DistrictName = b.District.Name,
+                   WardName = b.Ward.Name,
+                   AddressDetails = $"{b.Address.Information}",
+                   BuildingStatus = b.BuildingStatus.Name,
+                   LinkEmbedMap = b.LinkEmbedMap
+               })
+               .FirstOrDefaultAsync();
+
+            if (building == null)
+            {
+                return NotFound("Building not found.");
+            }
+
+            return Ok(building);
+
+        }
 
         [HttpGet("GetBuildingById/{id}")]
         public async Task<IActionResult> GetBuildingById(int id)
@@ -213,13 +264,15 @@ namespace RMS_API.Controllers
                     Name = b.Name,
                     TotalFloors = b.TotalFloors,
                     NumberOfRooms = (int)b.NumberOfRooms,
+                    Distance = b.Distance,
                     CreatedDate = b.CreatedDate,
                     UpdatedDate = b.UpdatedDate,
                     ProvinceName = b.Province.Name,
                     DistrictName = b.District.Name,
                     WardName = b.Ward.Name,
-                    AddressDetails = $"{b.Address.Ward.Name}, {b.Address.District.Name}, {b.Address.Province.Name}",
-                    BuildingStatus = b.BuildingStatus.Name
+                    AddressDetails = $"{b.Address.Information}",
+                    BuildingStatus = b.BuildingStatus.Name,
+                    LinkEmbedMap = b.LinkEmbedMap
                 })
                 .FirstOrDefaultAsync();
 
@@ -231,8 +284,11 @@ namespace RMS_API.Controllers
             return Ok(building);
         }
 
+
+
+
         [HttpPut("EditBuilding/{id}")]
-        public async Task<IActionResult> EditBuilding(int id, [FromBody] AddBuildingDTO buildingDto)
+        public async Task<IActionResult> EditBuilding(int id, [FromBody] BuildingDTO buildingDto)
         {
             if (!ModelState.IsValid)
             {
@@ -286,7 +342,9 @@ namespace RMS_API.Controllers
             }
 
             // Update the building details
+            
             building.Name = buildingDto.Name;
+            building.Distance = buildingDto.Distance;
             building.TotalFloors = buildingDto.TotalFloors;
             building.NumberOfRooms = buildingDto.NumberOfRooms;
             building.UpdatedDate = DateTime.UtcNow;
