@@ -306,7 +306,9 @@ namespace RMS_API.Models
 
                 entity.Property(e => e.BuildingId).HasColumnName("buildingId");
 
-                entity.Property(e => e.Description).HasColumnName("description");
+                entity.Property(e => e.Description)
+                    .HasMaxLength(100)
+                    .HasColumnName("description");
 
                 entity.Property(e => e.ExpiredDate)
                     .HasColumnType("date")
