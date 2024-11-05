@@ -329,138 +329,89 @@
                 </nav>
             </header>
             <!--  Header End -->
+
             <div class="container-fluid">
                 <div class="container mt-4">
                     <h1>@ViewData["Title"]</h1>
-
+                    
                     <!-- Form for Editing Building -->
                     <form id="editBuilding" onsubmit="editBuilding(); return false;">
-                        <input type="hidden" id="BuildingId" name="BuildingId" />
+                        <input type="hidden" id="BuildingId" name="BuildingId" value="@Model.Id" />
 
                         <div class="form-group">
                             <label for="Name">Tên Tòa Nhà</label>
-                            <input type="text" class="form-control" id="Name" name="Name" required />
+                            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="Distance">Khoảng cách(Km)</label>
+                            <input type="number" class="form-control" id="Distance" name="Distance" value="@Model.Distance" required readonly />
                         </div>
                         <div class="form-group">
                             <label for="TotalFloors">Số Tầng</label>
-                            <input type="number" class="form-control" id="TotalFloors" name="TotalFloors" required />
+                            <input type="number" class="form-control" id="TotalFloors" name="TotalFloors" value="@Model.TotalFloors" required />
                         </div>
                         <div class="form-group">
                             <label for="NumberOfRooms">Số Phòng</label>
-                            <input type="number" class="form-control" id="NumberOfRooms" name="NumberOfRooms" required />
+                            <input type="number" class="form-control" id="NumberOfRooms" name="NumberOfRooms" value="@Model.NumberOfRooms" required />
                         </div>
                         <div class="form-group">
                             <label for="AddressDetails">Địa Chỉ</label>
-                            <input type="text" class="form-control" id="AddressDetails" name="AddressDetails" required />
+                            <input type="text" class="form-control" id="AddressDetails" name="AddressDetails" value="@Model.AddressDetails" required readonly />
                         </div>
 
                         <div class="form-group">
                             <label for="ProvinceId">Tỉnh/Thành phố</label>
-                            <select class="form-control" id="ProvinceId" name="ProvinceName" required>
-                                <option value="">Chọn Tỉnh/Thành phố</option>
-                                @if (ViewBag.Provinces != null)
-                                {
-                                    foreach (var province in ViewBag.Provinces)
-                                    {
-                                        <option value="@province.Name">@province.Name</option>
-                                    }
-                                }
-                            </select>
+                            <input class="form-control" id="ProvinceId" name="ProvinceName" value="@Model.ProvinceName" required readonly />
                         </div>
                         <div class="form-group">
                             <label for="DistrictId">Quận/Huyện</label>
-                            <select class="form-control" id="DistrictId" name="DistrictName" required>
-                                <option value="">Chọn Quận/Huyện</option>
-                            </select>
+                            <input class="form-control" id="DistrictId" name="DistrictName" value="@Model.DistrictName" required readonly />
                         </div>
                         <div class="form-group">
                             <label for="WardId">Xã/Phường</label>
-                            <select class="form-control" id="WardId" name="WardName" required>
-                                <option value="">Chọn Xã/Phường</option>
-                            </select>
+                            <input class="form-control" id="WardId" name="WardName" value="@Model.WardName" required readonly />
                         </div>
                         <div class="form-group">
                             <label for="BuildingStatus">Trạng Thái</label>
-                            <select class="form-control" id="BuildingStatus" name="BuildingStatus" required>
-                                @if (ViewBag.BuildingStatuses != null)
+                            <input class="form-control" id="BuildingStatus" name="BuildingStatus" value="@Model.BuildingStatus" required />
+                            @* <datalist id="BuildingStatus" >
+                                @foreach (var status in ViewBag.BuildingStatuses)
                                 {
-                                    foreach (var status in ViewBag.BuildingStatuses)
-                                    {
-                                        <option value="@status.Name">@status.Name</option>
-                                    }
+                                    <option value="@status.Name">@status.Name</option>
                                 }
-                            </select>
+                            </datalist> *@
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Lưu</button>
+                        <button type="submit" class="btn btn-primary" href="/Building/ListBuilding">Lưu</button>
                     </form>
                 </div>
             </div>
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             <script>
-                $(document).ready(function () {
-                    $('#ProvinceId').change(function () {
-                        var provinceName = encodeURIComponent($(this).val());
-                        var url = `https://localhost:5001/api/Building/GetDistrictsByProvince/${provinceName}`;
-
-                        if (provinceName) {
-                            $.ajax({
-                                url: url,
-                                type: 'GET',
-                                success: function (data) {
-                                    $('#DistrictId').empty().append('<option value="">Chọn Quận</option>');
-                                    $.each(data, function (index, district) {
-                                        $('#DistrictId').append('<option value="' + district.name + '">' + district.name + '</option>');
-                                    });
-                                },
-                                error: function () {
-                                    alert('Có lỗi xảy ra khi lấy danh sách quận.');
-                                }
-                            });
-                        } else {
-                            $('#DistrictId').empty().append('<option value="">Chọn Quận</option>');
-                        }
-                    });
-
-                    $('#DistrictId').change(function () {
-                        var districtName = encodeURIComponent($(this).val());
-                        var url = `https://localhost:5001/api/Building/GetWardsByDistrict/${districtName}`;
-
-                        if (districtName) {
-                            $.ajax({
-                                url: url,
-                                type: 'GET',
-                                success: function (data) {
-                                    $('#WardId').empty().append('<option value="">Chọn Xã</option>');
-                                    $.each(data, function (index, ward) {
-                                        $('#WardId').append('<option value="' + ward.name + '">' + ward.name + '</option>');
-                                    });
-                                },
-                                error: function () {
-                                    alert('Có lỗi xảy ra khi lấy xã.');
-                                }
-                            });
-                        } else {
-                            $('#WardId').empty().append('<option value="">Chọn Xã</option>');
-                        }
-                    });
-                });
-
                 function editBuilding() {
-                    var buildingId = $('#BuildingId').val();
-                    var url = `https://localhost:5001/api/Building/EditBuilding/${buildingId}`;
+                    // Ensure the building ID is correctly retrieved
+                    var id = $('#BuildingId').val();
+
+                    // Confirm if the ID is valid
+                    if (!id) {
+                        alert('Building ID is missing.');
+                        return;
+                    }
+
+                    var url = `https://localhost:7056/api/Building/EditBuilding/${id}`;
 
                     var buildingData = {
-                        BuildingId: buildingId,
                         Name: $('#Name').val(),
+                        Distance: parseInt($('#Distance').val()),
                         TotalFloors: parseInt($('#TotalFloors').val()),
                         NumberOfRooms: parseInt($('#NumberOfRooms').val()),
                         AddressDetails: $('#AddressDetails').val(),
                         ProvinceName: $('#ProvinceId').val(),
                         DistrictName: $('#DistrictId').val(),
                         WardName: $('#WardId').val(),
-                        BuildingStatus: $('#BuildingStatus').val()
+                        BuildingStatus: $('#BuildingStatus').val(),
+                        
                     };
 
                     $.ajax({
@@ -470,7 +421,9 @@
                         data: JSON.stringify(buildingData),
                         success: function (response) {
                             alert('Cập nhật thành công!');
+
                             location.reload();
+                            window.location.href = '/Building/ListBuilding'
                         },
                         error: function (xhr) {
                             alert('Error: ' + xhr.responseText);
@@ -479,9 +432,10 @@
                 }
             </script>
 
-
-
         </div>
+        
+        <script src="~/lib/simplebar/dist/simplebar.js"></script>
+        
 
 </body>
 

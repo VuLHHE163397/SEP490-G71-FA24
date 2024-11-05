@@ -14,6 +14,7 @@
     <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
 
+
     <!-- Custom CSS Styles -->
     <style>
 
@@ -272,11 +273,13 @@
             <!--  Header End -->
             <div class="container-fluid">
                 <div class="container mt-4">
-                    <h1>@ViewData["Title"]</h1>
+                    <h1 center>@ViewData["Title"]</h1>
 
                     <!-- Create button -->
                     <div class="mb-3">
-                        <a asp-controller="Building" asp-action="AddBuilding" class="btn btn-primary">Tạo Tòa Nhà Mới</a>
+                        <a asp-controller="Building" asp-action="AddBuilding" class="btn btn-primary">
+                            ➕🏛️ Tạo Tòa Nhà Mới
+                        </a>
                     </div>
 
                     <table class="table table-striped">
@@ -304,8 +307,13 @@
                                         <td>@building.AddressDetails</td>
                                         <td>@building.BuildingStatus</td>
                                         <td>
-                                            <button class="btn btn-warning" asp-action="EditBuilding" asp-controller="Building" onclick="editBuilding(@building.Id)">Sửa</button>
-                                            
+                                            <button class="btn btn-warning" asp-action="EditBuilding" asp-controller="Building" onclick="editBuilding(@building.Id)">Sửa 🛠️</button>
+                                            <button class="btn btn-primary btn-sm"
+                                                    asp-action="BuildingDetail"
+                                                    asp-controller="Building"
+                                                    onclick="buildingDetail(@building.Id)">
+                                                <i class="fas fa-info-circle"></i> Chi tiết tòa nhà
+                                            </button>
                                         </td>
                                     </tr>
                                 }
@@ -324,6 +332,10 @@
                     function editBuilding(id) {
                         // Redirect to the edit page for the specific building
                         window.location.href = `/Building/EditBuilding/${id}`;
+                    }
+
+                    function buildingDetail(id) {
+                        window.location.href = `/Building/BuildingDetail/${id}`;
                     }
 
 
