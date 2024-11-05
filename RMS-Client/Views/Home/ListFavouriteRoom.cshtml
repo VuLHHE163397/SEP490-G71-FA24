@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <title>RMS-Thông tin chi tiết</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="~/images/favicon.ico" rel="icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="~/css/bootstrap1.min.css" rel="stylesheet">
+    <link href="~/css/style1.css" rel="stylesheet">
+
+    <style>
+        /* Layout styles */
+        html, body {
+            height: 100%; /* Đảm bảo chiều cao đầy đủ cho body */
+            margin: 0; /* Bỏ margin của body */
+        }
+
+        .container-xxl {
+            display: flex;
+            flex-direction: column; /* Đặt chiều dọc cho các phần tử */
+            min-height: 100vh; /* Chiều cao tối thiểu là 100% chiều cao của viewport */
+        }
+
+        .favorite-table th, .favorite-table td {
+            text-align: center;
+        }
+
+
+        .footer {
+            width: 100%; /* Đảm bảo footer rộng bằng 100% */
+            padding: 20px; /* Thêm padding để nội dung không bị chèn sát mép */
+            background-color: #343a40; /* Màu nền của footer */
+            margin-top: auto; /* Đẩy footer xuống dưới */
+        }
+
+        .main-container {
+            display: flex;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container-xxl bg-white p-0">
+        <!-- Header Start -->
+        <div class="container-fluid bg-dark px-0 header">
+            <div class="row gx-0">
+                <div class="col-lg-3 bg-dark d-none d-lg-block">
+                    <a asp-controller="Home" asp-action="Home"
+                       class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
+                        <h1 class="m-0 text-primary text-uppercase">RMS</h1>
+                    </a>
+                </div>
+                <div class="col-lg-9">
+                    <nav class="navbar navbar-expand-lg bg-dark navbar-dark p-3 p-lg-0">
+                        <a asp-controller="Home" asp-action="Home" class="navbar-brand d-block d-lg-none">
+                            <h1 class="m-0 text-primary text-uppercase">RMS</h1>
+                        </a>
+                        <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
+                                data-bs-target="#navbarCollapse">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                            <div class="navbar-nav mr-auto py-0">
+                                <a asp-controller="Home" asp-action="Home" class="nav-item nav-link active">Trang chủ</a>
+                                <!-- Conditional rendering for roles -->
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a href="Admin/manage" class="nav-item nav-link">Quản lí</a>
+                                }
+                                else if (User.IsInRole("Landlord"))
+                                {
+                                    <a href="Landlord/manage" class="nav-item nav-link">Quản lí</a>
+                                }
+                            </div>
+                        </div>
+                        <!-- Favorite Count Icon in Header -->
+                        <a asp-controller="Home" asp-action="ListFavouriteRoom" class="btn btn-outline-danger rounded-circle position-relative">
+                            <i class="fa fa-heart"></i>
+                            <span id="favoriteCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                0
+                            </span>
+                        </a>
+                        <a asp-controller="Home" asp-action="Login"
+                           class="nav-item nav-link active">
+                            Đăng nhập<i class="fa fa-arrow-right ms-3"></i>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
+
+        <div class="container-xxl py-5 content">
+            <div class="container">
+                <h3 style="color: #FEA116; text-align:center;" class="text-uppercase">Danh sách phòng yêu thích</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered favorite-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">Hình ảnh</th>
+                                <th scope="col">Địa chỉ </th>
+                                <th scope="col"> Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="favoriteRoomsList">
+                            <!-- Các hàng của danh sách yêu thích sẽ được tạo bởi JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="container-fluid bg-dark text-light footer wow fadeIn" data-wow-delay="0.1s">
+            <div class="container">
+                <div class="copyright">
+                    <div class="row">
+                        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                            &copy; <a class="border-bottom" href="#">RMS</a>, All Rights Reserved.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/wow/wow.min.js"></script>
+    <script src="~/lib/easing/easing.min.js"></script>
+    <script src="~/lib/waypoints/waypoints.min.js"></script>
+    <script src="~/lib/counterup/counterup.min.js"></script>
+    <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/lib/tempusdominus/js/moment.min.js"></script>
+    <script src="~/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="~/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="~/js/main.js"></script>
+    <script>
+        // Function to get favorites from cookies
+        function getFavorites() {
+            const favorites = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('favorites='))
+                ?.split('=')[1];
+            return favorites ? JSON.parse(decodeURIComponent(favorites)) : [];
+        }
+
+        const imageUrl = "@Url.Content("~/images/room1.jpg")";
+
+        function displayFavoriteRooms() {
+            const favorites = getFavorites();
+            const favoriteRoomsList = document.getElementById('favoriteRoomsList');
+
+            if (favorites.length === 0) {
+                favoriteRoomsList.innerHTML = `<tr><td colspan="4" class="text-center">Không có phòng yêu thích nào.</td></tr>`;
+                return;
+            }
+
+            favorites.forEach((room, index) => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <th scope="row">${index + 1}</th>
+                    <td><img src="${imageUrl}" alt="Room Image" class="img-fluid" style="width: 100px; height: auto;"></td>
+                    <td>${room.address}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick="removeFavorite('${room.id}')">Xóa</button>
+                    </td>
+                `;
+
+                favoriteRoomsList.appendChild(row);
+            });
+        }
+
+        // Function to remove a favorite room
+        function removeFavorite(roomId) {
+            let favorites = getFavorites();
+            favorites = favorites.filter(room => room.id !== roomId);
+            document.cookie = 'favorites=' + encodeURIComponent(JSON.stringify(favorites)) + '; path=/';
+
+            // Refresh the displayed list
+            const favoriteRoomsList = document.getElementById('favoriteRoomsList');
+            favoriteRoomsList.innerHTML = ''; // Clear current list
+            displayFavoriteRooms(); // Re-display updated list
+        }
+
+        // Initialize the favorite room list on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            displayFavoriteRooms(); // Display saved favorites from cookies when the page loads
+        });
+    </script>
+</body>
+</html>

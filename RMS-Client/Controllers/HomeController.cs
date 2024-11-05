@@ -80,7 +80,10 @@ namespace RMS_Client.Controllers
             }
         }
 
-
+        public IActionResult ListFavouriteRoom()
+        {
+            return View("~/Views/Home/ListFavouriteRoom.cshtml");
+        }
         public IActionResult Register()
         {
             return View("~/Views/Login/Register.cshtml");
