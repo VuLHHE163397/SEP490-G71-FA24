@@ -1,7 +1,7 @@
-﻿@model List<RMS_API.DTOs.BuildingDTO>
+﻿@model RMS_API.DTOs.BuildingDTO
 
 @{
-    ViewData["Title"] = "Danh sách tòa nhà"; // Page title
+    ViewData["Title"] = "Thông tin chi tiết của tòa nhà "; // Page title
 }
 
 <!doctype html>
@@ -13,13 +13,142 @@
     <title>RMS</title>
     <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
-</head>
 
+    <!-- Custom CSS Styles -->
+    <style>
+
+        /* CSS for AddBuilding Form */
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+            .form-group label {
+                font-weight: bold;
+                color: #555;
+            }
+
+        .form-control {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+            .form-control:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            }
+
+        .btn-primary, .btn-secondary {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+
+            .btn-secondary:hover {
+                background-color: #5a6268;
+            }
+
+
+
+        /* Sidebar styling */
+        .sidebar-submenu {
+            padding-left: 15px;
+            display: none;
+        }
+
+        .sidebar-sublink {
+            color: #6c757d;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+            .sidebar-sublink:hover {
+                color: #0d6efd;
+            }
+
+        /* Sidebar arrow rotation */
+        .rotate {
+            transform: rotate(180deg);
+            transition: transform 0.3s;
+        }
+
+        /* Table styling */
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Button styles */
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        /* Page wrapper styles */
+        .page-wrapper {
+            display: flex;
+        }
+
+        /* Main content area padding */
+        .body-wrapper {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        /* Header navbar icon */
+        .nav-icon-hover {
+            cursor: pointer;
+        }
+
+        /* Profile image in dropdown */
+        .navbar-nav .dropdown-menu img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+    </style>
+</head>
 <body>
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
-        <!-- Sidebar Start -->
         <aside class="left-sidebar">
             <!-- Sidebar scroll-->
             <div>
@@ -39,7 +168,7 @@
                             <span class="hide-menu">Trang chủ</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
+                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-layout-dashboard"></i>
                                 </span>
@@ -52,13 +181,14 @@
                         </li>
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-building"></i>
-                                </span>
+                            <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
+                                <span><i class="ti ti-building"></i></span>
                                 <span class="hide-menu">Quản lý tòa nhà</span>
+                                <i class="ti ti-angle-down"></i>
                             </a>
+
                         </li>
+
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Room" asp-action="ListRoom" aria-expanded="false">
                                 <span>
@@ -68,7 +198,7 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Facility" asp-action="ListFacility" aria-expanded="false">
+                            <a class="sidebar-link" href="./ui-buttons.html" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-alien"></i>
                                 </span>
@@ -203,76 +333,101 @@
                 <div class="container mt-4">
                     <h1>@ViewData["Title"]</h1>
 
-                    <!-- Create button -->
-                    <div class="mb-3">
-                        <a asp-controller="Building" asp-action="AddBuilding" class="btn btn-primary">Tạo Tòa Nhà Mới</a>
-                    </div>
+                    <!-- Form for Editing Building -->
+                    <form id="editBuilding" onsubmit="editBuilding(); return false;">
+                        <input type="hidden" id="BuildingId" name="BuildingId" value="@Model.Id" />
 
-                    <table class="table table-striped">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>Tên</th>
-                                <th>Số tầng</th>
-                                <th>Số phòng</th>
-                                <th>Địa chỉ</th>
-                                <th>Trạng thái</th>
-                                <th>Hành động</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model != null && Model.Any())
-                            {
-                                foreach (var building in Model)
-                                {
-                                    <tr>
-                                        <td>@building.Id</td>
-                                        <td>@building.Name</td>
-                                        <td>@building.TotalFloors</td>
-                                        <td>@building.NumberOfRooms</td>
-                                        <td>@building.AddressDetails</td>
-                                        <td>@building.BuildingStatus</td>
-                                        <td>
-                                            <button class="btn btn-warning" onclick="editBuilding(@building.Id)">Sửa</button>
-                                            <button class="btn btn-primary" onclick="viewListRoom(@building.Id)">View List Room</button>
-                                        </td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                        <div class="form-group">
+                            <label for="Name">Tên Tòa Nhà</label>
+                            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="Distance">Khoảng cách</label>
+                            <input type="number" class="form-control" id="Distance" name="Distance" value="@Model.Distance" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="TotalFloors">Số Tầng</label>
+                            <input type="number" class="form-control" id="TotalFloors" name="TotalFloors" value="@Model.TotalFloors" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="NumberOfRooms">Số Phòng</label>
+                            <input type="number" class="form-control" id="NumberOfRooms" name="NumberOfRooms" value="@Model.NumberOfRooms" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="AddressDetails">Địa Chỉ</label>
+                            <input type="text" class="form-control" id="AddressDetails" name="AddressDetails" value="@Model.AddressDetails" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ProvinceId">Tỉnh/Thành phố</label>
+                            <input class="form-control" id="ProvinceId" name="ProvinceName" value="@Model.ProvinceName" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="DistrictId">Quận/Huyện</label>
+                            <input class="form-control" id="DistrictId" name="DistrictName" value="@Model.DistrictName" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="WardId">Xã/Phường</label>
+                            <input class="form-control" id="WardId" name="WardName" value="@Model.WardName" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="BuildingStatus">Trạng Thái</label>
+                            <input class="form-control" id="BuildingStatus" name="BuildingStatus" value="@Model.BuildingStatus" required />
+                        </div>
+
+                        <a asp-controller="Building" asp-action="ListBuilding" class="btn btn-secondary">Trở Về</a>
+                    </form>
                 </div>
+            </div>
 
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                <script>
-                    function editBuilding(id) {
-                        // Redirect to the edit page
-                        window.location.href = '/Building/EditBuilding/' + id;
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script>
+                function editBuilding() {
+                    // Ensure the building ID is correctly retrieved
+                    var id = $('#BuildingId').val();
+
+                    // Confirm if the ID is valid
+                    if (!id) {
+                        alert('Building ID is missing.');
+                        return;
                     }
 
+                    var url = `https://localhost:7056/api/Building/EditBuilding/${id}`;
 
+                    var buildingData = {
+                        Name: $('#Name').val(),
+                        TotalFloors: parseInt($('#TotalFloors').val()),
+                        NumberOfRooms: parseInt($('#NumberOfRooms').val()),
+                        AddressDetails: $('#AddressDetails').val(),
+                        ProvinceName: $('#ProvinceId').val(),
+                        DistrictName: $('#DistrictId').val(),
+                        WardName: $('#WardId').val(),
+                        BuildingStatus: $('#BuildingStatus').val()
+                    };
 
+                    $.ajax({
+                        url: url,
+                        type: 'PUT',
+                        contentType: 'application/json',
+                        data: JSON.stringify(buildingData),
+                        success: function (response) {
+                            alert('Cập nhật thành công!');
 
-                </script>
+                            location.reload();
+                            window.location.href = '/Building/ListBuilding'
+                        },
+                        error: function (xhr) {
+                            alert('Error: ' + xhr.responseText);
+                        }
+                    });
+                }
+            </script>
 
-
-
-            </div>
         </div>
-    </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/sidebarmenu.js"></script>
-    <script src="~/js/app.min.js"></script>
-    <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
-    <script src="~/lib/simplebar/dist/simplebar.js"></script>
-    <script src="~/js/dashboard.js"></script>
+
+        <script src="~/lib/simplebar/dist/simplebar.js"></script>
+
+
 </body>
 
 </html>

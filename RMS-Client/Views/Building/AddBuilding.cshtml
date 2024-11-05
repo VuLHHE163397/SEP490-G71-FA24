@@ -1,7 +1,7 @@
 ﻿@model List<RMS_API.DTOs.BuildingDTO>
 
 @{
-    ViewData["Title"] = "Tao tòa nhà"; // Page title
+    ViewData["Title"] = "Tạo Tòa Nhà"; 
 }
 
 <!doctype html>
@@ -155,7 +155,7 @@ h1 {
             <!-- Sidebar scroll-->
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a asp-controller="Statistic" asp-action="ViewStatistic" class="text-nowrap logo-img">
+                    <a asp-controller="Building" asp-action="ListBuilding" class="text-nowrap logo-img">
                         <img src="~/images/logos/dark-logo.svg" width="180" alt="" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
@@ -170,7 +170,7 @@ h1 {
                             <span class="hide-menu">Trang chủ</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
+                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-layout-dashboard"></i>
                                 </span>
@@ -361,10 +361,16 @@ h1 {
                             <label for="TotalFloors">Số Tầng</label>
                             <input type="number" class="form-control" id="TotalFloors" name="TotalFloors" required />
                         </div>
+
                         <div class="form-group">
                             <label for="NumberOfRooms">Số Phòng</label>
                             <input type="number" class="form-control" id="NumberOfRooms" name="NumberOfRooms" required />
                         </div>
+                        <div class="form-group">
+                            <label for="Distance">Khoảng cách</label>
+                            <input type="number" class="form-control" id="Distance" name="Distance" required />
+                        </div>
+
                         <div class="form-group">
                             <label for="ProvinceId">Tỉnh</label>
                             <select class="form-control" id="ProvinceId" name="ProvinceName" required>
@@ -396,21 +402,27 @@ h1 {
                                 }
                             </select>
                         </div>
-                         <div class="form-group">
+                        <div class="form-group">
                             <label for="AddressDetails">Địa Chỉ</label>
                             <input type="text" class="form-control" id="AddressDetails" name="AddressDetails" required />
                         </div>
+                        <div class="form-group">
+                            <label for="LinkEmbedMap">Link Map</label>
+                            <input type="text" class="form-control" id="LinkEmbedMap" name="LinkEmbedMap" required />
+                        </div>
+
+
                         <button type="submit" class="btn btn-primary">Tạo Tòa Nhà</button>
                         <a asp-controller="Building" asp-action="ListBuilding" class="btn btn-secondary">Trở Về</a>
-
                     </form>
                 </div>
+
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>
                     $(document).ready(function () {
                         $('#ProvinceId').change(function () {
                             var provinceName = encodeURIComponent($(this).val());
-                            var url = `https://localhost:5001/api/Building/GetDistrictsByProvince/${provinceName}`;
+                            var url = `https://localhost:7056/api/Building/GetDistrictsByProvince/${provinceName}`;
 
                             if (provinceName) {
                                 $.ajax({
@@ -435,7 +447,7 @@ h1 {
 
                         $('#DistrictId').change(function () {
                             var districtName = encodeURIComponent($(this).val());
-                            var url = `https://localhost:5001/api/Building/GetWardsByDistrict/${districtName}`;
+                            var url = `https://localhost:7056/api/Building/GetWardsByDistrict/${districtName}`;
 
                             if (districtName) {
                                 $.ajax({
@@ -459,28 +471,42 @@ h1 {
                         });
 
                         $('#addBuildingForm').submit(function (event) {
-                            event.preventDefault(); // Ngăn chặn hành động mặc định của form
+                            event.preventDefault(); // Prevent default form action
+
+                            // Validate TotalFloors and NumberOfRooms
+                            var totalFloors = parseInt($('#TotalFloors').val(), 10);
+                            var numberOfRooms = parseInt($('#NumberOfRooms').val(), 10);
+
+                            if (totalFloors < 1 || totalFloors > 100) {
+                                alert('Số tầng phải là số dương.');
+                                return;
+                            }
+                            if (numberOfRooms < 1 || numberOfRooms > 500) {
+                                alert('Số phòng phải phải là số dương.');
+                                return;
+                            }
 
                             var buildingData = {
                                 Name: $('#Name').val(),
-                                TotalFloors: $('#TotalFloors').val(),
-                                NumberOfRooms: $('#NumberOfRooms').val(),
-                                ProvinceName: $('#ProvinceId').val(), // Sử dụng data-id
+                                TotalFloors: totalFloors,
+                                NumberOfRooms: numberOfRooms,
+                                ProvinceName: $('#ProvinceId').val(),
                                 DistrictName: $('#DistrictId').val(),
                                 WardName: $('#WardId').val(),
                                 AddressDetails: $('#AddressDetails').val(),
                                 BuildingStatus: $('#BuildingStatus').val()
                             };
-                            console.log
 
                             $.ajax({
-                                url: 'https://localhost:5001/api/Building/AddBuilding',
+                                url: 'https://localhost:7056/api/Building/AddBuilding',
                                 type: 'POST',
                                 contentType: 'application/json',
                                 data: JSON.stringify(buildingData),
                                 success: function (response) {
                                     alert('Tòa nhà đã được tạo thành công.');
-                                    // Có thể chuyển hướng hoặc làm gì đó sau khi thành công
+                                    // You can redirect or perform another action here if needed
+
+                                    window.location.href = '/Building/ListBuilding';
                                 },
                                 error: function (xhr) {
                                     alert('Có lỗi xảy ra: ' + xhr.responseText);
@@ -488,19 +514,16 @@ h1 {
                             });
                         });
                     });
+
                     function toggleSubmenu(event) {
                         event.preventDefault();
                         var submenu = event.currentTarget.nextElementSibling;
                         submenu.style.display = submenu.style.display === "none" ? "block" : "none";
                     }
-
-
                 </script>
-
-
-
-
             </div>
+
+
         </div>
 
     </div>
