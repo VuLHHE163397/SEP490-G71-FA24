@@ -289,7 +289,7 @@
                             </div>
                         </div>
                         <!-- Favorite Count Icon in Header -->
-                        <a href="#" class="btn btn-outline-danger rounded-circle position-relative">
+                        <a asp-controller="Home" asp-action="ListFavouriteRoom" class="btn btn-outline-danger rounded-circle position-relative">
                             <i class="fa fa-heart"></i>
                             <span id="favoriteCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                 0
@@ -307,14 +307,14 @@
         <!-- Header End -->
         <!-- Search Start -->
         <div class="container-xxl py-5 content">
-            
+
             <div class="container" style="border: 2px solid green; padding: 15px; border-radius: 5px;">
                 <h1 style="color: #FEA116" class="text-center text-uppercase">Tìm phòng</h1>
                 <!-- Search and Filter Options -->
                 <div class="row mb-2 align-items-center">
                     <!-- Location Filters (Left Side) -->
                     <div class="col-lg-8 d-flex gap-2 align-items-center">
-                        <div class="select-container">  
+                        <div class="select-container">
                             <label for="province" class="form-label small-label">Tỉnh/Thành Phố</label>
                             <select id="province" class="form-select form-select-sm" onchange="updateDistricts()">
                                 <option value="">Tỉnh/Thành Phố</option>
@@ -377,7 +377,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="container-xxl py-5 content">
                 <div class="container">
                     <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
@@ -393,10 +393,9 @@
                                         @* <img class="img-fluid" src="@(room.Images?.FirstOrDefault())" alt="Room Image"> *@
                                         <!-- Nút trái tim ở góc trên phải -->
                                         <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
-                                           onclick="addToFavorites(this)" data-room-id="@room.Id">
+                                           onclick="toggleFavorite(this)" data-room-id="@room.Id" data-room-address="@room.Address">
                                             <i class="fa fa-heart"></i>
                                         </a>
-                                        
                                     </div>
                                     <div class="room-details p-3">
                                         <h5 class="mb-2">
@@ -406,10 +405,10 @@
                                         <!-- Các thông tin cách nhau bằng hàng -->
                                         <div class="mt-2">
                                             <small class="text-muted d-block"><i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT @room.Distance?.ToString("0") km</small>
-                                    @{
-                                        decimal priceInMillions = room.Price / 1_000_000; // Chia giá tiền cho 1 triệu
-                                        string formattedPrice = priceInMillions.ToString("0.0"); // Định dạng số với 1 chữ số thập phân
-                                    }
+                                            @{
+                                                decimal priceInMillions = room.Price / 1_000_000; // Chia giá tiền cho 1 triệu
+                                                string formattedPrice = priceInMillions.ToString("0.0"); // Định dạng số với 1 chữ số thập phân
+                                            }
                                             <small class="text-muted d-block"><i class="fa fa-dollar-sign text-primary me-2"></i>@formattedPrice triệu VND</small>
                                             <small class="text-muted d-block"><i class="fa fa-expand text-primary me-2"></i>@room.Area m²</small>
                                         </div>
@@ -673,47 +672,54 @@
                     return favorites ? JSON.parse(decodeURIComponent(favorites)) : [];
                 }
 
-                // Function to get favorites from cookies
-                function getFavorites() {
-                    const favorites = document.cookie
-                        .split('; ')
-                        .find(row => row.startsWith('favorites='))
-                        ?.split('=')[1];
-                    return favorites ? JSON.parse(decodeURIComponent(favorites)) : [];
-                }
-
                 // Function to set favorites in cookies with an expiration of 7 days
                 function setFavorites(favorites) {
                     const now = new Date();
-                    now.setTime(now.getTime() + (7 * 24 * 60 * 60 * 1000)); // Thêm 7 ngày vào thời gian hiện tại
-                    const expires = "expires=" + now.toUTCString(); // Định dạng ngày hết hạn
-
+                    now.setTime(now.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 ngày
+                    const expires = "expires=" + now.toUTCString();
                     document.cookie = 'favorites=' + encodeURIComponent(JSON.stringify(favorites)) + '; ' + expires + '; path=/';
-                }
-
-                // Function to add a room to favorites
-                function addToFavorites(element) {
-                    const roomId = element.getAttribute("data-room-id");
-                    let favorites = getFavorites();
-
-                    // Kiểm tra nếu phòng chưa có trong danh sách yêu thích
-                    if (!favorites.includes(roomId)) {
-                        favorites.push(roomId);
-                        setFavorites(favorites);
-                        updateFavoriteCount(); // Cập nhật số lượng yêu thích ngay khi thêm
-                    } else {
-                        alert("Phòng này đã có trong danh sách yêu thích.");
-                    }
                 }
 
                 // Function to update the favorite count in the header
                 function updateFavoriteCount() {
                     const favorites = getFavorites();
-                    document.getElementById('favoriteCount').innerText = favorites.length; // Cập nhật số lượng yêu thích
+                    const favoriteCount = favorites.length;
+                    const favoriteCountElement = document.getElementById('favoriteCount');
+                    if (favoriteCountElement) {
+                        favoriteCountElement.innerText = favoriteCount; // Cập nhật số lượng yêu thích
+                    }
                 }
 
-                // Initialize the favorite count on page load
-                document.addEventListener('DOMContentLoaded', updateFavoriteCount);
+                // Function to toggle favorite status
+                function toggleFavorite(element) {
+                    const roomId = element.getAttribute("data-room-id");
+                    const roomImage = "~/images/room1.jpg"; // Đường dẫn ảnh cố định
+                    const roomAddress = element.getAttribute("data-room-address");
+
+                    let favorites = getFavorites();
+
+                    // Kiểm tra nếu phòng đã có trong danh sách yêu thích
+                    const existingRoomIndex = favorites.findIndex(room => room.id === roomId);
+
+                    if (existingRoomIndex === -1) {
+                        // Nếu chưa có, thêm phòng vào danh sách yêu thích
+                        favorites.push({ id: roomId, image: roomImage, address: roomAddress });
+                        element.classList.add('active'); // Thêm lớp active để thay đổi kiểu dáng nút nếu cần
+                    } else {
+                        // Nếu đã có, xóa phòng khỏi danh sách yêu thích
+                        favorites.splice(existingRoomIndex, 1);
+                        element.classList.remove('active'); // Gỡ bỏ lớp active
+                    }
+
+                    setFavorites(favorites);
+                    updateFavoriteCount();
+                }
+
+                // Initialize favorite count on page load
+                document.addEventListener('DOMContentLoaded', () => {
+                    updateFavoriteCount(); // Hiển thị số lượng yêu thích từ cookie khi trang tải
+                    displayFavoriteRooms(); // Hiển thị danh sách yêu thích nếu có trên trang
+                });
 
             </script>
 </body>

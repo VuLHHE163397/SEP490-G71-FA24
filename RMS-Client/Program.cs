@@ -49,7 +49,6 @@ app.UseEndpoints(endpoints =>
 });
 
 
-
 // Cấu hình route mặc định cho ứng dụng.
 app.MapControllerRoute(
     name: "default",
