@@ -6,6 +6,8 @@
         public string Name { get; set; } = null!;
         public int TotalFloors { get; set; }
         public int NumberOfRooms { get; set; }
+        public double? Distance { get; set; }
+        public string? LinkEmbedMap { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 
