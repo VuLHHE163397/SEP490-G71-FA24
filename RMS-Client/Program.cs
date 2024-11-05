@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Register services in the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddHttpClient();
 
 
 
@@ -50,6 +50,6 @@ app.UseAuthorization();
 // Configure default route for controllers.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Building}/{action=ListBuilding}/{id?}");
+    pattern: "{controller=Home}/{action=Home}/{id?}");
 
 app.Run();

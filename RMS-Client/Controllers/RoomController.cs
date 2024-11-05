@@ -142,19 +142,25 @@ namespace RMS_Client.Controllers
             return View(roomDTO);
         }
 
-        public async Task<IActionResult> ExportToExcel()
+        public async Task<IActionResult> ExportToExcel(string filename = "Rooms_List.xlsx")
         {
             var rooms = new List<Room>(); // Lấy danh sách phòng từ database
             var response = await client.GetAsync(RoomApiUri + "/GetAllRoom");
+
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
                 rooms = JsonConvert.DeserializeObject<List<Room>>(json);
             }
 
+            if (rooms.Count == 0)
+            {
+                // Nếu không có dữ liệu, trả về thông báo lỗi hoặc một file rỗng
+                return Content("Không có dữ liệu để xuất.");
+            }
+
             using (var package = new ExcelPackage())
             {
-                // Tạo một worksheet
                 var worksheet = package.Workbook.Worksheets.Add("Rooms");
 
                 // Tiêu đề cột
@@ -163,9 +169,13 @@ namespace RMS_Client.Controllers
                 worksheet.Cells[1, 3].Value = "Floor";
                 worksheet.Cells[1, 4].Value = "Price (VNĐ)";
                 worksheet.Cells[1, 5].Value = "Status";
+                worksheet.Cells[1, 6].Value = "Description";
+                worksheet.Cells[1, 7].Value = "Started Date";
+                worksheet.Cells[1, 8].Value = "Expired Date";
+                worksheet.Cells[1, 9].Value = "Building ID";
 
                 // Định dạng tiêu đề
-                using (var range = worksheet.Cells[1, 1, 1, 5])
+                using (var range = worksheet.Cells[1, 1, 1, 9])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -180,7 +190,7 @@ namespace RMS_Client.Controllers
                     worksheet.Cells[row, 1].Value = room.RoomNumber;
                     worksheet.Cells[row, 2].Value = room.Area;
                     worksheet.Cells[row, 3].Value = room.Floor;
-                    worksheet.Cells[row, 4].Value = room.Price.ToString("N0") + " VNĐ";
+                    worksheet.Cells[row, 4].Value = room.Price.ToString("N0") + " VNĐ"; // Định dạng tiền tệ
 
                     // Chuyển đổi trạng thái sang tiếng Việt
                     string statusNameVi = room.RooomStatusId switch
@@ -189,9 +199,14 @@ namespace RMS_Client.Controllers
                         2 => "Đã có người",
                         3 => "Đang sửa chữa",
                         4 => "Sắp trống",
-                        _ => room.RooomStatus.Name,
                     };
                     worksheet.Cells[row, 5].Value = statusNameVi;
+
+                    // Thêm thông tin mô tả, ngày bắt đầu, ngày hết hạn, ID tòa nhà
+                    worksheet.Cells[row, 6].Value = room.Description;
+                    worksheet.Cells[row, 7].Value = room.StartedDate?.ToString("dd/MM/yyyy");
+                    worksheet.Cells[row, 8].Value = room.ExpiredDate?.ToString("dd/MM/yyyy");
+                    worksheet.Cells[row, 9].Value = room.BuildingId;
 
                     row++;
                 }
@@ -204,9 +219,7 @@ namespace RMS_Client.Controllers
                 package.SaveAs(stream);
                 stream.Position = 0;
 
-                // Trả về file Excel để tải về
-                var fileName = "Rooms_List.xlsx";
-                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
             }
         }
 
