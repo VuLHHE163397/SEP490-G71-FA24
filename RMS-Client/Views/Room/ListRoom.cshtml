@@ -373,7 +373,7 @@
                                 <td>
                                     @{
                                         string statusNameVi;
-                                        switch (room.RooomStatusId)
+                                        switch (room.RoomStatusId)
                                         {
                                             case 1:
                                                 statusNameVi = "Trống";
@@ -388,7 +388,7 @@
                                                 statusNameVi = "Sắp trống";
                                                 break;
                                             default:
-                                                statusNameVi = room.RooomStatusId.ToString();
+                                                statusNameVi = room.RoomStatusId.ToString();
                                                 break;
                                         }
                                     }
@@ -396,7 +396,9 @@
                                 </td>
                                 <td>
                                     <a asp-controller="Room" asp-action="View" asp-route-id="@room.Id" class="btn btn-info">View</a>
-                                    <a asp-controller="Room" asp-action="Delete" asp-route-id="@room.Id" class="btn btn-danger">Delete</a>
+                                    <form method="post" action="@Url.Action("Delete", new { id = room.Id, buildingId = ViewBag.SelectedBuildingId, statusIds = ViewBag.SelectedStatusIds })" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         }

@@ -46,7 +46,7 @@ namespace RMS_Client.Controllers
             // Lọc theo nhiều status
             if (statusIds != null && statusIds.Any())
             {
-                rooms = rooms.Where(r => statusIds.Contains(r.RooomStatusId)).ToList();
+                rooms = rooms.Where(r => statusIds.Contains(r.RoomStatusId)).ToList();
             }
 
             // Lấy danh sách tòa nhà và trạng thái (như trước đây)
@@ -77,6 +77,21 @@ namespace RMS_Client.Controllers
             return View(rooms);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id, int? buildingId, List<int> statusIds)
+        {
+            // Gọi API để xóa phòng
+            string apiUrl = $"{RoomApiUri}/DeleteRoomById/{id}";
+            var response = await client.DeleteAsync(apiUrl);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Sau khi xóa, giữ lại các tham số lọc và chuyển hướng về danh sách phòng
+                return RedirectToAction("ListRoom", new { buildingId = buildingId, statusIds = statusIds });
+            }
+            return NotFound("Room could not be deleted.");
+        }
+
 
 
         [HttpGet]
@@ -91,23 +106,26 @@ namespace RMS_Client.Controllers
 
             // Lấy danh sách tòa nhà
             string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";
-            HttpResponseMessage buildingResponse = await client.GetAsync(apiUrlBuilding);
-            if (buildingResponse.IsSuccessStatusCode)
+            var buildings = new List<Building>();
+            var responseBuilding = await client.GetAsync(apiUrlBuilding);
+            if (responseBuilding.IsSuccessStatusCode)
             {
-                var buildingData = await buildingResponse.Content.ReadAsStringAsync();
-                var buildings = JsonConvert.DeserializeObject<List<BuildingDTO>>(buildingData);
-                ViewBag.Buildings = buildings;
+                var json = await responseBuilding.Content.ReadAsStringAsync();
+                buildings = JsonConvert.DeserializeObject<List<Building>>(json);
             }
 
             // Lấy status của room
             string apiUrlStatusRo = RoomApiUri + "/GetAllStatus";
-            HttpResponseMessage statusResponse = await client.GetAsync(apiUrlStatusRo);
-            if (statusResponse.IsSuccessStatusCode)
+            var status = new List<RoomStatus>();
+            var responseStatusRo = await client.GetAsync(apiUrlStatusRo);
+            if (responseStatusRo.IsSuccessStatusCode)
             {
-                var statusData = await statusResponse.Content.ReadAsStringAsync();
-                var status = JsonConvert.DeserializeObject<List<RoomStatus>>(statusData);
-                ViewBag.Status = status;
+                var json = await responseStatusRo.Content.ReadAsStringAsync();
+                status = JsonConvert.DeserializeObject<List<RoomStatus>>(json);
             }
+
+            ViewBag.Buildings = buildings;
+            ViewBag.Status = status;
             return View(); // Truyền đối tượng RoomDTO đã đặt mặc định
         }
 
@@ -141,6 +159,8 @@ namespace RMS_Client.Controllers
             // Nếu có lỗi hoặc ModelState không hợp lệ, trả về lại View với dữ liệu đã nhập
             return View(roomDTO);
         }
+
+
 
         public async Task<IActionResult> ExportToExcel(int buildingId)
         {
@@ -201,7 +221,7 @@ namespace RMS_Client.Controllers
                     worksheet.Cells[row, 2].Value = room.Area;
                     worksheet.Cells[row, 3].Value = room.Floor;
                     worksheet.Cells[row, 4].Value = room.Price.ToString("N0") + " VNĐ";
-                    worksheet.Cells[row, 5].Value = room.RooomStatusId switch
+                    worksheet.Cells[row, 5].Value = room.RoomStatusId switch
                     {
                         1 => "Trống",
                         2 => "Đã có người",
