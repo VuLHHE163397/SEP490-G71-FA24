@@ -43,8 +43,8 @@ namespace RMS_API.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var ConnectionString = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetConnectionString("DefaultConnection");
-                optionsBuilder.UseSqlServer(ConnectionString);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("server =(local); database =RMS_SEP490;uid=tuyen;pwd=tuyen;Trusted_Connection=True;Encrypt=False");
             }
         }
 
@@ -227,14 +227,18 @@ namespace RMS_API.Models
 
             modelBuilder.Entity<Image>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.HasNoKey();
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("id");
 
                 entity.Property(e => e.Link).HasColumnName("link");
 
                 entity.Property(e => e.RoomId).HasColumnName("roomID");
 
                 entity.HasOne(d => d.Room)
-                    .WithMany(p => p.Images)
+                    .WithMany()
                     .HasForeignKey(d => d.RoomId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_images_Rooms");

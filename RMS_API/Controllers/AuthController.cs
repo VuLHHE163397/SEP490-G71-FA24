@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RMS_API.Models;
-using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace RMS_API.Controllers
 {
@@ -9,96 +9,44 @@ namespace RMS_API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private readonly RMS_SEP490Context _context;
 
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly IConfiguration _configuration;
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
+        public AuthController(RMS_SEP490Context context)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _configuration = configuration;
+            _context = context;
         }
 
-        //action register
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public async Task<IActionResult> Register([FromBody] User newUser)
         {
-            var user = new User { Email = model.Email, FirstName = model.Firstname };
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (result.Succeeded)
+            if (_context.Users.Any(u => u.Email == newUser.Email))
             {
-                return Ok(new { result = "User registered successfully" });
+                return BadRequest("Email này đã được đăng ký!");
             }
 
-            return BadRequest(result.Errors);
+            newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password); 
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Đăng ký thành công!" });
         }
 
-        //Action login
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login([FromBody] UserLogin login)
         {
-            var user = await _userManager.FindByNameAsync(model.Email);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password)) return Unauthorized();
-            //var token = GenerateJwtToken(user);
-            var token = "test";
-            return Ok(new { token });
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == login.Email);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
+            {
+                return Unauthorized("Tên đăng nhập hoặc mật khẩu không đúng.");
+            }
 
-        }
-        // Gen token for server, so server can send token to user for checking authentication 
-        //private string GenerateJwtToken(User user)
-        //{
-        //    var claims = new[]
-        //    {
-        //    new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString()),
-        //    new Claim(JwtRegisteredClaimNames.Name, user.firstName),
-        //    new Claim("firstName", user.firstName ?? String.Empty),
-        //};
-
-        //    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-        //    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        //    var token = new JwtSecurityToken(
-        //        issuer: _configuration["Jwt:Issuer"],
-        //        audience: _configuration["Jwt:Audience"],
-        //        claims: claims,
-        //        expires: DateTime.Now.AddHours(24),
-        //        signingCredentials: creds);
-
-        //    return new JwtSecurityTokenHandler().WriteToken(token);
-        //}
-
-
-        //Model login
-        public class RegisterModel
-        {
-            [Required]
-            [DataType(DataType.Text)]
-            public string Email { get; set; }
-            [Required]
-            [DataType(DataType.Text)]
-            public string Firstname { get; set; }
-            [Required]
-            [DataType(DataType.Text)]
-            public string Midname { get; set; }
-            [Required]
-            [DataType(DataType.Text)]
-            public string Lastname { get; set; }
-            [Required]
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
+            // Create a response that includes user data or a token if using JWT authentication
+            return Ok(new { message = "Đăng nhập thành công!", user = user });
         }
 
-        //Model 
-        public class LoginModel
+        public class UserLogin
         {
-            [Required]
-            [DataType(DataType.Text)]
             public string Email { get; set; }
-
-            [Required]
-            [DataType(DataType.Password)]
             public string Password { get; set; }
         }
     }
