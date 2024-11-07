@@ -334,7 +334,7 @@ namespace RMS_API.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Rooms_Buildings");
 
-                entity.HasOne(d => d.RooomStatus)
+                entity.HasOne(d => d.RoomStatus)
                     .WithMany(p => p.Rooms)
                     .HasForeignKey(d => d.RooomStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)

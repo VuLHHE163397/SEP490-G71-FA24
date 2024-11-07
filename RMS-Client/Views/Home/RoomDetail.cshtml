@@ -1,4 +1,9 @@
-﻿@model RMS_API.DTOs.RoomDetailDTO
+﻿@using RMS_API.DTOs
+@{
+    var roomDetail = ViewData["RoomDetail"] as RoomDetailDTO;
+    var suggestedRooms = ViewData["SuggestedRooms"] as List<SuggestedRoomDTO>;
+}
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -139,7 +144,7 @@
                     <!-- Left Column -->
                     <div class="left-column">
                         <div class="room-details">
-                            <img class="img-fluid" src="~/images/room1.jpg" alt="Room Image">
+                            <img class="img-fluid" src="~/images/room2.jpg" alt="Room Image">
                             @* <img src="@Model.ImageUrl" alt="Room Image" class="img-fluid" /> *@
                             <p><strong>Chủ nhà:</strong> @Model.OwnerName</p>
                             <p><strong>Số điện thoại:</strong> @Model.OwnerPhone</p>
@@ -162,107 +167,134 @@
                             }
                         </div>
                     </div>
-
-                    <!-- Right Column (Suggested Rooms) -->
                     <div class="right-column">
-                        <h4>Phòng cùng khu vực</h4>
-                        <div>
-                            <!-- Add code to dynamically display suggested rooms -->
-                            <p>Phòng A - Giá: 2 triệu VND</p>
-                            <p>Phòng B - Giá: 1.5 triệu VND</p>
-                            <!-- Repeat this block or dynamically load more rooms -->
+                        <h3 style="color: #FEA116; text-align:center;" class="text-uppercase">Các phòng cùng tòa nhà</h3>
+                        <div class="row">
+                            @if (suggestedRooms != null && suggestedRooms.Any())
+                            {
+                                foreach (var room in suggestedRooms)
+                                {
+                                    <div class="col-md-12">
+                                        <div class="card mb-4">
+                                            <!-- Hiển thị ảnh phòng, nếu có -->
+                                            <img class="img-fluid" src="~/images/room4.jpg" alt="Room Image">
+                                            @* <img class="img-fluid" src="@room.Images?.FirstOrDefault() ?? " ~ /images/room2.jpg"" alt="Room Image"> *@
+                                            <div class="card-body">
+                                                @{
+                                                    // Chuyển đổi giá từ VND sang triệu VND
+                                                    decimal priceMillions = room.Price / 1_000_000;
+                                                    string formatPrice = priceInMillions.ToString("0");
+                                                }
+                                                <p class="card-title"><strong>Giá:</strong> @formatPrice triệu VND</p>
+                                                <p class="card-text"><strong>Diện tích:</strong> @room.Area m²</p>
+                                                <p class="card-text">
+                                                    <strong>Trạng thái:</strong>
+                                                    <span style="color: green; text-transform: uppercase; font-weight: bold;">
+                                                        @room.RoomStatusName
+                                                    </span>
+                                                </p>
+                                                <a style="color:red" asp-controller="Home" asp-action="RoomDetail" asp-route-id="@room.Id">Xem chi tiết</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p>Không có phòng gợi ý nào.</p>
+                            }
+                        </div>
+                    </div>
+                  
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="container-fluid bg-dark text-light footer wow fadeIn" data-wow-delay="0.1s">
+                <div class="container">
+                    <div class="copyright">
+                        <div class="row">
+                            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                                &copy; <a class="border-bottom" href="#">RMS</a>, All Rights Reserved.
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Footer -->
-        <div class="container-fluid bg-dark text-light footer wow fadeIn" data-wow-delay="0.1s">
-            <div class="container">
-                <div class="copyright">
-                    <div class="row">
-                        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                            &copy; <a class="border-bottom" href="#">RMS</a>, All Rights Reserved.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/lib/wow/wow.min.js"></script>
+        <script src="~/lib/easing/easing.min.js"></script>
+        <script src="~/lib/waypoints/waypoints.min.js"></script>
+        <script src="~/lib/counterup/counterup.min.js"></script>
+        <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
+        <script src="~/lib/tempusdominus/js/moment.min.js"></script>
+        <script src="~/lib/tempusdominus/js/moment-timezone.min.js"></script>
+        <script src="~/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/wow/wow.min.js"></script>
-    <script src="~/lib/easing/easing.min.js"></script>
-    <script src="~/lib/waypoints/waypoints.min.js"></script>
-    <script src="~/lib/counterup/counterup.min.js"></script>
-    <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="~/lib/tempusdominus/js/moment.min.js"></script>
-    <script src="~/lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="~/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="~/js/main.js"></script>
-    <script>
-        // Function to get favorites from cookies
-        function getFavorites() {
-            const favorites = document.cookie
-                .split('; ')
-                .find(row => row.startsWith('favorites='))
-                ?.split('=')[1];
-            return favorites ? JSON.parse(decodeURIComponent(favorites)) : [];
-        }
-
-        // Function to set favorites in cookies with an expiration of 7 days
-        function setFavorites(favorites) {
-            const now = new Date();
-            now.setTime(now.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days
-            const expires = "expires=" + now.toUTCString();
-            document.cookie = 'favorites=' + encodeURIComponent(JSON.stringify(favorites)) + '; ' + expires + '; path=/';
-        }
-
-        // Function to update the favorite count in the header
-        function updateFavoriteCount() {
-            const favorites = getFavorites();
-            const favoriteCount = favorites.length;
-            const favoriteCountElement = document.getElementById('favoriteCount');
-            if (favoriteCountElement) {
-                favoriteCountElement.innerText = favoriteCount; // Update favorite count
-            }
-        }
-
-        // Function to toggle favorite status
-        function toggleFavorite(element) {
-            const roomId = element.getAttribute("data-room-id");
-            const roomAddress = element.getAttribute("data-room-address");
-            const roomImage = "~/images/room1.jpg"; // Fixed image path
-
-            let favorites = getFavorites();
-
-            // Check if the room is already in favorites
-            const existingFavoriteIndex = favorites.findIndex(room => room.id === roomId);
-
-            if (existingFavoriteIndex === -1) {
-                // Add to favorites if not already present
-                favorites.push({ id: roomId, image: roomImage, address: roomAddress });
-            } else {
-                // Remove from favorites if already present
-                favorites.splice(existingFavoriteIndex, 1);
+        <!-- Template Javascript -->
+        <script src="~/js/main.js"></script>
+        <script>
+            // Function to get favorites from cookies
+            function getFavorites() {
+                const favorites = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('favorites='))
+                    ?.split('=')[1];
+                return favorites ? JSON.parse(decodeURIComponent(favorites)) : [];
             }
 
-            setFavorites(favorites);
-            updateFavoriteCount();
-        }
+            // Function to set favorites in cookies with an expiration of 7 days
+            function setFavorites(favorites) {
+                const now = new Date();
+                now.setTime(now.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days
+                const expires = "expires=" + now.toUTCString();
+                document.cookie = 'favorites=' + encodeURIComponent(JSON.stringify(favorites)) + '; ' + expires + '; path=/';
+            }
 
-        // Initialize favorite count on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            updateFavoriteCount(); // Display favorite count from cookie when page loads
-        });
+            // Function to update the favorite count in the header
+            function updateFavoriteCount() {
+                const favorites = getFavorites();
+                const favoriteCount = favorites.length;
+                const favoriteCountElement = document.getElementById('favoriteCount');
+                if (favoriteCountElement) {
+                    favoriteCountElement.innerText = favoriteCount; // Update favorite count
+                }
+            }
 
-    </script>
+            // Function to toggle favorite status
+            function toggleFavorite(element) {
+                const roomId = element.getAttribute("data-room-id");
+                const roomAddress = element.getAttribute("data-room-address");
+                const roomImage = "~/images/room1.jpg"; // Fixed image path
+
+                let favorites = getFavorites();
+
+                // Check if the room is already in favorites
+                const existingFavoriteIndex = favorites.findIndex(room => room.id === roomId);
+
+                if (existingFavoriteIndex === -1) {
+                    // Add to favorites if not already present
+                    favorites.push({ id: roomId, image: roomImage, address: roomAddress });
+                } else {
+                    // Remove from favorites if already present
+                    favorites.splice(existingFavoriteIndex, 1);
+                }
+
+                setFavorites(favorites);
+                updateFavoriteCount();
+            }
+
+            // Initialize favorite count on page load
+            document.addEventListener('DOMContentLoaded', () => {
+                updateFavoriteCount(); // Display favorite count from cookie when page loads
+            });
+
+        </script>
 </body>
 </html>

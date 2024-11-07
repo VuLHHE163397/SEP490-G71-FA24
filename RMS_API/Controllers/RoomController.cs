@@ -134,7 +134,7 @@ namespace RMS_API.Controllers
                     Address = $"{r.Building.Address.Information}, {r.Building.Address.Ward.Name}, {r.Building.Address.District.Name}, {r.Building.Address.Province.Name}",
                     Price = r.Price,
                     Area = r.Area,
-                    RoomStatusName = r.RooomStatus.Name,
+                    RoomStatusName = r.RoomStatus.Name,
                     //Images = r.Images.Select(i => i.Link).ToList()
                 })
                 .ToList();
@@ -155,7 +155,7 @@ namespace RMS_API.Controllers
                     .ThenInclude(b => b.District)
                 .Include(r => r.Building)
                     .ThenInclude(b => b.Province)
-                .Include(r => r.RooomStatus)
+                .Include(r => r.RoomStatus)
                 .Include(r => r.Building.User) // Lấy thông tin chủ nhà
                 .FirstOrDefault(r => r.Id == id);
 
@@ -175,7 +175,7 @@ namespace RMS_API.Controllers
                 Area = room.Area,
                 Distance = room.Building?.Distance ?? 0,
                 Description = room.Description,
-                RoomStatus = room.RooomStatus?.Name ?? "Trạng thái không xác định",
+                RoomStatus = room.RoomStatus?.Name ?? "Trạng thái không xác định",
                 OwnerName = $"{room.Building?.User?.LastName ?? ""} " +
                             $"{room.Building?.User?.MidName ?? ""} " +
                             $"{room.Building?.User?.FirstName ?? ""}".Trim(),
@@ -186,6 +186,37 @@ namespace RMS_API.Controllers
 
             return Ok(roomDetailDto);
         }
-    }
 
+        [HttpGet("{roomId}/suggestedrooms")]
+        public IActionResult GetSuggestedRooms(int roomId)
+        {
+            // Lấy thông tin phòng hiện tại để lấy BuildingId
+            var currentRoom = _context.Rooms
+                .FirstOrDefault(r => r.Id == roomId);
+
+            if (currentRoom == null)
+            {
+                return NotFound("Phòng không tồn tại");
+            }
+
+            // Lấy danh sách các phòng gợi ý trong cùng BuildingId và RoomStatusId là 1 hoặc 4
+            var suggestedRooms = _context.Rooms
+                .Where(r => r.BuildingId == currentRoom.BuildingId &&
+                            (r.RoomStatusId == 1 || r.RoomStatusId == 4) &&
+                            r.Id != roomId) // Loại trừ phòng hiện tại
+                .OrderBy(r => r.Price) // Sắp xếp theo giá tiền, nếu cần
+                .Take(8) // Lấy top 8 phòng
+                .Select(r => new SuggestedRoomDTO
+                {
+                    Id = r.Id,
+                    Price = r.Price,
+                    Area = r.Area,
+                    RoomStatusName = r.RoomStatus.Name,
+                    //Images = r.Images.Select(i => i.Url).ToList() // Giả sử có liên kết tới bảng Images
+                })
+                .ToList();
+
+            return Ok(suggestedRooms);
+        }
+    }
 }
