@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "+MqqgWu4rfi/DY5qB96pg02aGSQMm2JOIdTHbepBn8J/n04sKoQeG+U+uMGcAI6gu5O4Y9iNy5l4y61i8VXULg==",
+  "dgSpecHash": "eeI1j8gmuRSb0pRh9HEo4HlWzHHSfA4YsWqJqVDNU0tJHaNr+MqE8mpqNNs8aWzhBZhjLqHBld7UY8FUSDWdSw==",
   "success": true,
   "projectFilePath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\dell\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\epplus\\7.4.2\\epplus.7.4.2.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\epplus.interfaces\\6.1.1\\epplus.interfaces.6.1.1.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\epplus.system.drawing\\6.1.1\\epplus.system.drawing.6.1.1.nupkg.sha512",

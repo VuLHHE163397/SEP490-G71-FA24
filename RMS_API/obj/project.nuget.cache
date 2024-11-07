@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "9OsaP3oQEkpG6XLDOhiGmKwnUGRICfNWe2dRvVPoqLhZzGBRvPypPiI70VGo7fXDYLC0M1GIvGtYI006rNE8sA==",
+  "dgSpecHash": "iR6VBpKyddyPCX3lLhYFo9YoD2yQvJyHEKnHTf5zJlXpTblOqttzBk3GmdzsPLRV2cVxLKLPTzbx4O/BxaQAyw==",
   "success": true,
   "projectFilePath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\dell\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.30\\microsoft.aspnetcore.authentication.jwtbearer.6.0.30.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\6.0.30\\microsoft.aspnetcore.cryptography.internal.6.0.30.nupkg.sha512",
