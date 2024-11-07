@@ -180,6 +180,38 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "AddRoom",
+    "RelativePath": "api/Room",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roomDTO",
+        "Type": "RMS_API.DTOs.RoomLlDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "GetSuggestedRooms",
+    "RelativePath": "api/Room/{roomId}/suggestedrooms",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roomId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "GetRoomDetail",
     "RelativePath": "api/Room/detail/{id}",
     "HttpMethod": "GET",
@@ -206,8 +238,28 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "GetAllBuilding",
+    "RelativePath": "api/Room/GetAllBuilding",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "GetAllRoom",
     "RelativePath": "api/Room/GetAllRoom",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "GetAllStatus",
+    "RelativePath": "api/Room/GetAllStatus",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -244,16 +296,6 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.RoomStatusController",
-    "Method": "GetAllStatus",
-    "RelativePath": "api/RoomStatus/GetAllStatus",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   }
 ]

@@ -175,13 +175,13 @@
                 const row = document.createElement('tr');
 
                 row.innerHTML = `
-                    <th scope="row">${index + 1}</th>
-                    <td><img src="${imageUrl}" alt="Room Image" class="img-fluid" style="width: 100px; height: auto;"></td>
-                    <td>${room.address}</td>
-                    <td>
-                        <button class="btn btn-danger" onclick="removeFavorite('${room.id}')">Xóa</button>
-                    </td>
-                `;
+                            <th scope="row">${index + 1}</th>
+                            <td><img src="${imageUrl}" alt="Room Image" class="img-fluid" style="width: 100px; height: auto;"></td>
+                            <td>${room.address}</td>
+                            <td>
+                                <button class="btn btn-danger" onclick="removeFavorite('${room.id}')">Xóa</button>
+                            </td>
+                        `;
 
                 favoriteRoomsList.appendChild(row);
             });
@@ -196,13 +196,29 @@
             // Refresh the displayed list
             const favoriteRoomsList = document.getElementById('favoriteRoomsList');
             favoriteRoomsList.innerHTML = ''; // Clear current list
+            updateFavoriteCount();
             displayFavoriteRooms(); // Re-display updated list
         }
+        // Function to set favorites in cookies with an expiration of 7 days
+        function setFavorites(favorites) {
+            const now = new Date();
+            now.setTime(now.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days
+            const expires = "expires=" + now.toUTCString();
+            document.cookie = 'favorites=' + encodeURIComponent(JSON.stringify(favorites)) + '; ' + expires + '; path=/';
+        }
 
-        // Initialize the favorite room list on page load
+        // Function to update the favorite count in the header
+        function updateFavoriteCount() {
+            const favorites = getFavorites(); // Lấy danh sách yêu thích từ localStorage hoặc nơi lưu trữ
+            const favoriteCount = document.getElementById('favoriteCount');
+            favoriteCount.textContent = favorites.length; // Cập nhật số lượng
+        }
+        // Initialize favorite count on page load
         document.addEventListener('DOMContentLoaded', () => {
-            displayFavoriteRooms(); // Display saved favorites from cookies when the page loads
+            updateFavoriteCount();
+            displayFavoriteRooms();// Display favorite count from cookie when page loads
         });
+
     </script>
 </body>
 </html>

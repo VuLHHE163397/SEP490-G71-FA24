@@ -170,6 +170,37 @@ namespace RMS_API.Controllers
 
             return Ok(roomDetailDto);
         }
-    }
 
+        [HttpGet("{roomId}/suggestedrooms")]
+        public IActionResult GetSuggestedRooms(int roomId)
+        {
+            // Lấy thông tin phòng hiện tại để lấy BuildingId
+            var currentRoom = _context.Rooms
+                .FirstOrDefault(r => r.Id == roomId);
+
+            if (currentRoom == null)
+            {
+                return NotFound("Phòng không tồn tại");
+            }
+
+            // Lấy danh sách các phòng gợi ý trong cùng BuildingId và RoomStatusId là 1 hoặc 4
+            var suggestedRooms = _context.Rooms
+                .Where(r => r.BuildingId == currentRoom.BuildingId &&
+                            (r.RooomStatusId == 1 || r.RooomStatusId == 4) &&
+                            r.Id != roomId) // Loại trừ phòng hiện tại
+                .OrderBy(r => r.Price) // Sắp xếp theo giá tiền, nếu cần
+                .Take(8) // Lấy top 8 phòng
+                .Select(r => new SuggestedRoomDTO
+                {
+                    Id = r.Id,
+                    Price = r.Price,
+                    Area = r.Area,
+                    RoomStatusName = r.RooomStatus.Name,
+                    //Images = r.Images.Select(i => i.Url).ToList() // Giả sử có liên kết tới bảng Images
+                })
+                .ToList();
+
+            return Ok(suggestedRooms);
+        }
+    }
 }
