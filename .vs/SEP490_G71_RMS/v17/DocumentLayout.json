@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "D:\\DoAn_RMS\\SEP490-G71-FA24\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\doan_rms\\sep490-g71-fa24\\rms-client\\controllers\\servicecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\controllers\\servicecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\doan_rms\\sep490-g71-fa24\\rms-client\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\doan_rms\\sep490-g71-fa24\\rms_api\\controllers\\servicecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\controllers\\servicecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\doan_rms\\sep490-g71-fa24\\rms_api\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\doan_rms\\sep490-g71-fa24\\rms-client\\controllers\\servicecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\controllers\\servicecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\doan_rms\\sep490-g71-fa24\\rms-client\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\doan_rms\\sep490-g71-fa24\\rms_api\\dtos\\servicedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -78,11 +78,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "RoomController.cs",
               "DocumentMoniker": "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS-Client\\Controllers\\RoomController.cs",
               "RelativeDocumentMoniker": "RMS-Client\\Controllers\\RoomController.cs",
@@ -90,12 +90,11 @@
               "RelativeToolTip": "RMS-Client\\Controllers\\RoomController.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-05T04:27:42.04Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-05T04:27:42.04Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "ServiceController.cs",
               "DocumentMoniker": "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS-Client\\Controllers\\ServiceController.cs",
               "RelativeDocumentMoniker": "RMS-Client\\Controllers\\ServiceController.cs",
@@ -116,8 +115,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Room\\ListRoom.cshtml",
               "ViewState": "AQIAAGwAAAAAAAAAAAAAAIEAAAAtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-05T04:00:21.997Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-05T04:00:21.997Z"
             },
             {
               "$type": "Document",
@@ -129,18 +127,17 @@
               "RelativeToolTip": "RMS-Client\\Views\\Service\\ListService.cshtml",
               "ViewState": "AQIAAG8AAAAAAAAAAAAAAPEAAAAdAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-05T03:40:29.263Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-05T03:40:29.263Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "ServiceController.cs",
               "DocumentMoniker": "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS_API\\Controllers\\ServiceController.cs",
               "RelativeDocumentMoniker": "RMS_API\\Controllers\\ServiceController.cs",
               "ToolTip": "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS_API\\Controllers\\ServiceController.cs",
               "RelativeToolTip": "RMS_API\\Controllers\\ServiceController.cs",
-              "ViewState": "AQIAAAkAAAAAAAAAAAAAAB8AAAAeAAAA",
+              "ViewState": "AQIAABQAAAAAAAAAAAAQwB8AAAAeAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-05T03:39:40.266Z",
               "EditorCaption": ""
@@ -155,18 +152,17 @@
               "RelativeToolTip": "RMS_API\\DTOs\\ServiceDTO.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-05T04:07:49.18Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-05T04:07:49.18Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "RoomController.cs",
               "DocumentMoniker": "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS_API\\Controllers\\RoomController.cs",
               "RelativeDocumentMoniker": "RMS_API\\Controllers\\RoomController.cs",
               "ToolTip": "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS_API\\Controllers\\RoomController.cs",
               "RelativeToolTip": "RMS_API\\Controllers\\RoomController.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "ViewState": "AQIAABAAAAAAAAAAAAAzwAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-05T04:56:21.963Z",
               "EditorCaption": ""
@@ -181,8 +177,7 @@
               "RelativeToolTip": "RMS-Client\\Controllers\\BuildingController.cs",
               "ViewState": "AQIAAAgAAAAAAAAAAAAAwAgAAAA5AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-05T04:28:43.541Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-05T04:28:43.541Z"
             },
             {
               "$type": "Document",
@@ -194,8 +189,7 @@
               "RelativeToolTip": "RMS-Client\\Controllers\\FacilityController.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-05T04:31:12.495Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-05T04:31:12.495Z"
             },
             {
               "$type": "Document",
@@ -207,8 +201,7 @@
               "RelativeToolTip": "RMS-Client\\Controllers\\HomeController.cs",
               "ViewState": "AQIAABMAAAAAAAAAAAAQwBoAAABLAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-05T03:28:23.456Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-05T03:28:23.456Z"
             },
             {
               "$type": "Document",
@@ -220,8 +213,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Service\\AddService.cshtml",
               "ViewState": "AQIAANIAAAAAAAAAAAAAAOYAAAAcAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-05T03:40:30.129Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-05T03:40:30.129Z"
             },
             {
               "$type": "Document",
@@ -233,8 +225,7 @@
               "RelativeToolTip": "RMS_API\\appsettings.json",
               "ViewState": "AQIAAAwAAAAAAAAAAAAAAAoAAABKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-11-05T03:39:13.454Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-05T03:39:13.454Z"
             },
             {
               "$type": "Document",
@@ -258,8 +249,7 @@
               "RelativeToolTip": "RMS-Client\\Program.cs",
               "ViewState": "AQIAABgAAAAAAAAAAAAAADYAAAA4AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-05T03:22:02.441Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-05T03:22:02.441Z"
             },
             {
               "$type": "Document",
