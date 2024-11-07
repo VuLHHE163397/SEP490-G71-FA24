@@ -1,7 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RMS_API.Models;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 
 namespace RMS_API.Controllers
 {
@@ -17,37 +22,124 @@ namespace RMS_API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] User newUser)
+        public async Task<IActionResult> Register([FromBody] User user)
         {
-            if (_context.Users.Any(u => u.Email == newUser.Email))
+            if (await _context.Users.AnyAsync(u => u.Email == user.Email))
             {
                 return BadRequest("Email này đã được đăng ký!");
             }
 
-            newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password); 
+            var newUser = new User
+            {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                MidName = user.MidName,
+                LastName = user.LastName,
+                Phone = user.Phone,
+                Password = BCrypt.Net.BCrypt.HashPassword(user.Password),
+                RoleId = 2,
+                UserStatusId = 1
+            };
+
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
-
             return Ok(new { message = "Đăng ký thành công!" });
         }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLogin login)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == login.Email);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
-            {
-                return Unauthorized("Tên đăng nhập hoặc mật khẩu không đúng.");
-            }
+            var user = await _context.Users
+        .Include(u => u.Role)
+        .SingleOrDefaultAsync(u => u.Email == model.Email);
 
-            // Create a response that includes user data or a token if using JWT authentication
-            return Ok(new { message = "Đăng nhập thành công!", user = user });
+           
+            if (user == null)
+                return Unauthorized("Tài khoản không tồn tại. Xin hãy đăng nhập lại!");
+            if ( !BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
+            //if (user.Password != model.Password)
+                return Unauthorized("Mật khẩu không đúng!");
+
+
+            var token = GenerateJwtToken(user);
+            return Ok(new { token });            
         }
 
-        public class UserLogin
+        //Gen token for jwt
+        private string GenerateJwtToken(User user)
         {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024"); // Replace with a secure key
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Email)
+            };
+
+            if (user.Role != null && !string.IsNullOrEmpty(user.Role.Name))
+            {
+                claims.Add(new Claim(ClaimTypes.Role, user.Role.Name));
+            }
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddHours(2),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            //    var tokenDescriptor = new SecurityTokenDescriptor
+            //    {
+            //        Subject = new ClaimsIdentity(new[]
+            //        {
+            //    new Claim(ClaimTypes.Name, user.Email),
+            //    new Claim(ClaimTypes.Role, user.Role.Name)
+            //}),
+            //        Expires = DateTime.UtcNow.AddHours(1),
+            //        SigningCredentials = new SigningCredentials(
+            //            new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            //    };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
+
+
+        //Model register
+        public class RegisterModel
+        {
+            [Required]
+            [DataType(DataType.Text)]
             public string Email { get; set; }
+            [Required]
+            [DataType(DataType.Text)]
+            public string Firstname { get; set; }
+            [Required]
+            [DataType(DataType.Text)]
+            public string Midname { get; set; }
+            [Required]
+            [DataType(DataType.Text)]
+            public string Lastname { get; set; }
+            [Required]
+            [DataType(DataType.Text)]
+            public string Phone { get; set; }
+            [Required]
+            [DataType(DataType.Password)]
             public string Password { get; set; }
+        }
+
+        //Model login
+        public class LoginModel
+        {
+            [Required]
+            [DataType(DataType.Text)]
+            public string Email { get; set; } = string.Empty;
+
+            [Required]
+            [DataType(DataType.Password)]
+            public string Password { get; set; } = string.Empty;
         }
     }
 }

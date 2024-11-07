@@ -22,12 +22,11 @@
                         <!-- Adjusted width here -->
                         <div class="card mb-0">
                             <div class="card-body">
-                                <a href="Home" class="text-nowrap logo-img text-center d-block py-3 w-100">
-                                    <img src="~/images/logos/rms_logo.svg">
+                                <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                                    <img src="~/images/logo.jpg" width="180" alt="">
                                 </a>
                                 <p class="text-center">RMS_Quản lý trọ theo cách của bạn</p>
                                 <form id="registerForm" style="max-width: 1000px; margin: auto;">
-                                    <!-- Adjusted form width here -->
                                     <div class="mb-3">
                                         <label class="form-label">Tên đầy đủ</label>
                                         <div class="row">
@@ -42,7 +41,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="mb-3">
                                         <label for="phone" class="form-label">Số điện thoại</label>
                                         <input type="text" class="form-control" id="phone">
@@ -73,7 +71,8 @@
                                             <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 6">
                                         </div>
                                     </div>
-                                    <button type="button" onclick="register()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</button>
+
+                                    <a href="login" onclick="register()"  class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</a>
                                     <div class="d-flex align-items-center justify-content-center">
                                         <p class="fs-4 mb-0 fw-bold">Bạn đã có tài khoản?</p>
                                         <a class="text-primary fw-bold ms-2" href="Login">Đăng nhập</a>
@@ -90,10 +89,38 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        function validateEmail(email) {
+            const emailRegex = /^[^@@\s]+@@[^@@\s]+\.[^@@\s]+$/;
+            return emailRegex.test(email);
+        }
 
+        function validatePhone(phone) {
+            const phoneRegex = /^0\d{9}$/;
+            return phoneRegex.test(phone);
+        }
 
+        function sendVerificationCode() {
+            // Send verification code via email API call here
+            alert("Mã xác nhận đã được gửi tới email của bạn!");
+        }
 
-        function register() {
+        function validateForm() {
+            const email = document.getElementById("email").value;
+            const phone = document.getElementById("phone").value;
+            const password = document.getElementById("password").value;
+
+            if (!validateEmail(email)) {
+                alert("Invalid email format");
+                return false;
+            }
+            if (!validatePhone(phone)) {
+                alert("Invalid phone number format");
+                return false;
+            }
+            return true;
+        }
+
+            function register() {
             // Get values from input fields
             const firstName = $("#firstName").val().trim();
             const midName = $("#midName").val().trim();
@@ -104,21 +131,21 @@
             const confirmPassword = $("#confirmPassword").val().trim();
             const verificationCode = $(".code-input").map(function () { return $(this).val().trim(); }).get().join('');
 
-            // Validate fields
-
             if (!validateEmail(email)) {
                 alert("Email không hợp lệ!");
                 return;
             }
-            // if (!validatephone(phone)) {
-            //     alert("số điện thoại không hợp lệ!");
-            //     return;
-            // }
 
-            if (password.length < 6) {
-                alert("Mật khẩu phải có ít nhất 6 ký tự!");
+            if (!validatephone(phone)) {
+                alert("số điện thoại không hợp lệ!");
                 return;
             }
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
             if (password !== confirmPassword) {
                 alert("Mật khẩu xác nhận không khớp!");
                 return;
@@ -129,7 +156,6 @@
             //     alert("Mã xác nhận không hợp lệ!");
             //     return;
             // }
-
 
             const userData = {
                 newUser: {
@@ -148,40 +174,25 @@
                 userStatus: {
                     id: 1,
                     name: "Active"
-
                 }
             };
 
-
             $.ajax({
-                url: "https://localhost:7056/api/Auth/register",  // Replace with your API endpoint
+                url: "https://localhost:7056/api/Auth/register",  
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(userData),
                 success: function (response) {
                     alert("Đăng ký thành công!");
+                    //$(".Sign-In").css("display", "block");
+                    //$(".registration").css("display", "none");
                     window.location.href = "Login";
                 },
                 error: function (xhr, status, error) {
                     alert("Đăng ký thất bại: " + xhr.responseText);
                 }
             });
-
-        }
-
-        function validatePhone(phone) {
-            const phoneRegex = /^0\d{9}$/;
-            return phoneRegex.test(phone);
-        }
-        function validateEmail(email) {
-            const emailRegex = /^[^@@\s]+@@[^@@\s]+\.[^@@\s]+$/;
-            return emailRegex.test(email);
-        }
-
-        function sendVerificationCode() {
-            // Send verification code via email API call here
-            alert("Mã xác nhận đã được gửi tới email của bạn!");
-        }
+        }        
     </script>
 </body>
 

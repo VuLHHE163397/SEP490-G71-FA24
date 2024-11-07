@@ -11,18 +11,17 @@ namespace RMS_Client.Controllers
             return View();
         }
 
+        public IActionResult Register()
+        {
+            return View("~/Views/Login/Register.cshtml");
+        }
         public IActionResult Login()
         {
             return View("~/Views/Login/Login.cshtml");
         }
 
-        public IActionResult Register()
-        {
-            return View("~/Views/Login/Register.cshtml");
-        }
-
         [HttpPost]
-        public IActionResult Login(UserLogin userLogin)
+        public IActionResult Login(LoginModel userLogin)
         {            
             return RedirectToAction("ListBuilding", "Building");
         }

@@ -36,10 +36,10 @@
                                 <p class="text-center">RMS_Quản lý trọ theo cách của bạn</p>
                                 <form id="loginForm">
                                     <div class="mb-3">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email" aria-describedby="emailHelp" required>
+                                        <label for="email" class="form-label">Tài khoản</label>
+                                        <input type="email" class="form-control" id="email" required>
                                     </div>
-                                    <div class="mb-4">
+                                    <div class="mb-3">
                                         <label for="password" class="form-label">Mật khẩu</label>
                                         <input type="password" class="form-control" id="password" required>
                                     </div>
@@ -49,9 +49,8 @@
                                             <label class="form-check-label text-dark" for="rememberMe">Ghi nhớ thiết bị này</label>
                                         </div>
                                         <a class="text-primary fw-bold" href="./index.html">Quên mật khẩu</a>
-                                    </div>
-                                    <button type="button" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" onclick="login()">Đăng nhập</button>
-                                    <button type="button" onclick="register()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</button>
+                                    </div>                                    
+                                    <button type="button" onclick="login()" class="btn btn-primary w-100">Login</button>
                                     <div class="d-flex align-items-center justify-content-center">
                                         <p class="fs-4 mb-0 fw-bold">Bạn chưa có tài khoản?</p>
                                         <a class="text-primary fw-bold ms-2" href="Register">Đăng ký ngay</a>
@@ -69,29 +68,18 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function login() {
-            const email = $("#email").val().trim();
-            const password = $("#password").val().trim();
-
-            // Validate form fields
-            if (!email || !password) {
-                alert("Vui lòng nhập đầy đủ thông tin đăng nhập.");
-                return;
-            }
-
-            // Create data payload
-            const loginData = {
-                Email: email,
-                Password: password
-            };
+            var email = $("#email").val();
+            var password = $("#password").val();
 
             $.ajax({
                 url: "https://localhost:7056/api/Auth/login",
                 type: "POST",
                 contentType: "application/json",
-                data: JSON.stringify(loginData),
+                data: JSON.stringify({ email: email, Password: password }),
                 success: function (response) {
-                    alert("Đăng nhập thành công!");
-                    window.location.href = "/Home"; // Redirect to the main page or dashboard
+                    alert("Login successful!");
+                    localStorage.setItem("token", response.token);
+                    window.location.href = "/Building/ListBuilding";
                 },
                 error: function (xhr, status, error) {
                     alert("Đăng nhập thất bại: " + xhr.responseText);
