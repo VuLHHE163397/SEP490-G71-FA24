@@ -241,7 +241,7 @@ namespace RMS_API.Controllers
             // Lấy danh sách các phòng gợi ý trong cùng BuildingId và RoomStatusId là 1 hoặc 4
             var suggestedRooms = _context.Rooms
                 .Where(r => r.BuildingId == currentRoom.BuildingId &&
-                            (r.RooomStatusId == 1 || r.RooomStatusId == 4) &&
+                            (r.RoomStatusId == 1 || r.RoomStatusId == 4) &&
                             r.Id != roomId) // Loại trừ phòng hiện tại
                 .OrderBy(r => r.Price) // Sắp xếp theo giá tiền, nếu cần
                 .Take(8) // Lấy top 8 phòng

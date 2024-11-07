@@ -180,8 +180,24 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "GetSuggestedRooms",
+    "RelativePath": "api/Room/{roomId}/suggestedrooms",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roomId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "AddRoom",
-    "RelativePath": "api/Room",
+    "RelativePath": "api/Room/AddRoom",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -196,9 +212,25 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "GetSuggestedRooms",
-    "RelativePath": "api/Room/{roomId}/suggestedrooms",
-    "HttpMethod": "GET",
+    "Method": "DeteleRoomAllRoomByBuildingId",
+    "RelativePath": "api/Room/DeleteRoomAllRoom",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "buildingId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "DeteleRoomById",
+    "RelativePath": "api/Room/DeleteRoomById/{roomId}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -268,8 +300,8 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "GetRoomByBuilding",
-    "RelativePath": "api/Room/GetRoomByBuilding",
+    "Method": "GetBuildingNameById",
+    "RelativePath": "api/Room/GetBuildingById",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -284,14 +316,14 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "GetRoomByStatus",
-    "RelativePath": "api/Room/GetRoomByStatus",
+    "Method": "GetRoomByBuilding",
+    "RelativePath": "api/Room/GetRoomByBuilding",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "statusId",
+        "Name": "buildingId",
         "Type": "System.Int32",
         "IsRequired": false
       }
