@@ -175,13 +175,13 @@
                 const row = document.createElement('tr');
 
                 row.innerHTML = `
-                            <th scope="row">${index + 1}</th>
-                            <td><img src="${imageUrl}" alt="Room Image" class="img-fluid" style="width: 100px; height: auto;"></td>
-                            <td>${room.address}</td>
-                            <td>
-                                <button class="btn btn-danger" onclick="removeFavorite('${room.id}')">Xóa</button>
-                            </td>
-                        `;
+                                            <th scope="row">${index + 1}</th>
+                                            <td><img src="${imageUrl}" alt="Room Image" class="img-fluid" style="width: 100px; height: auto;"></td>
+                                            <td>${room.address}</td>
+                                            <td>
+                                                                <button class="fas fa-trash-alt" onclick="removeFavorite('${room.id}')"></button>
+                                            </td>
+                                        `;
 
                 favoriteRoomsList.appendChild(row);
             });
