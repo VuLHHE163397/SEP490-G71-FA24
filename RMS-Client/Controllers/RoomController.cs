@@ -16,6 +16,7 @@ namespace RMS_Client.Controllers
     {
         private readonly HttpClient client = null;
         private string RoomApiUri = "https://localhost:7056/api/Room";
+        private string BuildingApiUri = "https://localhost:7056/api/Building";
 
         public RoomController()
         {
@@ -91,76 +92,6 @@ namespace RMS_Client.Controllers
             }
             return NotFound("Room could not be deleted.");
         }
-
-
-
-        [HttpGet]
-        // Hành động hiển thị trang thêm phòng
-        public async Task<IActionResult> CreateRoom()
-        {
-            //// Tạo một đối tượng RoomDTO với RoomStatusId mặc định là 1
-            //var roomDTO = new RoomDTO
-            //{
-            //    RoomStatusId = 1 // Đặt mặc định là 1 (Trạng thái "Trống")
-            //};
-
-            // Lấy danh sách tòa nhà
-            string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";
-            var buildings = new List<Building>();
-            var responseBuilding = await client.GetAsync(apiUrlBuilding);
-            if (responseBuilding.IsSuccessStatusCode)
-            {
-                var json = await responseBuilding.Content.ReadAsStringAsync();
-                buildings = JsonConvert.DeserializeObject<List<Building>>(json);
-            }
-
-            // Lấy status của room
-            string apiUrlStatusRo = RoomApiUri + "/GetAllStatus";
-            var status = new List<RoomStatus>();
-            var responseStatusRo = await client.GetAsync(apiUrlStatusRo);
-            if (responseStatusRo.IsSuccessStatusCode)
-            {
-                var json = await responseStatusRo.Content.ReadAsStringAsync();
-                status = JsonConvert.DeserializeObject<List<RoomStatus>>(json);
-            }
-
-            ViewBag.Buildings = buildings;
-            ViewBag.Status = status;
-            return View(); // Truyền đối tượng RoomDTO đã đặt mặc định
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateRoom(RoomLlDTO roomDTO)
-        {
-            if (ModelState.IsValid)
-            {
-                // Nếu RoomStatusId không có giá trị, gán mặc định là 1 (Trạng thái "Trống")
-                roomDTO.RoomStatusId = roomDTO.RoomStatusId != 0 ? roomDTO.RoomStatusId : 1;
-
-                var json = JsonConvert.SerializeObject(roomDTO);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(RoomApiUri + "/AddRoom", content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    // Điều hướng đến danh sách phòng sau khi thêm thành công
-                    return RedirectToAction("ListRoom");
-                }
-                else
-                {
-                    // In ra mã trạng thái và nội dung phản hồi
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Error: {response.StatusCode}, {responseContent}");
-                    // Thêm lỗi vào ModelState nếu thêm không thành công
-                    ModelState.AddModelError("", "Thêm phòng không thành công.");
-                }
-            }
-
-            // Nếu có lỗi hoặc ModelState không hợp lệ, trả về lại View với dữ liệu đã nhập
-            return View(roomDTO);
-        }
-
-
 
         public async Task<IActionResult> ExportToExcel(int buildingId)
         {

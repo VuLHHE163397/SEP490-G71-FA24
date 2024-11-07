@@ -291,28 +291,7 @@
                                             @(ViewBag.SelectedStatusIds != null && ((List<int>)ViewBag.SelectedStatusIds).Contains(status.Id) ? "checked" : "")
                                                    onchange="submitFilterForm()" />
                                             <label>
-                                                @{
-                                                    string statusNameInVietnamese;
-                                                    switch (status.Name)
-                                                    {
-                                                        case "Empty":
-                                                            statusNameInVietnamese = "Trống";
-                                                            break;
-                                                        case "Not Empty":
-                                                            statusNameInVietnamese = "Không trống";
-                                                            break;
-                                                        case "Repairing":
-                                                            statusNameInVietnamese = "Đang sửa chữa";
-                                                            break;
-                                                        case "About to be Empty":
-                                                            statusNameInVietnamese = "Sắp hết hạn";
-                                                            break;
-                                                        default:
-                                                            statusNameInVietnamese = status.Name;
-                                                            break;
-                                                    }
-                                                }
-                                                @statusNameInVietnamese
+                                                @status.Name
                                             </label>
 
                                         </div>
@@ -358,7 +337,7 @@
                         <th>Diện tích</th>
                         <th>Giá phòng</th>
                         <th>Trạng thái</th>
-
+                        <th>Xóa tất cả phòng</th>
                     </tr>
                 </thead>
                 <tbody>

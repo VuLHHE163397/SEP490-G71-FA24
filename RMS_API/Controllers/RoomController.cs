@@ -18,10 +18,18 @@ namespace RMS_API.Controllers
         {
             _context = context;
         }
+
         [HttpGet("GetAllRoom")]
         public IActionResult GetAllRoom()
         {
             var ro = _context.Rooms.ToList();
+            return Ok(ro);
+        }
+
+        [HttpGet("GetRoomById/{roomId}")]
+        public IActionResult GetAllRoom(int roomId)
+        {
+            var ro = _context.Rooms.FirstOrDefault(p => p.Id == roomId);
             return Ok(ro);
         }
 
@@ -148,18 +156,45 @@ namespace RMS_API.Controllers
             return NoContent(); // Trả về 204 No Content sau khi xóa thành công
         }
 
-        [HttpDelete("DeleteRoomAllRoom")]
-        public IActionResult DeteleRoomAllRoomByBuildingId(int buildingId)
+        [HttpDelete("DeleteAllRoom/{buildingId}")]
+        public IActionResult DeleteAllRoomByBuildingId(int buildingId)
         {
-            if (!_context.Buildings.Any(p => p.Id == buildingId))
+            // Kiểm tra xem có phòng nào thuộc tòa nhà với buildingId không
+            var rooms = _context.Rooms.Where(r => r.BuildingId == buildingId).ToList();
+            if (!rooms.Any())
             {
-                return NotFound("Khong tim thay Building co id = " + buildingId);
+                return NotFound("Không tìm thấy phòng nào thuộc tòa nhà có ID = " + buildingId);
             }
-            var ro = _context.Rooms.FirstOrDefault(p => p.BuildingId == buildingId);
-            _context.Rooms.Remove(ro);
+
+            // Xóa các đối tượng liên quan đến phòng
+            foreach (var room in rooms)
+            {
+                // Xóa Facilities liên quan đến room
+                var facilities = _context.Facilities.Where(f => f.RoomId == room.Id);
+                _context.Facilities.RemoveRange(facilities);
+
+                // Xóa RoomHistories liên quan đến room
+                var roomHistories = _context.RoomHistories.Where(h => h.RoomId == room.Id);
+                _context.RoomHistories.RemoveRange(roomHistories);
+
+                // Xóa ServicesOfRooms liên quan đến room
+                var servicesOfRooms = _context.ServicesOfRooms.Where(s => s.RoomId == room.Id);
+                _context.ServicesOfRooms.RemoveRange(servicesOfRooms);
+
+                // Xóa Tennants liên quan đến room
+                var tenants = _context.Tennants.Where(t => t.RoomId == room.Id);
+                _context.Tennants.RemoveRange(tenants);
+            }
+
+            // Cuối cùng, xóa các phòng
+            _context.Rooms.RemoveRange(rooms);
+
+            // Lưu thay đổi vào database
             _context.SaveChanges();
-            return Ok(ro);
+
+            return Ok("Đã xóa tất cả phòng thuộc tòa nhà có ID = " + buildingId);
         }
+
 
         [HttpGet("GetActiveRooms")]
         public IActionResult GetActiveRooms()
@@ -173,7 +208,7 @@ namespace RMS_API.Controllers
                     Address = $"{r.Building.Address.Information}, {r.Building.Address.Ward.Name}, {r.Building.Address.District.Name}, {r.Building.Address.Province.Name}",
                     Price = r.Price,
                     Area = r.Area,
-                    RoomStatusName = r.RooomStatus.Name,
+                    RoomStatusName = r.RoomStatus.Name,
                     //Images = r.Images.Select(i => i.Link).ToList()
                 })
                 .ToList();
@@ -194,7 +229,7 @@ namespace RMS_API.Controllers
                     .ThenInclude(b => b.District)
                 .Include(r => r.Building)
                     .ThenInclude(b => b.Province)
-                .Include(r => r.RooomStatus)
+                .Include(r => r.RoomStatus)
                 .Include(r => r.Building.User) // Lấy thông tin chủ nhà
                 .FirstOrDefault(r => r.Id == id);
 
@@ -214,7 +249,7 @@ namespace RMS_API.Controllers
                 Area = room.Area,
                 Distance = room.Building?.Distance ?? 0,
                 Description = room.Description,
-                RoomStatus = room.RooomStatus?.Name ?? "Trạng thái không xác định",
+                RoomStatus = room.RoomStatus?.Name ?? "Trạng thái không xác định",
                 OwnerName = $"{room.Building?.User?.LastName ?? ""} " +
                             $"{room.Building?.User?.MidName ?? ""} " +
                             $"{room.Building?.User?.FirstName ?? ""}".Trim(),
