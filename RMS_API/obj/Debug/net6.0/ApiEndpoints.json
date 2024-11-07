@@ -76,6 +76,16 @@
   {
     "ContainingType": "RMS_API.Controllers.BuildingController",
     "Method": "EditBuilding",
+    "RelativePath": "api/Building/EditBuilding",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.BuildingController",
+    "Method": "EditBuilding",
     "RelativePath": "api/Building/EditBuilding/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
@@ -88,7 +98,7 @@
       },
       {
         "Name": "buildingDto",
-        "Type": "RMS_API.DTOs.AddBuildingDTO",
+        "Type": "RMS_API.DTOs.BuildingDTO",
         "IsRequired": true
       }
     ],
@@ -108,6 +118,22 @@
     "ContainingType": "RMS_API.Controllers.BuildingController",
     "Method": "GetBuildingById",
     "RelativePath": "api/Building/GetBuildingById/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.BuildingController",
+    "Method": "GetBuildinImformationgById",
+    "RelativePath": "api/Building/GetBuildinImformationgById/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
