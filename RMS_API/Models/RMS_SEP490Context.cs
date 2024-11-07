@@ -322,7 +322,7 @@ namespace RMS_API.Models
 
                 entity.Property(e => e.RoomNumber).HasColumnName("roomNumber");
 
-                entity.Property(e => e.RoomStatusId).HasColumnName("roomStatusId");
+                entity.Property(e => e.RooomStatusId).HasColumnName("rooomStatusId");
 
                 entity.Property(e => e.StartedDate)
                     .HasColumnType("date")
@@ -336,7 +336,7 @@ namespace RMS_API.Models
 
                 entity.HasOne(d => d.RooomStatus)
                     .WithMany(p => p.Rooms)
-                    .HasForeignKey(d => d.RoomStatusId)
+                    .HasForeignKey(d => d.RooomStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Rooms_RoomStatus");
             });
@@ -426,10 +426,13 @@ namespace RMS_API.Models
 
             modelBuilder.Entity<ServicesOfRoom>(entity =>
             {
-                // Định nghĩa khóa chính kết hợp là RoomId và ServiceId
-                entity.HasKey(e => new { e.RoomId, e.ServiceId });
+                entity.HasNoKey();
 
                 entity.ToTable("ServicesOfRoom");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("id");
 
                 entity.Property(e => e.RoomId).HasColumnName("roomId");
 
