@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RMS_API.Models;
 using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 
 namespace RMS_API.Controllers
 {
@@ -9,68 +14,100 @@ namespace RMS_API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private readonly RMS_SEP490Context _context;
 
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly IConfiguration _configuration;
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
+        public AuthController(RMS_SEP490Context context)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _configuration = configuration;
+            _context = context;
         }
 
-        //action register
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public async Task<IActionResult> Register([FromBody] User user)
         {
-            var user = new User { Email = model.Email, FirstName = model.Firstname };
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (result.Succeeded)
+            if (await _context.Users.AnyAsync(u => u.Email == user.Email))
             {
-                return Ok(new { result = "User registered successfully" });
+                return BadRequest("Email này đã được đăng ký!");
             }
 
-            return BadRequest(result.Errors);
+            var newUser = new User
+            {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                MidName = user.MidName,
+                LastName = user.LastName,
+                Phone = user.Phone,
+                Password = BCrypt.Net.BCrypt.HashPassword(user.Password),
+                RoleId = 2,
+                UserStatusId = 1
+            };
+
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Đăng ký thành công!" });
         }
 
-        //Action login
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var user = await _userManager.FindByNameAsync(model.Email);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password)) return Unauthorized();
-            //var token = GenerateJwtToken(user);
-            var token = "test";
-            return Ok(new { token });
+            var user = await _context.Users
+        .Include(u => u.Role)
+        .SingleOrDefaultAsync(u => u.Email == model.Email);
 
+           
+            if (user == null)
+                return Unauthorized("Tài khoản không tồn tại. Xin hãy đăng nhập lại!");
+            if ( !BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
+            //if (user.Password != model.Password)
+                return Unauthorized("Mật khẩu không đúng!");
+
+
+            var token = GenerateJwtToken(user);
+            return Ok(new { token });            
         }
-        // Gen token for server, so server can send token to user for checking authentication 
-        //private string GenerateJwtToken(User user)
-        //{
-        //    var claims = new[]
-        //    {
-        //    new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString()),
-        //    new Claim(JwtRegisteredClaimNames.Name, user.firstName),
-        //    new Claim("firstName", user.firstName ?? String.Empty),
-        //};
 
-        //    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-        //    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        //Gen token for jwt
+        private string GenerateJwtToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024"); // Replace with a secure key
 
-        //    var token = new JwtSecurityToken(
-        //        issuer: _configuration["Jwt:Issuer"],
-        //        audience: _configuration["Jwt:Audience"],
-        //        claims: claims,
-        //        expires: DateTime.Now.AddHours(24),
-        //        signingCredentials: creds);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Email)
+            };
 
-        //    return new JwtSecurityTokenHandler().WriteToken(token);
-        //}
+            if (user.Role != null && !string.IsNullOrEmpty(user.Role.Name))
+            {
+                claims.Add(new Claim(ClaimTypes.Role, user.Role.Name));
+            }
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddHours(2),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            //    var tokenDescriptor = new SecurityTokenDescriptor
+            //    {
+            //        Subject = new ClaimsIdentity(new[]
+            //        {
+            //    new Claim(ClaimTypes.Name, user.Email),
+            //    new Claim(ClaimTypes.Role, user.Role.Name)
+            //}),
+            //        Expires = DateTime.UtcNow.AddHours(1),
+            //        SigningCredentials = new SigningCredentials(
+            //            new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            //    };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
 
 
-        //Model login
+        //Model register
         public class RegisterModel
         {
             [Required]
@@ -86,20 +123,23 @@ namespace RMS_API.Controllers
             [DataType(DataType.Text)]
             public string Lastname { get; set; }
             [Required]
+            [DataType(DataType.Text)]
+            public string Phone { get; set; }
+            [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; }
         }
 
-        //Model 
+        //Model login
         public class LoginModel
         {
             [Required]
             [DataType(DataType.Text)]
-            public string Email { get; set; }
+            public string Email { get; set; } = string.Empty;
 
             [Required]
             [DataType(DataType.Password)]
-            public string Password { get; set; }
+            public string Password { get; set; } = string.Empty;
         }
     }
 }
