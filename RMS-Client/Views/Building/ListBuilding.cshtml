@@ -17,6 +17,10 @@
 
     <!-- Custom CSS Styles -->
     <style>
+        .btn {
+            width: 130px; /* Set a fixed width, adjust as needed */
+            
+        }
 
         /* Sidebar styling */
         .sidebar-submenu {
@@ -307,13 +311,8 @@
                                         <td>@building.AddressDetails</td>
                                         <td>@building.BuildingStatus</td>
                                         <td>
-                                            <button class="btn btn-warning" asp-action="EditBuilding" asp-controller="Building" onclick="editBuilding(@building.Id)">Sửa 🛠️</button>
-                                            <button class="btn btn-primary btn-sm"
-                                                    asp-action="BuildingDetail"
-                                                    asp-controller="Building"
-                                                    onclick="buildingDetail(@building.Id)">
-                                                <i class="fas fa-info-circle"></i> Chi tiết tòa nhà
-                                            </button>
+                                            <button class="btn btn-warning" asp-action="EditBuilding" asp-controller="Building" onclick="editBuilding(@building.Id)">Sửa</button>
+                                            <button class="btn btn-primary btn-sm" asp-action="BuildingDetail" asp-controller="Building" onclick="buildingDetail(@building.Id)">Xem Chi tiết </button>
                                         </td>
                                     </tr>
                                 }
