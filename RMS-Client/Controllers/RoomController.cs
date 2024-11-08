@@ -46,7 +46,7 @@ namespace RMS_Client.Controllers
             // Lọc theo nhiều status
             if (statusIds != null && statusIds.Any())
             {
-                rooms = rooms.Where(r => statusIds.Contains(r.RooomStatusId)).ToList();
+                rooms = rooms.Where(r => statusIds.Contains(r.RoomStatusId)).ToList();
             }
 
             // Lấy danh sách tòa nhà và trạng thái (như trước đây)
@@ -193,7 +193,7 @@ namespace RMS_Client.Controllers
                     worksheet.Cells[row, 4].Value = room.Price.ToString("N0") + " VNĐ"; // Định dạng tiền tệ
 
                     // Chuyển đổi trạng thái sang tiếng Việt
-                    string statusNameVi = room.RooomStatusId switch
+                    string statusNameVi = room.RoomStatusId switch
                     {
                         1 => "Trống",
                         2 => "Đã có người",

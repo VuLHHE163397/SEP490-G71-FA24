@@ -23,10 +23,10 @@ namespace RMS_API.Models
         public DateTime? StartedDate { get; set; }
         public DateTime? ExpiredDate { get; set; }
         public int BuildingId { get; set; }
-        public int RooomStatusId { get; set; }
+        public int RoomStatusId { get; set; }
 
         public virtual Building Building { get; set; } = null!;
-        public virtual RoomStatus RooomStatus { get; set; } = null!;
+        public virtual RoomStatus RoomStatus { get; set; } = null!;
         public virtual ICollection<Facility> Facilities { get; set; }
         public virtual ICollection<Image> Images { get; set; }
         public virtual ICollection<MaintainanceRequest> MaintainanceRequests { get; set; }

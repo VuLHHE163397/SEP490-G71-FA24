@@ -35,7 +35,7 @@ namespace RMS_API.Controllers
         [HttpGet("GetRoomByStatus")]
         public IActionResult GetRoomByStatus(int statusId)
         {
-            var room = _context.Rooms.Where(p => p.RooomStatusId == statusId).ToList();
+            var room = _context.Rooms.Where(p => p.RoomStatusId == statusId).ToList();
             return Ok(room);
         }
 
@@ -97,7 +97,7 @@ namespace RMS_API.Controllers
                 StartedDate = roomDTO.StartedDate,
                 ExpiredDate = roomDTO.ExpiredDate,
                 BuildingId = roomDTO.BuildingId,
-                RooomStatusId = roomDTO.RoomStatusId,
+                RoomStatusId = roomDTO.RoomStatusId,
             };
 
             _context.Rooms.Add(room);
@@ -110,7 +110,7 @@ namespace RMS_API.Controllers
         public IActionResult GetActiveRooms()
         {
             var rooms = _context.Rooms
-                .Where(r => r.RooomStatusId == 1) // Lọc các phòng có trạng thái đang hoạt động
+                .Where(r => r.RoomStatusId == 1) // Lọc các phòng có trạng thái đang hoạt động
                 .Select(r => new
                 {
                     Id = r.Id,
@@ -118,7 +118,7 @@ namespace RMS_API.Controllers
                     Address = $"{r.Building.Address.Information}, {r.Building.Address.Ward.Name}, {r.Building.Address.District.Name}, {r.Building.Address.Province.Name}",
                     Price = r.Price,
                     Area = r.Area,
-                    RoomStatusName = r.RooomStatus.Name,
+                    RoomStatusName = r.RoomStatus.Name,
                     //Images = r.Images.Select(i => i.Link).ToList()
                 })
                 .ToList();
@@ -139,7 +139,7 @@ namespace RMS_API.Controllers
                     .ThenInclude(b => b.District)
                 .Include(r => r.Building)
                     .ThenInclude(b => b.Province)
-                .Include(r => r.RooomStatus)
+                .Include(r => r.RoomStatus)
                 .Include(r => r.Building.User) // Lấy thông tin chủ nhà
                 .FirstOrDefault(r => r.Id == id);
 
@@ -159,7 +159,7 @@ namespace RMS_API.Controllers
                 Area = room.Area,
                 Distance = room.Building?.Distance ?? 0,
                 Description = room.Description,
-                RoomStatus = room.RooomStatus?.Name ?? "Trạng thái không xác định",
+                RoomStatus = room.RoomStatus?.Name ?? "Trạng thái không xác định",
                 OwnerName = $"{room.Building?.User?.LastName ?? ""} " +
                             $"{room.Building?.User?.MidName ?? ""} " +
                             $"{room.Building?.User?.FirstName ?? ""}".Trim(),
