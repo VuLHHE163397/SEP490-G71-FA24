@@ -1,4 +1,8 @@
-﻿<!doctype html>
+﻿@model List<RMS_API.DTOs.ServiceDTO>
+@{
+    ViewData["Title"] = "Quản lý danh sách dịch vụ"; // Page title
+}
+<!doctype html>
 <html lang="en">
 
 <head>
@@ -7,25 +11,89 @@
     <title>RMS</title>
     <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+
+        /* Sidebar styling */
+        .sidebar-submenu {
+            padding-left: 15px;
+            display: none;
+        }
+
+        .sidebar-sublink {
+            color: #6c757d;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+            .sidebar-sublink:hover {
+                color: #0d6efd;
+            }
+
+        /* Sidebar arrow rotation */
+        .rotate {
+            transform: rotate(180deg);
+            transition: transform 0.3s;
+        }
+
+        /* Table styling */
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Button styles */
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        /* Page wrapper styles */
+        .page-wrapper {
+            display: flex;
+        }
+
+        /* Main content area padding */
+        .body-wrapper {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        /* Header navbar icon */
+        .nav-icon-hover {
+            cursor: pointer;
+        }
+
+        /* Profile image in dropdown */
+        .navbar-nav .dropdown-menu img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+    </style>
 </head>
 
 <body>
-    <!--  Body Wrapper -->
+
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
-        <!-- Sidebar Start -->
+
         <aside class="left-sidebar">
-            <!-- Sidebar scroll-->
+
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a asp-controller="Statistic" asp-action="ViewStatistic" class="text-nowrap logo-img">
-                        <img src="~/images/logos/dark-logo.svg" width="180" alt="" />
+                        <img src="~/images/logo.jpg" width="180" alt="" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
                     </div>
                 </div>
-                <!-- Sidebar navigation-->
+
                 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
                     <ul id="sidebarnav">
                         <li class="nav-small-cap">
@@ -33,10 +101,8 @@
                             <span class="hide-menu">Trang chủ</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
+                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding">
+                                <span><i class="ti ti-layout-dashboard"></i></span>
                                 <span class="hide-menu">Trang chủ</span>
                             </a>
                         </li>
@@ -44,22 +110,33 @@
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">Quản lý</span>
                         </li>
-
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-building"></i>
-                                </span>
-                                <span class="hide-menu">Quản lý tòa nhà</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Room" asp-action="ListRoom" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-home"></i>
-                                </span>
+                            <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
+                                <span><i class="ti ti-layout-dashboard"></i></span>
                                 <span class="hide-menu">Quản lý phòng</span>
+                                <span><i class="ti ti-chevron-down"></i></span>
                             </a>
+                            <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
+                                @{
+                                    var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
+                                }
+                                @if (buildingsss != null && buildingsss.Any())
+                                {
+                                    foreach (var buildingss in buildingsss)
+                                    {
+                                        <li class="sidebar-subitem">
+                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
+                                                <i class="ti ti-file"></i>
+                                                @buildingss.Name
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                }
+                            </ul>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Facility" asp-action="ListFacility" aria-expanded="false">
@@ -77,6 +154,7 @@
                                 <span class="hide-menu">Dịch vụ</span>
                             </a>
                         </li>
+
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
                                 <span>
@@ -140,14 +218,13 @@
                         </div>
                     </div>
                 </nav>
-                <!-- End Sidebar navigation -->
+
             </div>
-            <!-- End Sidebar scroll-->
+
         </aside>
-        <!--  Sidebar End -->
-        <!--  Main wrapper -->
+
         <div class="body-wrapper">
-            <!--  Header Start -->
+
             <header class="app-header">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
@@ -190,16 +267,18 @@
                             </li>
                         </ul>
                     </div>
+
                 </nav>
             </header>
             <!--  Header End -->
+
             <div class="container-fluid">
                 <link rel="stylesheet" href="~/css/styles.min.css" />
                 <div class="container-fluid" style="margin-top: 1rem">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h2>Danh sách dịch vụ</h2>
+                        <h1 center>@ViewData["Title"]</h1>
                         <div class="d-flex align-items-center">
-                            <a href="/Service/AddService" class="btn btn-success mx-1">Thêm dịch vụ</a>
+                            <a href="/Service/AddService" class="btn btn-success mx-1"> <i class="fa-solid fa-plus"></i> Thêm dịch vụ</a>
 
                         </div>
                     </div>
@@ -211,18 +290,9 @@
                         <br />
                         <span>Các dịch vụ phải được gán cho từng khách thuê phòng để khi tính tiền sẽ có tiền dịch vụ đó.</span>
                         <br />
-                        <span>Để cấu hình đơn giá điện nước tính theo bậc thang bạn vẫn phải tạo 2 dịch vụ là điện, nước; sau đó vào menu "Thiết lập" => Tab "Đơn giá điện nước bậc thang" để thiết lập đơn giá.</span>
                     </div>
                     <div class="d-flex justify-content-between align-item-center" style="margin-top: 0.5rem">
                         <div class="d-flex align-item-center" style="align-items: center">
-                            <span>Xem</span>
-                            <select class="form-select">
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>
-                            <span>Mục</span>
                         </div>
                         <div class="d-flex align-items-center">
                             <span>Tìm:</span>
@@ -238,56 +308,34 @@
                                 <th>Tùy chọn</th>
                             </tr>
                         </thead>
+                        
                         <tbody>
-                            <tr>
-                                <td>
-                                    1
-                                </td>
-                                <td>
-                                    Điện
-                                </td>
-                                <td>
-                                    3.000
-                                </td>
-                                <td>
-                                    <a href="/Service/EditService" class="btn btn-primary">Sửa</a>
-                                    <button class="btn btn-danger">Xóa</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    2
-                                </td>
-                                <td>
-                                    Nước
-                                </td>
-                                <td>
-                                    50.000
-                                </td>
-                                <td>
-                                    <a href="/Service/EditService" class="btn btn-primary">Sửa</a>
-                                    <button class="btn btn-danger">Xóa</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    3
-                                </td>
-                                <td>
-                                    Mạng
-                                </td>
-                                <td>
-                                    50.000
-                                </td>
-                                <td>
-                                    <a href="/Service/EditService" class="btn btn-primary">Sửa</a>
-                                    <button class="btn btn-danger">Xóa</button>
-                                </td>
-                            </tr>
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var services in Model)
+                                {
+                                    <tr>
+                                        <td>@services.Id</td>
+                                        <td>@services.Name</td>
+                                        <td>@String.Format("{0:0,0} VNĐ", services.Price)</td>
+                                        <td>
+                                            <a href="/Service/EditService?id=@services.Id" class="btn btn-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button class="btn btn-danger" onclick="DeleteService('@services.Id')">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -306,6 +354,21 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
+    <script>
+        function DeleteService(id) {
+            $.ajax({
+                url: `https://localhost:7056/api/Service?id=${id}`,  // Đảm bảo URL API đúng
+                type: "DELETE",  // Sử dụng phương thức DELETE
+                success: function (response) {
+                    alert("Xóa dịch vụ thành công");  // Thông báo khi xóa thành công
+                    window.location.reload();  // Reload lại trang sau khi xóa
+                },
+                error: function (xhr, status, error) {
+                    alert("Không thể xóa dịch vụ");  // Thông báo lỗi khi xóa không thành công
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>
