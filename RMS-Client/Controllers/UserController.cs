@@ -14,7 +14,7 @@ namespace RMS_Client.Controllers
             _logger = logger;
         }
 
-        public IActionResult ListUser()
+        public IActionResult Login()
         {
             return View();
         }

@@ -1,13 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RMS_API.Models;
 using System.ComponentModel.DataAnnotations;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using RMS_API.DTOs;
 
 namespace RMS_API.Controllers
 {
@@ -15,135 +9,97 @@ namespace RMS_API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly RMS_SEP490Context _context;
 
-        public AuthController(RMS_SEP490Context context)
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IConfiguration _configuration;
+        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
         {
-            _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _configuration = configuration;
         }
 
+        //action register
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel registerModel)
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var user = new User
-            {
-                FirstName = registerModel.FirstName,
-                MidName = registerModel.MidName,
-                LastName = registerModel.LastName,
-                Email = registerModel.Email,
-                Phone = registerModel.Phone,
-                Password = BCrypt.Net.BCrypt.HashPassword(registerModel.Password),
-                UserStatusId = 1,
-                RoleId = 2,
-            };
-            Role? role = _context.Roles?.SingleOrDefault(r => r.Id == 2);
-            UserStatus userStatus = _context.UserStatuses?.SingleOrDefault(us => us.Id == 1);
+            var user = new User { Email = model.Email, FirstName = model.Firstname };
+            var result = await _userManager.CreateAsync(user, model.Password);
 
-            user.Role = role;
-            user.UserStatus = userStatus;
-            var newUser = _context.Users.Add(user);
-            _context.SaveChanges();
-            if (newUser == null)
-                return BadRequest("Fail");
-            return Ok("Success");
+            if (result.Succeeded)
+            {
+                return Ok(new { result = "User registered successfully" });
+            }
+
+            return BadRequest(result.Errors);
         }
 
-
+        //Action login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            if (model.Email == null && model.Password == null)
-                return Unauthorized("Xin mời nhập tài khoản và mật khẩu");
+            var user = await _userManager.FindByNameAsync(model.Email);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password)) return Unauthorized();
+            //var token = GenerateJwtToken(user);
+            var token = "test";
+            return Ok(new { token });
 
-            var user = await _context.Users
-        .Include(u => u.Role)
-        .SingleOrDefaultAsync(u => u.Email == model.Email);
-
-            
-            if (user == null)
-                return Unauthorized("Tài khoản không tồn tại. Xin hãy đăng nhập lại!");
-            if ( !BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
-            //if (user.Password != model.Password)
-                return Unauthorized("Mật khẩu không đúng!");
-
-            var token = GenerateJwtToken(user);
-            return Ok(new { token });            
         }
-
-        //Gen token for jwt
-        private string GenerateJwtToken(User user)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024"); 
-
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Email)
-            };
-
-            if (user.Role != null && !string.IsNullOrEmpty(user.Role.Name))
-            {
-                claims.Add(new Claim(ClaimTypes.Role, user.Role.Name));
-            }
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(2),
-                SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            //    var tokenDescriptor = new SecurityTokenDescriptor
-            //    {
-            //        Subject = new ClaimsIdentity(new[]
-            //        {
-            //    new Claim(ClaimTypes.Name, user.Email),
-            //    new Claim(ClaimTypes.Role, user.Role.Name)
-            //}),
-            //        Expires = DateTime.UtcNow.AddHours(1),
-            //        SigningCredentials = new SigningCredentials(
-            //            new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            //    };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
-
-
-        //Model register
-        //public class UserDTO
+        // Gen token for server, so server can send token to user for checking authentication 
+        //private string GenerateJwtToken(User user)
         //{
-        //    [Required]
-        //    [DataType(DataType.Text)]
-        //    public string Email { get; set; }
-        //    [Required]
-        //    [DataType(DataType.Text)]
-        //    public string Firstname { get; set; }
-        //    [Required]
-        //    [DataType(DataType.Text)]
-        //    public string Midname { get; set; }
-        //    [Required]
-        //    [DataType(DataType.Text)]
-        //    public string Lastname { get; set; }
-        //    [Required]
-        //    [DataType(DataType.Text)]
-        //    public string Phone { get; set; }
-        //    [Required]
-        //    [DataType(DataType.Password)]
-        //    public string Password { get; set; }
+        //    var claims = new[]
+        //    {
+        //    new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString()),
+        //    new Claim(JwtRegisteredClaimNames.Name, user.firstName),
+        //    new Claim("firstName", user.firstName ?? String.Empty),
+        //};
+
+        //    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+        //    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        //    var token = new JwtSecurityToken(
+        //        issuer: _configuration["Jwt:Issuer"],
+        //        audience: _configuration["Jwt:Audience"],
+        //        claims: claims,
+        //        expires: DateTime.Now.AddHours(24),
+        //        signingCredentials: creds);
+
+        //    return new JwtSecurityTokenHandler().WriteToken(token);
         //}
 
+
         //Model login
+        public class RegisterModel
+        {
+            [Required]
+            [DataType(DataType.Text)]
+            public string Email { get; set; }
+            [Required]
+            [DataType(DataType.Text)]
+            public string Firstname { get; set; }
+            [Required]
+            [DataType(DataType.Text)]
+            public string Midname { get; set; }
+            [Required]
+            [DataType(DataType.Text)]
+            public string Lastname { get; set; }
+            [Required]
+            [DataType(DataType.Password)]
+            public string Password { get; set; }
+        }
+
+        //Model 
         public class LoginModel
         {
             [Required]
             [DataType(DataType.Text)]
-            public string Email { get; set; } = string.Empty;
+            public string Email { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
-            public string Password { get; set; } = string.Empty;
+            public string Password { get; set; }
         }
     }
 }
