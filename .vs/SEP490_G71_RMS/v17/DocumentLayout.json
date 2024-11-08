@@ -36,7 +36,7 @@
               "RelativeDocumentMoniker": "RMS-Client\\Views\\Login\\Login.cshtml",
               "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\Views\\Login\\Login.cshtml",
               "RelativeToolTip": "RMS-Client\\Views\\Login\\Login.cshtml",
-              "ViewState": "AQIAAEkAAAAAAAAAAAAAAFYAAAARAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAEcAAAA1AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-11-08T05:52:51.792Z",
               "EditorCaption": ""
@@ -51,8 +51,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Home\\Home.cshtml",
               "ViewState": "AQIAAH8CAAAAAAAAAAAAAEgCAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-08T04:03:21.146Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-08T04:03:21.146Z"
             }
           ]
         }
