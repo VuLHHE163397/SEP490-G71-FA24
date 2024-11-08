@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RMS_API.DTOs;
 using RMS_API.Models;
+using System.Threading.Tasks;
 
 
 namespace RMS_API.Controllers
@@ -71,6 +72,14 @@ namespace RMS_API.Controllers
             return Ok(bui);
         }
 
+        [HttpGet("GetFacilityByRoomId/{roomId}")]
+        public IActionResult GetAllFacilities(int roomId)
+        {
+            // Lấy danh sách các cơ sở vật chất cho RoomId thay vì chỉ một phần tử
+            var fa = _context.Facilities.Where(p => p.RoomId == roomId).ToList();
+            return Ok(fa);
+        }
+
         [HttpPost("AddRoom")]
         public async Task<IActionResult> AddRoom([FromBody] RoomLlDTO roomDTO)
         {
@@ -97,13 +106,6 @@ namespace RMS_API.Controllers
                 return BadRequest("RoomNumber đã tồn tại trong Building này.");
             }
 
-            // Kiểm tra RoomNumber bắt đầu bằng số tầng
-            int floorPrefix = int.Parse(roomDTO.RoomNumber.ToString()[0].ToString());
-            if (floorPrefix != roomDTO.Floor)
-            {
-                return BadRequest("RoomNumber phải bắt đầu bằng số tầng.");
-            }
-
             // Tạo đối tượng Room mới từ DTO
             var room = new Room
             {
@@ -123,6 +125,51 @@ namespace RMS_API.Controllers
 
             return Ok(room);
         }
+
+        [HttpPut("UpdateRoom")]
+        public IActionResult UpdateRoom([FromBody] RoomLlUpdateDTO roomDto)
+        {
+            if (roomDto == null)
+            {
+                return BadRequest("Sai dữ liệu");
+            }
+
+            // Kiểm tra xem phòng với Id có tồn tại trong cơ sở dữ liệu không
+            var room = _context.Rooms.FirstOrDefault(r => r.Id == roomDto.Id);
+
+            if (room == null)
+            {
+                return NotFound("Không tìm thấy phòng có Id = " + roomDto.Id);
+            }
+
+            // Lấy BuildingId từ phòng hiện tại
+            var buildingId = room.BuildingId;
+
+            // Kiểm tra xem RoomNumber có bị trùng trong cùng tòa nhà không
+            var roomExists = _context.Rooms
+                .Any(r => r.BuildingId == buildingId && r.RoomNumber == roomDto.RoomNumber && r.Id != roomDto.Id);
+
+            if (roomExists)
+            {
+                return BadRequest("Số phòng đã tồn tại.");
+            }
+
+            // Cập nhật thông tin phòng
+            room.Price = roomDto.Price;
+            room.RoomNumber = roomDto.RoomNumber;
+            room.Area = roomDto.Area;
+            room.Description = roomDto.Description;
+            room.Floor = roomDto.Floor;
+            room.StartedDate = roomDto.StartedDate;
+            room.ExpiredDate = roomDto.ExpiredDate;
+            room.RoomStatusId = roomDto.RoomStatusId;
+
+            // Lưu thay đổi vào cơ sở dữ liệu
+            _context.SaveChanges();
+
+            return Ok("Cập nhật phòng thành công");
+        }
+
 
         [HttpDelete("DeleteRoomById/{roomId}")]
         public IActionResult DeteleRoomById(int roomId)
