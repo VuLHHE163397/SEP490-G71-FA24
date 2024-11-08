@@ -39,33 +39,33 @@
                                         <label class="form-label">Tên đầy đủ</label>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input type="text" class="form-control" id="firstName" placeholder="Tên">
+                                                <input type="text" class="form-control" required id="firstName" placeholder="Tên">
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="text" class="form-control" id="midName" placeholder="Tên đệm">
+                                                <input type="text" class="form-control" required id="midName" placeholder="Tên đệm">
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="text" class="form-control" id="lastName" placeholder="Họ">
+                                                <input type="text" class="form-control" required id="lastName" placeholder="Họ">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label for="phone" class="form-label">Số điện thoại</label>
-                                        <input type="text" class="form-control" id="phone">
+                                        <input type="text" class="form-control" required pattern="[0-9]{10}" id="phone">
                                     </div>
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email">
+                                        <input type="email" class="form-control" required pattern="^[^@@\s]+@@[^@@\s]+\.[^@@\s]+$" id="email">
                                     </div>
                                     <div class="mb-4">
                                         <label for="password" class="form-label">Mật khẩu</label>
-                                        <input type="password" class="form-control" id="password">
+                                        <input type="password" class="form-control" required id="password">
                                     </div>
                                     <div class="mb-4">
                                         <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
-                                        <input type="password" class="form-control" id="confirmPassword">
+                                        <input type="password" class="form-control" required id="confirmPassword">
                                     </div>
-                                    <div class="mb-4">
+                                    @* <div class="mb-4">
                                         <button type="button" class="btn btn-primary" onclick="sendVerificationCode()">Gửi mã qua email</button>
                                     </div>
                                     <div class="mb-4">
@@ -78,9 +78,9 @@
                                             <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 5">
                                             <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 6">
                                         </div>
-                                    </div>
+                                    </div> *@
 
-                                    <a href="login" onclick="register()"  class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</a>
+                                    <a onclick="register()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</a>
                                     <div class="d-flex align-items-center justify-content-center">
                                         <p class="fs-4 mb-0 fw-bold">Bạn đã có tài khoản?</p>
                                         <a class="text-primary fw-bold ms-2" href="Login">Đăng nhập</a>
@@ -116,7 +116,7 @@
             const email = document.getElementById("email").value;
             const phone = document.getElementById("phone").value;
             const password = document.getElementById("password").value;
-
+            
             if (!validateEmail(email)) {
                 alert("Invalid email format");
                 return false;
@@ -128,7 +128,9 @@
             return true;
         }
 
-            function register() {
+        function register() {
+            console.log('Start register function');
+
             // Get values from input fields
             const firstName = $("#firstName").val().trim();
             const midName = $("#midName").val().trim();
@@ -137,59 +139,53 @@
             const phone = $("#phone").val().trim();
             const password = $("#password").val().trim();
             const confirmPassword = $("#confirmPassword").val().trim();
-            const verificationCode = $(".code-input").map(function () { return $(this).val().trim(); }).get().join('');
+            // const verificationCode = $(".code-input").map(function () { return $(this).val().trim(); }).get().join('');
+            // if (!validatePhone(phone)) {
+            //     alert("số điện thoại không hợp lệ!");
+            //     return;
+            // }
+            // if (!validateEmail(email)) {
+            //     alert("Email không hợp lệ!");
+            //     return;
+            // }
 
-            if (!validateEmail(email)) {
-                alert("Email không hợp lệ!");
-                return;
-            }
+            // console.log(phone)
+            // if (!validatephone(phone)) {
+            //     alert("số điện thoại không hợp lệ!");
+            //     return;
+            // }
+            
 
-            if (!validatephone(phone)) {
-                alert("số điện thoại không hợp lệ!");
-                return;
-            }
+            // if (password != confirmPassword) {
+            //     alert("Passwords do not match!");
+            //     return;
+            // }
 
-            if (password !== confirmPassword) {
-                alert("Passwords do not match!");
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                alert("Mật khẩu xác nhận không khớp!");
-                return;
-            }
+            // if (password !== confirmPassword) {
+            //     alert("Mật khẩu xác nhận không khớp!");
+            //     return;
+            // }
 
             // Check verification code
             // if (verificationCode.length !== 6 || verificationCode !== expectedCode) {
             //     alert("Mã xác nhận không hợp lệ!");
             //     return;
-            // }
+            
 
-            const userData = {
-                newUser: {
-                    firstName: firstName,
-                    midName: midName,
-                    lastName: lastName,
-                    email: email,
-                    phone: phone,
-                    password: password
-                },
-                role: {
-                    id: 2,
-                    name: "Landlord"
-
-                },
-                userStatus: {
-                    id: 1,
-                    name: "Active"
-                }
+            const user = {
+                firstName: firstName,
+                midName: midName,
+                lastName: lastName,
+                email: email,
+                phone: phone,
+                password: password
             };
 
             $.ajax({
-                url: "https://localhost:7056/api/Auth/register",  
+                url: "https://localhost:7056/api/Auth/register",
                 type: "POST",
+                data: JSON.stringify(user),
                 contentType: "application/json",
-                data: JSON.stringify(userData),
                 success: function (response) {
                     alert("Đăng ký thành công!");
                     //$(".Sign-In").css("display", "block");
@@ -200,7 +196,7 @@
                     alert("Đăng ký thất bại: " + xhr.responseText);
                 }
             });
-        }        
+        }
     </script>
 </body>
 

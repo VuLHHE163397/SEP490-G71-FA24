@@ -20,11 +20,7 @@ namespace RMS_Client.Controllers
             return View("~/Views/Login/Login.cshtml");
         }
 
-        [HttpPost]
-        public IActionResult Login(LoginModel userLogin)
-        {            
-            return RedirectToAction("ListBuilding", "Building");
-        }
+        
     }
 
    
