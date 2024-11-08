@@ -318,7 +318,7 @@ namespace RMS_API.Models
 
                 entity.Property(e => e.RoomNumber).HasColumnName("roomNumber");
 
-                entity.Property(e => e.RooomStatusId).HasColumnName("rooomStatusId");
+                entity.Property(e => e.RoomStatusId).HasColumnName("roomStatusId");
 
                 entity.Property(e => e.StartedDate)
                     .HasColumnType("date")
@@ -330,9 +330,9 @@ namespace RMS_API.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Rooms_Buildings");
 
-                entity.HasOne(d => d.RooomStatus)
+                entity.HasOne(d => d.RoomStatus)
                     .WithMany(p => p.Rooms)
-                    .HasForeignKey(d => d.RooomStatusId)
+                    .HasForeignKey(d => d.RoomStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Rooms_RoomStatus");
             });

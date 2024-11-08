@@ -195,7 +195,7 @@
                                 <span class="hide-menu">Quản lý tòa nhà</span>
                                 <i class="ti ti-angle-down"></i>
                             </a>
-                            
+
                         </li>
 
                         <li class="sidebar-item">
@@ -342,7 +342,7 @@
             <div class="container-fluid">
                 <div class="container mt-4">
                     <h1>@ViewData["Title"]</h1>
-                    
+
                     <!-- Form for Editing Building -->
                     <form id="editBuilding" onsubmit="editBuilding(); return false;">
                         <input type="hidden" id="BuildingId" name="BuildingId" value="@Model.Id" />
@@ -396,7 +396,7 @@
                         </div>
 
 
-                        
+
 
                         <button type="submit" class="btn btn-primary" href="/Building/ListBuilding">Lưu</button>
                     </form>
@@ -452,7 +452,7 @@
                         DistrictName: $('#DistrictId').val(),
                         WardName: $('#WardId').val(),
                         BuildingStatus: $('#BuildingStatus').val(),
-                        
+
                     };
 
                     $.ajax({
@@ -474,9 +474,9 @@
             </script>
 
         </div>
-        
+
         <script src="~/lib/simplebar/dist/simplebar.js"></script>
-        
+
 
 </body>
 

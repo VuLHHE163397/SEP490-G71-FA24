@@ -18,7 +18,6 @@ namespace RMS_Client.Controllers
         private readonly string GetBuildingById = "https://localhost:7056/api/Building/GetBuildingById";
         private readonly string GetDistrictsByProvince = "https://localhost:7056/api/Building/GetDistrictsByProvince";
         private readonly string GetBuildinImformationgById = "https://localhost:7056/api/Building/GetBuildinImformationgById";
-        private readonly string GetBuildingStatus = "https://localhost:7056/api/Building/GetBuildingStatus";
         public BuildingController()
         {
             _client = new HttpClient();
@@ -76,7 +75,7 @@ namespace RMS_Client.Controllers
             return View(building);
         }
 
-        
+
         public async Task<IActionResult> EditBuilding(int? id)
         {
 
@@ -110,34 +109,27 @@ namespace RMS_Client.Controllers
                 ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
                 return View(building);
             }
-           
-
+            //lay status building
+            /*string apiUrlStatusBu = GetDistrictsByProvince + "/provinceName";
+            var status = new BuildingStatus();
+            var resp = await _client.GetAsync(apiUrlStatusBu);
+            if (resp.IsSuccessStatusCode)
+            {
+                var json = await resp.Content.ReadAsStringAsync();
+                status = JsonConvert.DeserializeObject<BuildingStatus>(json);
+            }
+            ViewBag.Status = status;
+*/
             return View(building);
+
+
+
+
            
         }
-     
-      /*  public async Task<IActionResult> EditBuilding()
-        {
-            
-
-            // Lấy status của room
-            string apiUrlStatusBu = GetBuildingStatus;
-            HttpResponseMessage statusResponse = await _client.GetAsync(apiUrlStatusBu);
-            if (statusResponse.IsSuccessStatusCode)
-            {
-                var statusData = await statusResponse.Content.ReadAsStringAsync();
-                var status = JsonConvert.DeserializeObject<List<BuildingStatus>>(statusData);
-                ViewBag.Status = status;
-            }
-            return View(); // Truyền đối tượng RoomDTO đã đặt mặc định
 
 
-
-        }*/
-
-
-
-
+        
 
 
     }

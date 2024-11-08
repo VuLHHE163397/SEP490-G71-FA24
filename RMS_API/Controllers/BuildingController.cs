@@ -160,7 +160,7 @@ namespace RMS_API.Controllers
                 BuildingStatusId = buildingStatus.Id,
                 UserId = 2,
                 LinkEmbedMap = buildingDto.LinkEmbedMap
-               
+
 
             };
 
@@ -200,7 +200,7 @@ namespace RMS_API.Controllers
             return Ok("Building deleted successfully.");
         }
 
-      
+
         /*[HttpGet("EditBuilding")]
         public IActionResult EditBuilding()
         {
@@ -344,7 +344,7 @@ namespace RMS_API.Controllers
             }
 
             // Update the building details
-            
+
             building.Name = buildingDto.Name;
             building.Distance = buildingDto.Distance;
             building.TotalFloors = buildingDto.TotalFloors;
