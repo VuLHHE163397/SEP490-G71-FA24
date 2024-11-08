@@ -10,6 +10,8 @@
         public int Floor { get; set; }
         public DateTime? StartedDate { get; set; }
         public DateTime? ExpiredDate { get; set; }
+
         public int RoomStatusId { get; set; }
+        //NVB
     }
 }
