@@ -1,79 +1,4 @@
-﻿@* @model RMS_API.DTOs.RoomLlUpdateDTO
-
-<h2 class="mb-4">Chỉnh sửa phòng</h2>
-
-<form asp-action="EditRoom" method="post" class="p-4 shadow-sm bg-light rounded">
-    <table class="table table-borderless">
-        <tr>
-            <td class="fw-bold text-end align-middle" style="width: 30%;">Room Number</td>
-            <td>
-                <input asp-for="RoomNumber" class="form-control" placeholder="Enter room number" />
-                <span asp-validation-for="RoomNumber" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td class="fw-bold text-end align-middle">Price</td>
-            <td>
-                <input asp-for="Price" class="form-control" placeholder="Enter price" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td class="fw-bold text-end align-middle">Area (sq. meters)</td>
-            <td>
-                <input asp-for="Area" class="form-control" placeholder="Enter area" />
-                <span asp-validation-for="Area" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td class="fw-bold text-end align-middle">Floor</td>
-            <td>
-                <input asp-for="Floor" class="form-control" placeholder="Enter floor number" />
-                <span asp-validation-for="Floor" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td class="fw-bold text-end align-middle">Description</td>
-            <td>
-                <textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter room description"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td class="fw-bold text-end align-middle">Started Date</td>
-            <td>
-                <input asp-for="StartedDate" class="form-control" type="date" />
-                <span asp-validation-for="StartedDate" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td class="fw-bold text-end align-middle">Expired Date</td>
-            <td>
-                <input asp-for="ExpiredDate" class="form-control" type="date" />
-                <span asp-validation-for="ExpiredDate" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td class="fw-bold text-end align-middle">Room Status</td>
-            <td>
-                <select asp-for="RoomStatusId" asp-items="ViewBag.RoomStatuses" class="form-select">
-                    <option value="">-- Select Room Status --</option>
-                </select>
-                <span asp-validation-for="RoomStatusId" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <button type="submit" class="btn btn-primary w-100">Lưu thay đổi</button>
-            </td>
-        </tr>
-    </table>
-</form>
- *@
-
-
-                @model RMS_API.DTOs.RoomLlUpdateDTO
+﻿@model RMS_API.DTOs.RoomLlUpdateDTO
 
 @{
     ViewData["Title"] = "Cập nhật phòng";
@@ -411,60 +336,67 @@
                     <form asp-action="EditRoom" method="post">
                         <input type="hidden" id="BuildingId" name="BuildingId" value="@Model.Id" />
 
-                        <div class="form-group">
-                            <td class="fw-bold text-end align-middle" style="width: 30%;">Room Number</td>
-                            <td>
+                        <div class="form-group row">
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="RoomNumber">Room Number</label>
+                            <div class="col-sm-9">
                                 <input asp-for="RoomNumber" class="form-control" placeholder="Enter room number" />
                                 <span asp-validation-for="RoomNumber" class="text-danger"></span>
-                            </td>
-                        </div>
-                        <div class="form-group">
-                            <td class="fw-bold text-end align-middle">Price</td>
-                            <td>
-                                <input asp-for="Price" class="form-control" placeholder="Enter price" />
-                                <span asp-validation-for="Price" class="text-danger"></span>
-                            </td>
-                        </div>
-                        <div class="form-group">
-                            <td class="fw-bold text-end align-middle">Area (sq. meters)</td>
-                            <td>
-                                <input asp-for="Area" class="form-control" placeholder="Enter area" />
-                                <span asp-validation-for="Area" class="text-danger"></span>
-                            </td>
-                        </div>
-                        <div class="form-group">
-                            <td class="fw-bold text-end align-middle">Floor</td>
-                            <td>
-                                <input asp-for="Floor" class="form-control" placeholder="Enter floor number" />
-                                <span asp-validation-for="Floor" class="text-danger"></span>
-                            </td>
-                        </div>
-                        <div class="form-group">
-                            <td class="fw-bold text-end align-middle">Description</td>
-                            <td>
-                                <textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter room description"></textarea>
-                                <span asp-validation-for="Description" class="text-danger"></span>
-                            </td>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <td class="fw-bold text-end align-middle">Started Date</td>
-                            <td>
+                        <div class="form-group row">
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="Price">Price</label>
+                            <div class="col-sm-9">
+                                <input asp-for="Price" class="form-control" placeholder="Enter price" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="Area">Area (sq. meters)</label>
+                            <div class="col-sm-9">
+                                <input asp-for="Area" class="form-control" placeholder="Enter area" />
+                                <span asp-validation-for="Area" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="Floor">Floor</label>
+                            <div class="col-sm-9">
+                                <input asp-for="Floor" class="form-control" placeholder="Enter floor number" />
+                                <span asp-validation-for="Floor" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="Description">Description</label>
+                            <div class="col-sm-9">
+                                <textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter room description"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="StartedDate">Started Date</label>
+                            <div class="col-sm-9">
                                 <input asp-for="StartedDate" class="form-control" type="date" />
                                 <span asp-validation-for="StartedDate" class="text-danger"></span>
-                            </td>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <td class="fw-bold text-end align-middle">Room Status</td>
-                            <td>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="RoomStatusId">Room Status</label>
+                            <div class="col-sm-9">
                                 <select asp-for="RoomStatusId" asp-items="ViewBag.RoomStatuses" class="form-select">
                                     <option value="">-- Select Room Status --</option>
                                 </select>
                                 <span asp-validation-for="RoomStatusId" class="text-danger"></span>
-                            </td>
+                            </div>
                         </div>
+
                         <button type="submit" class="btn btn-primary w-100">Lưu thay đổi</button>
                     </form>
+
                 </div>
             </div>
 
