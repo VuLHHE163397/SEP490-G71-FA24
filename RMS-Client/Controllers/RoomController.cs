@@ -77,21 +77,6 @@ namespace RMS_Client.Controllers
             return View(rooms);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id, int? buildingId, List<int> statusIds)
-        {
-            // Gọi API để xóa phòng
-            string apiUrl = $"{RoomApiUri}/DeleteRoomById/{id}";
-            var response = await client.DeleteAsync(apiUrl);
-
-            if (response.IsSuccessStatusCode)
-            {
-                // Sau khi xóa, giữ lại các tham số lọc và chuyển hướng về danh sách phòng
-                return RedirectToAction("ListRoom", new { buildingId = buildingId, statusIds = statusIds });
-            }
-            return NotFound("Room could not be deleted.");
-        }
-
 
 
         [HttpGet]
@@ -106,26 +91,23 @@ namespace RMS_Client.Controllers
 
             // Lấy danh sách tòa nhà
             string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";
-            var buildings = new List<Building>();
-            var responseBuilding = await client.GetAsync(apiUrlBuilding);
-            if (responseBuilding.IsSuccessStatusCode)
+            HttpResponseMessage buildingResponse = await client.GetAsync(apiUrlBuilding);
+            if (buildingResponse.IsSuccessStatusCode)
             {
-                var json = await responseBuilding.Content.ReadAsStringAsync();
-                buildings = JsonConvert.DeserializeObject<List<Building>>(json);
+                var buildingData = await buildingResponse.Content.ReadAsStringAsync();
+                var buildings = JsonConvert.DeserializeObject<List<BuildingDTO>>(buildingData);
+                ViewBag.Buildings = buildings;
             }
 
             // Lấy status của room
             string apiUrlStatusRo = RoomApiUri + "/GetAllStatus";
-            var status = new List<RoomStatus>();
-            var responseStatusRo = await client.GetAsync(apiUrlStatusRo);
-            if (responseStatusRo.IsSuccessStatusCode)
+            HttpResponseMessage statusResponse = await client.GetAsync(apiUrlStatusRo);
+            if (statusResponse.IsSuccessStatusCode)
             {
-                var json = await responseStatusRo.Content.ReadAsStringAsync();
-                status = JsonConvert.DeserializeObject<List<RoomStatus>>(json);
+                var statusData = await statusResponse.Content.ReadAsStringAsync();
+                var status = JsonConvert.DeserializeObject<List<RoomStatus>>(statusData);
+                ViewBag.Status = status;
             }
-
-            ViewBag.Buildings = buildings;
-            ViewBag.Status = status;
             return View(); // Truyền đối tượng RoomDTO đã đặt mặc định
         }
 
@@ -160,53 +142,40 @@ namespace RMS_Client.Controllers
             return View(roomDTO);
         }
 
-
-
-        public async Task<IActionResult> ExportToExcel(int buildingId)
+        public async Task<IActionResult> ExportToExcel(string filename = "Rooms_List.xlsx")
         {
-            var rooms = new List<Room>();
-            string buildingName = "Building"; // Khởi tạo biến buildingName với giá trị mặc định
+            var rooms = new List<Room>(); // Lấy danh sách phòng từ database
+            var response = await client.GetAsync(RoomApiUri + "/GetAllRoom");
 
-            // Gọi API để lấy tên tòa nhà
-            var buildingResponse = await client.GetAsync(RoomApiUri + $"/GetBuildingById?buildingId={buildingId}");
-            if (buildingResponse.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
-                var buildingNameJson = await buildingResponse.Content.ReadAsStringAsync();
-                buildingName = JsonConvert.DeserializeObject<string>(buildingNameJson) ?? "Building"; // Chuyển đổi chuỗi JSON và gán trực tiếp vào biến buildingName
-            }
-            else
-            {
-                return Content("Không thể kết nối đến API để lấy tên tòa nhà.");
+                var json = await response.Content.ReadAsStringAsync();
+                rooms = JsonConvert.DeserializeObject<List<Room>>(json);
             }
 
-
-            // Gọi API với buildingId để lấy danh sách phòng
-            var response = await client.GetAsync(RoomApiUri + $"/GetRoomByBuilding?buildingId={buildingId}");
-            if (!response.IsSuccessStatusCode)
+            if (rooms.Count == 0)
             {
-                return Content("Không thể kết nối đến API.");
-            }
-
-            var json = await response.Content.ReadAsStringAsync();
-            if (string.IsNullOrEmpty(json) || json == "[]")
-            {
+                // Nếu không có dữ liệu, trả về thông báo lỗi hoặc một file rỗng
                 return Content("Không có dữ liệu để xuất.");
             }
-
-            rooms = JsonConvert.DeserializeObject<List<Room>>(json);
 
             using (var package = new ExcelPackage())
             {
                 var worksheet = package.Workbook.Worksheets.Add("Rooms");
 
+                // Tiêu đề cột
                 worksheet.Cells[1, 1].Value = "Room Number";
                 worksheet.Cells[1, 2].Value = "Area (m²)";
                 worksheet.Cells[1, 3].Value = "Floor";
                 worksheet.Cells[1, 4].Value = "Price (VNĐ)";
                 worksheet.Cells[1, 5].Value = "Status";
                 worksheet.Cells[1, 6].Value = "Description";
+                worksheet.Cells[1, 7].Value = "Started Date";
+                worksheet.Cells[1, 8].Value = "Expired Date";
+                worksheet.Cells[1, 9].Value = "Building ID";
 
-                using (var range = worksheet.Cells[1, 1, 1, 6])
+                // Định dạng tiêu đề
+                using (var range = worksheet.Cells[1, 1, 1, 9])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -214,34 +183,43 @@ namespace RMS_Client.Controllers
                     range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 }
 
+                // Điền dữ liệu phòng vào các dòng tiếp theo
                 int row = 2;
                 foreach (var room in rooms)
                 {
                     worksheet.Cells[row, 1].Value = room.RoomNumber;
                     worksheet.Cells[row, 2].Value = room.Area;
                     worksheet.Cells[row, 3].Value = room.Floor;
-                    worksheet.Cells[row, 4].Value = room.Price.ToString("N0") + " VNĐ";
-                    worksheet.Cells[row, 5].Value = room.RoomStatusId switch
+                    worksheet.Cells[row, 4].Value = room.Price.ToString("N0") + " VNĐ"; // Định dạng tiền tệ
+
+                    // Chuyển đổi trạng thái sang tiếng Việt
+                    string statusNameVi = room.RoomStatusId switch
                     {
                         1 => "Trống",
                         2 => "Đã có người",
                         3 => "Đang sửa chữa",
                         4 => "Sắp trống",
-                        _ => "Không xác định"
                     };
+                    worksheet.Cells[row, 5].Value = statusNameVi;
+
+                    // Thêm thông tin mô tả, ngày bắt đầu, ngày hết hạn, ID tòa nhà
                     worksheet.Cells[row, 6].Value = room.Description;
+                    worksheet.Cells[row, 7].Value = room.StartedDate?.ToString("dd/MM/yyyy");
+                    worksheet.Cells[row, 8].Value = room.ExpiredDate?.ToString("dd/MM/yyyy");
+                    worksheet.Cells[row, 9].Value = room.BuildingId;
 
                     row++;
                 }
 
+                // Auto-fit các cột
                 worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
+                // Tạo file Excel dưới dạng MemoryStream
                 var stream = new MemoryStream();
                 package.SaveAs(stream);
                 stream.Position = 0;
 
-                var fileName = $"Danh sách tòa nhà {buildingName}.xlsx";
-                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
             }
         }
 

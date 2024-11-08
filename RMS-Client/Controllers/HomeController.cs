@@ -106,14 +106,7 @@ namespace RMS_Client.Controllers
         {
             return View("~/Views/Home/ListFavouriteRoom.cshtml");
         }
-        public IActionResult Register()
-        {
-            return View("~/Views/Login/Register.cshtml");
-        }
-        public IActionResult Login()
-        {
-            return View("~/Views/Login/Login.cshtml");
-        }
+      
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

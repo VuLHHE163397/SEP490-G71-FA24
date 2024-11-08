@@ -14,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddOData(opt => opt.Count().Filter().OrderBy().Expand().Select().SetMaxTop(100));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpClient();
+
 builder.Services.AddSwaggerGen(s =>
 {
     s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
