@@ -173,7 +173,7 @@ namespace RMS_API.Controllers
                     Address = $"{r.Building.Address.Information}, {r.Building.Address.Ward.Name}, {r.Building.Address.District.Name}, {r.Building.Address.Province.Name}",
                     Price = r.Price,
                     Area = r.Area,
-                    RoomStatusName = r.RooomStatus.Name,
+                    RoomStatusName = r.RoomStatus.Name,
                     //Images = r.Images.Select(i => i.Link).ToList()
                 })
                 .ToList();
@@ -194,7 +194,7 @@ namespace RMS_API.Controllers
                     .ThenInclude(b => b.District)
                 .Include(r => r.Building)
                     .ThenInclude(b => b.Province)
-                .Include(r => r.RooomStatus)
+                .Include(r => r.RoomStatus)
                 .Include(r => r.Building.User) // Lấy thông tin chủ nhà
                 .FirstOrDefault(r => r.Id == id);
 
@@ -214,7 +214,7 @@ namespace RMS_API.Controllers
                 Area = room.Area,
                 Distance = room.Building?.Distance ?? 0,
                 Description = room.Description,
-                RoomStatus = room.RooomStatus?.Name ?? "Trạng thái không xác định",
+                RoomStatus = room.RoomStatus?.Name ?? "Trạng thái không xác định",
                 OwnerName = $"{room.Building?.User?.LastName ?? ""} " +
                             $"{room.Building?.User?.MidName ?? ""} " +
                             $"{room.Building?.User?.FirstName ?? ""}".Trim(),

@@ -200,7 +200,7 @@
                         <h2>Thêm dịch vụ</h2>
                         <div>
                             <a href="/Service/ListService" class="btn btn-warning">Quay về</a>
-                            <button type="submit" class="btn btn-success">Lưu</button>
+                            <button type="submit" class="btn btn-success" onclick="AddService()">Lưu</button>
                         </div>
                     </div>
                     <hr />
@@ -255,6 +255,37 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
+    <script>
+        function AddService() {
+            var service = {
+                name: $("#ServiceName").val(),
+                price: $("#Price").val(),
+            }
+            $.ajax({
+                url: "https://localhost:7056/api/Service",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(service),
+                success: function (response) {
+                    alert('Thêm dịch vụ thành công');
+                    window.location.href = "/Service/ListService"
+                },
+                error: function (xhr, status, error) {
+                    console.log(error)
+                    console.log(xhr)
+                    console.log(status)
+                    var message = "";
+                    Object.keys(xhr.responseJSON.errors).forEach(key => {
+                        message += key + ":\n";
+                        xhr.responseJSON.errors[key].forEach(x => {
+                            
+                        })
+                    });
+                    alert("Lỗi khi thêm dịch vụ");
+                }
+            })
+        }
+    </script>
 </body>
 
 </html>

@@ -3,23 +3,26 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RMS_API.Models;
-using RMS_Client.Services; // Thay đổi thành namespace thực tế của bạn
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Thêm các dịch vụ vào container.
+// Register services in the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
-builder.Services.AddHttpClient<BuildingService>(); // Đảm bảo thêm dịch vụ BuildingService
 
-// Cấu hình CORS
+
+
+// Configure CORS to allow all origins, methods, and headers.
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
-        builder => builder.AllowAnyOrigin()
-                          .AllowAnyMethod()
-                          .AllowAnyHeader());
+        policyBuilder => policyBuilder.AllowAnyOrigin()
+                                      .AllowAnyMethod()
+                                      .AllowAnyHeader());
 });
+
+// Configure DbContext with SQL Server connection.
 builder.Services.AddDbContext<RMS_SEP490Context>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -28,7 +31,7 @@ builder.Services.AddDbContext<RMS_SEP490Context>(options =>
 
 var app = builder.Build();
 
-// Cấu hình pipeline yêu cầu HTTP.
+// Configure HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -36,22 +39,17 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
 app.UseStaticFiles();
 
-// Sử dụng CORS
+// Enable CORS with configured policy.
 app.UseCors("AllowAllOrigins");
+
 app.UseRouting();
+app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers(); // Đảm bảo rằng bạn đã cấu hình đúng
-});
-
-
-// Cấu hình route mặc định cho ứng dụng.
+// Configure default route for controllers.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Building}/{action=ListBuilding}/{id?}"); // Đặt controller mặc định là Home và action là Index
+    pattern: "{controller=Building}/{action=ListBuilding}/{id?}");
 
 app.Run();
