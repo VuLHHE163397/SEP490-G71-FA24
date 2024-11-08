@@ -83,11 +83,6 @@ namespace RMS_Client.Controllers
         // Hành động hiển thị trang thêm phòng
         public async Task<IActionResult> CreateRoom()
         {
-            //// Tạo một đối tượng RoomDTO với RoomStatusId mặc định là 1
-            //var roomDTO = new RoomDTO
-            //{
-            //    RoomStatusId = 1 // Đặt mặc định là 1 (Trạng thái "Trống")
-            //};
 
             // Lấy danh sách tòa nhà
             string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";

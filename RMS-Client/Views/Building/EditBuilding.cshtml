@@ -143,6 +143,15 @@
             border-radius: 50%;
         }
 
+        .dropdown-item {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+            .dropdown-item:hover {
+                background-color: aqua;
+            }
+
     </style>
 </head>
 <body>
@@ -371,16 +380,23 @@
                             <label for="WardId">Xã/Phường</label>
                             <input class="form-control" id="WardId" name="WardName" value="@Model.WardName" required readonly />
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="position: relative;">
                             <label for="BuildingStatus">Trạng Thái</label>
-                            <input class="form-control" id="BuildingStatus" name="BuildingStatus" value="@Model.BuildingStatus" required />
-                            @* <datalist id="BuildingStatus" >
-                                @foreach (var status in ViewBag.BuildingStatuses)
-                                {
-                                    <option value="@status.Name">@status.Name</option>
-                                }
-                            </datalist> *@
+
+                            <!-- Input field for displaying selected status -->
+                            <input type="text" class="form-control" id="BuildingStatus" name="BuildingStatus"
+                                   value="@Model.BuildingStatus" readonly onclick="toggleDropdown()" />
+
+                            <!-- Custom dropdown menu that appears when input is clicked -->
+                            <div id="BuildingStatusDropdown" style="display: none; position: absolute; top: 100%; left: 0; width: 100%; border: 1px solid #ced4da; border-radius: 4px; background-color: #fff; z-index: 1000;">
+                                <div class="dropdown-item" onclick="selectStatus('Hoạt động')">Hoạt động</div>
+                                <div class="dropdown-item" onclick="selectStatus('Hủy hoạt động')">Hủy hoạt động</div>
+                                <div class="dropdown-item" onclick="selectStatus('Sửa chữa')">Sửa chữa</div>
+                            </div>
                         </div>
+
+
+                        
 
                         <button type="submit" class="btn btn-primary" href="/Building/ListBuilding">Lưu</button>
                     </form>
@@ -389,6 +405,31 @@
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             <script>
+
+                function toggleDropdown() {
+                    // Toggle the visibility of the custom dropdown
+                    var dropdown = document.getElementById("BuildingStatusDropdown");
+                    dropdown.style.display = (dropdown.style.display === "none") ? "block" : "none";
+                }
+
+                function selectStatus(status) {
+                    // Update the input field with the selected status
+                    document.getElementById("BuildingStatus").value = status;
+
+                    // Hide the dropdown after selection
+                    document.getElementById("BuildingStatusDropdown").style.display = "none";
+                }
+
+                // Hide the dropdown when clicking outside the input or dropdown
+                document.addEventListener('click', function (event) {
+                    var input = document.getElementById("BuildingStatus");
+                    var dropdown = document.getElementById("BuildingStatusDropdown");
+
+                    // If click is outside of both input and dropdown, hide the dropdown
+                    if (!input.contains(event.target) && !dropdown.contains(event.target)) {
+                        dropdown.style.display = "none";
+                    }
+                });
                 function editBuilding() {
                     // Ensure the building ID is correctly retrieved
                     var id = $('#BuildingId').val();
