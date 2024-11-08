@@ -172,7 +172,7 @@ namespace RMS_Client.Controllers
             if (response.IsSuccessStatusCode)
             {
                 TempData["Success"] = "Cập nhật phòng thành công!";
-                return RedirectToAction("ListRoom");
+                return RedirectToAction("ListRoom", new { buildingId = room.BuildingId });
             }
             else
             {
