@@ -1,15 +1,4 @@
-﻿@page
-@model RMS_Client.Controllers.HomeController
-
-@* @if (Model.ShowAlert)
-{
-    <script>
-        alert('Login failed! Please check your username and password.');
-    </script>
-} *@
-
-
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 
 <head>
@@ -18,12 +7,38 @@
     <title>RMS</title>
     <link rel="icon" type="image/png" href="~/images/logo.jpg" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
+    <style>
+        /* Popup styling */
+        #popupMessage {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #4caf50;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            z-index: 1000;
+        }
+
+        #popupErrorMessage {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #C53500;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            z-index: 1000;
+        }
+    </style>
 </head>
 
 <body>
-    <!--  Body Wrapper -->
-    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-         data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
         <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
             <div class="d-flex align-items-center justify-content-center w-100">
                 <div class="row justify-content-center w-100">
@@ -51,7 +66,7 @@
                                             </label>
                                         </div>
                                         <a class="text-primary fw-bold" href="./index.html">Quên mật khẩu</a>
-                                    </div>                                    
+                                    </div>
                                     <button type="button" onclick="login()" class="btn btn-primary w-100">Login</button>
                                     <div class="d-flex align-items-center justify-content-center">
                                         <p class="fs-4 mb-0 fw-bold">Chưa có tài khoản?</p>
@@ -65,10 +80,18 @@
             </div>
         </div>
     </div>
+
+    <!-- Popup Message -->
+    <div id="popupMessage">Đăng nhập thành công!</div>
+    <div id="popupErrorMessage">Đăng nhập thất bại!</div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function login() {
+            // if (payload.role === "Admin") {
+            //     window.location.href = "/User/ListUser";
+            // }
             var email = $("#email").val();
             var password = $("#password").val();
 
@@ -78,18 +101,53 @@
                 contentType: "application/json",
                 data: JSON.stringify({ email: email, Password: password }),
                 success: function (response) {
-                    alert("Login successful!");
                     localStorage.setItem("token", response.token);
-                    window.location.href = "/Building/ListBuilding";
+                    showPopup("Đăng nhập thành công!");
+
+                    try {
+                        // Giải mã token jwt
+                        const tokenParts = response.token.split('.');
+                        const payload = JSON.parse(atob(tokenParts[1]));
+
+                        // xét role chuyển trang
+                        setTimeout(function () {
+                            if (payload.role === "Admin") {
+                                window.location.href = "/User/ListUser";                                
+                            }  
+                            if (payload.role === "Landlord") {
+                                window.location.href = "/Building/ListBuilding";                                
+                            } 
+                        }, 1000); 
+                    } catch (error) {
+                        console.error("Failed to decode token", error);
+                        alert("Đăng nhập thành công, nhưng có lỗi xảy ra khi xử lý thông tin người dùng.");
+                    }
                 },
+
                 error: function (xhr, status, error) {
-                    alert("Login failed: " + xhr.responseText);
+                    showErrorPopup("Đăng nhập thất bại: " + xhr.responseText);
                 }
             });
         }
 
+        function showPopup(message) {
+            var popup = $("#popupMessage");
+            popup.text(message);
+            popup.fadeIn();
+            setTimeout(function () {
+                popup.fadeOut();
+            }, 2000); 
+        }
+
+        function showErrorPopup(message) {
+            var popup = $("#popupErrorMessage");
+            popup.text(message);
+            popup.fadeIn();
+            setTimeout(function () {
+                popup.fadeOut();
+            }, 4000);
+        }
     </script>
 </body>
-
 
 </html>

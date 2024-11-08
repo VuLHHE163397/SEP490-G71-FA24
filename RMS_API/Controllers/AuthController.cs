@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using RMS_API.DTOs;
 
 namespace RMS_API.Controllers
 {
@@ -22,45 +23,48 @@ namespace RMS_API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] User user)
+        public async Task<IActionResult> Register([FromBody] RegisterModel registerModel)
         {
-            if (await _context.Users.AnyAsync(u => u.Email == user.Email))
+            var user = new User
             {
-                return BadRequest("Email này đã được đăng ký!");
-            }
-
-            var newUser = new User
-            {
-                Email = user.Email,
-                FirstName = user.FirstName,
-                MidName = user.MidName,
-                LastName = user.LastName,
-                Phone = user.Phone,
-                Password = BCrypt.Net.BCrypt.HashPassword(user.Password),
+                FirstName = registerModel.FirstName,
+                MidName = registerModel.MidName,
+                LastName = registerModel.LastName,
+                Email = registerModel.Email,
+                Phone = registerModel.Phone,
+                Password = BCrypt.Net.BCrypt.HashPassword(registerModel.Password),
+                UserStatusId = 1,
                 RoleId = 2,
-                UserStatusId = 1
             };
+            Role? role = _context.Roles?.SingleOrDefault(r => r.Id == 2);
+            UserStatus userStatus = _context.UserStatuses?.SingleOrDefault(us => us.Id == 1);
 
-            _context.Users.Add(newUser);
-            await _context.SaveChangesAsync();
-            return Ok(new { message = "Đăng ký thành công!" });
+            user.Role = role;
+            user.UserStatus = userStatus;
+            var newUser = _context.Users.Add(user);
+            _context.SaveChanges();
+            if (newUser == null)
+                return BadRequest("Fail");
+            return Ok("Success");
         }
 
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
+            if (model.Email == null && model.Password == null)
+                return Unauthorized("Xin mời nhập tài khoản và mật khẩu");
+
             var user = await _context.Users
         .Include(u => u.Role)
         .SingleOrDefaultAsync(u => u.Email == model.Email);
 
-           
+            
             if (user == null)
                 return Unauthorized("Tài khoản không tồn tại. Xin hãy đăng nhập lại!");
             if ( !BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
             //if (user.Password != model.Password)
                 return Unauthorized("Mật khẩu không đúng!");
-
 
             var token = GenerateJwtToken(user);
             return Ok(new { token });            
@@ -70,7 +74,7 @@ namespace RMS_API.Controllers
         private string GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024"); // Replace with a secure key
+            var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024"); 
 
             var claims = new List<Claim>
             {
@@ -108,27 +112,27 @@ namespace RMS_API.Controllers
 
 
         //Model register
-        public class RegisterModel
-        {
-            [Required]
-            [DataType(DataType.Text)]
-            public string Email { get; set; }
-            [Required]
-            [DataType(DataType.Text)]
-            public string Firstname { get; set; }
-            [Required]
-            [DataType(DataType.Text)]
-            public string Midname { get; set; }
-            [Required]
-            [DataType(DataType.Text)]
-            public string Lastname { get; set; }
-            [Required]
-            [DataType(DataType.Text)]
-            public string Phone { get; set; }
-            [Required]
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
-        }
+        //public class UserDTO
+        //{
+        //    [Required]
+        //    [DataType(DataType.Text)]
+        //    public string Email { get; set; }
+        //    [Required]
+        //    [DataType(DataType.Text)]
+        //    public string Firstname { get; set; }
+        //    [Required]
+        //    [DataType(DataType.Text)]
+        //    public string Midname { get; set; }
+        //    [Required]
+        //    [DataType(DataType.Text)]
+        //    public string Lastname { get; set; }
+        //    [Required]
+        //    [DataType(DataType.Text)]
+        //    public string Phone { get; set; }
+        //    [Required]
+        //    [DataType(DataType.Password)]
+        //    public string Password { get; set; }
+        //}
 
         //Model login
         public class LoginModel
