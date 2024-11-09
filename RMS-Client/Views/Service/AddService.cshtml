@@ -200,7 +200,7 @@
                         <h2>Thêm dịch vụ</h2>
                         <div>
                             <a href="/Service/ListService" class="btn btn-warning">Quay về</a>
-                            <button type="submit" class="btn btn-success">Lưu</button>
+                            <button type="submit" class="btn btn-success" onclick="AddService()">Lưu</button>
                         </div>
                     </div>
                     <hr />
@@ -213,18 +213,7 @@
                                     <input type="text" id="ServiceName" name="ServiceName" class="form-control" required />
                                 </div>
                             </div>
-                            <!-- Loại dịch vụ -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="ServiceType">Loại <span class="text-danger">*</span></label>
-                                    <select id="ServiceType" name="ServiceType" class="form-select" required>
-                                        <option value="">Loại dịch vụ</option>
-                                        <option value="1">Dịch vụ điện</option>
-                                        <option value="2">Dịch vụ nước</option>
-                                        <option value="3">Dịch vụ mạng</option>
-                                    </select>
-                                </div>
-                            </div>
+                            
                         </div>
 
                         <div class="row mb-3">
@@ -239,15 +228,7 @@
                                 </div>
                             </div>
                             <!-- Trạng thái -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="IsActive">Trạng thái</label>
-                                    <div class="form-check">
-                                        <input type="checkbox" id="IsActive" name="IsActive" class="form-check-input" checked />
-                                        <label for="IsActive" class="form-check-label">Đang dùng</label>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
 
                         <div class="row mb-3">
@@ -274,6 +255,37 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
+    <script>
+        function AddService() {
+            var service = {
+                name: $("#ServiceName").val(),
+                price: $("#Price").val(),
+            }
+            $.ajax({
+                url: "https://localhost:7056/api/Service",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(service),
+                success: function (response) {
+                    alert('Thêm dịch vụ thành công');
+                    window.location.href = "/Service/ListService"
+                },
+                error: function (xhr, status, error) {
+                    console.log(error)
+                    console.log(xhr)
+                    console.log(status)
+                    var message = "";
+                    Object.keys(xhr.responseJSON.errors).forEach(key => {
+                        message += key + ":\n";
+                        xhr.responseJSON.errors[key].forEach(x => {
+                            
+                        })
+                    });
+                    alert("Lỗi khi thêm dịch vụ");
+                }
+            })
+        }
+    </script>
 </body>
 
 </html>

@@ -202,10 +202,10 @@
                 <link rel="stylesheet" href="~/css/styles.min.css" />
                 <div class="container" style="margin-top: 1rem; max-width: 900px;">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2>Sửa dịch vụ</h2>
+                        <h2>Sửa cơ sửa vật chất</h2>
                         <div>
                             <a href="/Service/ListService" class="btn btn-warning">Quay về</a>
-                            <button type="submit" class="btn btn-success">Lưu</button>
+                            <button type="submit" class="btn btn-success" onclick="UpdateService(@Model.Id)">Lưu</button>
                         </div>
                     </div>
                     <hr />
@@ -215,41 +215,20 @@
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <label for="ServiceName">Tên <span class="text-danger">*</span></label>
-                                    <input type="text" id="ServiceName" name="ServiceName" class="form-control" required />
+                                    <input type="text" id="ServiceName" name="ServiceName" class="form-control" required value="@Model.Name" />
                                 </div>
                             </div>
-                            <!-- Loại dịch vụ -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="ServiceType">Loại <span class="text-danger">*</span></label>
-                                    <select id="ServiceType" name="ServiceType" class="form-select" required>
-                                        <option value="">Loại dịch vụ</option>
-                                        <option value="1">Dịch vụ điện</option>
-                                        <option value="2">Dịch vụ nước</option>
-                                        <option value="3">Dịch vụ mạng</option>
-                                    </select>
-                                </div>
-                            </div>
+                            
                         </div>
 
                         <div class="row mb-3">
                             <!-- Đơn giá -->
                             <div class="col-md-8">
                                 <div class="form-group">
-                                    <label for="Price">Đơn giá <span class="text-danger">*</span></label>
+                                    <label for="Price">Đơn giá <span class="text-danger">*</span> (VNĐ)</label>
                                     <div class="input-group">
-                                        <input type="number" id="Price" name="Price" class="form-control" value="0" required />
+                                        <input type="number" id="Price" name="Price" class="form-control" required value="@Model.Price" />
                                         <span class="input-group-text">VNĐ</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Trạng thái -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="IsActive">Trạng thái</label>
-                                    <div class="form-check">
-                                        <input type="checkbox" id="IsActive" name="IsActive" class="form-check-input" checked />
-                                        <label for="IsActive" class="form-check-label">Đang dùng</label>
                                     </div>
                                 </div>
                             </div>
@@ -278,6 +257,29 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
+    <script>
+        function UpdateService(id) {
+            var service = {
+                id: id,
+                name: $("#ServiceName").val(),
+                price: $("#Price").val(),
+            }
+            $.ajax({
+                url: "https://localhost:7056/api/Service",
+                type: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify(service),
+                success: function (response) {
+                    alert('Cật nhật vụ thành công');
+                    window.location.href = "/Service/ListService"
+                },
+                error: function (xhr, status, error) {
+                    console.log(error)
+                    alert("Lỗi khi cật nhật dịch vụ");
+                }
+            })
+        }
+    </script>
 </body>
 
 </html>
