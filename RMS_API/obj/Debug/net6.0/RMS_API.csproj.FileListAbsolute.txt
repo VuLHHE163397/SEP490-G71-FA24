@@ -163,3 +163,4 @@ D:\GitHub\SEP490-G71-FA24\RMS_API\obj\Debug\net6.0\refint\RMS_API.dll
 D:\GitHub\SEP490-G71-FA24\RMS_API\obj\Debug\net6.0\RMS_API.pdb
 D:\GitHub\SEP490-G71-FA24\RMS_API\obj\Debug\net6.0\RMS_API.genruntimeconfig.cache
 D:\GitHub\SEP490-G71-FA24\RMS_API\obj\Debug\net6.0\ref\RMS_API.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\libman.json
