@@ -295,8 +295,7 @@
                                 0
                             </span>
                         </a>
-                        @* <a asp-controller="Auth" asp-action="Login" *@
-                        <a href="Auth/Login"
+                        <a asp-controller="Home" asp-action="Login"
                            class="nav-item nav-link active">
                             Đăng nhập<i class="fa fa-arrow-right ms-3"></i>
                         </a>
@@ -645,7 +644,7 @@
                     priceSlider.noUiSlider.set([1000000, 3000000]); // Default price range
                     document.getElementById('slider-min-value').textContent = '1000000';
                     document.getElementById('slider-max-value').textContent = '3000000';
-                    document.getElementById('selected-price-range').textContent = 'Mức giá';
+                    document.getElementById('selected-price-range').textContent = 'Giá tiền';
 
                     // Reset area slider to default values
                     areaSlider.noUiSlider.set([10, 50]); // Default area range

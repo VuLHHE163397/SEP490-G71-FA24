@@ -179,7 +179,8 @@
                                             <td><img src="${imageUrl}" alt="Room Image" class="img-fluid" style="width: 100px; height: auto;"></td>
                                             <td>${room.address}</td>
                                             <td>
-                                                                <button class="fas fa-trash-alt" onclick="removeFavorite('${room.id}')"></button>
+                                                           <button class="fas fa-trash-alt fa-lg" title="Xoá" onclick="removeFavorite('${room.id}')" style="font-size: 1.5em;"></button>
+                                                           <a href="/Home/RoomDetail/${room.id}" class="fas fa-eye fa-lg" style="margin-left: 10px; font-size: 1.5em; color: blue;" title="Xem chi tiết"></a>
                                             </td>
                                         `;
 

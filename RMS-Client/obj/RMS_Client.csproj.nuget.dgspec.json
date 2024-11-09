@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj": {}
+    "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj": {}
   },
   "projects": {
-    "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj": {
+    "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
+        "projectUniqueName": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
         "projectName": "RMS_Client",
-        "projectPath": "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
-        "packagesPath": "C:\\Users\\Phong Vu\\.nuget\\packages\\",
-        "outputPath": "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS-Client\\obj\\",
+        "projectPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
+        "packagesPath": "C:\\Users\\bangc\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "D:\\Visual Studio 2022\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Phong Vu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\bangc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -33,8 +33,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
-                "projectPath": "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj"
+              "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
+                "projectPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj"
               }
             }
           }
@@ -43,11 +43,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -78,24 +73,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
+    "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
+        "projectUniqueName": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
         "projectName": "RMS_API",
-        "projectPath": "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
-        "packagesPath": "C:\\Users\\Phong Vu\\.nuget\\packages\\",
-        "outputPath": "D:\\DoAn_RMS\\SEP490-G71-FA24\\RMS_API\\obj\\",
+        "projectPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
+        "packagesPath": "C:\\Users\\bangc\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "D:\\Visual Studio 2022\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Phong Vu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\bangc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -117,11 +112,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -188,7 +178,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
