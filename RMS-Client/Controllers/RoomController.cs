@@ -9,6 +9,7 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace RMS_Client.Controllers
 {
@@ -16,6 +17,7 @@ namespace RMS_Client.Controllers
     {
         private readonly HttpClient client = null;
         private string RoomApiUri = "https://localhost:7056/api/Room";
+        private string BuildingApiUri = "https://localhost:7056/api/Building";
 
         public RoomController()
         {
@@ -77,105 +79,188 @@ namespace RMS_Client.Controllers
             return View(rooms);
         }
 
-
-
         [HttpGet]
-        // Hành động hiển thị trang thêm phòng
-        public async Task<IActionResult> CreateRoom()
+        public async Task<IActionResult> RoomDetail(int id)
         {
-            //// Tạo một đối tượng RoomDTO với RoomStatusId mặc định là 1
-            //var roomDTO = new RoomDTO
-            //{
-            //    RoomStatusId = 1 // Đặt mặc định là 1 (Trạng thái "Trống")
-            //};
+            string apiUrl = $"{RoomApiUri}/GetRoomById/{id}";
+            var room = new Room();
 
-            // Lấy danh sách tòa nhà
-            string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";
-            HttpResponseMessage buildingResponse = await client.GetAsync(apiUrlBuilding);
-            if (buildingResponse.IsSuccessStatusCode)
-            {
-                var buildingData = await buildingResponse.Content.ReadAsStringAsync();
-                var buildings = JsonConvert.DeserializeObject<List<BuildingDTO>>(buildingData);
-                ViewBag.Buildings = buildings;
-            }
-
-            // Lấy status của room
-            string apiUrlStatusRo = RoomApiUri + "/GetAllStatus";
-            HttpResponseMessage statusResponse = await client.GetAsync(apiUrlStatusRo);
-            if (statusResponse.IsSuccessStatusCode)
-            {
-                var statusData = await statusResponse.Content.ReadAsStringAsync();
-                var status = JsonConvert.DeserializeObject<List<RoomStatus>>(statusData);
-                ViewBag.Status = status;
-            }
-            return View(); // Truyền đối tượng RoomDTO đã đặt mặc định
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateRoom(RoomLlDTO roomDTO)
-        {
-            if (ModelState.IsValid)
-            {
-                // Nếu RoomStatusId không có giá trị, gán mặc định là 1 (Trạng thái "Trống")
-                roomDTO.RoomStatusId = roomDTO.RoomStatusId != 0 ? roomDTO.RoomStatusId : 1;
-
-                var json = JsonConvert.SerializeObject(roomDTO);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(RoomApiUri + "/AddRoom", content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    // Điều hướng đến danh sách phòng sau khi thêm thành công
-                    return RedirectToAction("ListRoom");
-                }
-                else
-                {
-                    // In ra mã trạng thái và nội dung phản hồi
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Error: {response.StatusCode}, {responseContent}");
-                    // Thêm lỗi vào ModelState nếu thêm không thành công
-                    ModelState.AddModelError("", "Thêm phòng không thành công.");
-                }
-            }
-
-            // Nếu có lỗi hoặc ModelState không hợp lệ, trả về lại View với dữ liệu đã nhập
-            return View(roomDTO);
-        }
-
-        public async Task<IActionResult> ExportToExcel(string filename = "Rooms_List.xlsx")
-        {
-            var rooms = new List<Room>(); // Lấy danh sách phòng từ database
-            var response = await client.GetAsync(RoomApiUri + "/GetAllRoom");
-
+            var response = await client.GetAsync(apiUrl);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                rooms = JsonConvert.DeserializeObject<List<Room>>(json);
+                room = JsonConvert.DeserializeObject<Room>(json);
+            }
+            else
+            {
+                TempData["Error"] = "Không tìm thấy thông tin phòng.";
+                return RedirectToAction("ListRoom");
             }
 
-            if (rooms.Count == 0)
+            // Lấy danh sách tòa nhà và trạng thái (như trước đây)
+            string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";
+            var buildings = new List<Building>();
+            var responseBuilding = await client.GetAsync(apiUrlBuilding);
+            if (responseBuilding.IsSuccessStatusCode)
             {
-                // Nếu không có dữ liệu, trả về thông báo lỗi hoặc một file rỗng
+                var json = await responseBuilding.Content.ReadAsStringAsync();
+                buildings = JsonConvert.DeserializeObject<List<Building>>(json);
+            }
+
+            // Lấy danh sách cơ sở vật chất theo RoomId
+            string apiUrlFac = $"{RoomApiUri}/GetFacilityByRoomId/{id}";
+            var facs = new List<Facility>();
+            var responseFac = await client.GetAsync(apiUrlFac);
+            if (responseFac.IsSuccessStatusCode)
+            {
+                var json = await responseFac.Content.ReadAsStringAsync();
+                facs = JsonConvert.DeserializeObject<List<Facility>>(json);
+            }
+
+            ViewBag.Buildings = buildings;
+            ViewBag.Facilities = facs;
+            return View(room);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditRoom(int id)
+        {
+            // Lấy thông tin phòng qua API dựa trên Id
+            string apiUrl = $"{RoomApiUri}/GetRoomById/{id}";
+            RoomLlUpdateDTO room = null;
+
+            var response = await client.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                room = JsonConvert.DeserializeObject<RoomLlUpdateDTO>(json);
+            }
+            else
+            {
+                TempData["Error"] = "Không tìm thấy thông tin phòng.";
+                return RedirectToAction("ListRoom");
+            }
+            string apiUrlStatusRo = RoomApiUri + "/GetAllStatus";
+            var status = new List<RoomStatus>();
+            var responseStatusRo = await client.GetAsync(apiUrlStatusRo);
+            if (responseStatusRo.IsSuccessStatusCode)
+            {
+                var json = await responseStatusRo.Content.ReadAsStringAsync();
+                status = JsonConvert.DeserializeObject<List<RoomStatus>>(json);
+            }
+            ViewBag.RoomStatuses = new SelectList(status, "Id", "Name");
+
+            return View(room);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditRoom(RoomLlUpdateDTO room)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(room); // Trả lại view nếu model không hợp lệ
+            }
+
+            // Chuẩn bị dữ liệu JSON để gửi đi
+            var jsonContent = JsonConvert.SerializeObject(room);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            // Gọi API PUT để cập nhật phòng
+            string apiUrl = $"{RoomApiUri}/UpdateRoom";
+            var response = await client.PutAsync(apiUrl, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["Success"] = "Cập nhật phòng thành công!";
+                return RedirectToAction("ListRoom", new { buildingId = room.BuildingId });
+            }
+            else
+            {
+                TempData["Error"] = "Cập nhật phòng thất bại: " + await response.Content.ReadAsStringAsync();
+                return View(room); // Trả lại view với lỗi
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id, int? buildingId, List<int> statusIds)
+        {
+            // Gọi API để xóa phòng
+            string apiUrl = $"{RoomApiUri}/DeleteRoomById/{id}";
+            var response = await client.DeleteAsync(apiUrl);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Sau khi xóa, giữ lại các tham số lọc và chuyển hướng về danh sách phòng
+                return RedirectToAction("ListRoom", new { buildingId = buildingId, statusIds = statusIds });
+            }
+            return NotFound("Room could not be deleted.");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAllRoomsByBuildingId(int buildingId)
+        {
+            var apiUrl = $"{RoomApiUri}/DeleteAllRoom/{buildingId}";
+            var response = await client.DeleteAsync(apiUrl);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["Message"] = "Đã xóa tất cả phòng thuộc tòa nhà thành công.";
+            }
+            else
+            {
+                TempData["Error"] = "Có lỗi xảy ra khi xóa các phòng.";
+            }
+
+            // Chuyển hướng về trang ListRoom với buildingId sau khi xóa
+            return RedirectToAction("ListRoom", new { buildingId = buildingId });
+        }
+
+
+        public async Task<IActionResult> ExportToExcel(int buildingId)
+        {
+            var rooms = new List<Room>();
+            string buildingName = "Building"; // Khởi tạo biến buildingName với giá trị mặc định
+
+            // Gọi API để lấy tên tòa nhà
+            var buildingResponse = await client.GetAsync(RoomApiUri + $"/GetBuildingById?buildingId={buildingId}");
+            if (buildingResponse.IsSuccessStatusCode)
+            {
+                var buildingNameJson = await buildingResponse.Content.ReadAsStringAsync();
+                buildingName = JsonConvert.DeserializeObject<string>(buildingNameJson) ?? "Building"; // Chuyển đổi chuỗi JSON và gán trực tiếp vào biến buildingName
+            }
+            else
+            {
+                return Content("Không thể kết nối đến API để lấy tên tòa nhà.");
+            }
+
+
+            // Gọi API với buildingId để lấy danh sách phòng
+            var response = await client.GetAsync(RoomApiUri + $"/GetRoomByBuilding?buildingId={buildingId}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return Content("Không thể kết nối đến API.");
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrEmpty(json) || json == "[]")
+            {
                 return Content("Không có dữ liệu để xuất.");
             }
+
+            rooms = JsonConvert.DeserializeObject<List<Room>>(json);
 
             using (var package = new ExcelPackage())
             {
                 var worksheet = package.Workbook.Worksheets.Add("Rooms");
 
-                // Tiêu đề cột
                 worksheet.Cells[1, 1].Value = "Room Number";
                 worksheet.Cells[1, 2].Value = "Area (m²)";
                 worksheet.Cells[1, 3].Value = "Floor";
                 worksheet.Cells[1, 4].Value = "Price (VNĐ)";
                 worksheet.Cells[1, 5].Value = "Status";
                 worksheet.Cells[1, 6].Value = "Description";
-                worksheet.Cells[1, 7].Value = "Started Date";
-                worksheet.Cells[1, 8].Value = "Expired Date";
-                worksheet.Cells[1, 9].Value = "Building ID";
 
-                // Định dạng tiêu đề
-                using (var range = worksheet.Cells[1, 1, 1, 9])
+                using (var range = worksheet.Cells[1, 1, 1, 6])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -183,43 +268,34 @@ namespace RMS_Client.Controllers
                     range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 }
 
-                // Điền dữ liệu phòng vào các dòng tiếp theo
                 int row = 2;
                 foreach (var room in rooms)
                 {
                     worksheet.Cells[row, 1].Value = room.RoomNumber;
                     worksheet.Cells[row, 2].Value = room.Area;
                     worksheet.Cells[row, 3].Value = room.Floor;
-                    worksheet.Cells[row, 4].Value = room.Price.ToString("N0") + " VNĐ"; // Định dạng tiền tệ
-
-                    // Chuyển đổi trạng thái sang tiếng Việt
-                    string statusNameVi = room.RoomStatusId switch
+                    worksheet.Cells[row, 4].Value = room.Price.ToString("N0") + " VNĐ";
+                    worksheet.Cells[row, 5].Value = room.RoomStatusId switch
                     {
                         1 => "Trống",
                         2 => "Đã có người",
                         3 => "Đang sửa chữa",
                         4 => "Sắp trống",
+                        _ => "Không xác định"
                     };
-                    worksheet.Cells[row, 5].Value = statusNameVi;
-
-                    // Thêm thông tin mô tả, ngày bắt đầu, ngày hết hạn, ID tòa nhà
                     worksheet.Cells[row, 6].Value = room.Description;
-                    worksheet.Cells[row, 7].Value = room.StartedDate?.ToString("dd/MM/yyyy");
-                    worksheet.Cells[row, 8].Value = room.ExpiredDate?.ToString("dd/MM/yyyy");
-                    worksheet.Cells[row, 9].Value = room.BuildingId;
 
                     row++;
                 }
 
-                // Auto-fit các cột
                 worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
-                // Tạo file Excel dưới dạng MemoryStream
                 var stream = new MemoryStream();
                 package.SaveAs(stream);
                 stream.Position = 0;
 
-                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
+                var fileName = $"Danh sách tòa nhà {buildingName}.xlsx";
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
         }
 

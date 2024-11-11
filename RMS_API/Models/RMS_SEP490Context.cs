@@ -422,13 +422,10 @@ namespace RMS_API.Models
 
             modelBuilder.Entity<ServicesOfRoom>(entity =>
             {
-                entity.HasNoKey();
+                // Định nghĩa khóa chính kết hợp là RoomId và ServiceId
+                entity.HasKey(e => new { e.RoomId, e.ServiceId });
 
                 entity.ToTable("ServicesOfRoom");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
 
                 entity.Property(e => e.RoomId).HasColumnName("roomId");
 

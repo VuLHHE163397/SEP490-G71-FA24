@@ -291,28 +291,7 @@
                                             @(ViewBag.SelectedStatusIds != null && ((List<int>)ViewBag.SelectedStatusIds).Contains(status.Id) ? "checked" : "")
                                                    onchange="submitFilterForm()" />
                                             <label>
-                                                @{
-                                                    string statusNameInVietnamese;
-                                                    switch (status.Name)
-                                                    {
-                                                        case "Empty":
-                                                            statusNameInVietnamese = "Trống";
-                                                            break;
-                                                        case "Not Empty":
-                                                            statusNameInVietnamese = "Không trống";
-                                                            break;
-                                                        case "Repairing":
-                                                            statusNameInVietnamese = "Đang sửa chữa";
-                                                            break;
-                                                        case "About to be Empty":
-                                                            statusNameInVietnamese = "Sắp hết hạn";
-                                                            break;
-                                                        default:
-                                                            statusNameInVietnamese = status.Name;
-                                                            break;
-                                                    }
-                                                }
-                                                @statusNameInVietnamese
+                                                @status.Name
                                             </label>
 
                                         </div>
@@ -340,7 +319,7 @@
                                 <a class="btn btn-success mb-2" style="width: 200px;" asp-controller="Room" asp-action="CreateRoom" asp-route-buildingId="@buildingId">
                                     <i class="ti ti-bed"></i> Thêm Phòng
                                 </a>
-                                <a asp-action="ExportToExcel" class="btn btn-success mb-2" style="width: 200px;">
+                                <a asp-action="ExportToExcel" asp-route-buildingId="@buildingId" class="btn btn-success mb-2" style="width: 200px;">
                                     <i class="ti ti-file-export"></i> Xuất phòng
                                 </a>
                             </div>
@@ -358,7 +337,10 @@
                         <th>Diện tích</th>
                         <th>Giá phòng</th>
                         <th>Trạng thái</th>
-
+                        <form asp-action="DeleteAllRoomsByBuildingId" method="post">
+                            <input type="hidden" name="buildingId" value="@ViewBag.SelectedBuildingId" />
+                            <button type="submit" class="btn btn-danger">Xóa tất cả phòng trong tòa nhà</button>
+                        </form>
                     </tr>
                 </thead>
                 <tbody>
@@ -376,13 +358,13 @@
                                         switch (room.RoomStatusId)
                                         {
                                             case 1:
-                                                statusNameVi = "Trống";
+                                                statusNameVi = "Đang Trống";
                                                 break;
                                             case 2:
-                                                statusNameVi = "Đã có người";
+                                                statusNameVi = "Đang cho thuê";
                                                 break;
                                             case 3:
-                                                statusNameVi = "Đang sửa chữa";
+                                                statusNameVi = "Đang bảo trì";
                                                 break;
                                             case 4:
                                                 statusNameVi = "Sắp trống";
@@ -395,8 +377,17 @@
                                     @statusNameVi
                                 </td>
                                 <td>
-                                    <a asp-controller="Room" asp-action="View" asp-route-id="@room.Id" class="btn btn-info">View</a>
-                                    <a asp-controller="Room" asp-action="Delete" asp-route-id="@room.Id" class="btn btn-danger">Delete</a>
+                                    <a asp-controller="Room" asp-action="RoomDetail" asp-route-id="@room.Id" class="btn btn-info">
+                                        <i class="ti ti-eye"></i>
+                                    </a>
+                                    <form method="post" action="@Url.Action("Delete", new { id = room.Id, buildingId = ViewBag.SelectedBuildingId, statusIds = ViewBag.SelectedStatusIds })" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="ti ti-trash"></i>
+                                        </button>
+                                    </form>
+                                    <a asp-controller="Room" asp-action="EditRoom" asp-route-id="@room.Id" class="btn btn-info">
+                                        <i class="ti ti-pencil"></i>
+                                    </a>
                                 </td>
                             </tr>
                         }

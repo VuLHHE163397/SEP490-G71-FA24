@@ -44,47 +44,76 @@ namespace RMS_Client.Controllers
             }
         }
 
+
         public async Task<IActionResult> RoomDetail(int id)
         {
             try
             {
                 // Gọi API chi tiết phòng dựa trên id
-                var response = await _httpClient.GetAsync($"api/Room/detail/{id}");
+                var roomDetailResponse = await _httpClient.GetAsync($"api/Room/detail/{id}");
 
-                // Kiểm tra nếu phản hồi không thành công
-                if (!response.IsSuccessStatusCode)
+                if (!roomDetailResponse.IsSuccessStatusCode)
                 {
-                    _logger.LogWarning($"Room detail for ID {id} could not be retrieved. Status Code: {response.StatusCode}");
-                    return NotFound(); // Trả về trang 404 nếu không tìm thấy phòng
+                    _logger.LogWarning($"Room detail for ID {id} could not be retrieved. Status Code: {roomDetailResponse.StatusCode}");
+                    return NotFound(); // Nếu không có chi tiết phòng
                 }
 
-                // Chuyển đổi JSON từ API thành RoomDetailDto
-                var roomDetailJson = await response.Content.ReadAsStringAsync();
+                var roomDetailJson = await roomDetailResponse.Content.ReadAsStringAsync();
                 var roomDetail = JsonConvert.DeserializeObject<RoomDetailDTO>(roomDetailJson);
 
-                // Kiểm tra dữ liệu null trước khi truyền vào view
+                // Kiểm tra dữ liệu chi tiết phòng
                 if (roomDetail == null)
                 {
                     _logger.LogWarning($"Room detail data is null for ID {id}.");
-                    return NotFound(); // Trả về trang 404 nếu không có dữ liệu
+                    return NotFound();
                 }
 
-                // Truyền dữ liệu chi tiết phòng vào view RoomDetail.cshtml
-                return View("~/Views/Home/RoomDetail.cshtml", roomDetail);
+                // Gọi API phòng gợi ý dựa trên ID phòng
+                var suggestedRoomsResponse = await _httpClient.GetAsync($"api/Room/{id}/suggestedrooms");
+
+                if (!suggestedRoomsResponse.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning($"Suggested rooms for Room ID {id} could not be retrieved. Status Code: {suggestedRoomsResponse.StatusCode}");
+                    return NotFound(); // Nếu không có phòng gợi ý
+                }
+
+                var suggestedRoomsJson = await suggestedRoomsResponse.Content.ReadAsStringAsync();
+                var suggestedRooms = JsonConvert.DeserializeObject<List<SuggestedRoomDTO>>(suggestedRoomsJson);
+
+                // Kiểm tra nếu có phòng gợi ý
+                if (suggestedRooms == null || !suggestedRooms.Any())
+                {
+                    _logger.LogWarning($"No suggested rooms found for Room ID {id}.");
+                    suggestedRooms = new List<SuggestedRoomDTO>(); // Đảm bảo không null
+                }
+
+                // Truyền cả dữ liệu chi tiết phòng và phòng gợi ý vào ViewData
+                ViewData["RoomDetail"] = roomDetail;
+                ViewData["SuggestedRooms"] = suggestedRooms;
+
+                // Trả về view với cả dữ liệu chi tiết phòng và phòng gợi ý
+                return View(roomDetail);
             }
             catch (Exception ex)
             {
-                // Ghi log lỗi nếu có ngoại lệ xảy ra
                 _logger.LogError(ex, $"An error occurred while fetching room details for ID {id}.");
-                return View("Error"); // Trả về trang Error nếu có lỗi
+                return View("Error"); // Nếu có lỗi xảy ra
             }
         }
+
 
         public IActionResult ListFavouriteRoom()
         {
             return View("~/Views/Home/ListFavouriteRoom.cshtml");
         }
-      
+        public IActionResult Register()
+        {
+            return View("~/Views/Login/Register.cshtml");
+        }
+        public IActionResult Login()
+        {
+            return View("~/Views/Login/Login.cshtml");
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

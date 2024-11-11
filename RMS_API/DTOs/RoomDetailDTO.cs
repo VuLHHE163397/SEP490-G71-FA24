@@ -12,5 +12,6 @@
         public string OwnerName { get; set; }
         public string OwnerPhone { get; set; }
         public string ImageUrl { get; set; } // Nếu có thông tin về ảnh
+
     }
 }
