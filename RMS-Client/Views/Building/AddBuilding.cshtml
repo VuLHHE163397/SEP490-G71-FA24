@@ -352,92 +352,70 @@ h1 {
                 <div class="container mt-4">
                     <h1>@ViewData["Title"]</h1>
 
-                    <form id="addBuildingForm" class="needs-validation" novalidate>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="Name" class="form-label">Tên Tòa Nhà</label>
-                                <input type="text" class="form-control" id="Name" name="Name" required />
-                                <div class="invalid-feedback">Vui lòng nhập tên tòa nhà.</div>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="TotalFloors" class="form-label">Số Tầng</label>
-                                <input type="number" class="form-control" id="TotalFloors" name="TotalFloors" required />
-                                <div class="invalid-feedback">Vui lòng nhập số tầng.</div>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="NumberOfRooms" class="form-label">Số Phòng</label>
-                                <input type="number" class="form-control" id="NumberOfRooms" name="NumberOfRooms" required />
-                                <div class="invalid-feedback">Vui lòng nhập số phòng.</div>
-                            </div>
+                    <form id="addBuildingForm">
+                        <div class="form-group">
+                            <label for="Name">Tên Tòa Nhà</label>
+                            <input type="text" class="form-control" id="Name" name="Name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="TotalFloors">Số Tầng</label>
+                            <input type="number" class="form-control" id="TotalFloors" name="TotalFloors" required />
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="Distance" class="form-label">Khoảng cách (km)</label>
-                                <input type="number" class="form-control" id="Distance" step="0.1" min="0.1" max="100" name="Distance" required />
-                                <div class="invalid-feedback">Vui lòng nhập khoảng cách hợp lệ.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="BuildingStatus" class="form-label">Trạng Thái</label>
-                                <select class="form-select" id="BuildingStatus" name="BuildingStatus" required>
-                                    <option value="">Chọn trạng thái</option>
-                                    @foreach (var status in ViewBag.BuildingStatuses)
-                                    {
-                                        <option value="@status.Name">@status.Name</option>
-                                    }
-                                </select>
-                                <div class="invalid-feedback">Vui lòng chọn trạng thái của tòa nhà.</div>
-                            </div>
+                        <div class="form-group">
+                            <label for="NumberOfRooms">Số Phòng</label>
+                            <input type="number" class="form-control" id="NumberOfRooms" name="NumberOfRooms" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="Distance">Khoảng cách</label>
+                            <input type="number" class="form-control" id="Distance" name="Distance" required />
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="ProvinceId" class="form-label">Tỉnh</label>
-                                <select class="form-select" id="ProvinceId" name="ProvinceName" required>
-                                    <option value="">Chọn Tỉnh/Thành phố</option>
-                                    @foreach (var province in ViewBag.Provinces)
-                                    {
-                                        <option value="@province.Name">@province.Name</option>
-                                    }
-                                </select>
-                                <div class="invalid-feedback">Vui lòng chọn tỉnh/thành phố.</div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="DistrictId" class="form-label">Quận</label>
-                                <select class="form-select" id="DistrictId" name="DistrictName" required>
-                                    <option value="">Chọn Quận</option>
-                                </select>
-                                <div class="invalid-feedback">Vui lòng chọn quận.</div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="WardId" class="form-label">Xã</label>
-                                <select class="form-select" id="WardId" name="WardName" required>
-                                    <option value="">Chọn Xã</option>
-                                </select>
-                                <div class="invalid-feedback">Vui lòng chọn xã.</div>
-                            </div>
+                        <div class="form-group">
+                            <label for="ProvinceId">Tỉnh</label>
+                            <select class="form-control" id="ProvinceId" name="ProvinceName" required>
+                                <option value="">Chọn Tỉnh/Thành phố</option>
+                                @foreach (var province in ViewBag.Provinces)
+                                {
+                                    <option value="@province.Name">@province.Name</option>
+                                }
+                            </select>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="AddressDetails" class="form-label">Địa Chỉ</label>
+                        <div class="form-group">
+                            <label for="DistrictId">Quận</label>
+                            <select class="form-control" id="DistrictId" name="DistrictName" required>
+                                <option value="">Chọn Quận</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="WardId">Xã</label>
+                            <select class="form-control" id="WardId" name="WardName" required>
+                                <option value="">Chọn Xã</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="BuildingStatus">Trạng Thái</label>
+                            <select class="form-control" id="BuildingStatus" name="BuildingStatus" required>
+                                @foreach (var status in ViewBag.BuildingStatuses)
+                                {
+                                    <option value="@status.Name">@status.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="AddressDetails">Địa Chỉ</label>
                             <input type="text" class="form-control" id="AddressDetails" name="AddressDetails" required />
-                            <div class="invalid-feedback">Vui lòng nhập địa chỉ.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="LinkEmbedMap">Link Map</label>
+                            <input type="text" class="form-control" id="LinkEmbedMap" name="LinkEmbedMap" required />
                         </div>
 
-                        <div class="mb-3">
-                            <label for="LinkEmbedMap" class="form-label">Link Map</label>
-                            <input type="url" class="form-control" id="LinkEmbedMap" name="LinkEmbedMap" required />
-                            <div class="invalid-feedback">Vui lòng nhập liên kết bản đồ hợp lệ.</div>
-                        </div>
 
-                        <div class="d-flex justify-content-between">
-                            <button type="submit" class="btn btn-primary">Tạo Tòa Nhà</button>
-                            <a asp-controller="Building" asp-action="ListBuilding" class="btn btn-secondary">Trở Về</a>
-                        </div>
+                        <button type="submit" class="btn btn-primary">Tạo Tòa Nhà</button>
+                        <a asp-controller="Building" asp-action="ListBuilding" class="btn btn-secondary">Trở Về</a>
                     </form>
                 </div>
-            </div>
-
 
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>
@@ -496,7 +474,6 @@ h1 {
                             event.preventDefault(); // Prevent default form action
 
                             // Validate TotalFloors and NumberOfRooms
-                            var distance = parseFloat($('#Distance').val());
                             var totalFloors = parseInt($('#TotalFloors').val(), 10);
                             var numberOfRooms = parseInt($('#NumberOfRooms').val(), 10);
 
@@ -511,15 +488,13 @@ h1 {
 
                             var buildingData = {
                                 Name: $('#Name').val(),
-                                Distance: distance,
                                 TotalFloors: totalFloors,
                                 NumberOfRooms: numberOfRooms,
                                 ProvinceName: $('#ProvinceId').val(),
                                 DistrictName: $('#DistrictId').val(),
                                 WardName: $('#WardId').val(),
                                 AddressDetails: $('#AddressDetails').val(),
-                                BuildingStatus: $('#BuildingStatus').val(),
-                                LinkEmbedMap: $('#LinkEmbedMap').val()
+                                BuildingStatus: $('#BuildingStatus').val()
                             };
 
                             $.ajax({
