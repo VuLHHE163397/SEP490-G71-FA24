@@ -226,7 +226,7 @@
         }
 
             .confirm-button:hover {
-                background-color: aquamarine;
+                background-color: darkgreen;
             }
 
         .selected-range {
@@ -314,19 +314,19 @@
                     <!-- Location Filters (Left Side) -->
                     <div class="col-lg-8 d-flex gap-2 align-items-center">
                         <div class="select-container">
-                            <label for="province" class="form-label small-label">Tỉnh/Thành Phố</label>
+                           
                             <select id="province" class="form-select form-select-sm" onchange="updateDistricts()">
                                 <option value="">Tỉnh/Thành Phố</option>
                             </select>
                         </div>
                         <div class="select-container">
-                            <label for="district" class="form-label small-label">Quận/Huyện/Thị Xã</label>
+                           
                             <select id="district" class="form-select form-select-sm" onchange="updateCommunes()" disabled>
                                 <option value="">Quận/Huyện/Thị Xã</option>
                             </select>
                         </div>
                         <div class="select-container">
-                            <label for="commune" class="form-label small-label">Xã/Phường/Thị Trấn</label>
+
                             <select id="commune" class="form-select form-select-sm" disabled>
                                 <option value="">Xã/Phường/Thị Trấn</option>
                             </select>
@@ -334,12 +334,12 @@
                     </div>
 
                     <!-- Room Status Filter and Buttons (Right Side) -->
-                    <div style="margin-top:20px" class="col-lg-4 d-flex flex-column align-items-end gap-3 ms-auto">
+                    <div style="margin-bottom:10px;padding-right:50px" class="col-lg-4 d-flex flex-column align-items-end gap-3 ms-auto">
                         <!-- Filter Buttons -->
                         <div class="d-flex gap-2">
-                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-distance-range" onclick="toggleDistanceModal(true)">Chọn khoảng cách</button>
-                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-price-range" onclick="toggleModal(true)">Chọn mức giá</button>
-                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-area-range" onclick="toggleAreaModal(true)">Chọn diện tích</button>
+                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-distance-range" onclick="toggleDistanceModal(true)">Khoảng cách</button>
+                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-price-range" onclick="toggleModal(true)">Giá tiền</button>
+                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-area-range" onclick="toggleAreaModal(true)">Diện tích</button>
                             <button class="reset-button" onclick="resetValues()">Đặt lại</button>
                         </div>
                     </div>
@@ -359,7 +359,7 @@
                     <button class="btn btn-primary btnsearch" type="button" onclick="searchRooms()">Tìm kiếm</button>
                 </div>
                 <!-- Sort Section (Right Side and Higher Up) -->
-                <div style="margin-top:30px;margin-right:40px" class="row mb-4">
+                <div style="margin-bottom:80px;margin-right:40px" class="row mb-4">
                     <div class="col-lg-4 offset-lg-8 text-end mt-4">
                         <!-- Added mt-4 for top margin -->
                         <div class="sort-section">
@@ -644,19 +644,19 @@
                     priceSlider.noUiSlider.set([1000000, 3000000]); // Default price range
                     document.getElementById('slider-min-value').textContent = '1000000';
                     document.getElementById('slider-max-value').textContent = '3000000';
-                    document.getElementById('selected-price-range').textContent = 'Chọn mức giá';
+                    document.getElementById('selected-price-range').textContent = 'Giá tiền';
 
                     // Reset area slider to default values
                     areaSlider.noUiSlider.set([10, 50]); // Default area range
                     document.getElementById('slider-area-min-value').textContent = '10';
                     document.getElementById('slider-area-max-value').textContent = '50';
-                    document.getElementById('selected-area-range').textContent = 'Chọn diện tích';
+                    document.getElementById('selected-area-range').textContent = 'Diện tích';
 
                     // Reset distance slider to default values
                     distanceSlider.noUiSlider.set([0, 5]); // Default distance range
                     document.getElementById('slider-distance-min-value').textContent = '0';
                     document.getElementById('slider-distance-max-value').textContent = '5';
-                    document.getElementById('selected-distance-range').textContent = 'Chọn khoảng cách';
+                    document.getElementById('selected-distance-range').textContent = 'Khoảng cách';
                 }
 
                 // Call the resetValues function when the reset button is clicked

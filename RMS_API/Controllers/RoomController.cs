@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RMS_API.DTOs;
 using RMS_API.Models;
-using System.Threading.Tasks;
 
 
 namespace RMS_API.Controllers
@@ -19,7 +18,6 @@ namespace RMS_API.Controllers
         {
             _context = context;
         }
-
         [HttpGet("GetAllRoom")]
         public IActionResult GetAllRoom()
         {
@@ -28,7 +26,7 @@ namespace RMS_API.Controllers
         }
 
         [HttpGet("GetRoomById/{roomId}")]
-        public IActionResult GetAllRoom(int roomId)
+        public IActionResult GetRoomById(int roomId)
         {
             var ro = _context.Rooms.FirstOrDefault(p => p.Id == roomId);
             return Ok(ro);
@@ -106,6 +104,13 @@ namespace RMS_API.Controllers
                 return BadRequest("RoomNumber đã tồn tại trong Building này.");
             }
 
+            // Kiểm tra RoomNumber bắt đầu bằng số tầng
+            int floorPrefix = int.Parse(roomDTO.RoomNumber.ToString()[0].ToString());
+            if (floorPrefix != roomDTO.Floor)
+            {
+                return BadRequest("RoomNumber phải bắt đầu bằng số tầng.");
+            }
+
             // Tạo đối tượng Room mới từ DTO
             var room = new Room
             {
@@ -169,7 +174,6 @@ namespace RMS_API.Controllers
 
             return Ok("Cập nhật phòng thành công");
         }
-
 
         [HttpDelete("DeleteRoomById/{roomId}")]
         public IActionResult DeteleRoomById(int roomId)
@@ -242,7 +246,6 @@ namespace RMS_API.Controllers
             return Ok("Đã xóa tất cả phòng thuộc tòa nhà có ID = " + buildingId);
         }
 
-
         [HttpGet("GetActiveRooms")]
         public IActionResult GetActiveRooms()
         {
@@ -307,6 +310,37 @@ namespace RMS_API.Controllers
 
             return Ok(roomDetailDto);
         }
-    }
 
+        [HttpGet("{roomId}/suggestedrooms")]
+        public IActionResult GetSuggestedRooms(int roomId)
+        {
+            // Lấy thông tin phòng hiện tại để lấy BuildingId
+            var currentRoom = _context.Rooms
+                .FirstOrDefault(r => r.Id == roomId);
+
+            if (currentRoom == null)
+            {
+                return NotFound("Phòng không tồn tại");
+            }
+
+            // Lấy danh sách các phòng gợi ý trong cùng BuildingId và RoomStatusId là 1 hoặc 4
+            var suggestedRooms = _context.Rooms
+                .Where(r => r.BuildingId == currentRoom.BuildingId &&
+                            (r.RoomStatusId == 1 || r.RoomStatusId == 4) &&
+                            r.Id != roomId) // Loại trừ phòng hiện tại
+                .OrderBy(r => r.Price) // Sắp xếp theo giá tiền, nếu cần
+                .Take(8) // Lấy top 8 phòng
+                .Select(r => new SuggestedRoomDTO
+                {
+                    Id = r.Id,
+                    Price = r.Price,
+                    Area = r.Area,
+                    RoomStatusName = r.RoomStatus.Name,
+                    //Images = r.Images.Select(i => i.Url).ToList() // Giả sử có liên kết tới bảng Images
+                })
+                .ToList();
+
+            return Ok(suggestedRooms);
+        }
+    }
 }

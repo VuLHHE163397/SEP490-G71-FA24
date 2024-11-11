@@ -160,7 +160,7 @@ namespace RMS_API.Controllers
                 BuildingStatusId = buildingStatus.Id,
                 UserId = 2,
                 LinkEmbedMap = buildingDto.LinkEmbedMap
-               
+
 
             };
 
@@ -199,7 +199,9 @@ namespace RMS_API.Controllers
 
             return Ok("Building deleted successfully.");
         }
-        [HttpGet("EditBuilding")]
+
+
+        /*[HttpGet("EditBuilding")]
         public IActionResult EditBuilding()
         {
             ViewBag.Provinces = _context.Provinces.ToList();
@@ -207,7 +209,7 @@ namespace RMS_API.Controllers
             ViewBag.BuildingStatuses = _context.BuildingStatuses.ToList();
 
             return View();
-        }
+        }*/
 
         [HttpGet("GetBuildinImformationgById/{id}")]
         public async Task<IActionResult> GetBuildinImformationgById(int id)
@@ -288,7 +290,7 @@ namespace RMS_API.Controllers
 
 
         [HttpPut("EditBuilding/{id}")]
-        public async Task<IActionResult> EditBuilding(int id, [FromBody] BuildingDTO buildingDto)
+        public async Task<IActionResult> EditBuildingById(int id, [FromBody] BuildingDTO buildingDto)
         {
             if (!ModelState.IsValid)
             {
@@ -342,7 +344,7 @@ namespace RMS_API.Controllers
             }
 
             // Update the building details
-            
+
             building.Name = buildingDto.Name;
             building.Distance = buildingDto.Distance;
             building.TotalFloors = buildingDto.TotalFloors;
@@ -366,6 +368,13 @@ namespace RMS_API.Controllers
             await _context.SaveChangesAsync();
 
             return Ok("Building updated successfully.");
+        }
+
+        [HttpGet("GetBuildingStatus")]
+        public async Task<IActionResult> GetBuildingStaus()
+        {
+            var status = await _context.BuildingStatuses.ToListAsync();
+            return Ok(status);
         }
 
 
