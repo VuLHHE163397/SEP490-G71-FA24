@@ -196,6 +196,22 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.FacilityController",
+    "Method": "CreateAsync",
+    "RelativePath": "api/Facility",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "facilityDTO",
+        "Type": "RMS_API.DTOs.FacilityDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.FacilityController",
     "Method": "UpdateAsync",
     "RelativePath": "api/Facility",
     "HttpMethod": "PUT",

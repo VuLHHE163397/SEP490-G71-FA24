@@ -50,6 +50,27 @@ namespace RMS_API.Controllers
             return Ok(facilities);
         }
 
+        //thêm cơ sở vật chất
+        [HttpPost]
+        public async Task<IActionResult> CreateAsync(FacilityDTO facilityDTO)
+        {
+            try
+            {
+                var facility = new Facility
+                {
+                    Name = facilityDTO.Name,
+                    RoomId = facilityDTO.RoomId,
+                    FacilityStatus = facilityDTO.FacilityStatus,
+                };
+                _context.Facilities.Add(facility);
+                await _context.SaveChangesAsync();
+                return Ok(facility);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         //update dịch vụ
         [HttpPut]
         public async Task<IActionResult> UpdateAsync(FacilityDTO facilityDTO)

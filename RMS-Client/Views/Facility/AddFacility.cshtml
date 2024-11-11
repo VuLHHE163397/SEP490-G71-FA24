@@ -222,7 +222,7 @@
                             <a href="/Facility/ListFacility" class="btn btn-warning mr-2">
                                 Quay về
                             </a>
-                            <button class="btn btn-success">Lưu</button>
+                            <button type"submit" class="btn btn-success" onclick="AddFacility()">Lưu</button>
                         </div>
 
                         <!-- Form -->
@@ -231,25 +231,24 @@
 
                                 <!-- Tên tài sản -->
                                 <div class="form-group col-md-3">
-                                    <label for="assetName" class="form-label">Tên tài sản <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="assetName" required>
+                                    <label for="FacilityName" class="form-label">Tên tài sản <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="FacilityName" id="FacilityName" required>
                                 </div>
 
                                 <!-- Phòng -->
                                 <div class="form-group col-md-3">
-                                    <label for="room" class="form-label">Phòng</label>
-                                    <select id="room" class="form-control">
+                                    <label for="RoomId" class="form-label">Phòng</label>
+                                    <select id="RoomId" class="form-control">
                                         <option>Chọn phòng</option>
-                                        <option>Phòng 101</option>
-                                        <option>Phòng 102</option>
+                                        
                                     </select>
                                 </div>
                                 
                                 <div class="form-group col-md-3">
-                                    <label for="tinhtrang" class="form-label">Tình trạng</label>
-                                    <select id="tinhtrang" class="form-control">
-                                        <option>Tốt</option>
-                                        <option>Cần bảo dưỡng</option>
+                                    <label for="FacilityStatusName" class="form-label">Tình trạng</label>
+                                    <select id="FacilityStatusName" class="form-control">
+                                        <option></option>
+                                       
                                     </select>
                                 </div>
                             </div>
@@ -276,6 +275,38 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
+    <script>
+        function AddFacility() {
+            var facility = {
+                name: $("#FacilityName").val(),
+                roomid: $("#RoomId").val(),
+                status: $("#FacilityStatusName").val(),
+            }
+            $.ajax({
+                url: "https://localhost:7056/api/Facility",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(facility),
+                success: function (response) {
+                    alert('Thêm cơ sở vật chất thành công');
+                    window.location.href = "/Facility/ListFacility"
+                },
+                error: function (xhr, status, error) {
+                    console.log(error)
+                    console.log(xhr)
+                    console.log(status)
+                    var message = "";
+                    Object.keys(xhr.responseJSON.errors).forEach(key => {
+                        message += key + ":\n";
+                        xhr.responseJSON.errors[key].forEach(x => {
+
+                        })
+                    });
+                    alert("Lỗi khi thêm tài sản");
+                }
+            })
+        }
+    </script>
 </body>
 
 </html>
