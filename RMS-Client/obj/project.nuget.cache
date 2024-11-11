@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "kdv8tG/QntvAwm8rtJ53w2emJf9YAUafQO68KVE1sS1NE/RRBRSrO382/qbLs2oNbw/SIE34mrWUUrk/9Ieo6Q==",
+  "dgSpecHash": "AHhC40au9WiRfZtQzoxJ5Kip+HGV7oSC6Taht7IMib7m5mhskucz4Q+FjgRUzzooG5QHaL2rSNxoacJaKAfsDw==",
   "success": true,
   "projectFilePath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\dell\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\epplus\\7.4.2\\epplus.7.4.2.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\epplus.interfaces\\6.1.1\\epplus.interfaces.6.1.1.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\epplus.system.drawing\\6.1.1\\epplus.system.drawing.6.1.1.nupkg.sha512",
@@ -83,12 +84,5 @@
     "C:\\Users\\dell\\.nuget\\packages\\system.text.json\\8.0.5\\system.text.json.8.0.5.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  "logs": []
 }

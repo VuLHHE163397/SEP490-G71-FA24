@@ -25,21 +25,21 @@ builder.Services.AddSwaggerGen(s =>
         Scheme = "Bearer"
     });
 
-//    s.AddSecurityRequirement(new OpenApiSecurityRequirement
-//            {
-//                {
-//                    new OpenApiSecurityScheme
-//                    {
-//                        Reference = new OpenApiReference
-//                        {
-//                            Type = ReferenceType.SecurityScheme,
-//                            Id = "Bearer"
-//                        }
-//                    },
-//                    Array.Empty<string>()
-//                }
-//            });
-//});
+    s.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+});
 builder.Services.AddDbContext<RMS_SEP490Context>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "3w5sCUaZ4kB/Oa69sjV5+Se9R6AilXToc3o8Ry3crCrmUmbFl4BaiajrrcHNw+PfJaSuTB19h2fGTrWoGjSXZQ==",
+  "dgSpecHash": "pqvaDeJCs5niymZE918gItO2dFTRPu2hoQjUKb/S5zKXryiU92fqp2IZa0Z3ir4hGyvW/W1KDI3V+YtuDLfVZQ==",
   "success": true,
   "projectFilePath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\dell\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.30\\microsoft.aspnetcore.authentication.jwtbearer.6.0.30.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\6.0.30\\microsoft.aspnetcore.cryptography.internal.6.0.30.nupkg.sha512",
@@ -80,12 +81,5 @@
     "C:\\Users\\dell\\.nuget\\packages\\system.text.json\\6.0.0\\system.text.json.6.0.0.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  "logs": []
 }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
+//using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RMS_API.Models;
@@ -20,11 +20,11 @@ builder.Services.AddCors(options =>
                           .AllowAnyMethod()
                           .AllowAnyHeader());
 });
-builder.Services.AddDbContext<RMS_SEP490Context>(options =>
-{
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseSqlServer(connectionString);
-});
+//builder.Services.AddDbContext<RMS_SEP490Context>(options =>
+//{
+//    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//    options.UseSqlServer(connectionString);
+//});
 
 var app = builder.Build();
 
@@ -52,6 +52,6 @@ app.UseEndpoints(endpoints =>
 // Cấu hình route mặc định cho ứng dụng.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Building}/{action=ListBuilding}/{id?}"); // Đặt controller mặc định là Home và action là Index
+    pattern: "{controller=Home}/{action=Home}/{id?}"); // Đặt controller mặc định là Home và action là Index
 
 app.Run();

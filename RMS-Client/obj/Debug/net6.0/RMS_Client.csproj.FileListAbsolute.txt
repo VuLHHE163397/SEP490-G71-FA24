@@ -263,7 +263,6 @@ D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490\SEP490-G71-
 D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\RMS_Client.runtimeconfig.json
 D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\RMS_Client.dll
 D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\RMS_Client.pdb
-D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\BCrypt.Net-Next.dll
 D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\EPPlus.dll
 D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\EPPlus.Interfaces.dll
 D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\EPPlus.System.Drawing.dll
@@ -364,3 +363,4 @@ D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490\SEP490-G71-
 D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\RMS_Client.pdb
 D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\RMS_Client.genruntimeconfig.cache
 D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\ref\RMS_Client.dll
+D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\BCrypt.Net-Next.dll
