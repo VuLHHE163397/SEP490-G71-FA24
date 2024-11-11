@@ -248,8 +248,8 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "DeteleRoomAllRoomByBuildingId",
-    "RelativePath": "api/Room/DeleteRoomAllRoom",
+    "Method": "DeleteAllRoomByBuildingId",
+    "RelativePath": "api/Room/DeleteAllRoom/{buildingId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -257,7 +257,7 @@
       {
         "Name": "buildingId",
         "Type": "System.Int32",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -352,6 +352,22 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "GetAllFacilities",
+    "RelativePath": "api/Room/GetFacilityByRoomId/{roomId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roomId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "GetRoomByBuilding",
     "RelativePath": "api/Room/GetRoomByBuilding",
     "HttpMethod": "GET",
@@ -362,6 +378,38 @@
         "Name": "buildingId",
         "Type": "System.Int32",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "GetAllRoom",
+    "RelativePath": "api/Room/GetRoomById/{roomId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roomId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "UpdateRoom",
+    "RelativePath": "api/Room/UpdateRoom",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roomDto",
+        "Type": "RMS_API.DTOs.RoomLlUpdateDTO",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
