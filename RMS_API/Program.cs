@@ -16,32 +16,32 @@ builder.Services.AddControllers().AddOData(opt => opt.Count().Filter().OrderBy()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpClient();
 
-builder.Services.AddSwaggerGen(s =>
-{
-    s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
+//builder.Services.AddSwaggerGen(s =>
+//{
+//    s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+//    {
+//        Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')",
+//        Name = "Authorization",
+//        In = ParameterLocation.Header,
+//        Type = SecuritySchemeType.ApiKey,
+//        Scheme = "Bearer"
+//    });
 
-    s.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    Array.Empty<string>()
-                }
-            });
-});
+//    s.AddSecurityRequirement(new OpenApiSecurityRequirement
+//            {
+//                {
+//                    new OpenApiSecurityScheme
+//                    {
+//                        Reference = new OpenApiReference
+//                        {
+//                            Type = ReferenceType.SecurityScheme,
+//                            Id = "Bearer"
+//                        }
+//                    },
+//                    Array.Empty<string>()
+//                }
+//            });
+//});
 builder.Services.AddDbContext<RMS_SEP490Context>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
