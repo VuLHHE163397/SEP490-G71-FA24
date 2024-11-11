@@ -70,6 +70,13 @@ namespace RMS_API.Controllers
             return Ok(bui);
         }
 
+        [HttpGet("GetAllImage/{roomId}")]
+        public IActionResult GetImageByRoom(int roomId)
+        {
+            var image = _context.Images.Where(p => p.RoomId == roomId).ToList();
+            return Ok(image);
+        }
+
         [HttpGet("GetFacilityByRoomId/{roomId}")]
         public IActionResult GetAllFacilities(int roomId)
         {
