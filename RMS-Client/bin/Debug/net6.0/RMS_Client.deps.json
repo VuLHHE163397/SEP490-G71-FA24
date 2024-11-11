@@ -15,14 +15,6 @@
           "RMS_Client.dll": {}
         }
       },
-      "BCrypt.Net-Next/4.0.3": {
-        "runtime": {
-          "lib/net6.0/BCrypt.Net-Next.dll": {
-            "assemblyVersion": "4.0.3.0",
-            "fileVersion": "4.0.3.0"
-          }
-        }
-      },
       "EPPlus/7.4.2": {
         "dependencies": {
           "EPPlus.System.Drawing": "6.1.1",
@@ -848,7 +840,6 @@
       },
       "RMS_API/1.0.0": {
         "dependencies": {
-          "BCrypt.Net-Next": "4.0.3",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.30",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.30",
           "Microsoft.AspNetCore.OData": "8.2.0",
@@ -868,13 +859,6 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
-    },
-    "BCrypt.Net-Next/4.0.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA==",
-      "path": "bcrypt.net-next/4.0.3",
-      "hashPath": "bcrypt.net-next.4.0.3.nupkg.sha512"
     },
     "EPPlus/7.4.2": {
       "type": "package",

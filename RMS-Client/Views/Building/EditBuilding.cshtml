@@ -380,6 +380,10 @@
                             <label for="WardId">Xã/Phường</label>
                             <input class="form-control" id="WardId" name="WardName" value="@Model.WardName" required readonly />
                         </div>
+                        <div class="form-group" >
+                            <label for="LinkEmbedMap">Link Map</label>
+                            <input class="form-control" id="LinkEmbedMap" name="LinkEmbedMap" value="@Model.LinkEmbedMap" required  />
+                        </div>
                         <div class="form-group" style="position: relative;">
                             <label for="BuildingStatus">Trạng Thái</label>
 
@@ -452,6 +456,7 @@
                         DistrictName: $('#DistrictId').val(),
                         WardName: $('#WardId').val(),
                         BuildingStatus: $('#BuildingStatus').val(),
+                        LinkEmbedMap: $('#LinkEmbedMap').val()
 
                     };
 
