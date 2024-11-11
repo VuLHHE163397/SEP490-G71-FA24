@@ -400,7 +400,7 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "GetAllRoom",
+    "Method": "GetRoomById",
     "RelativePath": "api/Room/GetRoomById/{roomId}",
     "HttpMethod": "GET",
     "IsController": true,
