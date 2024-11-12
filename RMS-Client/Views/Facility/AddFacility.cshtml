@@ -238,19 +238,31 @@
                                 <!-- Phòng -->
                                 <div class="form-group col-md-3">
                                     <label for="RoomId" class="form-label">Phòng</label>
-                                    <select id="RoomId" class="form-control">
+                                    <select id="RoomId" class="form-control custom-select">
                                         <option>Chọn phòng</option>
-                                        
                                     </select>
                                 </div>
-                                
+
+                                <!-- Tình trạng -->
                                 <div class="form-group col-md-3">
                                     <label for="FacilityStatusName" class="form-label">Tình trạng</label>
-                                    <select id="FacilityStatusName" class="form-control">
-                                        <option></option>
-                                       
+                                    <select id="FacilityStatusName" class="form-control custom-select">
+                                        <option>Tình trạng</option>
                                     </select>
                                 </div>
+
+                                <!-- Add custom CSS if necessary -->
+                                <style>
+                                    /* Ensure arrow appears for dropdowns */
+                                    .custom-select {
+                                        appearance: auto;
+                                        -webkit-appearance: menulist; /* For older WebKit browsers */
+                                        -moz-appearance: menulist; /* For Firefox */
+                                    }
+                                </style>
+
+                                <!-- Include Bootstrap (ensure correct path/version) -->
+                                <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
                             </div>
 
 
