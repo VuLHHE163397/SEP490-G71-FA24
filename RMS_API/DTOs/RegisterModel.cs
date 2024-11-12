@@ -21,6 +21,7 @@ namespace RMS_API.DTOs
         public string? Password { get; set; }
         [Required]
         [DataType(DataType.PhoneNumber)]
-        public string? Phone { get; set; }
+        public string? Phone { get; set; }       
+        public string? VerificationCode { get; set; }
     }
 }

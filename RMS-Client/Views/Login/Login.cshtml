@@ -118,7 +118,6 @@
                                 window.location.href = "/Building/ListBuilding";                                
                             } 
                         }, 1000); 
-
                     } catch (error) {
                         console.error("Failed to decode token", error);
                         alert("Đăng nhập thành công, nhưng có lỗi xảy ra khi xử lý thông tin người dùng.");
@@ -135,12 +134,10 @@
             var popup = $("#popupMessage");
             popup.text(message);
             popup.fadeIn();
-
             setTimeout(function () {
                 popup.fadeOut();
             }, 2000); 
         }
-
 
         function showErrorPopup(message) {
             var popup = $("#popupErrorMessage");
@@ -154,4 +151,3 @@
 </body>
 
 </html>
-//Quack quack

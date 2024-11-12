@@ -65,19 +65,23 @@
                                         <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
                                         <input type="password" class="form-control" required id="confirmPassword">
                                     </div>
-                                    @* <div class="mb-4">
+                                    <div class="mb-4">
                                         <button type="button" class="btn btn-primary" onclick="sendVerificationCode()">Gửi mã qua email</button>
                                     </div>
                                     <div class="mb-4">
                                         <label for="verificationCode" class="form-label">Mã xác nhận qua mail</label>
-                                        <div id="verificationCode" class="d-flex justify-content-between">
-                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 1">
-                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 2">
-                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 3">
-                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 4">
-                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 5">
-                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 6">
-                                        </div>
+                                        <input type="text" class="form-control" id="verificationCode">
+                                    </div>
+                                    @* <div class="mb-4">
+                                    <label for="verificationCode" class="form-label">Mã xác nhận qua mail</label>
+                                    <div id="verificationCode" class="d-flex justify-content-between">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 1">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 2">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 3">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 4">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 5">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 6">
+                                    </div>
                                     </div> *@
 
                                     <a onclick="register()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</a>
@@ -110,7 +114,7 @@
         function sendVerificationCode() {
             // Send verification code via email API call here
             alert("Mã xác nhận đã được gửi tới email của bạn!");
-        }        
+        }
 
         function register() {
             console.log('Start register function');
@@ -123,7 +127,8 @@
             const phone = $("#phone").val().trim();
             const password = $("#password").val().trim();
             const confirmPassword = $("#confirmPassword").val().trim();
-            const verificationCode = $(".code-input").map(function () { return $(this).val().trim(); }).get().join('');
+            const verificationCode = $("#verificationCode").val().trim();
+            // const verificationCode = $(".code-input").map(function () { return $(this).val().trim(); }).get().join('');
 
             if (!validatePhone(phone)) {
                 alert("số điện thoại không hợp lệ!");
@@ -133,18 +138,15 @@
             if (!validateEmail(email)) {
                 alert("Email không hợp lệ!");
                 return;
-            }     
+            }
 
-            if (password !== confirmpassword) {
+            if (password !== confirmPassword) {
                 alert("mật khẩu xác nhận không khớp!");
                 return;
             }
 
-            // Check verification code
-            // if (verificationCode.length !== 6 || verificationCode !== expectedCode) {
-            //     alert("Mã xác nhận không hợp lệ!");
-            //     return;
-            
+
+
 
             const user = {
                 firstName: firstName,
@@ -152,7 +154,8 @@
                 lastName: lastName,
                 email: email,
                 phone: phone,
-                password: password
+                password: password,
+                verificationCode: verificationCode
             };
 
             $.ajax({
@@ -171,6 +174,28 @@
                 }
             });
         }
+
+        function sendVerificationCode() {
+            const email = $("#email").val().trim();
+            if (!validateEmail(email)) {
+                alert("Email không hợp lệ!");
+                return;
+            }
+
+            $.ajax({
+                url: "https://localhost:7056/api/Auth/sendVerificationCode",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(email),
+                success: function () {
+                    alert("Mã xác nhận đã được gửi tới email của bạn!");
+                },
+                error: function (xhr, status, error) {
+                    alert("Lỗi khi gửi mã xác nhận: " + xhr.responseText);
+                }
+            });
+        }
+
     </script>
 </body>
-</html>n
+</html>

@@ -8,6 +8,8 @@ using System.Text;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using RMS_API.DTOs;
+using System.Net;
+using System.Net.Mail;
 
 namespace RMS_API.Controllers
 {
@@ -16,15 +18,75 @@ namespace RMS_API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly RMS_SEP490Context _context;
+        private static Dictionary<string, string> _verificationCodes = new Dictionary<string, string>();
 
         public AuthController(RMS_SEP490Context context)
         {
             _context = context;
         }
 
+        [HttpPost("sendVerificationCode")]
+        public IActionResult SendVerificationCode([FromBody] string email)
+        {
+            // Generate a 6-digit random verification code
+            var verificationCode = new Random().Next(100000, 999999).ToString();
+
+            // Store the verification code in the dictionary
+            _verificationCodes[email] = verificationCode;
+
+            // Send the code via email
+            var subject = "Verify email của bạn";
+            var body = $"Mã code của bạn là: {verificationCode}" +
+                $"Xin không chia sẻ cho bất kỳ ai";
+
+            if (SendEmail(email, subject, body))
+            {
+                return Ok("Code đã được gửi qua thư của bạn.");
+            }
+            return StatusCode(500, "Lỗi, không gửi đc qua thư của bạn.");
+        }
+
+        private bool SendEmail(string toEmail, string subject, string body)
+        {
+            try
+            {
+                using (var smtpClient = new SmtpClient("smtp.gmail.com"))
+                {
+                    smtpClient.Port = 587;
+                    smtpClient.Credentials = new NetworkCredential("thegalaxy2308@gmail.com", "bvnn tund btwo hnvd");
+                    smtpClient.EnableSsl = true;
+
+                    var mailMessage = new MailMessage
+                    {
+                        From = new MailAddress("thegalaxy2308@gmail.com"),
+                        Subject = subject,
+                        Body = body,
+                        IsBodyHtml = false,
+                    };
+                    mailMessage.To.Add(toEmail);
+
+                    smtpClient.Send(mailMessage);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi khi gửi mail: {ex.Message}");
+                return false;
+            }
+        }
+
+
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel registerModel)
         {
+            // Check if verification code is correct
+            if (!_verificationCodes.ContainsKey(registerModel.Email) || _verificationCodes[registerModel.Email] != registerModel.VerificationCode)
+            {
+                return BadRequest("Code lỗi hoặc đã hết hạn.");
+            }
+
             var user = new User
             {
                 FirstName = registerModel.FirstName,
@@ -36,16 +98,14 @@ namespace RMS_API.Controllers
                 UserStatusId = 1,
                 RoleId = 2,
             };
-            Role? role = _context.Roles?.SingleOrDefault(r => r.Id == 2);
-            UserStatus userStatus = _context.UserStatuses?.SingleOrDefault(us => us.Id == 1);
 
-            user.Role = role;
-            user.UserStatus = userStatus;
-            var newUser = _context.Users.Add(user);
-            _context.SaveChanges();
-            if (newUser == null)
-                return BadRequest("Fail");
-            return Ok("Success");
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            // Remove the verification code after successful registration
+            _verificationCodes.Remove(registerModel.VerificationCode);
+
+            return Ok("đăng nhập thành công.");
         }
 
 
@@ -59,22 +119,22 @@ namespace RMS_API.Controllers
         .Include(u => u.Role)
         .SingleOrDefaultAsync(u => u.Email == model.Email);
 
-            
+
             if (user == null)
                 return Unauthorized("Tài khoản không tồn tại. Xin hãy đăng nhập lại!");
-            if ( !BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
-            //if (user.Password != model.Password)
+            if (!BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
+                //if (user.Password != model.Password)
                 return Unauthorized("Mật khẩu không đúng!");
 
             var token = GenerateJwtToken(user);
-            return Ok(new { token });            
+            return Ok(new { token });
         }
 
         //Gen token for jwt
         private string GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024"); 
+            var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024");
 
             var claims = new List<Claim>
             {
@@ -92,47 +152,14 @@ namespace RMS_API.Controllers
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            //    var tokenDescriptor = new SecurityTokenDescriptor
-            //    {
-            //        Subject = new ClaimsIdentity(new[]
-            //        {
-            //    new Claim(ClaimTypes.Name, user.Email),
-            //    new Claim(ClaimTypes.Role, user.Role.Name)
-            //}),
-            //        Expires = DateTime.UtcNow.AddHours(1),
-            //        SigningCredentials = new SigningCredentials(
-            //            new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            //    };
+            };            
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
 
 
-        //Model register
-        //public class UserDTO
-        //{
-        //    [Required]
-        //    [DataType(DataType.Text)]
-        //    public string Email { get; set; }
-        //    [Required]
-        //    [DataType(DataType.Text)]
-        //    public string Firstname { get; set; }
-        //    [Required]
-        //    [DataType(DataType.Text)]
-        //    public string Midname { get; set; }
-        //    [Required]
-        //    [DataType(DataType.Text)]
-        //    public string Lastname { get; set; }
-        //    [Required]
-        //    [DataType(DataType.Text)]
-        //    public string Phone { get; set; }
-        //    [Required]
-        //    [DataType(DataType.Password)]
-        //    public string Password { get; set; }
-        //}
+        
 
         //Model login
         public class LoginModel
