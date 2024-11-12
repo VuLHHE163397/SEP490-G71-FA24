@@ -10,6 +10,11 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Dropbox.Api;
+using Dropbox.Api.Files;
+using static Dropbox.Api.Files.ListRevisionsMode;
+
 
 namespace RMS_Client.Controllers
 {
@@ -17,7 +22,6 @@ namespace RMS_Client.Controllers
     {
         private readonly HttpClient client = null;
         private string RoomApiUri = "https://localhost:7056/api/Room";
-        private string BuildingApiUri = "https://localhost:7056/api/Building";
 
         public RoomController()
         {
@@ -73,6 +77,7 @@ namespace RMS_Client.Controllers
             // Truyền ViewBag
             ViewBag.Buildings = buildings;
             ViewBag.Status = status;
+            ViewBag.RoomStatuses = new SelectList(status, "Id", "Name");
             ViewBag.SelectedStatusIds = statusIds; // Lưu trữ trạng thái đã chọn
             ViewBag.SelectedBuildingId = buildingId; // Lưu trữ BuildingId đã chọn
 
@@ -132,9 +137,70 @@ namespace RMS_Client.Controllers
             return View(room);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> CreateRoom()
+
+        [HttpPost]
+        public async Task<IActionResult> UploadImageToDropbox(int roomId, IFormFile imageFile)
         {
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                TempData["Error"] = "Vui lòng chọn một ảnh hợp lệ.";
+                return RedirectToAction("RoomDetail", new { id = roomId });
+            }
+
+            // Thay bằng Access Token của bạn
+            string dropboxAccessToken = "sl.CAiWPncIvfMfTkK1523MNHia8kAdj04ahFTov_tt28Fv1htlTOGkt8J3vmxmx3Qca8e3vthAgR31ZFKRJCIOLN7HayLE4SgetqCSmb7crFeFFZ44AdtCrTi5wLtZpQN1Iyw0L-6ukXomz0g";
+            string dropboxFolderPath = "/Images";
+
+            using (var dropboxClient = new DropboxClient(dropboxAccessToken))
+            {
+                var fileName = $"{Guid.NewGuid()}_{imageFile.FileName}";
+                string imageUrl;
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    await imageFile.CopyToAsync(memoryStream);
+                    memoryStream.Position = 0;
+
+                    var uploadResponse = await dropboxClient.Files.UploadAsync(
+                        $"{dropboxFolderPath}/{fileName}",
+                        WriteMode.Overwrite.Instance,
+                        body: memoryStream);
+
+                    var sharedLink = await dropboxClient.Sharing.CreateSharedLinkWithSettingsAsync(uploadResponse.PathLower);
+                    imageUrl = sharedLink.Url.Replace("dl=0", "dl=1");
+                }
+
+                // Gửi yêu cầu đến API để lưu đường link ảnh
+                using (var httpClient = new HttpClient())
+                {
+                    var imageDto = new ImageDTO
+                    {
+                        Link = imageUrl,
+                        RoomId = roomId
+                    };
+
+                    var content = new StringContent(JsonConvert.SerializeObject(imageDto), Encoding.UTF8, "application/json");
+                    var response = await httpClient.PostAsync($"{RoomApiUri}/UploadImage/{roomId}", content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        TempData["Success"] = "Ảnh đã được upload và lưu thành công!";
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Có lỗi xảy ra khi lưu ảnh vào cơ sở dữ liệu.";
+                    }
+                }
+            }
+
+            return RedirectToAction("RoomDetail", new { id = roomId });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> CreateRoom(int? buildingId)
+        {
+
             // Lấy danh sách Building từ API
             string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";
             var buildingss = new List<BuildingDTO>();
@@ -170,6 +236,8 @@ namespace RMS_Client.Controllers
 
             ViewBag.Buildings = buildings;
 
+            ViewBag.SelectedBuildingId = buildingId;
+
             return View();
         }
 
@@ -178,6 +246,7 @@ namespace RMS_Client.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 // Nếu RoomStatusId không có giá trị, gán mặc định là 1 (Trạng thái "Trống")
                 roomDTO.RoomStatusId = roomDTO.RoomStatusId != 0 ? roomDTO.RoomStatusId : 1;
 
@@ -187,7 +256,7 @@ namespace RMS_Client.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("ListRoom", new { buildingId = buildingId });
+                    return RedirectToAction("ListRoom", "Room", new { buildingId = buildingId });
                 }
                 else
                 {
@@ -198,8 +267,18 @@ namespace RMS_Client.Controllers
             return View(roomDTO);
         }
 
-
-
+        [HttpGet]
+        public async Task<IActionResult> CheckRoomNameExists(int roomName, int buildingId)
+        {
+            string apiUrl = $"{RoomApiUri}/CheckRoomNameExists?roomName={roomName}&buildingId={buildingId}";
+            var response = await client.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var exists = await response.Content.ReadAsStringAsync();
+                return Json(bool.Parse(exists)); // Trả về true nếu phòng đã tồn tại, false nếu chưa
+            }
+            return Json(false);
+        }
 
         [HttpGet]
         public async Task<IActionResult> EditRoom(int id)
@@ -283,7 +362,9 @@ namespace RMS_Client.Controllers
                 // Sau khi xóa, giữ lại các tham số lọc và chuyển hướng về danh sách phòng
                 return RedirectToAction("ListRoom", new { buildingId = buildingId, statusIds = statusIds });
             }
-            return NotFound("Room could not be deleted.");
+            // Đọc thông báo lỗi từ phản hồi
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            return NotFound($"Room could not be deleted. Error: {errorMessage}");
         }
 
         [HttpPost]
@@ -325,7 +406,7 @@ namespace RMS_Client.Controllers
 
 
             // Gọi API với buildingId để lấy danh sách phòng
-            var response = await client.GetAsync(RoomApiUri + $"/GetRoomByBuilding?buildingId={buildingId}");
+            var response = await client.GetAsync(RoomApiUri + $"/GetRoomByBuilding/{buildingId}");
             if (!response.IsSuccessStatusCode)
             {
                 return Content("Không thể kết nối đến API.");

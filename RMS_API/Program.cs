@@ -46,6 +46,11 @@ builder.Services.AddDbContext<RMS_SEP490Context>(options =>
     options.UseSqlServer(connectionString);
 });
 
+// In Startup.cs or Program.cs
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+});
 
 
 builder.Services.AddCors(opts =>
