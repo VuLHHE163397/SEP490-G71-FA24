@@ -34,4 +34,3 @@ namespace RMS_API.Models
         public virtual ICollection<Tennant> Tennants { get; set; }
     }
 }
-

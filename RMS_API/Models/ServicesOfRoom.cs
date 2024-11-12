@@ -5,6 +5,7 @@ namespace RMS_API.Models
 {
     public partial class ServicesOfRoom
     {
+        public int Id { get; set; }
         public int RoomId { get; set; }
         public int ServiceId { get; set; }
 
