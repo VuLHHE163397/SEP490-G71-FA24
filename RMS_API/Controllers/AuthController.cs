@@ -26,20 +26,24 @@ namespace RMS_API.Controllers
         }
 
         [HttpPost("sendVerificationCode")]
-        public IActionResult SendVerificationCode([FromBody] string email)
+        public async Task<IActionResult> SendVerificationCode([FromBody] RegisterModel user)
         {
-            // Generate a 6-digit random verification code
+
+            if (await _context.Users.AnyAsync(u => u.Email == user.Email))
+            {
+                return BadRequest("Email này đã được đăng ký!");
+            }      
+            
             var verificationCode = new Random().Next(100000, 999999).ToString();
 
             // Store the verification code in the dictionary
-            _verificationCodes[email] = verificationCode;
+            _verificationCodes[user.Email] = verificationCode;
+            
+            var subject = "Verify user của bạn";
+            var body = $"Mã code của bạn là: {verificationCode}." +
+                $"\nXin không chia sẻ cho bất kỳ ai.";
 
-            // Send the code via email
-            var subject = "Verify email của bạn";
-            var body = $"Mã code của bạn là: {verificationCode}" +
-                $"Xin không chia sẻ cho bất kỳ ai";
-
-            if (SendEmail(email, subject, body))
+            if (SendEmail(user.Email, subject, body))
             {
                 return Ok("Code đã được gửi qua thư của bạn.");
             }
@@ -53,7 +57,7 @@ namespace RMS_API.Controllers
                 using (var smtpClient = new SmtpClient("smtp.gmail.com"))
                 {
                     smtpClient.Port = 587;
-                    smtpClient.Credentials = new NetworkCredential("thegalaxy2308@gmail.com", "bvnn tund btwo hnvd");
+                    smtpClient.Credentials = new NetworkCredential("thegalaxy2308@gmail.com", "");
                     smtpClient.EnableSsl = true;
 
                     var mailMessage = new MailMessage
@@ -67,24 +71,29 @@ namespace RMS_API.Controllers
 
                     smtpClient.Send(mailMessage);
                     return true;
+
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Lỗi khi gửi mail: {ex.Message}");
                 return false;
+
             }
         }
-
 
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel registerModel)
         {
-            // Check if verification code is correct
-            if (!_verificationCodes.ContainsKey(registerModel.Email) || _verificationCodes[registerModel.Email] != registerModel.VerificationCode)
+            if (!_verificationCodes.ContainsKey(registerModel.Email))
             {
-                return BadRequest("Code lỗi hoặc đã hết hạn.");
+                return BadRequest("Code lỗi hoặc đã hết hạn. Mã code phải có 6 số");
+            }
+            
+            if (_verificationCodes[registerModel.Email] != registerModel.VerificationCode)
+            {
+                return BadRequest("Xin vui lòng nhập mã code có 6 chữ số.");
             }
 
             var user = new User
@@ -105,7 +114,7 @@ namespace RMS_API.Controllers
             // Remove the verification code after successful registration
             _verificationCodes.Remove(registerModel.VerificationCode);
 
-            return Ok("đăng nhập thành công.");
+            return Ok("Đăng ký thành công.");
         }
 
 

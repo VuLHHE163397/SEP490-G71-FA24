@@ -39,13 +39,13 @@
                                         <label class="form-label">Tên đầy đủ</label>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input type="text" class="form-control" required id="firstName" placeholder="Tên">
+                                                <input type="text" class="form-control" required id="lastName" placeholder="Họ">
                                             </div>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" required id="midName" placeholder="Tên đệm">
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="text" class="form-control" required id="lastName" placeholder="Họ">
+                                                <input type="text" class="form-control" required id="firstName" placeholder="Tên">
                                             </div>
                                         </div>
                                     </div>
@@ -65,13 +65,13 @@
                                         <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
                                         <input type="password" class="form-control" required id="confirmPassword">
                                     </div>
-                                    <div class="mb-4">
+                                    @* <div class="mb-4">
                                         <button type="button" class="btn btn-primary" onclick="sendVerificationCode()">Gửi mã qua email</button>
-                                    </div>
-                                    <div class="mb-4">
+                                    </div> *@
+                                    @* <div class="mb-4">
                                         <label for="verificationCode" class="form-label">Mã xác nhận qua mail</label>
                                         <input type="text" class="form-control" id="verificationCode">
-                                    </div>
+                                    </div> *@
                                     @* <div class="mb-4">
                                     <label for="verificationCode" class="form-label">Mã xác nhận qua mail</label>
                                     <div id="verificationCode" class="d-flex justify-content-between">
@@ -84,7 +84,7 @@
                                     </div>
                                     </div> *@
 
-                                    <a onclick="register()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</a>
+                                    <a onclick="sendVerificationCode()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</a>
                                     <div class="d-flex align-items-center justify-content-center">
                                         <p class="fs-4 mb-0 fw-bold">Bạn đã có tài khoản?</p>
                                         <a class="text-primary fw-bold ms-2" href="Login">Đăng nhập</a>
@@ -116,10 +116,9 @@
             alert("Mã xác nhận đã được gửi tới email của bạn!");
         }
 
-        function register() {
-            console.log('Start register function');
 
-            // Get values from input fields
+
+        function sendVerificationCode() {
             const firstName = $("#firstName").val().trim();
             const midName = $("#midName").val().trim();
             const lastName = $("#lastName").val().trim();
@@ -127,26 +126,57 @@
             const phone = $("#phone").val().trim();
             const password = $("#password").val().trim();
             const confirmPassword = $("#confirmPassword").val().trim();
-            const verificationCode = $("#verificationCode").val().trim();
-            // const verificationCode = $(".code-input").map(function () { return $(this).val().trim(); }).get().join('');
+
+
+            if (!lastName) {
+                alert("Vui lòng nhập Họ!");
+                return;
+            }
+
+            if (!midName) {
+                alert("Vui lòng nhập Tên đệm!");
+                return;
+            }
+
+            if (!firstName) {
+                alert("Vui lòng nhập Tên!");
+                return;
+            }
+
+            if (!phone) {
+                alert("Vui lòng nhập số điện thoại!");
+                return;
+            }
 
             if (!validatePhone(phone)) {
-                alert("số điện thoại không hợp lệ!");
+                alert("Số điện thoại không hợp lệ! Cần bắt đầu bằng 0 và có 10 chữ số");
+                return;
+            }
+
+            if (!email) {
+                alert("Vui lòng nhập email!");
                 return;
             }
 
             if (!validateEmail(email)) {
-                alert("Email không hợp lệ!");
+                alert("Email không hợp lệ! Email cần theo cấu trúc example@gmail.com");
+                return;
+            }
+
+            if (!password) {
+                alert("Vui lòng nhập mật khẩu!");
+                return;
+            }
+
+            if (!confirmPassword) {
+                alert("Vui lòng nhập xác nhận mật khẩu!");
                 return;
             }
 
             if (password !== confirmPassword) {
-                alert("mật khẩu xác nhận không khớp!");
+                alert("Mật khẩu xác nhận không khớp!");
                 return;
             }
-
-
-
 
             const user = {
                 firstName: firstName,
@@ -154,44 +184,28 @@
                 lastName: lastName,
                 email: email,
                 phone: phone,
-                password: password,
-                verificationCode: verificationCode
-            };
+                password: password                
+            };        
 
-            $.ajax({
-                url: "https://localhost:7056/api/Auth/register",
-                type: "POST",
-                data: JSON.stringify(user),
-                contentType: "application/json",
-                success: function (response) {
-                    alert("Đăng ký thành công!");
-                    //$(".Sign-In").css("display", "block");
-                    //$(".registration").css("display", "none");
-                    window.location.href = "Login";
-                },
-                error: function (xhr, status, error) {
-                    alert("Đăng ký thất bại: " + xhr.responseText);
-                }
-            });
-        }
-
-        function sendVerificationCode() {
-            const email = $("#email").val().trim();
-            if (!validateEmail(email)) {
-                alert("Email không hợp lệ!");
-                return;
-            }
 
             $.ajax({
                 url: "https://localhost:7056/api/Auth/sendVerificationCode",
                 type: "POST",
+                data: JSON.stringify(user),
                 contentType: "application/json",
-                data: JSON.stringify(email),
-                success: function () {
-                    alert("Mã xác nhận đã được gửi tới email của bạn!");
+                success: function (response) {
+
+                    sessionStorage.setItem("firstName", firstName);
+                    sessionStorage.setItem("midName", midName);
+                    sessionStorage.setItem("lastName", lastName);
+                    sessionStorage.setItem("email", email);
+                    sessionStorage.setItem("phone", phone);
+                    sessionStorage.setItem("password", password);
+                    
+                    window.location.href = "/Auth/VerifyEmail";
                 },
                 error: function (xhr, status, error) {
-                    alert("Lỗi khi gửi mã xác nhận: " + xhr.responseText);
+                    alert("Đăng ký không thành công! " + xhr.responseText);
                 }
             });
         }
