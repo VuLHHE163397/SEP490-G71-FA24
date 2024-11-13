@@ -335,6 +335,10 @@ namespace RMS_API.Models
                     .HasForeignKey(d => d.RoomStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Rooms_RoomStatus");
+
+                entity.Property(e => e.FreeInFutureDate)
+                    .HasColumnType("date")
+                    .HasColumnName("freeInFutureDate");
             });
 
             modelBuilder.Entity<RoomHistory>(entity =>

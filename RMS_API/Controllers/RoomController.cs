@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RMS_API.DTOs;
 using RMS_API.Models;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace RMS_API.Controllers
@@ -32,7 +33,7 @@ namespace RMS_API.Controllers
             return Ok(ro);
         }
 
-        [HttpGet("GetRoomByBuilding")]
+        [HttpGet("GetRoomByBuilding/{buildingId}")]
         public IActionResult GetRoomByBuilding(int buildingId)
         {
             var room = _context.Rooms.Where(p => p.BuildingId == buildingId).ToList();
@@ -63,12 +64,63 @@ namespace RMS_API.Controllers
             return Ok(ro);
         }
 
+
         [HttpGet("GetAllBuilding")]
         public IActionResult GetAllBuilding()
         {
             var bui = _context.Buildings.ToList();
             return Ok(bui);
         }
+
+        [HttpGet("GetAllImage/{roomId}")]
+        public IActionResult GetImageByRoom(int roomId)
+        {
+            var image = _context.Images.Where(p => p.RoomId == roomId).ToList();
+            return Ok(image);
+        }
+
+        [HttpPost("UploadImage/{roomId}")]
+        public async Task<IActionResult> UploadImage(int roomId, [FromBody] ImageDTO imageDto)
+        {
+            if (imageDto == null || string.IsNullOrEmpty(imageDto.Link))
+            {
+                return BadRequest("Đường link ảnh không hợp lệ.");
+            }
+
+            // Lưu imageDto vào cơ sở dữ liệu
+            var room = await _context.Rooms.FindAsync(roomId);
+            if (room == null)
+            {
+                return NotFound("Room không tồn tại.");
+            }
+
+            var image = new Models.Image
+            {
+                Link = imageDto.Link,
+                RoomId = roomId
+            };
+
+            _context.Images.Add(image);
+            await _context.SaveChangesAsync();
+
+            return Ok("Ảnh đã được lưu thành công.");
+        }
+
+        [HttpDelete("DeleteImageById/{id}")]
+        public IActionResult DeleteImageById(int id)
+        {
+            var image = _context.Images.FirstOrDefault(r => r.Id == id);
+            if (image == null)
+            {
+                return NotFound(new { message = $"Image with ID {id} not found." });
+            }
+
+            _context.Images.Remove(image);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+
 
         [HttpGet("GetFacilityByRoomId/{roomId}")]
         public IActionResult GetAllFacilities(int roomId)
@@ -81,19 +133,6 @@ namespace RMS_API.Controllers
         [HttpPost("AddRoom")]
         public async Task<IActionResult> AddRoom([FromBody] RoomLlDTO roomDTO)
         {
-            // Kiểm tra sự tồn tại của Building
-            var building = await _context.Buildings.FindAsync(roomDTO.BuildingId);
-            if (building == null)
-            {
-                return BadRequest("BuildingId không tồn tại.");
-            }
-
-            // Kiểm tra sự tồn tại của RoomStatus
-            var roomStatus = await _context.RoomStatuses.FindAsync(roomDTO.RoomStatusId);
-            if (roomStatus == null)
-            {
-                return BadRequest("RoomStatusId không tồn tại.");
-            }
 
             // Kiểm tra RoomNumber trong cùng Building có bị trùng không
             var existingRoom = await _context.Rooms
@@ -102,13 +141,6 @@ namespace RMS_API.Controllers
             if (existingRoom != null)
             {
                 return BadRequest("RoomNumber đã tồn tại trong Building này.");
-            }
-
-            // Kiểm tra RoomNumber bắt đầu bằng số tầng
-            int floorPrefix = int.Parse(roomDTO.RoomNumber.ToString()[0].ToString());
-            if (floorPrefix != roomDTO.Floor)
-            {
-                return BadRequest("RoomNumber phải bắt đầu bằng số tầng.");
             }
 
             // Tạo đối tượng Room mới từ DTO
@@ -130,6 +162,14 @@ namespace RMS_API.Controllers
 
             return Ok(room);
         }
+
+        [HttpGet("CheckRoomNameExists")]
+        public IActionResult CheckRoomNameExists(int roomName, int buildingId)
+        {
+            var roomExists = _context.Rooms.Any(r => r.RoomNumber == roomName && r.BuildingId == buildingId);
+            return Ok(roomExists); // Trả về true nếu phòng tồn tại, ngược lại trả về false
+        }
+
 
         [HttpPut("UpdateRoom")]
         public IActionResult UpdateRoom([FromBody] RoomLlUpdateDTO roomDto)
@@ -198,6 +238,9 @@ namespace RMS_API.Controllers
             var tenants = _context.Tennants.Where(t => t.RoomId == roomId);
             _context.Tennants.RemoveRange(tenants);
 
+            var images = _context.Images.Where(i => i.RoomId == roomId);
+            _context.Images.RemoveRange(images);
+
             // Xóa phòng
             _context.Rooms.Remove(room);
 
@@ -235,6 +278,9 @@ namespace RMS_API.Controllers
                 // Xóa Tennants liên quan đến room
                 var tenants = _context.Tennants.Where(t => t.RoomId == room.Id);
                 _context.Tennants.RemoveRange(tenants);
+
+                var images = _context.Images.Where(i => i.RoomId == room.Id);
+                _context.Images.RemoveRange(images);
             }
 
             // Cuối cùng, xóa các phòng

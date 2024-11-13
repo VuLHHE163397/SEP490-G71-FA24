@@ -16,6 +16,44 @@
     <link rel="stylesheet" href="~/css/styles.min.css" />
     <style>
 
+        .image-gallery {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 500px; /* Đảm bảo container chính không bị quá lớn */
+            margin: 0 auto;
+        }
+
+        .main-image {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 10px;
+        }
+
+            .main-image img {
+                width: 100%;
+                border-radius: 5px;
+            }
+
+        .thumbnail-container {
+            width: 100%;
+            overflow: hidden; /* Đảm bảo các ảnh nhỏ không tràn ra */
+        }
+
+            .thumbnail-container .thumbnail {
+                width: 80px;
+                height: 80px;
+                cursor: pointer;
+                border-radius: 5px;
+                object-fit: cover;
+                transition: transform 0.2s;
+            }
+
+                .thumbnail-container .thumbnail:hover {
+                    transform: scale(1.1);
+                }
+
+
         .map-container {
             margin-top: 20px;
             border-radius: 8px;
@@ -101,7 +139,7 @@
 
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a asp-controller="Statistic" asp-action="ViewStatistic" class="text-nowrap logo-img">
+                    <a asp-controller="Building" asp-action="ListBuilding" class="text-nowrap logo-img">
                         <img src="~/images/logo.jpg" width="180" alt="" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
@@ -292,87 +330,168 @@
                         <h1>Chi Tiết Phòng @Model.RoomNumber </h1>
                     </div>
                     <div class="row g-4">
-                        <div class="container-xxl py-5 content">
-                            <div class="container">
-                                <div class="left-column">
-                                    <div class="room-details">
-                                        <div>
-                                            <div>
-                                                <img class="img-fluid" src="~/images/room1.jpg" alt="Room Image">
-                                            </div>
-                                            <div>
-                                            </div>
-                                        </div>
-                                        <div class="">Đặc điểm Phòng</div>
-                                        <div class="container"></div>
-                                        <div><strong>Giá:</strong> @string.Format("{0:N0} VNĐ", Model.Price)</div>
-                                        <div><strong>Diện tích:</strong> @Model.Area.ToString("0") m²</div>
-                                        @{
-                                            var facilities = ViewBag.Facilities as List<RMS_API.Models.Facility>;
-                                        }
-
-                                        @if (facilities != null && facilities.Any())
-                                        {
-                                            <div>
-                                                <strong>Cơ sở vật chất: </strong>
-                                                @for (int i = 0; i < facilities.Count; i++)
-                                                {
-                                                    <span>@facilities[i].Name</span>
-                                                    @if (i < facilities.Count - 1)
-                                                    {
-                                                        <span>, </span>
-                                                    }
-                                                }
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="sidebar-subitem">
-                                                <strong>Cơ sở vật chất: </strong> Hiện tại chưa có cơ sở vật chất nào!
-                                            </div>
-                                        }
-
-                                        <p>
-                                            <strong>Trạng thái phòng:</strong>
-                                            @{
-                                                string statusNameVi;
-                                                switch (Model.RoomStatusId)
-                                                {
-                                                    case 1:
-                                                        statusNameVi = "Trống";
-                                                        break;
-                                                    case 2:
-                                                        statusNameVi = "Đã có người";
-                                                        break;
-                                                    case 3:
-                                                        statusNameVi = "Đang sửa chữa";
-                                                        break;
-                                                    case 4:
-                                                        statusNameVi = "Sắp trống";
-                                                        break;
-                                                    default:
-                                                        statusNameVi = @Model.RoomStatusId.ToString();
-                                                        break;
-                                                }
-                                            }
-                                            @statusNameVi
-                                        </p>
-                                        <p><strong>Mô tả chi tiết:</strong> @Model.Description</p>
-                                    </div>
-                                </div>
+                        <div class="image-gallery">
+                            <div class="main-image">
+                                @{
+                                    var images = ViewBag.Images as List<RMS_API.Models.Image>;
+                                }
+                                @if (images != null && images.Any())
+                                {
+                                    <img src="@images[0].Link" alt="Main Room Image" id="displayed-image">
+                                }
                             </div>
+
+                            <div class="thumbnail-container slick-carousel">
+                                @if (images != null && images.Any())
+                                {
+                                    @for (int i = 0; i < images.Count; i++)
+                                    {
+                                        <div class="thumbnail-item" style="position: relative;">
+                                            <img src="@images[i].Link" alt="Room Image" class="thumbnail" onclick="changeImage(this)">
+                                            <!-- Nút xóa (dấu "X") -->
+                                            <button class="delete-button" data-id="@images[i].Id" onclick="deleteImage(@images[i].Id)" style="position: absolute; top: 0; right: 0; background: red; color: white; border: none; cursor: pointer;">X</button>
+                                        </div>
+                                    }
+                                }
+                            </div>
+
+
+                            <div class="upload-section">
+                                <h3>Upload Ảnh Phòng</h3>
+                                <form asp-action="UploadImageToDropbox" asp-controller="Room" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="roomId" value="@Model.Id" />
+                                    <div class="mb-3">
+                                        <input type="file" name="imageFile" class="form-control" required />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Upload Ảnh</button>
+                                </form>
+                            </div>
+
                         </div>
+                        <div class="">Đặc điểm Phòng</div>
+                        <div class="container"></div>
+                        <div><strong>Giá:</strong> @string.Format("{0:N0} VNĐ", Model.Price)</div>
+                        <div><strong>Diện tích:</strong> @Model.Area.ToString("0") m²</div>
+                        @{
+                            var facilities = ViewBag.Facilities as List<RMS_API.Models.Facility>;
+                        }
+
+                        @if (facilities != null && facilities.Any())
+                        {
+                            <div>
+                                <strong>Cơ sở vật chất: </strong>
+                                @for (int i = 0; i < facilities.Count; i++)
+                                {
+                                    <span>@facilities[i].Name</span>
+                                    @if (i < facilities.Count - 1)
+                                    {
+                                        <span>, </span>
+                                    }
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="sidebar-subitem">
+                                <strong>Cơ sở vật chất: </strong> Hiện tại chưa có cơ sở vật chất nào!
+                            </div>
+                        }
+
+                        <p>
+                            <strong>Trạng thái phòng:</strong>
+                            @{
+                                string statusNameVi;
+                                switch (Model.RoomStatusId)
+                                {
+                                    case 1:
+                                        statusNameVi = "Trống";
+                                        break;
+                                    case 2:
+                                        statusNameVi = "Đã có người";
+                                        break;
+                                    case 3:
+                                        statusNameVi = "Đang sửa chữa";
+                                        break;
+                                    case 4:
+                                        statusNameVi = "Sắp trống";
+                                        break;
+                                    default:
+                                        statusNameVi = @Model.RoomStatusId.ToString();
+                                        break;
+                                }
+                            }
+                            @statusNameVi
+                        </p>
+                        <p><strong>Mô tả chi tiết:</strong> @Model.Description</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <script>
+        $(document).ready(function () {
+            // Khởi tạo slick cho container ảnh nhỏ
+            $('.slick-carousel').slick({
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                arrows: true,
+                dots: false,
+                centerMode: true,       // Căn giữa ảnh trong carousel
+                focusOnSelect: true,    // Cho phép chọn ảnh khi nhấn vào thumbnail
+                variableWidth: true     // Tự điều chỉnh kích thước để tránh tràn
+            });
+        });
+
+        // Hàm thay đổi hình ảnh lớn khi nhấn vào thumbnail
+        function changeImage(element) {
+            document.getElementById("displayed-image").src = element.src;
+        }
+
+
         function toggleSubmenu(event) {
             event.preventDefault();
             var submenu = event.currentTarget.nextElementSibling;
             submenu.style.display = submenu.style.display === "none" ? "block" : "none";
         }
+
+        function deleteImage(imageId) {
+            if (confirm("Bạn chắc chắn muốn xóa ảnh này?")) {
+                fetch(`/api/Room/DeleteImageById/${imageId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Xóa ảnh trên giao diện
+                            var imageElement = document.querySelector(`[data-id='${imageId}']`).closest('.thumbnail-item');
+                            imageElement.remove();
+                            alert("Ảnh đã được xóa.");
+                            // Nếu muốn có thể tải lại trang sau khi xóa ảnh
+                            location.reload();
+                        } else {
+                            response.json().then(data => {
+                                alert("Có lỗi xảy ra khi xóa ảnh: " + (data.message || ''));
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert("Có lỗi xảy ra khi kết nối với server.");
+                    });
+            }
+        }
+
+
+
+
+
     </script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
 </body>
 </html>

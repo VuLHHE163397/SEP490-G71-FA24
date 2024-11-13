@@ -46,8 +46,6 @@ builder.Services.AddDbContext<RMS_SEP490Context>(options =>
     options.UseSqlServer(connectionString);
 });
 
-
-
 builder.Services.AddCors(opts =>
 {
     opts.AddPolicy("CORSPolicy", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed((host) => true));

@@ -8,11 +8,23 @@
     ".NETCoreApp,Version=v6.0": {
       "RMS_Client/1.0.0": {
         "dependencies": {
+          "Dropbox.Api": "7.0.0",
           "EPPlus": "7.4.2",
           "RMS_API": "1.0.0"
         },
         "runtime": {
           "RMS_Client.dll": {}
+        }
+      },
+      "Dropbox.Api/7.0.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.2"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Dropbox.Api.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.0.0"
+          }
         }
       },
       "EPPlus/7.4.2": {
@@ -859,6 +871,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Dropbox.Api/7.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Ie48rFTFL7rC8YGZ2KMRckhN8QbF56VzCns9+PymrjwcVfnGfKEc2EtHLUau2hrlwvaUtDf6wvTQJXHWAwhhug==",
+      "path": "dropbox.api/7.0.0",
+      "hashPath": "dropbox.api.7.0.0.nupkg.sha512"
     },
     "EPPlus/7.4.2": {
       "type": "package",

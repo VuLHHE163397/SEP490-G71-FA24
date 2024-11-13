@@ -23,12 +23,13 @@ namespace RMS_API.Controllers
             try
             {
                 var services = await _context.Services.FirstOrDefaultAsync(s => s.Id == id);
-                if(services == null)
+                if (services == null)
                 {
                     throw new Exception("Service not found");
                 }
                 return Ok(services);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -64,7 +65,8 @@ namespace RMS_API.Controllers
                 _context.Services.Add(service);
                 await _context.SaveChangesAsync();
                 return Ok(service);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -77,7 +79,7 @@ namespace RMS_API.Controllers
             try
             {
                 var serviceDb = await _context.Services.FirstOrDefaultAsync(e => e.Id == serviceDTO.Id);
-                if(serviceDb == null)
+                if (serviceDb == null)
                 {
                     throw new Exception("Service not found");
                 }
@@ -86,7 +88,8 @@ namespace RMS_API.Controllers
                 _context.Services.Update(serviceDb);
                 await _context.SaveChangesAsync();
                 return Ok(serviceDb);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -97,14 +100,15 @@ namespace RMS_API.Controllers
             try
             {
                 var serviceDb = await _context.Services.FirstOrDefaultAsync(e => e.Id == id);
-                if(serviceDb == null)
+                if (serviceDb == null)
                 {
                     throw new Exception("Service not found");
                 }
                 _context.Services.Remove(serviceDb);
                 await _context.SaveChangesAsync();
                 return Ok(true);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

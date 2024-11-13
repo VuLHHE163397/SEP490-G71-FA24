@@ -2,6 +2,22 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "Dropbox.Api/7.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/Dropbox.Api.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Dropbox.Api.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "EPPlus/7.4.2": {
         "type": "package",
         "dependencies": {
@@ -1401,6 +1417,19 @@
     }
   },
   "libraries": {
+    "Dropbox.Api/7.0.0": {
+      "sha512": "Ie48rFTFL7rC8YGZ2KMRckhN8QbF56VzCns9+PymrjwcVfnGfKEc2EtHLUau2hrlwvaUtDf6wvTQJXHWAwhhug==",
+      "type": "package",
+      "path": "dropbox.api/7.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "dropbox.api.7.0.0.nupkg.sha512",
+        "dropbox.api.nuspec",
+        "lib/netstandard2.0/Dropbox.Api.dll",
+        "lib/netstandard2.0/Dropbox.Api.xml"
+      ]
+    },
     "EPPlus/7.4.2": {
       "sha512": "TGFbvGSQQEX4Egxi6YIcnEkid47bSx7xmzS1I8HNlrgNklIN4skodsqzqo9li+SUCj9MWjROqKp/oeVqSaMHew==",
       "type": "package",
@@ -3724,6 +3753,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "Dropbox.Api >= 7.0.0",
       "EPPlus >= 7.4.2",
       "RMS_API >= 1.0.0"
     ]
@@ -3777,6 +3807,10 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "Dropbox.Api": {
+            "target": "Package",
+            "version": "[7.0.0, )"
+          },
           "EPPlus": {
             "target": "Package",
             "version": "[7.4.2, )"
