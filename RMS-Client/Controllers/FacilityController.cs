@@ -24,9 +24,21 @@ namespace RMS_Client.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> ListFacility()
+        public async Task<IActionResult> ListFacility(string? keyword, int buildingId, int roomId, int pageIndex = 1, int pageSize = 10)
         {
-            string apiUrlFacility = FacilityApiUri + "/GetAllFacility";
+            string apiUrlFacility = FacilityApiUri + $"/GetAllFacility?pageIndex={pageIndex}&pageSize={pageSize}";
+            if(keyword != null)
+            {
+                apiUrlFacility += $"&keyword={keyword}";
+            }
+            if(buildingId > 0)
+            {
+                apiUrlFacility += $"&buildingId={buildingId}";
+            }
+            if(roomId > 0)
+            {
+                apiUrlFacility += $"&roomId={roomId}";
+            }
             var facilityResponse = await client.GetAsync(apiUrlFacility);
             var facilities = new List<FacilityDTO>();
             if (facilityResponse.IsSuccessStatusCode)

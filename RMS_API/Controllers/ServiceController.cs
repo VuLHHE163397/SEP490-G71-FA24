@@ -91,6 +91,7 @@ namespace RMS_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        //Xóa dịch vụ
         [HttpDelete]
         public async Task<IActionResult> DeleteAsync(int id)
         {

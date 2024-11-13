@@ -64,7 +64,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" hasp-controller="Facility" asp-action="ListFacility" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-alien"></i>
+                                    <i class="fa-solid fa-gears"></i>
                                 </span>
                                 <span class="hide-menu">Cơ sở vật chất</span>
                             </a>
@@ -205,7 +205,7 @@
                         <h2>Sửa cơ sở vật chất</h2>
                         <div>
                             <a href="/Facility/ListFacility" class="btn btn-warning">Quay về</a>
-                            <button type="submit" class="btn btn-success" onclick="UpdateFacility(@Model.Id)">Lưu</button>
+                            <button type="submit" class="btn btn-success" onclick="UpdateFacility()">Lưu</button>
                         </div>
                     </div>
                     <hr />
@@ -214,8 +214,8 @@
                             <!-- Tên tài sản -->
                             <div class="col-md-8">
                                 <div class="form-group">
-                                    <label for="ServiceName">Tên <span class="text-danger">*</span></label>
-                                    <input type="text" id="FacilityName" name="FacilityName" class="form-control" required value="@Model.Name" />
+                                    <label for="FacilityName" class="form-label">Tên tài sản <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="FacilityName" id="FacilityName" required>
                                 </div>
                             </div>
 
@@ -224,9 +224,8 @@
                         <div class="row mb-3">
                             <!-- Số Phòng -->
                             <div class="form-group col-md-3">
-                                <label for="room" class="form-label">Số phòng</label>
-                                <select id="room" class="form-control custom-select">
-                                    <option value="">@Model.RoomId</option>
+                                <label for="RoomId" class="form-label">Số phòng</label>
+                                <select id="RoomId" class="form-control custom-select">
                                 </select>
                             </div>
                         </div>
@@ -234,11 +233,8 @@
                         <div class="row mb-3">
                             <!-- Tình trạng -->
                             <div class="form-group col-md-3">
-                                <label for="facilityStatus" class="form-label">Tình trạng</label>
-                                <select id="facilityStatus" class="form-control custom-select">
-                                    <option>@Model.FacilityStatusName</option>
-                                    <option>Tốt</option>
-                                    <option>Cũ</option>
+                                <label for="FacilityStatusId" class="form-label">Tình trạng</label>
+                                <select id="FacilityStatusId" class="form-control custom-select">
                                 </select>
                             </div>
                         </div>
@@ -268,6 +264,30 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
+    <script>
+        function UpdateFacility(id) {
+            var facility = {
+                id: id,
+                name: $("#FacilityName").val(),
+                roomId: $("#RoomId").val(),
+                statusId: $("#FacilityStatusId").val(),
+            }
+            $.ajax({
+                url: "https://localhost:7056/api/Facility",
+                type: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify(facility),
+                success: function (response) {
+                    alert('Cật nhật cơ sở vật chất thành công');
+                    window.location.href = "/Facility/ListFacility"
+                },
+                error: function (xhr, status, error) {
+                    console.log(error)
+                    alert("Lỗi khi cật nhật cơ sở vật chất");
+                }
+            })
+        }
+    </script>
 
 </body>
 

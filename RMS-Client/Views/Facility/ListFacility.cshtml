@@ -141,7 +141,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Facility" asp-action="ListFacility" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-alien"></i>
+                                    <i class="fa-solid fa-gears"></i>
                                 </span>
                                 <span class="hide-menu">Cơ sở vật chất</span>
                             </a>
@@ -285,18 +285,12 @@
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div class="form-group mr-3">
                                 <label> <i class="fa-regular fa-building"></i> Nhà</label>
-                                <select class="form-control custom-select">
-                                    <option>Tất cả</option>
-                                    <option>Nhà A</option>
-                                    <option>Nhà B</option>
+                                <select class="form-control custom-select" id="buildings" onchange="search()">
                                 </select>
                             </div>
                             <div class="form-group mr-3">
                                 <label> <i class="fa-solid fa-house"></i>  Phòng</label>
-                                <select class="form-control  custom-select">
-                                    <option>Tất cả</option>
-                                    <option>Phòng 101</option>
-                                    <option>Phòng 102</option>
+                                <select class="form-control  custom-select" id="rooms" onchange="search()">
                                 </select>
                             </div>
                             <div>
@@ -311,8 +305,8 @@
                         <div class="d-flex justify-content-between align-items-center mb-3">
 
                             <div class="form-group d-flex align-items-center">
-                                <label for="search" class="mr-2">Tìm:</label>
-                                <input type="text" id="search" class="form-control" style="width: 200px;">
+                                <label for="search" class="mr-2" style="margin-top: 5px;"> <i class="fa-sharp fa-solid fa-magnifying-glass"></i>  </label>
+                                <input type="text" id="keyword" class="form-control" style="width: 200px;" onchange="search()" placeholder="Tìm kiếm...">
                             </div>
                         </div>
 
@@ -338,13 +332,13 @@
                                         <tr>
                                             <td>@facilities.Id</td>
                                             <td>@facilities.Name</td>
-                                            <td>@facilities.RoomId</td>
-                                            <td>@facilities.FacilityStatusName</td>
+                                            <td>@facilities.RoomNumber</td>
+                                            <td>@facilities.FacilityStatus</td>
                                             <td>
                                                 <a href="/Facility/EditFacility?id=@facilities.Id" class="btn btn-primary">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <button class="btn btn-danger" onclick="DeleteService('@facilities.Id')">
+                                                <button class="btn btn-danger" onclick="DeleteFacility('@facilities.Id')">
                                                     <i class="fa-solid fa-trash-can"></i>
                                                 </button>
                                             </td>
@@ -389,6 +383,84 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
+    <script>
+        $(document).ready(function () {
+            loadBuilding();
+            loadRoom();
+            setKeyword();
+        })
+        function setKeyword() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var keyword = urlParams.get('keyword');
+            $("#keyword").val(keyword)
+        }
+        function loadBuilding() {
+            $.ajax({
+                url: 'https://localhost:7056/api/Building/GetAllBuildings',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    renderBuilding(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderBuilding(data) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var buildingId = urlParams.get('buildingId');
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            for (var item of data) {
+                html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
+            }
+            $("#buildings").html(html);
+        }
+        function loadRoom() {
+            $.ajax({
+                url: 'https://localhost:7056/api/Room/GetAllRoom',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    renderRoom(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderRoom(data) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var roomId = urlParams.get('roomId');
+            let html = `<option value="-1" ${roomId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            for (var item of data) {
+                html += `<option value="${item.id}" ${roomId == item.id ? 'selected' : ''}>${item.roomNumber}</option>`
+            }
+            $("#rooms").html(html);
+        }
+        function search() {
+            var buildingId = $("#buildings").val();
+            var roomId = $("#rooms").val();
+            var keyword = $("#keyword").val();
+            //https://localhost:7056/api/Facility/GetAllFacility?pageSize=10&pageIndex=1&keyword=test&buildingId=1&roomId=1
+            var route = `/Facility/ListFacility?pageSize=10&buildingId=${buildingId}&roomId=${roomId}&keyword=${keyword}`;
+            window.location.href = route;
+        }
+
+        function DeleteFacility(id) {
+            $.ajax({
+                url: `https://localhost:7056/api/Facility?id=${id}`,  // Đảm bảo URL API đúng
+                type: "DELETE",  // Sử dụng phương thức DELETE
+                success: function (response) {
+                    alert("Xóa cơ sở vật chất thành công");  // Thông báo khi xóa thành công
+                    window.location.reload();  // Reload lại trang sau khi xóa
+                },
+                error: function (xhr, status, error) {
+                    alert("Không thể xóa cơ sở vật chất");  // Thông báo lỗi khi xóa không thành công
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>
