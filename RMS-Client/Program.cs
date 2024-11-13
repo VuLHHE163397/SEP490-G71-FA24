@@ -20,6 +20,7 @@ builder.Services.AddCors(options =>
                           .AllowAnyMethod()
                           .AllowAnyHeader());
 });
+
 //builder.Services.AddDbContext<RMS_SEP490Context>(options =>
 //{
 //    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

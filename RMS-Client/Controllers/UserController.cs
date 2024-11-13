@@ -14,9 +14,9 @@ namespace RMS_Client.Controllers
             _logger = logger;
         }
 
-        public IActionResult ListUser()
+        public IActionResult GetUser()
         {
-            return View();
+            return View("~/Views/Profile/ViewProfile.cshtml");
         }
     }
 }
