@@ -57,7 +57,7 @@ namespace RMS_API.Controllers
                 using (var smtpClient = new SmtpClient("smtp.gmail.com"))
                 {
                     smtpClient.Port = 587;
-                    smtpClient.Credentials = new NetworkCredential("thegalaxy2308@gmail.com", "");
+                    smtpClient.Credentials = new NetworkCredential("thegalaxy2308@gmail.com", "vzls bayn firj pjzg");
                     smtpClient.EnableSsl = true;
 
                     var mailMessage = new MailMessage
@@ -88,12 +88,12 @@ namespace RMS_API.Controllers
         {
             if (!_verificationCodes.ContainsKey(registerModel.Email))
             {
-                return BadRequest("Code lỗi hoặc đã hết hạn. Mã code phải có 6 số");
+                return BadRequest("Xin vui lòng nhập mã code có 6 chữ số.");
             }
             
             if (_verificationCodes[registerModel.Email] != registerModel.VerificationCode)
             {
-                return BadRequest("Xin vui lòng nhập mã code có 6 chữ số.");
+                return BadRequest("Code lỗi hoặc đã hết hạn. Mã code phải có 6 số.");
             }
 
             var user = new User

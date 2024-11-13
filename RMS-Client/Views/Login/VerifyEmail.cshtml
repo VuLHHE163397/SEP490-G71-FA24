@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="~/css/styles.min.css" />
     <style>
         /* Popup styling */
-        #popupMessage, #popupErrorMessage {
+        #popupMessage, #popupErrorMessage, #popupMessage1, #popupErrorMessage1 {
             display: none;
             position: fixed;
             bottom: 20px;
@@ -19,8 +19,14 @@
             font-size: 16px;
             z-index: 1000;
         }
-        #popupMessage { background-color: #4caf50; }
-        #popupErrorMessage { background-color: #C53500; }
+
+        #popupMessage, #popupMessage1 {
+            background-color: #4caf50;
+        }
+
+        #popupErrorMessage, #popupErrorMessage1 {
+            background-color: #C53500;
+        }
         
         .code-input {
             width: 50px;
@@ -67,8 +73,7 @@
                                             <input type="text" class="code-input" id="verificationCode6" maxlength="1" onclick="this.select()" />
                                         </div>
                                     </div>
-                                    <a onclick="verifyCode()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</a>
-                                    <button type="button" onclick="verifyCode()" class="btn btn-primary w-100">Xác thực</button>
+                                    <a onclick="verifyCode()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Xác thực</a>                                    
                                     <div class="d-flex align-items-center justify-content-center">
                                         <p class="fs-4 mb-0 fw-bold">Chưa nhận được mã?</p>
                                         <a class="text-primary fw-bold ms-2" href="#" onclick="resendCode()">Gửi lại mã</a>
@@ -84,7 +89,10 @@
 
    
     <div id="popupMessage">Xác thực thành công!</div>
+    <div id="popupMessage1">Mã mới đã được gửi qua email.</div>
     <div id="popupErrorMessage">Xác thực thất bại!</div>
+    <div id="popupErrorMessage1">Lỗi khi gửi mã mới!</div>
+    
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -103,7 +111,7 @@
                        $("#verificationCode4").val() + $("#verificationCode5").val() + $("#verificationCode6").val();
             
             if (code.length !== 6) {
-                showErrorPopup("Mã xác thực không hợp lệ!");
+                showErrorPopup("Mã xác thực không hợp lệ! Yêu cầu 6 chữ số!");
                 return;
             }
             var firstName = sessionStorage.getItem("firstName");
@@ -120,7 +128,7 @@
                 email: email,
                 phone: phone,
                 password: password,
-                verificationCode: code
+                verificationCode: verificationCode
             };
 
             console.log("Verification code:", code);
@@ -144,29 +152,29 @@
             });
         }
 
-        // function resendCode() {
-        //     $.ajax({
-        //         url: "https://localhost:7056/api/Auth/sendVerificationCode",
-        //         type: "POST",
-        //         contentType: "application/json",
-        //         data: JSON.stringify({ email: "user@example.com" }),  // Send the email to resend the code
-        //         success: function () {
-        //             showPopup("Mã mới đã được gửi qua email.");
-        //         },
-        //         error: function () {
-        //             showErrorPopup("Lỗi khi gửi mã mới!");
-        //         }
-        //     });
-        // }
+        function resendcode() {
+            $.ajax({
+                url: "https://localhost:7056/api/auth/sendverificationcode",
+                type: "post",
+                contenttype: "application/json",
+                data: json.stringify(user),
+                success: function (response) {
+                    showpopup("Mã mới đã được gửi qua email.");
+                },
+                error: function () {
+                    showerrorpopup("Lỗi khi gửi mã mới!");
+                }
+            });
+        }
 
 
 
         function showPopup(message) {
-            $("#popupMessage").text(message).fadeIn().delay(2000).fadeOut();
+            $("#popupMessage, #popupMessage1").text(message).fadeIn().delay(2000).fadeOut();
         }
 
         function showErrorPopup(message) {
-            $("#popupErrorMessage").text(message).fadeIn().delay(4000).fadeOut();
+            $("#popupErrorMessage, #popupErrorMessage1").text(message).fadeIn().delay(4000).fadeOut();
         }
     </script>
 </body>
