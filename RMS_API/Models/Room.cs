@@ -24,6 +24,7 @@ namespace RMS_API.Models
         public DateTime? ExpiredDate { get; set; }
         public int BuildingId { get; set; }
         public int RoomStatusId { get; set; }
+        public DateTime? FreeInFutureDate { get; set; }
 
         public virtual Building Building { get; set; } = null!;
         public virtual RoomStatus RoomStatus { get; set; } = null!;
