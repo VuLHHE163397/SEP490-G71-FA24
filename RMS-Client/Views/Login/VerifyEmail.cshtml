@@ -27,7 +27,7 @@
         #popupErrorMessage, #popupErrorMessage1 {
             background-color: #C53500;
         }
-        
+
         .code-input {
             width: 50px;
             height: 50px;
@@ -40,12 +40,13 @@
             padding: 10px;
             transition: all 0.3s ease;
         }
-        .code-input:focus {
-            border-color: #4caf50;
-            background-color: #e9f8e3;
-            box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
-            outline: none;
-        }
+
+            .code-input:focus {
+                border-color: #4caf50;
+                background-color: #e9f8e3;
+                box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+                outline: none;
+            }
     </style>
 </head>
 
@@ -73,7 +74,7 @@
                                             <input type="text" class="code-input" id="verificationCode6" maxlength="1" onclick="this.select()" />
                                         </div>
                                     </div>
-                                    <a onclick="verifyCode()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Xác thực</a>                                    
+                                    <a onclick="verifyCode()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Xác thực</a>
                                     <div class="d-flex align-items-center justify-content-center">
                                         <p class="fs-4 mb-0 fw-bold">Chưa nhận được mã?</p>
                                         <a class="text-primary fw-bold ms-2" href="#" onclick="resendCode()">Gửi lại mã</a>
@@ -87,17 +88,14 @@
         </div>
     </div>
 
-   
     <div id="popupMessage">Xác thực thành công!</div>
     <div id="popupMessage1">Mã mới đã được gửi qua email.</div>
     <div id="popupErrorMessage">Xác thực thất bại!</div>
     <div id="popupErrorMessage1">Lỗi khi gửi mã mới!</div>
-    
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      
         function moveFocus(current, nextId) {
             if (current.value.length === current.maxLength) {
                 document.getElementById(nextId).focus();
@@ -105,13 +103,11 @@
         }
 
         function verifyCode() {
-          
-
             var code = $("#verificationCode1").val() + $("#verificationCode2").val() + $("#verificationCode3").val() +
-                       $("#verificationCode4").val() + $("#verificationCode5").val() + $("#verificationCode6").val();
-            
+                $("#verificationCode4").val() + $("#verificationCode5").val() + $("#verificationCode6").val();
+
             if (code.length !== 6) {
-                showErrorPopup("Mã xác thực không hợp lệ! Yêu cầu 6 chữ số!");
+                showErrorPopup("Mã xác thực không hợp lệ! Yêu cầu 6 chữ số!", "popupErrorMessage");
                 return;
             }
             var firstName = sessionStorage.getItem("firstName");
@@ -128,12 +124,8 @@
                 email: email,
                 phone: phone,
                 password: password,
-                verificationCode: verificationCode
-            };
-
-            console.log("Verification code:", code);
-            console.log("User data:", user);
-
+                verificationCode: code
+            };           
 
             $.ajax({
                 url: "https://localhost:7056/api/Auth/register",
@@ -141,40 +133,38 @@
                 contentType: "application/json",
                 data: JSON.stringify(user),
                 success: function (response) {
-                    showPopup("Đăng ký thành công!");
+                    showPopup("Đăng ký thành công!", "popupMessage");
                     setTimeout(function () {
                         window.location.href = "/Auth/Login";
                     }, 2000);
                 },
                 error: function (xhr) {
-                    showErrorPopup("Đăng ký thất bại: " + xhr.responseText);
+                    showErrorPopup("Đăng ký thất bại: " + xhr.responseText, "popupErrorMessage");
                 }
             });
         }
 
-        function resendcode() {
+        function resendCode() {
             $.ajax({
-                url: "https://localhost:7056/api/auth/sendverificationcode",
-                type: "post",
-                contenttype: "application/json",
-                data: json.stringify(user),
+                url: "https://localhost:7056/api/Auth/sendVerificationCode",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(user),
                 success: function (response) {
-                    showpopup("Mã mới đã được gửi qua email.");
+                    showPopup("Mã mới đã được gửi qua email.", "popupMessage1");
                 },
                 error: function () {
-                    showerrorpopup("Lỗi khi gửi mã mới!");
+                    showErrorPopup("Lỗi khi gửi mã mới!", "popupErrorMessage1");
                 }
             });
         }
 
-
-
-        function showPopup(message) {
-            $("#popupMessage, #popupMessage1").text(message).fadeIn().delay(2000).fadeOut();
+        function showPopup(message, popupId) {
+            $("#" + popupId).text(message).fadeIn().delay(2000).fadeOut();
         }
 
-        function showErrorPopup(message) {
-            $("#popupErrorMessage, #popupErrorMessage1").text(message).fadeIn().delay(4000).fadeOut();
+        function showErrorPopup(message, popupId) {
+            $("#" + popupId).text(message).fadeIn().delay(4000).fadeOut();
         }
     </script>
 </body>

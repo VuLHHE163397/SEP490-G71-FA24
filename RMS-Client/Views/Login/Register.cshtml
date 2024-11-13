@@ -18,6 +18,71 @@
     <title>RMS</title>
     <link rel="shortcut icon" type="image/png" href="~/images/logos/rms_logo.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
+
+    <style>
+        .popupErrorMessage {
+            display: none;
+            position: fixed;
+            top: 30px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #C53500;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            z-index: 1000;
+            margin-top: 10px; /* Optional spacing for stacked alerts */
+        }
+        /* Popup styling */
+        #popupMessage {
+            display: none;
+            position: fixed;
+            top: 30px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #4caf50;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            z-index: 1000;
+            margin-top: 10px;
+        }
+
+        .spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+            .spinner .spin {
+                width: 50px;
+                height: 50px;
+                border: 5px solid rgba(0, 0, 0, 0.1);
+                border-top-color: #007bff;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+        @@keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner p {
+            margin-top: 10px;
+            color: #007bff;
+            font-size: 18px;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -66,11 +131,11 @@
                                         <input type="password" class="form-control" required id="confirmPassword">
                                     </div>
                                     @* <div class="mb-4">
-                                        <button type="button" class="btn btn-primary" onclick="sendVerificationCode()">Gửi mã qua email</button>
+                                    <button type="button" class="btn btn-primary" onclick="sendVerificationCode()">Gửi mã qua email</button>
                                     </div> *@
                                     @* <div class="mb-4">
-                                        <label for="verificationCode" class="form-label">Mã xác nhận qua mail</label>
-                                        <input type="text" class="form-control" id="verificationCode">
+                                    <label for="verificationCode" class="form-label">Mã xác nhận qua mail</label>
+                                    <input type="text" class="form-control" id="verificationCode">
                                     </div> *@
                                     @* <div class="mb-4">
                                     <label for="verificationCode" class="form-label">Mã xác nhận qua mail</label>
@@ -87,7 +152,7 @@
                                     <a onclick="sendVerificationCode()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</a>
                                     <div class="d-flex align-items-center justify-content-center">
                                         <p class="fs-4 mb-0 fw-bold">Bạn đã có tài khoản?</p>
-                                        <a class="text-primary fw-bold ms-2" href="Login">Đăng nhập</a>
+                                        <a class="text-primary fw-bold ms-2" href="/Auth/Login">Đăng nhập</a>
                                     </div>
                                 </form>
                             </div>
@@ -97,6 +162,14 @@
             </div>
         </div>
     </div>
+
+    <div id="popupContainer"></div>
+    <div id="loadingSpinner" class="spinner" style="display: none;">
+        <div class="spin"></div>
+        <p>Đang xử lý...</p>
+    </div>
+
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -129,52 +202,57 @@
 
 
             if (!lastName) {
-                alert("Vui lòng nhập Họ!");
+                showErrorPopup("Vui lòng nhập Họ!");
                 return;
             }
 
             if (!midName) {
-                alert("Vui lòng nhập Tên đệm!");
+                showErrorPopup("Vui lòng nhập Tên đệm!");
                 return;
             }
 
             if (!firstName) {
-                alert("Vui lòng nhập Tên!");
+                showErrorPopup("Vui lòng nhập Tên!");
                 return;
             }
 
             if (!phone) {
-                alert("Vui lòng nhập số điện thoại!");
+                showErrorPopup("Vui lòng nhập số điện thoại!");
                 return;
             }
 
             if (!validatePhone(phone)) {
-                alert("Số điện thoại không hợp lệ! Cần bắt đầu bằng 0 và có 10 chữ số");
+                showErrorPopup("Số điện thoại không hợp lệ! Cần bắt đầu bằng 0 và có 10 chữ số");
                 return;
             }
 
             if (!email) {
-                alert("Vui lòng nhập email!");
+                showErrorPopup("Vui lòng nhập email!");
                 return;
             }
 
             if (!validateEmail(email)) {
-                alert("Email không hợp lệ! Email cần theo cấu trúc example@gmail.com");
+                showErrorPopup("Email không hợp lệ! Email cần theo cấu trúc example@gmail.com");
                 return;
             }
 
             if (!password) {
-                alert("Vui lòng nhập mật khẩu!");
+                showErrorPopup("Vui lòng nhập mật khẩu!");
+                return;
+            }
+
+            if (password.length < 5) {
+                showErrorPopup("Mật khẩu ít nhất có 6 kí tự!");
                 return;
             }
 
             if (!confirmPassword) {
-                alert("Vui lòng nhập xác nhận mật khẩu!");
+                showErrorPopup("Vui lòng nhập xác nhận mật khẩu!");
                 return;
             }
 
             if (password !== confirmPassword) {
-                alert("Mật khẩu xác nhận không khớp!");
+                showErrorPopup("Mật khẩu xác nhận không khớp!");
                 return;
             }
 
@@ -184,30 +262,78 @@
                 lastName: lastName,
                 email: email,
                 phone: phone,
-                password: password                
-            };        
+                password: password
+            };
 
+            // Show the loading spinner
+            $("#loadingSpinner").show();
 
             $.ajax({
                 url: "https://localhost:7056/api/Auth/sendVerificationCode",
                 type: "POST",
-                data: JSON.stringify(user),
                 contentType: "application/json",
+                data: JSON.stringify(user),
                 success: function (response) {
-
+                    $("#loadingSpinner").hide();
+                    showPopup("Đăng nhập thành công!");
                     sessionStorage.setItem("firstName", firstName);
                     sessionStorage.setItem("midName", midName);
                     sessionStorage.setItem("lastName", lastName);
                     sessionStorage.setItem("email", email);
                     sessionStorage.setItem("phone", phone);
                     sessionStorage.setItem("password", password);
-                    
                     window.location.href = "/Auth/VerifyEmail";
+
+                    showPopup("Đăng nhập thành công");
                 },
                 error: function (xhr, status, error) {
-                    alert("Đăng ký không thành công! " + xhr.responseText);
+                    $("#loadingSpinner").hide();
+                    showErrorPopup("Đăng nhập thất bại: " + xhr.responseText);
                 }
             });
+        }
+
+        function showPopup(message) {
+            var popup = $("#popupMessage");
+            popup.text(message);
+            popup.fadeIn();
+            setTimeout(function () {
+                popup.fadeOut();
+            }, 2000);
+        }
+
+        function showErrorPopup(message) {
+            // Create a unique ID for each alert to avoid overlap
+            var popupId = "popupError_" + Date.now();
+            var popup = $(`<div id="${popupId}" class="popupErrorMessage">${message}</div>`);
+
+            // Append popup to the container
+            $("#popupContainer").append(popup);
+
+            // Show and fade out the alert
+            popup.fadeIn();
+            setTimeout(function () {
+                popup.fadeOut(function () {
+                    popup.remove(); // Remove the popup from the DOM after fading out
+                });
+            }, 2000); // Display time in milliseconds
+        }
+
+        function showPopup(message) {
+            // Create a unique ID for each alert to avoid overlap
+            var popupId = "popup_" + Date.now();
+            var popup = $(`<div id="${popupId}" class="popupMessage">${message}</div>`);
+
+            // Append popup to the container
+            $("#popupContainer").append(popup);
+
+            // Show and fade out the alert
+            popup.fadeIn();
+            setTimeout(function () {
+                popup.fadeOut(function () {
+                    popup.remove(); // Remove the popup from the DOM after fading out
+                });
+            }, 2000); // Display time in milliseconds
         }
 
     </script>
