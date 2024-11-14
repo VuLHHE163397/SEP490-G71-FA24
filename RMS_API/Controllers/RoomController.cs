@@ -296,7 +296,7 @@ namespace RMS_API.Controllers
         public IActionResult GetActiveRooms()
         {
             var rooms = _context.Rooms
-                .Where(r => r.RoomStatusId == 1) // Lọc các phòng có trạng thái đang hoạt động
+                .Where(r => r.RoomStatusId == 1 || r.RoomStatusId == 4) // Lọc các phòng có trạng thái đang hoạt động
                 .Select(r => new
                 {
                     Id = r.Id,
@@ -388,5 +388,49 @@ namespace RMS_API.Controllers
 
             return Ok(suggestedRooms);
         }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchRooms([FromQuery] RoomSearchDTO searchDto)
+        {
+            var rooms = await _context.Rooms
+                .Include(r => r.Building)
+                .ThenInclude(b => b.Province)
+                .Include(r => r.Building.District)
+                .Include(r => r.Building.Ward)
+                .Include(r => r.RoomStatus)
+                .Where(r =>
+                    (searchDto.ProvinceId == 0 || r.Building.ProvinceId == searchDto.ProvinceId) &&
+                    (searchDto.DistrictId == 0 || r.Building.DistrictId == searchDto.DistrictId) &&
+                    (searchDto.WardId == 0 || r.Building.WardId == searchDto.WardId) &&
+                    (string.IsNullOrEmpty(searchDto.RoomStatus) || r.RoomStatus.Name == searchDto.RoomStatus) &&
+                    (searchDto.MinDistance == null || r.Building.Distance >= searchDto.MinDistance) &&
+                    (searchDto.MaxDistance == null || r.Building.Distance <= searchDto.MaxDistance) &&
+                    (searchDto.MinPrice == null || r.Price >= searchDto.MinPrice) &&
+                    (searchDto.MaxPrice == null || r.Price <= searchDto.MaxPrice) &&
+                    (searchDto.MinArea == null || r.Area >= searchDto.MinArea) &&
+                    (searchDto.MaxArea == null || r.Area <= searchDto.MaxArea)
+                )
+                .Select(r => new
+                {
+                    Id = r.Id,
+                    Building = r.Building.Name,
+                    Distance = r.Building.Distance,
+                    Address = $"{r.Building.Address.Information}, {r.Building.Address.Ward.Name}, {r.Building.Address.District.Name}, {r.Building.Address.Province.Name}",
+                    Price = r.Price,
+                    Area = r.Area,
+                    RoomStatusName = r.RoomStatus.Name,
+                    //Images = r.Images.Select(i => i.Link).ToList()
+                })
+                .ToListAsync();
+
+            if (!rooms.Any())
+            {
+                return NotFound("Không tìm thấy phòng nào phù hợp.");
+            }
+
+            return Ok(rooms);
+        }
+
+
     }
 }
