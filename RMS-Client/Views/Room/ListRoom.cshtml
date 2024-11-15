@@ -310,9 +310,15 @@
 
                         <div class="col-md-3 offset-md-1 d-flex flex-column align-items-end">
                             <div class="btn-group-vertical">
-                                <a class="btn btn-success mb-2" style="width: 200px;">
-                                    <i class="ti ti-upload"></i> Nhập phòng từ excel
-                                </a>
+                                <form asp-action="ImportRooms" method="post" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label for="fileInput">Choose Excel file:</label>
+                                        <input type="file" name="file" id="fileInput" class="form-control" required />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Import Rooms</button>
+                                </form>
+
+
                                 <a class="btn btn-success mb-2" style="width: 200px;">
                                     <i class="ti ti-user"></i> Khách thuê
                                 </a>
@@ -395,6 +401,8 @@
         function submitFilterForm() {
             document.getElementById("statusFilterForm").submit();
         }
+
     </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>
