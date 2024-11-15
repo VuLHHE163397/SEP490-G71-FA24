@@ -142,113 +142,7 @@
         .content {
             padding-bottom: 70px; /* Ensure body content doesn't overlap with footer */
         }
-        /* Additional styles for the slider, case buttons, and popup */
-        .slider-container {
-            margin-top: 20px;
-        }
 
-
-        #price-slider {
-            margin: 20px;
-        }
-        /* Additional styles for the slider, case buttons, and popup */
-        .slider-container {
-            margin-top: 20px;
-        }
-
-        .case-buttons {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-
-            .case-buttons button {
-                margin: 0 5px;
-                padding: 6px 8px; /* Tăng padding để ô lớn hơn */
-                cursor: pointer;
-                border: 1px solid #ccc;
-                background-color: #f0f0f0;
-                border-radius: 5px;
-                transition: background-color 0.3s ease;
-            }
-
-                .case-buttons button:hover {
-                    background-color: cornflowerblue;
-                }
-
-
-        /* Popup modal styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 40px; /* Tăng padding để có thêm không gian bên trong */
-            border-radius: 8px;
-            width: 600px; /* Tăng width để cửa sổ lớn hơn */
-            max-width: 95%; /* Cải thiện để cửa sổ không vượt quá màn hình */
-            text-align: center;
-        }
-
-        .close-button {
-            background-color: red;
-            border-radius: 50%;
-            padding: 2px 4px; /* Padding nhỏ để bo tròn vừa đủ */
-            color: white;
-            cursor: pointer;
-            position: absolute; /* Đặt nút ở vị trí tuyệt đối */
-            top: 10px; /* Cách mép trên 10px */
-            right: 10px; /* Cách mép phải 10px */
-            width: 20px; /* Kích thước cố định cho nút */
-            height: 20px; /* Kích thước cố định cho nút */
-            display: flex; /* Sử dụng flexbox để căn giữa chữ X */
-            align-items: center; /* Căn giữa theo chiều dọc */
-            justify-content: center; /* Căn giữa theo chiều ngang */
-        }
-
-        .confirm-button {
-            margin-top: 20px;
-            padding: 8px 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-            .confirm-button:hover {
-                background-color: darkgreen;
-            }
-
-        .selected-range {
-            margin-top: 10px;
-            font-weight: normal;
-            color: black;
-        }
-
-        .reset-button {
-            margin-top: 10px;
-            background-color: orange;
-            color: black;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem; /* Match font size */
-        }
-
-            .reset-button:hover {
-                background-color: #e53935; /* Darker red for hover effect */
-            }
 
     </style>
 </head>
@@ -278,6 +172,7 @@
                         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                             <div class="navbar-nav mr-auto py-0">
                                 <a asp-controller="Home" asp-action="Home" class="nav-item nav-link active">Trang chủ</a>
+                                <a asp-controller="Home" asp-action="Search" class="nav-item nav-link active">Tìm phòng</a>
                                 <!-- Conditional rendering for roles -->
                                 @if (User.IsInRole("Admin"))
                                 {
@@ -306,78 +201,7 @@
         </div>
         <!-- Header End -->
         <!-- Search Start -->
-        <div class="container-xxl py-5 content">
-
-            <div class="container" style="border: 2px solid green; padding: 15px; border-radius: 5px;">
-                <h1 style="color: #FEA116" class="text-center text-uppercase">Tìm phòng</h1>
-                <!-- Search and Filter Options -->
-                <div class="row mb-2 align-items-center">
-                    <!-- Location Filters (Left Side) -->
-                    <div class="col-lg-8 d-flex gap-2 align-items-center">
-                        <div class="select-container">
-                           
-                            <select id="province" class="form-select form-select-sm" onchange="updateDistricts()">
-                                <option value="">Tỉnh/Thành Phố</option>
-                            </select>
-                        </div>
-                        <div class="select-container">
-                           
-                            <select id="district" class="form-select form-select-sm" onchange="updateCommunes()" disabled>
-                                <option value="">Quận/Huyện/Thị Xã</option>
-                            </select>
-                        </div>
-                        <div class="select-container">
-
-                            <select id="commune" class="form-select form-select-sm" disabled>
-                                <option value="">Xã/Phường/Thị Trấn</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Room Status Filter and Buttons (Right Side) -->
-                    <div style="margin-bottom:10px;padding-right:50px" class="col-lg-4 d-flex flex-column align-items-end gap-3 ms-auto">
-                        <!-- Filter Buttons -->
-                        <div class="d-flex gap-2">
-                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-distance-range" onclick="toggleDistanceModal(true)">Khoảng cách</button>
-                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-price-range" onclick="toggleModal(true)">Giá tiền</button>
-                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-area-range" onclick="toggleAreaModal(true)">Diện tích</button>
-                            <button class="reset-button" onclick="resetValues()">Đặt lại</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Room Status Filter -->
-                <div style="margin-top:30px;margin-right:40px" class="text-end mb-3">
-                    <h6>Trạng thái phòng</h6>
-                    <div>
-                        <input type="checkbox" id="vacant" value="Đang trống">
-                        <label for="vacant">Đang trống</label><br>
-                        <input type="checkbox" id="futureVacant" value="Sắp trống">
-                        <label style="margin-right:9px" for="futureVacant">Sắp trống</label><br>
-                    </div>
-                </div>
-                <!-- Search Button -->
-                <div class="text-center mt-4">
-                    <button class="btn btn-primary btnsearch" type="button" onclick="searchRooms()">Tìm kiếm</button>
-                </div>
-                <!-- Sort Section (Right Side and Higher Up) -->
-                <div style="margin-bottom:80px;margin-right:40px" class="row mb-4">
-                    <div class="col-lg-4 offset-lg-8 text-end mt-4">
-                        <!-- Added mt-4 for top margin -->
-                        <div class="sort-section">
-                            <select class="form-select d-inline-block w-50 me-2">
-                                <option value="price-asc">Giá Tăng Dần</option>
-                                <option value="price-desc">Giá Giảm Dần</option>
-                                <option value="area-asc">Diện Tích Tăng Dần</option>
-                                <option value="area-desc">Diện Tích Giảm Dần</option>
-                                <option value="date-new">Khoảng cách tăng dần</option>
-                                <option value="date-old">Khoảng cách giảm dần</option>
-                            </select>
-                            <button class="btn btn-primary">Sắp Xếp</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+       
             <div class="container-xxl py-5 content">
                 <div class="container">
                     <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
@@ -419,308 +243,96 @@
                         }
                     </div>
                 </div>
-
-                <!-- Popup Modals for Filters -->
-                <!-- Distance Filter Modal -->
-                <div class="modal-overlay" id="distance-filter-modal">
-                    <div class="modal-content">
-                        <span class="close-button" onclick="toggleDistanceModal(false)">X</span>
-                        <h4>Chọn khoảng cách</h4>
-                        <div class="case-buttons">
-                            <button onclick="setDistanceSliderCase(0, 2)">Dưới 2 km</button>
-                            <button onclick="setDistanceSliderCase(2, 4)">2 - 4 km</button>
-                            <button onclick="setDistanceSliderCase(4, 6)">4 - 6 km</button>
-                            <button onclick="setDistanceSliderCase(6, 8)">6 - 8 km</button>
-                            <button onclick="setDistanceSliderCase(8, 10)">8 - 10 km</button>
-                            <button onclick="setDistanceSliderCase(10, 20)">Trên 10 km</button>
-                        </div>
-                        <div id="distance-slider"></div>
-                        <div class="slider-values">
-                            <span id="slider-distance-min-value">0</span> - <span id="slider-distance-max-value">0</span> km
-                        </div>
-                        <button class="confirm-button" onclick="confirmDistanceSelection()">Xác nhận</button>
-                    </div>
-                </div>
-
-                <!-- Price Filter Modal -->
-                <div class="modal-overlay" id="price-filter-modal">
-                    <div class="modal-content">
-                        <span class="close-button" onclick="toggleModal(false)">X</span>
-                        <h4>Chọn mức giá</h4>
-                        <div class="case-buttons">
-                            <button onclick="setSliderCase(0, 1000000)">Dưới 1 triệu</button>
-                            <button onclick="setSliderCase(1000000, 2000000)">1 - 2 triệu</button>
-                            <button onclick="setSliderCase(2000000, 4000000)">2 - 4 triệu</button>
-                            <button onclick="setSliderCase(4000000, 6000000)">4 - 6 triệu</button>
-                            <button onclick="setSliderCase(6000000, 8000000)">6 - 8 triệu</button>
-                            <button onclick="setSliderCase(8000000, 10000000)">8 - 10 triệu</button>
-                            <button onclick="setSliderCase(10000000, 20000000)">Trên 10 triệu</button>
-                        </div>
-                        <div id="price-slider"></div>
-                        <div class="slider-values">
-                            <span id="slider-min-value">0</span> - <span id="slider-max-value">0</span> VND
-                        </div>
-                        <button class="confirm-button" onclick="confirmSelection()">Xác nhận</button>
-                    </div>
-                </div>
-
-                <!-- Area Filter Modal -->
-                <div class="modal-overlay" id="area-filter-modal">
-                    <div class="modal-content">
-                        <span class="close-button" onclick="toggleAreaModal(false)">X</span>
-                        <h4>Chọn diện tích</h4>
-                        <div class="case-buttons">
-                            <button onclick="setAreaSliderCase(0, 10)">Dưới 10 m²</button>
-                            <button onclick="setAreaSliderCase(10, 30)">10 - 30 m²</button>
-                            <button onclick="setAreaSliderCase(30, 50)">30 - 50 m²</button>
-                            <button onclick="setAreaSliderCase(50, 70)">50 - 70 m²</button>
-                            <button onclick="setAreaSliderCase(70, 90)">70 - 90 m²</button>
-                            <button onclick="setAreaSliderCase(90, 100)">Trên 90 m²</button>
-                        </div>
-                        <div id="area-slider"></div>
-                        <div class="slider-values">
-                            <span id="slider-area-min-value">0</span> - <span id="slider-area-max-value">0</span> m²
-                        </div>
-                        <button class="confirm-button" onclick="confirmAreaSelection()">Xác nhận</button>
-                    </div>
-                </div>
             </div>
-            <!-- Footer Start -->
-            <div class="container-fluid bg-dark text-light footer wow fadeIn" data-wow-delay="0.1s">
-                <div class="container">
-                    <div class="copyright">
-                        <div class="row">
-                            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                                &copy; <a class="border-bottom" href="#">RMS</a>, All Rights Reserved.
-                            </div>
+
+        </div>
+        <!-- Footer Start -->
+        <div class="container-fluid bg-dark text-light footer wow fadeIn" data-wow-delay="0.1s">
+            <div class="container">
+                <div class="copyright">
+                    <div class="row">
+                        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                            &copy; <a class="border-bottom" href="#">RMS</a>, All Rights Reserved.
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Footer End -->
-            <!-- Back to Top -->
-            <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        <!-- Footer End -->
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 
 
-            <!-- JavaScript Libraries -->
-            <script src="~/lib/jquery/jquery.min.js"></script>
-            <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-            <script src="~/lib/wow/wow.min.js"></script>
-            <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
-            <script src="~/lib/tempusdominus/js/moment.min.js"></script>
-            <script src="~/lib/tempusdominus/js/moment-timezone.min.js"></script>
-            <script src="~/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+        <!-- JavaScript Libraries -->
+        <script src="~/lib/jquery/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="~/lib/wow/wow.min.js"></script>
+        <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
+        <script src="~/lib/tempusdominus/js/moment.min.js"></script>
+        <script src="~/lib/tempusdominus/js/moment-timezone.min.js"></script>
+        <script src="~/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
-            <!-- JavaScript for noUiSlider and modal control -->
-            <script>
-                // Initialize the noUiSlider
-                const priceSlider = document.getElementById('price-slider');
+        <!-- JavaScript for noUiSlider and modal control -->
+        <script>      
+         
+            // Function to get favorites from cookies
+            function getFavorites() {
+                const favorites = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('favorites='))
+                    ?.split('=')[1];
+                return favorites ? JSON.parse(decodeURIComponent(favorites)) : [];
+            }
 
-                noUiSlider.create(priceSlider, {
-                    start: [1000000, 5000000], // Default range values
-                    connect: true,
-                    range: {
-                        'min': 0,
-                        'max': 20000000
-                    },
-                    step: 500000, // Step value for slider
-                    format: {
-                        to: (value) => Math.round(value),
-                        from: (value) => Number(value)
-                    }
-                });
+            // Function to set favorites in cookies with an expiration of 7 days
+            function setFavorites(favorites) {
+                const now = new Date();
+                now.setTime(now.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 ngày
+                const expires = "expires=" + now.toUTCString();
+                document.cookie = 'favorites=' + encodeURIComponent(JSON.stringify(favorites)) + '; ' + expires + '; path=/';
+            }
 
-                // Update the displayed min and max values
-                priceSlider.noUiSlider.on('update', (values) => {
-                    document.getElementById('slider-min-value').textContent = values[0];
-                    document.getElementById('slider-max-value').textContent = values[1];
-                });
+            // Function to update the favorite count in the header
+            function updateFavoriteCount() {
+                const favorites = getFavorites();
+                const favoriteCount = favorites.length;
+                const favoriteCountElement = document.getElementById('favoriteCount');
+                if (favoriteCountElement) {
+                    favoriteCountElement.innerText = favoriteCount; // Cập nhật số lượng yêu thích
+                }
+            }
 
-                // Function to set slider to specific case
-                function setSliderCase(min, max) {
-                    priceSlider.noUiSlider.set([min, max]);
+            // Function to toggle favorite status
+            function toggleFavorite(element) {
+                const roomId = element.getAttribute("data-room-id");
+                const roomImage = "~/images/room1.jpg"; // Đường dẫn ảnh cố định
+                const roomAddress = element.getAttribute("data-room-address");
+
+                let favorites = getFavorites();
+
+                // Kiểm tra nếu phòng đã có trong danh sách yêu thích
+                const existingRoomIndex = favorites.findIndex(room => room.id === roomId);
+
+                if (existingRoomIndex === -1) {
+                    // Nếu chưa có, thêm phòng vào danh sách yêu thích
+                    favorites.push({ id: roomId, image: roomImage, address: roomAddress });
+                    element.classList.add('active'); // Thêm lớp active để thay đổi kiểu dáng nút nếu cần
+                } else {
+                    // Nếu đã có, xóa phòng khỏi danh sách yêu thích
+                    favorites.splice(existingRoomIndex, 1);
+                    element.classList.remove('active'); // Gỡ bỏ lớp active
                 }
 
-                // Function to toggle the modal visibility
-                function toggleModal(show) {
-                    const modal = document.getElementById('price-filter-modal');
-                    modal.style.display = show ? 'flex' : 'none';
-                }
+                setFavorites(favorites);
+                updateFavoriteCount();
+            }
 
-                // Function to confirm the selection and display it
-                function confirmSelection() {
-                    const minValue = priceSlider.noUiSlider.get()[0];
-                    const maxValue = priceSlider.noUiSlider.get()[1];
-                    document.getElementById('selected-price-range').textContent = `${minValue} - ${maxValue} VND`;
-                    toggleModal(false); // Close the modal after confirming
-                }
-                // Initialize the noUiSlider for area selection
-                const areaSlider = document.getElementById('area-slider');
+            // Initialize favorite count on page load
+            document.addEventListener('DOMContentLoaded', () => {
+                updateFavoriteCount(); // Hiển thị số lượng yêu thích từ cookie khi trang tải              
+            });
 
-                // Create the area slider
-                noUiSlider.create(areaSlider, {
-                    start: [20, 50], // Default range values for area
-                    connect: true,
-                    range: {
-                        'min': 0,
-                        'max': 100 // Set maximum value for area as needed
-                    },
-                    step: 5, // Step value for slider
-                    format: {
-                        to: (value) => Math.round(value), // Round value for display
-                        from: (value) => Number(value) // Convert back to number
-                    }
-                });
-
-                // Update the displayed min and max values when the area slider is adjusted
-                areaSlider.noUiSlider.on('update', (values) => {
-                    document.getElementById('slider-area-min-value').textContent = `${Math.round(values[0])}`;
-                    document.getElementById('slider-area-max-value').textContent = `${Math.round(values[1])}`;
-                });
-
-                // Function to set the area slider to a specific case when a case button is clicked
-                function setAreaSliderCase(min, max) {
-                    areaSlider.noUiSlider.set([min, max]);
-                }
-
-                // Function to toggle the area modal visibility
-                function toggleAreaModal(show) {
-                    const modal = document.getElementById('area-filter-modal');
-                    modal.style.display = show ? 'flex' : 'none';
-                }
-
-                // Function to confirm the selection and display it on the button
-                function confirmAreaSelection() {
-                    const minAreaValue = Math.round(areaSlider.noUiSlider.get()[0]);
-                    const maxAreaValue = Math.round(areaSlider.noUiSlider.get()[1]);
-                    document.getElementById('selected-area-range').textContent = ` ${minAreaValue} - ${maxAreaValue} m²`;
-                    toggleAreaModal(false); // Close the modal after confirming
-                }
-                // Initialize the noUiSlider for distance selection
-                const distanceSlider = document.getElementById('distance-slider');
-
-                // Create the distance slider
-                noUiSlider.create(distanceSlider, {
-                    start: [2, 5], // Default range values for distance
-                    connect: true,
-                    range: {
-                        'min': 0,
-                        'max': 20 // Set maximum value for distance
-                    },
-                    step: 1, // Step value for slider
-                    format: {
-                        to: (value) => Math.round(value), // Round value for display
-                        from: (value) => Number(value) // Convert back to number
-                    }
-                });
-
-                // Update the displayed min and max values when the distance slider is adjusted
-                distanceSlider.noUiSlider.on('update', (values) => {
-                    document.getElementById('slider-distance-min-value').textContent = `${Math.round(values[0])}`;
-                    document.getElementById('slider-distance-max-value').textContent = `${Math.round(values[1])}`;
-                });
-
-                // Function to set the distance slider to a specific case when a case button is clicked
-                function setDistanceSliderCase(min, max) {
-                    distanceSlider.noUiSlider.set([min, max]);
-                }
-
-                // Function to toggle the distance modal visibility
-                function toggleDistanceModal(show) {
-                    const modal = document.getElementById('distance-filter-modal');
-                    modal.style.display = show ? 'flex' : 'none';
-                }
-
-                // Function to confirm the selection and display it on the button
-                function confirmDistanceSelection() {
-                    const minDistanceValue = Math.round(distanceSlider.noUiSlider.get()[0]);
-                    const maxDistanceValue = Math.round(distanceSlider.noUiSlider.get()[1]);
-                    document.getElementById('selected-distance-range').textContent = `${minDistanceValue} - ${maxDistanceValue} km`;
-                    toggleDistanceModal(false); // Close the modal after confirming
-                }
-                // Function to reset all sliders to default values
-                function resetValues() {
-                    // Reset price slider to default values
-                    priceSlider.noUiSlider.set([1000000, 3000000]); // Default price range
-                    document.getElementById('slider-min-value').textContent = '1000000';
-                    document.getElementById('slider-max-value').textContent = '3000000';
-                    document.getElementById('selected-price-range').textContent = 'Giá tiền';
-
-                    // Reset area slider to default values
-                    areaSlider.noUiSlider.set([10, 50]); // Default area range
-                    document.getElementById('slider-area-min-value').textContent = '10';
-                    document.getElementById('slider-area-max-value').textContent = '50';
-                    document.getElementById('selected-area-range').textContent = 'Diện tích';
-
-                    // Reset distance slider to default values
-                    distanceSlider.noUiSlider.set([0, 5]); // Default distance range
-                    document.getElementById('slider-distance-min-value').textContent = '0';
-                    document.getElementById('slider-distance-max-value').textContent = '5';
-                    document.getElementById('selected-distance-range').textContent = 'Khoảng cách';
-                }
-
-                // Call the resetValues function when the reset button is clicked
-                document.getElementById('reset-button').addEventListener('click', resetValues);
-
-                // Function to get favorites from cookies
-                function getFavorites() {
-                    const favorites = document.cookie
-                        .split('; ')
-                        .find(row => row.startsWith('favorites='))
-                        ?.split('=')[1];
-                    return favorites ? JSON.parse(decodeURIComponent(favorites)) : [];
-                }
-
-                // Function to set favorites in cookies with an expiration of 7 days
-                function setFavorites(favorites) {
-                    const now = new Date();
-                    now.setTime(now.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 ngày
-                    const expires = "expires=" + now.toUTCString();
-                    document.cookie = 'favorites=' + encodeURIComponent(JSON.stringify(favorites)) + '; ' + expires + '; path=/';
-                }
-
-                // Function to update the favorite count in the header
-                function updateFavoriteCount() {
-                    const favorites = getFavorites();
-                    const favoriteCount = favorites.length;
-                    const favoriteCountElement = document.getElementById('favoriteCount');
-                    if (favoriteCountElement) {
-                        favoriteCountElement.innerText = favoriteCount; // Cập nhật số lượng yêu thích
-                    }
-                }
-
-                // Function to toggle favorite status
-                function toggleFavorite(element) {
-                    const roomId = element.getAttribute("data-room-id");
-                    const roomImage = "~/images/room1.jpg"; // Đường dẫn ảnh cố định
-                    const roomAddress = element.getAttribute("data-room-address");
-
-                    let favorites = getFavorites();
-
-                    // Kiểm tra nếu phòng đã có trong danh sách yêu thích
-                    const existingRoomIndex = favorites.findIndex(room => room.id === roomId);
-
-                    if (existingRoomIndex === -1) {
-                        // Nếu chưa có, thêm phòng vào danh sách yêu thích
-                        favorites.push({ id: roomId, image: roomImage, address: roomAddress });
-                        element.classList.add('active'); // Thêm lớp active để thay đổi kiểu dáng nút nếu cần
-                    } else {
-                        // Nếu đã có, xóa phòng khỏi danh sách yêu thích
-                        favorites.splice(existingRoomIndex, 1);
-                        element.classList.remove('active'); // Gỡ bỏ lớp active
-                    }
-
-                    setFavorites(favorites);
-                    updateFavoriteCount();
-                }
-
-                // Initialize favorite count on page load
-                document.addEventListener('DOMContentLoaded', () => {
-                    updateFavoriteCount(); // Hiển thị số lượng yêu thích từ cookie khi trang tải
-                    displayFavoriteRooms(); // Hiển thị danh sách yêu thích nếu có trên trang
-                });
-
-            </script>
+        </script>
 </body>
 </html>

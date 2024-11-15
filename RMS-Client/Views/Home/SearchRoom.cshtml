@@ -1,0 +1,874 @@
+﻿@model List<RMS_API.DTOs.RoomSearchDTO>
+
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <title>RMS</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="~/images/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+    <!-- Include noUiSlider CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.1.0/nouislider.min.css">
+
+    <!-- Include noUiSlider JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.1.0/nouislider.min.js"></script>
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="~/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/css/bootstrap1.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="~/css/style1.css" rel="stylesheet">
+    <style>
+
+        html, body {
+            height: 100%; /* Đảm bảo chiều cao đầy đủ cho body */
+            margin: 0; /* Bỏ margin của body */
+        }
+
+        .container-xxl {
+            display: flex;
+            flex-direction: column; /* Đặt chiều dọc cho các phần tử */
+            min-height: 100vh; /* Chiều cao tối thiểu là 100% chiều cao của viewport */
+        }
+
+        .content {
+            flex: 1; /* Đẩy nội dung chính chiếm hết không gian còn lại */
+        }
+
+        .footer {
+            width: 100%; /* Đảm bảo footer rộng bằng 100% */
+            padding: 20px; /* Thêm padding để nội dung không bị chèn sát mép */
+            background-color: #343a40; /* Màu nền của footer */
+            margin-top: auto; /* Đẩy footer xuống dưới */
+        }
+
+        .small-label {
+            font-size: 0.9em;
+        }
+        /* Thu hẹp khoảng cách giữa các thẻ chọn */
+        .select-container {
+            flex: 1;
+        }
+
+            .select-container .form-select-sm {
+                width: 90%; /* Đảm bảo mỗi thẻ chiếm toàn bộ không gian cột */
+                font-size: 1rem;
+                padding: 0.3rem 0.5rem;
+            }
+
+        .row.mb-2.align-items-center .gap-2 {
+            gap: 8px; /* Đảm bảo khoảng cách giữa các phần tử */
+        }
+
+        .selected-range {
+            min-width: 150px;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.5rem;
+        }
+
+
+        .btn {
+            min-width: 40px; /* Chiều rộng tối thiểu cho nút */
+            height: 40px; /* Chiều cao cố định cho nút */
+        }
+
+        .content {
+            padding-bottom: 70px; /* Ensure body content doesn't overlap with footer */
+        }
+        /* Additional styles for the slider, case buttons, and popup */
+        .slider-container {
+            margin-top: 20px;
+        }
+
+        .label-row,
+        .select-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+            .label-row label,
+            .select-row select {
+                flex: 20;
+                text-align: center;
+            }
+
+            .select-row select {
+                padding: 5px;
+            }
+
+        #price-slider {
+            margin: 20px;
+        }
+        /* Additional styles for the slider, case buttons, and popup */
+        .slider-container {
+            margin-top: 20px;
+        }
+
+        .case-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+            .case-buttons button {
+                margin: 0 5px;
+                padding: 6px 8px; /* Tăng padding để ô lớn hơn */
+                cursor: pointer;
+                border: 1px solid #ccc;
+                background-color: #f0f0f0;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
+
+                .case-buttons button:hover {
+                    background-color: cornflowerblue;
+                }
+
+
+        /* Popup modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px; /* Tăng padding để có thêm không gian bên trong */
+            border-radius: 8px;
+            width: 600px; /* Tăng width để cửa sổ lớn hơn */
+            max-width: 95%; /* Cải thiện để cửa sổ không vượt quá màn hình */
+            text-align: center;
+        }
+
+        .close-button {
+            background-color: red;
+            border-radius: 50%;
+            padding: 2px 4px; /* Padding nhỏ để bo tròn vừa đủ */
+            color: white;
+            cursor: pointer;
+            position: absolute; /* Đặt nút ở vị trí tuyệt đối */
+            top: 10px; /* Cách mép trên 10px */
+            right: 10px; /* Cách mép phải 10px */
+            width: 20px; /* Kích thước cố định cho nút */
+            height: 20px; /* Kích thước cố định cho nút */
+            display: flex; /* Sử dụng flexbox để căn giữa chữ X */
+            align-items: center; /* Căn giữa theo chiều dọc */
+            justify-content: center; /* Căn giữa theo chiều ngang */
+        }
+
+        .confirm-button {
+            margin-top: 20px;
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            .confirm-button:hover {
+                background-color: darkgreen;
+            }
+
+        .selected-range {
+            margin-top: 10px;
+            font-weight: normal;
+            color: black;
+        }
+
+        .reset-button {
+            margin-top: 10px;
+            background-color: orange;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem; /* Match font size */
+        }
+
+            .reset-button:hover {
+                background-color: #e53935; /* Darker red for hover effect */
+            }
+
+        .room-item {
+            height: 450px; /* Chiều cao cố định cho tất cả các khung ảnh */
+            margin-bottom: 30px; /* Khoảng cách giữa các hàng */
+            display: flex;
+            flex-direction: column; /* Để bố trí các phần tử bên trong theo cột */
+            justify-content: space-between; /* Cân đối khoảng cách giữa các phần tử */
+        }
+
+            .room-item img {
+                height: 200px; /* Chiều cao cố định cho tất cả các hình ảnh */
+                width: 100%; /* Đảm bảo hình ảnh đầy đủ chiều rộng của khung */
+                object-fit: cover; /* Giữ tỷ lệ hình ảnh và cắt bớt nếu cần */
+            }
+
+        .room-status {
+            font-size: 1.2rem;
+            background-color: green;
+            color: azure;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px; /* Padding để căn chỉnh tốt hơn */
+            margin-bottom: auto; /* Đẩy nó lên trên cùng */
+        }
+
+        .room-details {
+            flex-grow: 1; /* Để chiếm không gian còn lại giữa ảnh và các nút */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Cân đối khoảng cách giữa các phần tử */
+        }
+
+            .room-details h5 {
+                font-size: 1.1rem; /* Đảm bảo kích thước đồng nhất cho tiêu đề */
+                color: #333; /* Màu sắc đồng nhất cho tiêu đề */
+                margin: 0; /* Để xóa khoảng cách mặc định */
+            }
+    </style>
+</head>
+
+<body>
+    <div class="container-xxl bg-white p-0">
+
+        <!-- Header Start -->
+        <div class="container-fluid bg-dark px-0 header">
+            <div class="row gx-0">
+                <div class="col-lg-3 bg-dark d-none d-lg-block">
+                    <a asp-controller="Home" asp-action="Home"
+                       class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
+                        <h1 class="m-0 text-primary text-uppercase">RMS</h1>
+                    </a>
+                </div>
+                <div class="col-lg-9">
+
+                    <nav class="navbar navbar-expand-lg bg-dark navbar-dark p-3 p-lg-0">
+                        <a asp-controller="Home" asp-action="Home" class="navbar-brand d-block d-lg-none">
+                            <h1 class="m-0 text-primary text-uppercase">RMS</h1>
+                        </a>
+                        <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
+                                data-bs-target="#navbarCollapse">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                            <div class="navbar-nav mr-auto py-0">
+                                <a asp-controller="Home" asp-action="Home" class="nav-item nav-link active">Trang chủ</a>
+                                <a asp-controller="Home" asp-action="SearchRoom" class="nav-item nav-link active">Tìm phòng</a>
+                                <!-- Conditional rendering for roles -->
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a href="Admin/manage" class="nav-item nav-link">Quản lí</a>
+                                }
+                                else if (User.IsInRole("Landlord"))
+                                {
+                                    <a href="Landlord/manage" class="nav-item nav-link">Quản lí</a>
+                                }
+                            </div>
+                        </div>
+                        <!-- Favorite Count Icon in Header -->
+                        <a asp-controller="Home" asp-action="ListFavouriteRoom" class="btn btn-outline-danger rounded-circle position-relative">
+                            <i class="fa fa-heart"></i>
+                            <span id="favoriteCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                0
+                            </span>
+                        </a>
+                        <a asp-controller="Home" asp-action="Login"
+                           class="nav-item nav-link active">
+                            Đăng nhập<i class="fa fa-arrow-right ms-3"></i>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
+        <!-- Search Start -->
+        <div class="container-xxl py-5 content">
+
+            <div class="container" style="border: 2px solid green; padding: 15px; border-radius: 5px;">
+                <h1 style="color: #FEA116" class="text-center text-uppercase">Tìm phòng</h1>
+                <!-- Search and Filter Options -->
+                <div class="row mb-2 align-items-center">
+                    <!-- Location Filters (Left Side) -->
+                    <div class="col-lg-8 d-flex gap-2 align-items-center">
+                        <form id="selectAddressForm">
+                            <!-- Row for select elements -->
+                            <div class="d-flex gap-2 align-items-center select-row">
+                                <select id="province" name="provinceId" required>
+                                    <option value="">Tỉnh/Thành phố</option>
+                                </select>
+
+                                <select id="district" name="districtId" required>
+                                    <option value="">Quận/Huyện/Thị xã</option>
+                                </select>
+
+                                <select id="ward" name="wardId" required>
+                                    <option value="">Xã/Phường/Thị trấn</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Room Status Filter and Buttons (Right Side) -->
+                    <div style="margin-bottom:10px;padding-right:50px" class="col-lg-4 d-flex flex-column align-items-end gap-3 ms-auto">
+                        <!-- Filter Buttons -->
+                        <div class="d-flex gap-2">
+                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-distance-range" onclick="toggleDistanceModal(true)">Khoảng cách</button>
+                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-price-range" onclick="toggleModal(true)">Giá tiền</button>
+                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-area-range" onclick="toggleAreaModal(true)">Diện tích</button>
+                            <button class="reset-button" onclick="resetValues()">
+                                <i class="fas fa-undo-alt"></i> Đặt lại
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Room Status Filter -->
+                <div style="margin-top:30px;margin-right:40px" class="text-end mb-3">
+                    <h6>Trạng thái phòng</h6>
+                    <div>
+                        <label><input type="radio" name="roomStatus" value="Đang trống" checked> Đang trống</label>
+                        <label><input type="radio" name="roomStatus" value="Sắp trống"> Sắp trống</label>
+                    </div>
+                </div>
+                <!-- Search Button -->
+                <div class="text-center mt-4">
+                    <button id="searchButton" onclick="searchRooms()"><i class="fas fa-search"></i>Tìm kiếm</button>
+                </div>
+            </div>
+            <!-- Popup Modals for Filters -->
+            <!-- Distance Filter Modal -->
+            <div class="modal-overlay" id="distance-filter-modal">
+                <div class="modal-content">
+                    <span class="close-button" onclick="toggleDistanceModal(false)">X</span>
+                    <h4>Chọn khoảng cách</h4>
+                    <div class="case-buttons">
+                        <button onclick="setDistanceSliderCase(0, 2)">Dưới 2 km</button>
+                        <button onclick="setDistanceSliderCase(2, 4)">2 - 4 km</button>
+                        <button onclick="setDistanceSliderCase(4, 6)">4 - 6 km</button>
+                        <button onclick="setDistanceSliderCase(6, 8)">6 - 8 km</button>
+                        <button onclick="setDistanceSliderCase(8, 10)">8 - 10 km</button>
+                        <button onclick="setDistanceSliderCase(10, 20)">Trên 10 km</button>
+                    </div>
+                    <div id="distance-slider"></div>
+                    <div class="slider-values">
+                        <span id="slider-distance-min-value">0</span> - <span id="slider-distance-max-value">0</span> km
+                    </div>
+                    <button class="confirm-button" onclick="confirmDistanceSelection()">Xác nhận</button>
+                </div>
+            </div>
+
+            <!-- Price Filter Modal -->
+            <div class="modal-overlay" id="price-filter-modal">
+                <div class="modal-content">
+                    <span class="close-button" onclick="toggleModal(false)">X</span>
+                    <h4>Chọn mức giá</h4>
+                    <div class="case-buttons">
+                        <button onclick="setSliderCase(0, 1000000)">Dưới 1 triệu</button>
+                        <button onclick="setSliderCase(1000000, 2000000)">1 - 2 triệu</button>
+                        <button onclick="setSliderCase(2000000, 4000000)">2 - 4 triệu</button>
+                        <button onclick="setSliderCase(4000000, 6000000)">4 - 6 triệu</button>
+                        <button onclick="setSliderCase(6000000, 8000000)">6 - 8 triệu</button>
+                        <button onclick="setSliderCase(8000000, 10000000)">8 - 10 triệu</button>
+                        <button onclick="setSliderCase(10000000, 20000000)">Trên 10 triệu</button>
+                    </div>
+                    <div id="price-slider"></div>
+                    <div class="slider-values">
+                        <span id="slider-min-value">0</span> - <span id="slider-max-value">0</span> VND
+                    </div>
+                    <button class="confirm-button" onclick="confirmSelection()">Xác nhận</button>
+                </div>
+            </div>
+
+            <!-- Area Filter Modal -->
+            <div class="modal-overlay" id="area-filter-modal">
+                <div class="modal-content">
+                    <span class="close-button" onclick="toggleAreaModal(false)">X</span>
+                    <h4>Chọn diện tích</h4>
+                    <div class="case-buttons">
+                        <button onclick="setAreaSliderCase(0, 10)">Dưới 10 m²</button>
+                        <button onclick="setAreaSliderCase(10, 30)">10 - 30 m²</button>
+                        <button onclick="setAreaSliderCase(30, 50)">30 - 50 m²</button>
+                        <button onclick="setAreaSliderCase(50, 70)">50 - 70 m²</button>
+                        <button onclick="setAreaSliderCase(70, 90)">70 - 90 m²</button>
+                        <button onclick="setAreaSliderCase(90, 100)">Trên 90 m²</button>
+                    </div>
+                    <div id="area-slider"></div>
+                    <div class="slider-values">
+                        <span id="slider-area-min-value">0</span> - <span id="slider-area-max-value">0</span> m²
+                    </div>
+                    <button class="confirm-button" onclick="confirmAreaSelection()">Xác nhận</button>
+                </div>
+            </div>
+
+            <div class="container-xxl py-5 content">
+                <div class="container">
+                    <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                        <h1 class="section-title text-center text-primary text-uppercase">Danh sách kết quả</h1>
+                        <h4 id="resultCount" class="result-count" style="color:blue;font-weight:bold;"></h4>
+                    </div>
+                    <!-- Result Container -->
+                    <div id="resultContainer" class="mt-5">
+                        <!-- Room results or messages will be injected here -->
+                    </div>
+                </div>
+
+            </div>
+            <!-- Footer Start -->
+            <div class="container-fluid bg-dark text-light footer wow fadeIn" data-wow-delay="0.1s">
+                <div class="container">
+                    <div class="copyright">
+                        <div class="row">
+                            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                                &copy; <a class="border-bottom" href="#">RMS</a>, All Rights Reserved.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer End -->
+            <!-- Back to Top -->
+            <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+            <!-- JavaScript Libraries -->
+            <script src="~/lib/jquery/jquery.min.js"></script>
+            <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+            <script src="~/lib/wow/wow.min.js"></script>
+            <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
+            <script src="~/lib/tempusdominus/js/moment.min.js"></script>
+            <script src="~/lib/tempusdominus/js/moment-timezone.min.js"></script>
+            <script src="~/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+            <!-- JavaScript for noUiSlider and modal control -->
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const provinceSelect = document.getElementById("province"); // Đổi id thành "province"
+                    const districtSelect = document.getElementById("district"); // Đổi id thành "district"
+                    const wardSelect = document.getElementById("ward"); // Đổi id thành "ward"
+
+                    // Hàm tải danh sách tỉnh
+                    function loadProvinces() {
+                        fetch('/api/location/provinces')
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error("Lỗi khi tải danh sách tỉnh");
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                data.forEach(province => {
+                                    const option = document.createElement("option");
+                                    option.value = province.id;
+                                    option.textContent = province.name;
+                                    provinceSelect.appendChild(option);
+                                });
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                alert("Không thể tải danh sách tỉnh. Vui lòng thử lại.");
+                            });
+                    }
+
+                    // Hàm tải danh sách huyện khi chọn tỉnh
+                    function loadDistricts(provinceId) {
+                        // Xóa các option hiện có trong dropdown huyện và xã
+                        districtSelect.innerHTML = '<option value="">Quận/Huyện/Thị xã</option>';
+                        wardSelect.innerHTML = '<option value="">Xã/Phường/Thị trấn</option>'; // reset xã khi chọn lại huyện
+
+                        if (!provinceId) return;
+
+                        fetch(`/api/location/districts/${provinceId}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error("Lỗi khi tải danh sách huyện");
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                data.forEach(district => {
+                                    const option = document.createElement("option");
+                                    option.value = district.id;
+                                    option.textContent = district.name;
+                                    districtSelect.appendChild(option);
+                                });
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                alert("Không thể tải danh sách huyện. Vui lòng thử lại.");
+                            });
+                    }
+
+                    // Hàm tải danh sách xã khi chọn huyện
+                    function loadWards(districtId) {
+                        // Xóa các option hiện có trong dropdown xã
+                        wardSelect.innerHTML = '<option value="">Xã/Phường/Thị trấn</option>';
+
+                        if (!districtId) return;
+
+                        fetch(`/api/location/wards/${districtId}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error("Lỗi khi tải danh sách xã");
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                data.forEach(ward => {
+                                    const option = document.createElement("option");
+                                    option.value = ward.id;
+                                    option.textContent = ward.name;
+                                    wardSelect.appendChild(option);
+                                });
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                alert("Không thể tải danh sách xã. Vui lòng thử lại.");
+                            });
+                    }
+
+                    // Event listeners
+                    provinceSelect.addEventListener("change", () => loadDistricts(provinceSelect.value));
+                    districtSelect.addEventListener("change", () => loadWards(districtSelect.value));
+
+                    // Tải dữ liệu tỉnh ban đầu
+                    loadProvinces();
+                });
+
+                // Initialize the noUiSlider
+                const priceSlider = document.getElementById('price-slider');
+
+                noUiSlider.create(priceSlider, {
+                    start: [1000000, 5000000], // Default range values
+                    connect: true,
+                    range: {
+                        'min': 0,
+                        'max': 20000000
+                    },
+                    step: 500000, // Step value for slider
+                    format: {
+                        to: (value) => Math.round(value),
+                        from: (value) => Number(value)
+                    }
+                });
+
+                // Update the displayed min and max values
+                priceSlider.noUiSlider.on('update', (values) => {
+                    document.getElementById('slider-min-value').textContent = values[0];
+                    document.getElementById('slider-max-value').textContent = values[1];
+                });
+
+                // Function to set slider to specific case
+                function setSliderCase(min, max) {
+                    priceSlider.noUiSlider.set([min, max]);
+                }
+
+                // Function to toggle the modal visibility
+                function toggleModal(show) {
+                    const modal = document.getElementById('price-filter-modal');
+                    modal.style.display = show ? 'flex' : 'none';
+                }
+
+                // Function to confirm the selection and display it
+                function confirmSelection() {
+                    const minValue = priceSlider.noUiSlider.get()[0];
+                    const maxValue = priceSlider.noUiSlider.get()[1];
+                    document.getElementById('selected-price-range').textContent = `${minValue} - ${maxValue} VND`;
+                    toggleModal(false); // Close the modal after confirming
+                }
+                // Initialize the noUiSlider for area selection
+                const areaSlider = document.getElementById('area-slider');
+
+                // Create the area slider
+                noUiSlider.create(areaSlider, {
+                    start: [20, 50], // Default range values for area
+                    connect: true,
+                    range: {
+                        'min': 0,
+                        'max': 100 // Set maximum value for area as needed
+                    },
+                    step: 5, // Step value for slider
+                    format: {
+                        to: (value) => Math.round(value), // Round value for display
+                        from: (value) => Number(value) // Convert back to number
+                    }
+                });
+
+                // Update the displayed min and max values when the area slider is adjusted
+                areaSlider.noUiSlider.on('update', (values) => {
+                    document.getElementById('slider-area-min-value').textContent = `${Math.round(values[0])}`;
+                    document.getElementById('slider-area-max-value').textContent = `${Math.round(values[1])}`;
+                });
+
+                // Function to set the area slider to a specific case when a case button is clicked
+                function setAreaSliderCase(min, max) {
+                    areaSlider.noUiSlider.set([min, max]);
+                }
+
+                // Function to toggle the area modal visibility
+                function toggleAreaModal(show) {
+                    const modal = document.getElementById('area-filter-modal');
+                    modal.style.display = show ? 'flex' : 'none';
+                }
+
+                // Function to confirm the selection and display it on the button
+                function confirmAreaSelection() {
+                    const minAreaValue = Math.round(areaSlider.noUiSlider.get()[0]);
+                    const maxAreaValue = Math.round(areaSlider.noUiSlider.get()[1]);
+                    document.getElementById('selected-area-range').textContent = ` ${minAreaValue} - ${maxAreaValue} m²`;
+                    toggleAreaModal(false); // Close the modal after confirming
+                }
+                // Initialize the noUiSlider for distance selection
+                const distanceSlider = document.getElementById('distance-slider');
+
+                // Create the distance slider
+                noUiSlider.create(distanceSlider, {
+                    start: [2, 5], // Default range values for distance
+                    connect: true,
+                    range: {
+                        'min': 0,
+                        'max': 20 // Set maximum value for distance
+                    },
+                    step: 1, // Step value for slider
+                    format: {
+                        to: (value) => Math.round(value), // Round value for display
+                        from: (value) => Number(value) // Convert back to number
+                    }
+                });
+
+                // Update the displayed min and max values when the distance slider is adjusted
+                distanceSlider.noUiSlider.on('update', (values) => {
+                    document.getElementById('slider-distance-min-value').textContent = `${Math.round(values[0])}`;
+                    document.getElementById('slider-distance-max-value').textContent = `${Math.round(values[1])}`;
+                });
+
+                // Function to set the distance slider to a specific case when a case button is clicked
+                function setDistanceSliderCase(min, max) {
+                    distanceSlider.noUiSlider.set([min, max]);
+                }
+
+                // Function to toggle the distance modal visibility
+                function toggleDistanceModal(show) {
+                    const modal = document.getElementById('distance-filter-modal');
+                    modal.style.display = show ? 'flex' : 'none';
+                }
+
+                // Function to confirm the selection and display it on the button
+                function confirmDistanceSelection() {
+                    const minDistanceValue = Math.round(distanceSlider.noUiSlider.get()[0]);
+                    const maxDistanceValue = Math.round(distanceSlider.noUiSlider.get()[1]);
+                    document.getElementById('selected-distance-range').textContent = `${minDistanceValue} - ${maxDistanceValue} km`;
+                    toggleDistanceModal(false); // Close the modal after confirming
+                }
+                // Function to reset all sliders to default values
+                function resetValues() {
+                    // Reset price slider to default values
+                    priceSlider.noUiSlider.set([1000000, 3000000]); // Default price range
+                    document.getElementById('slider-min-value').textContent = '1000000';
+                    document.getElementById('slider-max-value').textContent = '3000000';
+                    document.getElementById('selected-price-range').textContent = 'Giá tiền';
+
+                    // Reset area slider to default values
+                    areaSlider.noUiSlider.set([10, 50]); // Default area range
+                    document.getElementById('slider-area-min-value').textContent = '10';
+                    document.getElementById('slider-area-max-value').textContent = '50';
+                    document.getElementById('selected-area-range').textContent = 'Diện tích';
+
+                    // Reset distance slider to default values
+                    distanceSlider.noUiSlider.set([0, 5]); // Default distance range
+                    document.getElementById('slider-distance-min-value').textContent = '0';
+                    document.getElementById('slider-distance-max-value').textContent = '5';
+                    document.getElementById('selected-distance-range').textContent = 'Khoảng cách';
+                }
+
+                function searchRooms() {
+                    console.log("Search button clicked"); // Debugging line to check if function is triggered
+
+                    // Collect form data
+                    const provinceId = document.getElementById("province").value || 0;
+                    const districtId = document.getElementById("district").value || 0;
+                    const wardId = document.getElementById("ward").value || 0;
+                    const roomStatus = document.querySelector('input[name="roomStatus"]:checked')?.value || 0;
+                    const minDistance = document.getElementById("slider-distance-min-value").textContent || 0;
+                    const maxDistance = document.getElementById("slider-distance-max-value").textContent || 0;
+                    const minPrice = document.getElementById("slider-min-value").textContent || 0;
+                    const maxPrice = document.getElementById("slider-max-value").textContent || 0;
+                    const minArea = document.getElementById("slider-area-min-value").textContent || 0;
+                    const maxArea = document.getElementById("slider-area-max-value").textContent || 0;
+
+                    console.log("Collected data:", {
+                        provinceId, districtId, wardId, roomStatus, minDistance, maxDistance, minPrice, maxPrice, minArea, maxArea
+                    }); // Debugging line to check collected data
+
+                    // Prepare search parameters
+                    const searchParams = new URLSearchParams({
+                        provinceId, districtId, wardId, roomStatus, minDistance, maxDistance, minPrice, maxPrice, minArea, maxArea
+                    });
+
+                    // Send GET request to API
+                    fetch(`/api/room/search?${searchParams}`, { method: 'GET' })
+                        .then(response => {
+                            if (!response.ok) throw new Error("Network response was not ok");
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log("Received data:", data); // Debugging line to check the API response
+                            if (data && data.length > 0) {
+                                displayRooms(data);
+                            } else {
+                                showError("Không tìm thấy phòng nào phù hợp.");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error fetching rooms:", error);
+                            showError("Không tìm thấy phòng phù hợp");
+                        });
+                }
+
+                function displayRooms(rooms) {
+                    const resultContainer = document.getElementById("resultContainer");
+                    const resultCount = document.getElementById("resultCount");
+                    resultContainer.innerHTML = ""; // Clear previous results
+
+                    // Display count of results
+                    resultCount.innerText = `Tìm thấy: ${rooms.length} phòng phù hợp`;
+
+                    const row = document.createElement("div");
+                    row.classList.add("row"); // Thêm lớp row để chứa các cột
+
+                    rooms.forEach(room => {
+                        const roomElement = document.createElement("div");
+                        roomElement.classList.add("col-lg-3", "col-md-4", "col-sm-6", "wow", "fadeInUp"); // Đảm bảo 5 phần tử trên 1 hàng
+                        roomElement.setAttribute("data-wow-delay", "0.1s");
+
+                        const priceInMillions = (room.price / 1_000_000).toFixed(1);
+
+                        roomElement.innerHTML = `
+                            <div class="room-item shadow rounded overflow-hidden">
+                                <div class="position-relative">
+                                    <img class="img-fluid" src="/images/room1.jpg" alt="Room Image">
+                                    <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
+                                        onclick="toggleFavorite(this)" data-room-id="${room.id}" data-room-address="${room.address}">
+                                        <i class="fa fa-heart"></i>
+                                    </a>
+                                </div>
+                                <div class="room-details p-3">
+                                    <h6 class="mb-2">
+                                        <i class="fa fa-map-marker-alt text-primary me-2"></i>${room.address}
+                                    </h6>
+                                    <div class="room-status">${room.roomStatusName}</div>
+                                    <div class="mt-2">
+                                        <small class="text-muted d-block">
+                                            <i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT ${room.distance.toFixed(0)} km
+                                        </small>
+                                        <small class="text-muted d-block">
+                                            <i class="fa fa-dollar-sign text-primary me-2"></i>${priceInMillions} triệu VND
+                                        </small>
+                                        <small class="text-muted d-block">
+                                            <i class="fa fa-expand text-primary me-2"></i>${room.area} m²
+                                        </small>
+                                    </div>
+                                    <a style="color:red" href="/Home/RoomDetail/${room.id}">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        `;
+
+                        row.appendChild(roomElement);
+                    });
+
+                    resultContainer.appendChild(row); // Thêm hàng vào container kết quả
+                }
+
+                // Function to show error messages
+                function showError(message) {
+                    const resultContainer = document.getElementById("resultContainer");
+                    resultContainer.innerHTML = `<p class="text-danger">${message}</p>`;
+                }
+                // Function to get favorites from cookies
+                function getFavorites() {
+                    const favorites = document.cookie
+                        .split('; ')
+                        .find(row => row.startsWith('favorites='))
+                        ?.split('=')[1];
+                    return favorites ? JSON.parse(decodeURIComponent(favorites)) : [];
+                }
+
+                // Function to set favorites in cookies with an expiration of 7 days
+                function setFavorites(favorites) {
+                    const now = new Date();
+                    now.setTime(now.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 ngày
+                    const expires = "expires=" + now.toUTCString();
+                    document.cookie = 'favorites=' + encodeURIComponent(JSON.stringify(favorites)) + '; ' + expires + '; path=/';
+                }
+
+                // Function to update the favorite count in the header
+                function updateFavoriteCount() {
+                    const favorites = getFavorites();
+                    const favoriteCount = favorites.length;
+                    const favoriteCountElement = document.getElementById('favoriteCount');
+                    if (favoriteCountElement) {
+                        favoriteCountElement.innerText = favoriteCount; // Cập nhật số lượng yêu thích
+                    }
+                }
+
+                // Function to toggle favorite status
+                function toggleFavorite(element) {
+                    const roomId = element.getAttribute("data-room-id");
+                    const roomImage = "~/images/room1.jpg"; // Đường dẫn ảnh cố định
+                    const roomAddress = element.getAttribute("data-room-address");
+
+                    let favorites = getFavorites();
+
+                    // Kiểm tra nếu phòng đã có trong danh sách yêu thích
+                    const existingRoomIndex = favorites.findIndex(room => room.id === roomId);
+
+                    if (existingRoomIndex === -1) {
+                        // Nếu chưa có, thêm phòng vào danh sách yêu thích
+                        favorites.push({ id: roomId, image: roomImage, address: roomAddress });
+                        element.classList.add('active'); // Thêm lớp active để thay đổi kiểu dáng nút nếu cần
+                    } else {
+                        // Nếu đã có, xóa phòng khỏi danh sách yêu thích
+                        favorites.splice(existingRoomIndex, 1);
+                        element.classList.remove('active'); // Gỡ bỏ lớp active
+                    }
+
+                    setFavorites(favorites);
+                    updateFavoriteCount();
+                }
+
+                // Initialize favorite count on page load
+                document.addEventListener('DOMContentLoaded', () => {
+                    updateFavoriteCount(); // Hiển thị số lượng yêu thích từ cookie khi trang tải
+                });
+
+            </script>
+</body>
+</html>
