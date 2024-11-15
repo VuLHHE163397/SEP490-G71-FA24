@@ -356,9 +356,20 @@
                             </div>
 
 
+                            @* <div class="upload-section">
+                            <h3>Upload Ảnh Phòng</h3>
+                            <form asp-action="UploadImageToDropbox" asp-controller="Room" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="roomId" value="@Model.Id" />
+                            <div class="mb-3">
+                            <input type="file" name="imageFile" class="form-control" required />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Upload Ảnh</button>
+                            </form>
+                            </div> *@
+
                             <div class="upload-section">
                                 <h3>Upload Ảnh Phòng</h3>
-                                <form asp-action="UploadImageToDropbox" asp-controller="Room" method="post" enctype="multipart/form-data">
+                                <form asp-action="UploadImageToCloudinary" asp-controller="Room" method="post" enctype="multipart/form-data">
                                     <input type="hidden" name="roomId" value="@Model.Id" />
                                     <div class="mb-3">
                                         <input type="file" name="imageFile" class="form-control" required />
@@ -482,10 +493,6 @@
                     });
             }
         }
-
-
-
-
 
     </script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />

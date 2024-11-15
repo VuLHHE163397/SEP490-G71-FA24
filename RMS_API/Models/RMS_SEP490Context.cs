@@ -316,7 +316,9 @@ namespace RMS_API.Models
                     .HasColumnType("money")
                     .HasColumnName("price");
 
-                entity.Property(e => e.RoomNumber).HasColumnName("roomNumber");
+                entity.Property(e => e.RoomNumber)
+                    .HasMaxLength(50)
+                    .HasColumnName("RoomNumber");
 
                 entity.Property(e => e.RoomStatusId).HasColumnName("roomStatusId");
 

@@ -402,6 +402,15 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="FreeInFutureDate">Ngày Phòng sẽ trống trong tương lai</label>
+                            <div class="col-sm-9">
+                                <input asp-for="FreeInFutureDate" class="form-control" type="date" />
+                                <span asp-validation-for="FreeInFutureDate" class="text-danger"></span>
+                                <span class="error-message" id="dateError2" style="color: red; display: none;">Ngày Phòng sẽ trống sẽ phải sau hoặc cùng ngày hết hạn phòng</span>
+                            </div>
+                        </div>
+
 
                         <div class="form-group row">
                             <label class="col-sm-3 fw-bold text-end align-middle" for="RoomStatusId">Trạng thái phòng</label>
@@ -443,6 +452,10 @@
 
         document.getElementById('ExpiredDate').addEventListener('change', function () {
             validateDate();
+        });
+
+        document.getElementById('FreeInFutureDate').addEventListener('change', function () {
+            validateDate2();
         });
 
         // Hàm validate cho từng trường
@@ -491,6 +504,21 @@
             }
         }
 
+        function validateDate2() {
+            const freeInFutureDate = document.getElementById('FreeInFutureDate').value;
+            const expiredDate = document.getElementById('ExpiredDate').value;
+            const dateError2 = document.getElementById('dateError2');
+
+            if (freeInFutureDate && expiredDate) {
+                if (new Date(freeInFutureDate) < new Date(expiredDate)) {
+                    dateError2.style.display = 'inline';
+                    dateError2.textContent = 'Ngày Phòng sẽ trống sẽ phải sau hoặc cùng ngày hết hạn phòng';
+                } else {
+                    dateError2.style.display = 'none';
+                }
+            }
+        }
+
         document.getElementById('RoomNumber').addEventListener('blur', async function () {
             const roomName = this.value;
             const buildingId = document.getElementById('BuildingId').value;
@@ -519,7 +547,8 @@
             validatePrice();
             validateFloor();
             validateArea();
-            validateArea();
+            validateDate();
+            validateDate2();
 
             // Nếu có lỗi, ngăn form submit
             if (document.querySelectorAll('.error-message[style="display: inline;"]').length > 0) {
