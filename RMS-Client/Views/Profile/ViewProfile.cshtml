@@ -10,7 +10,7 @@
 <p><strong>Phone:</strong> <span id="phone"></span></p>
 
 
-@* <script>
+<script>
     $(document).ready(function () {
         const token = localStorage.getItem("token");
 
@@ -27,26 +27,26 @@
             const email = payload.email;
 
             // Fetch the profile data
-            // $.ajax({
-            //     url: `https://localhost:7056/api/User/getProfile?email=${encodeURIComponent(email)}`,
-            //     type: "GET",
-            //     headers:
-            //     {
-            //         "Authorization": `Bearer ${token}`
-            //     },
-            //     success: function (data) {
-            //         // Populate profile information in the page
-            //         $("#firstName").text(data.firstName);
-            //         $("#midName").text(data.midName);
-            //         $("#lastName").text(data.lastName);
-            //         $("#email").text(data.email);
-            //         $("#phone").text(data.phone);
-            //         // Add additional fields as necessary
-            //     },
-            //     error: function () {
-            //         showErrorPopup("Không thể tải thông tin hồ sơ!");
-            //     }
-            // });
+            $.ajax({
+                url: `https://localhost:7056/api/User/getProfile?email=${encodeURIComponent(email)}`,
+                type: "GET",
+                headers:
+                {
+                    "Authorization": `Bearer ${token}`
+                },
+                success: function (data) {
+                    // Populate profile information in the page
+                    $("#firstName").text(data.firstName);
+                    $("#midName").text(data.midName);
+                    $("#lastName").text(data.lastName);
+                    $("#email").text(data.email);
+                    $("#phone").text(data.phone);
+                    // Add additional fields as necessary
+                },
+                error: function () {
+                    showErrorPopup("Không thể tải thông tin hồ sơ!");
+                }
+            });
         }
         catch (error) {
             console.error("Error decoding token:", error);
@@ -54,6 +54,6 @@
         }
     });
 </script>
- *@
+
 
 

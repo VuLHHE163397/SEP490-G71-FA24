@@ -23,5 +23,6 @@ namespace RMS_API.DTOs
         [DataType(DataType.PhoneNumber)]
         public string? Phone { get; set; }       
         public string? VerificationCode { get; set; }
+
     }
 }

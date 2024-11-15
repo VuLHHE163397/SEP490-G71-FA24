@@ -24,10 +24,5 @@ namespace RMS_Client.Controllers
         {
             return View("~/Views/Login/VerifyEmail.cshtml");
         }
-        public IActionResult ViewProfile()
-        {
-            return View("~/Views/Login/VerifyEmail.cshtml");
-        }
-
     }
 }
