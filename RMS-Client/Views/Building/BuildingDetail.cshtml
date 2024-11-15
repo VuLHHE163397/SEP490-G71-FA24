@@ -154,7 +154,7 @@
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a asp-controller="Statistic" asp-action="ViewStatistic" class="text-nowrap logo-img">
-                        <img src="~/images/logos/dark-logo.svg" width="180" alt="" />
+                        <img src="~/images/logo.jpg" width="180" alt="" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
@@ -339,40 +339,40 @@
 
                         <div class="form-group">
                             <label for="Name">Tên Tòa Nhà</label>
-                            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
+                            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required readonly/>
                         </div>
                         <div class="form-group">
-                            <label for="Distance">Khoảng cách</label>
-                            <input type="number" class="form-control" id="Distance" name="Distance" value="@Model.Distance" required />
+                            <label for="Distance">Khoảng cách(Khoảng cách(Km))</label>
+                            <input type="number" class="form-control" id="Distance" name="Distance" value="@Model.Distance" required readonly />
                         </div>
                         <div class="form-group">
                             <label for="TotalFloors">Số Tầng</label>
-                            <input type="number" class="form-control" id="TotalFloors" name="TotalFloors" value="@Model.TotalFloors" required />
+                            <input type="number" class="form-control" id="TotalFloors" name="TotalFloors" value="@Model.TotalFloors" required readonly />
                         </div>
                         <div class="form-group">
                             <label for="NumberOfRooms">Số Phòng</label>
-                            <input type="number" class="form-control" id="NumberOfRooms" name="NumberOfRooms" value="@Model.NumberOfRooms" required />
+                            <input type="number" class="form-control" id="NumberOfRooms" name="NumberOfRooms" value="@Model.NumberOfRooms" required readonly />
                         </div>
                         <div class="form-group">
                             <label for="AddressDetails">Địa Chỉ</label>
-                            <input type="text" class="form-control" id="AddressDetails" name="AddressDetails" value="@Model.AddressDetails" required />
+                            <input type="text" class="form-control" id="AddressDetails" name="AddressDetails" value="@Model.AddressDetails" required readonly />
                         </div>
 
                         <div class="form-group">
                             <label for="ProvinceId">Tỉnh/Thành phố</label>
-                            <input class="form-control" id="ProvinceId" name="ProvinceName" value="@Model.ProvinceName" required />
+                            <input class="form-control" id="ProvinceId" name="ProvinceName" value="@Model.ProvinceName" required readonly />
                         </div>
                         <div class="form-group">
                             <label for="DistrictId">Quận/Huyện</label>
-                            <input class="form-control" id="DistrictId" name="DistrictName" value="@Model.DistrictName" required />
+                            <input class="form-control" id="DistrictId" name="DistrictName" value="@Model.DistrictName" required readonly />
                         </div>
                         <div class="form-group">
                             <label for="WardId">Xã/Phường</label>
-                            <input class="form-control" id="WardId" name="WardName" value="@Model.WardName" required />
+                            <input class="form-control" id="WardId" name="WardName" value="@Model.WardName" required readonly />
                         </div>
                         <div class="form-group">
                             <label for="BuildingStatus">Trạng Thái</label>
-                            <input class="form-control" id="BuildingStatus" name="BuildingStatus" value="@Model.BuildingStatus" required />
+                            <input class="form-control" id="BuildingStatus" name="BuildingStatus" value="@Model.BuildingStatus" required readonly />
                         </div>
 
                         <a asp-controller="Building" asp-action="ListBuilding" class="btn btn-secondary">Trở Về</a>
