@@ -290,6 +290,27 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "UploadImageToCloudinary",
+    "RelativePath": "api/Room",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "imageFile",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "roomId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "GetSuggestedRooms",
     "RelativePath": "api/Room/{roomId}/suggestedrooms",
     "HttpMethod": "GET",
@@ -322,6 +343,27 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "CheckRoomNameExists",
+    "RelativePath": "api/Room/CheckRoomNameExists",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roomName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "buildingId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "DeleteAllRoomByBuildingId",
     "RelativePath": "api/Room/DeleteAllRoom/{buildingId}",
     "HttpMethod": "DELETE",
@@ -330,6 +372,22 @@
     "Parameters": [
       {
         "Name": "buildingId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "DeleteImageById",
+    "RelativePath": "api/Room/DeleteImageById/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -390,6 +448,22 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "GetImageByRoom",
+    "RelativePath": "api/Room/GetAllImage/{roomId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roomId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "GetAllRoom",
     "RelativePath": "api/Room/GetAllRoom",
     "HttpMethod": "GET",
@@ -443,7 +517,7 @@
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "GetRoomByBuilding",
-    "RelativePath": "api/Room/GetRoomByBuilding",
+    "RelativePath": "api/Room/GetRoomByBuilding/{buildingId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -451,7 +525,7 @@
       {
         "Name": "buildingId",
         "Type": "System.Int32",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -468,6 +542,22 @@
         "Name": "roomId",
         "Type": "System.Int32",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "ImportRooms",
+    "RelativePath": "api/Room/ImportRooms",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
