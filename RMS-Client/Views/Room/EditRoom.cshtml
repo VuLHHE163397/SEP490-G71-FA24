@@ -150,17 +150,17 @@
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
         <aside class="left-sidebar">
-            <!-- Sidebar scroll-->
+
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a asp-controller="Statistic" asp-action="ViewStatistic" class="text-nowrap logo-img">
-                        <img src="~/images/logos/dark-logo.svg" width="180" alt="" />
+                    <a asp-controller="Building" asp-action="ListBuilding" class="text-nowrap logo-img">
+                        <img src="~/images/logo.jpg" width="180" alt="" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
                     </div>
                 </div>
-                <!-- Sidebar navigation-->
+
                 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
                     <ul id="sidebarnav">
                         <li class="nav-small-cap">
@@ -168,10 +168,8 @@
                             <span class="hide-menu">Trang chủ</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
+                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding">
+                                <span><i class="ti ti-layout-dashboard"></i></span>
                                 <span class="hide-menu">Trang chủ</span>
                             </a>
                         </li>
@@ -179,26 +177,36 @@
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">Quản lý</span>
                         </li>
-
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
-                                <span><i class="ti ti-building"></i></span>
-                                <span class="hide-menu">Quản lý tòa nhà</span>
-                                <i class="ti ti-angle-down"></i>
-                            </a>
-
-                        </li>
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Room" asp-action="ListRoom" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-home"></i>
-                                </span>
+                                <span><i class="ti ti-layout-dashboard"></i></span>
                                 <span class="hide-menu">Quản lý phòng</span>
+                                <span><i class="ti ti-chevron-down"></i></span>
                             </a>
+                            <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
+                                @{
+                                    var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
+                                }
+                                @if (buildingsss != null && buildingsss.Any())
+                                {
+                                    foreach (var buildingss in buildingsss)
+                                    {
+                                        <li class="sidebar-subitem">
+                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
+                                                <i class="ti ti-file"></i>
+                                                @buildingss.Name
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                }
+                            </ul>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-buttons.html" aria-expanded="false">
+                            <a class="sidebar-link" asp-controller="Facility" asp-action="ListFacility" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-alien"></i>
                                 </span>
@@ -206,13 +214,14 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
+                            <a class="sidebar-link" asp-controller="Service" asp-action="ListService" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-menu"></i>
                                 </span>
                                 <span class="hide-menu">Dịch vụ</span>
                             </a>
                         </li>
+
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
                                 <span>
@@ -276,9 +285,9 @@
                         </div>
                     </div>
                 </nav>
-                <!-- End Sidebar navigation -->
+
             </div>
-            <!-- End Sidebar scroll-->
+
         </aside>
         <!--  Sidebar End -->
         <!--  Main wrapper -->
@@ -333,43 +342,43 @@
                 <div class="container mt-4">
                     <h1>@ViewData["Title"]</h1>
 
-                    <form asp-action="EditRoom" method="post">
-                        <input type="hidden" id="BuildingId" name="BuildingId" value="@Model.Id" />
+                    <form asp-action="EditRoom" method="post" id="editRoomForm">
+                        <input type="hidden" id="BuildingId" name="BuildingId" value="@Model.BuildingId" />
 
                         <div class="form-group row">
-                            <label class="col-sm-3 fw-bold text-end align-middle" for="RoomNumber">Room Number</label>
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="RoomNumber">Tên Phòng</label>
                             <div class="col-sm-9">
-                                <input asp-for="RoomNumber" class="form-control" placeholder="Enter room number" />
-                                <span asp-validation-for="RoomNumber" class="text-danger"></span>
+                                <input asp-for="RoomNumber" class="form-control" id="RoomNumber" name="RoomNumber" required />
+                                <span class="error-message" id="roomNumberError" style="color: red; display: none;">Tên phòng đã tồn tại trong tòa nhà này.</span>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-3 fw-bold text-end align-middle" for="Price">Price</label>
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="Price">Giá Phòng</label>
                             <div class="col-sm-9">
-                                <input asp-for="Price" class="form-control" placeholder="Enter price" />
-                                <span asp-validation-for="Price" class="text-danger"></span>
+                                <input step="0.01" asp-for="Price" class="form-control" id="Price" name="Price" required />
+                                <span class="error-message" id="priceError" style="color: red; display: none;">Giá Phòng phải là một số dương</span>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-3 fw-bold text-end align-middle" for="Area">Area (sq. meters)</label>
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="Area">Diện tích</label>
                             <div class="col-sm-9">
-                                <input asp-for="Area" class="form-control" placeholder="Enter area" />
-                                <span asp-validation-for="Area" class="text-danger"></span>
+                                <input asp-for="Area" class="form-control" id="Area" name="Area" required />
+                                <span class="error-message" id="areaError" style="color: red; display: none;">Diện tích phải là một số dương.</span>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-3 fw-bold text-end align-middle" for="Floor">Floor</label>
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="Floor">Tầng</label>
                             <div class="col-sm-9">
-                                <input asp-for="Floor" class="form-control" placeholder="Enter floor number" />
-                                <span asp-validation-for="Floor" class="text-danger"></span>
+                                <input asp-for="Floor" class="form-control" id="Floor" name="Floor" required />
+                                <span class="error-message" id="floorError" style="color: red; display: none;">Số Tầng phải là một số nguyên dương.</span>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-3 fw-bold text-end align-middle" for="Description">Description</label>
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="Description">Mô tả phòng</label>
                             <div class="col-sm-9">
                                 <textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter room description"></textarea>
                                 <span asp-validation-for="Description" class="text-danger"></span>
@@ -377,7 +386,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-3 fw-bold text-end align-middle" for="StartedDate">Started Date</label>
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="StartedDate">Ngày bắt đầu thuê</label>
                             <div class="col-sm-9">
                                 <input asp-for="StartedDate" class="form-control" type="date" />
                                 <span asp-validation-for="StartedDate" class="text-danger"></span>
@@ -385,10 +394,28 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-3 fw-bold text-end align-middle" for="RoomStatusId">Room Status</label>
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="ExpiredDate">Ngày hết hạn phòng</label>
+                            <div class="col-sm-9">
+                                <input asp-for="ExpiredDate" class="form-control" type="date" />
+                                <span asp-validation-for="ExpiredDate" class="text-danger"></span>
+                                <span class="error-message" id="dateError" style="color: red; display: none;">Ngày hết hạn phải sau ngày bắt đầu thuê</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="FreeInFutureDate">Ngày Phòng sẽ trống trong tương lai</label>
+                            <div class="col-sm-9">
+                                <input asp-for="FreeInFutureDate" class="form-control" type="date" />
+                                <span asp-validation-for="FreeInFutureDate" class="text-danger"></span>
+                                <span class="error-message" id="dateError2" style="color: red; display: none;">Ngày Phòng sẽ trống sẽ phải sau hoặc cùng ngày hết hạn phòng</span>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="RoomStatusId">Trạng thái phòng</label>
                             <div class="col-sm-9">
                                 <select asp-for="RoomStatusId" asp-items="ViewBag.RoomStatuses" class="form-select">
-                                    <option value="">-- Select Room Status --</option>
                                 </select>
                                 <span asp-validation-for="RoomStatusId" class="text-danger"></span>
                             </div>
@@ -401,10 +428,134 @@
             </div>
 
         </div>
+    </div>
+    <script src="~/lib/simplebar/dist/simplebar.js"></script>
 
-        <script src="~/lib/simplebar/dist/simplebar.js"></script>
+    <script>
 
+        // Kiểm tra giá trị nhập vào của các trường ngay khi người dùng gõ
+        document.getElementById('Price').addEventListener('input', function () {
+            validatePrice();
+        });
 
+        document.getElementById('Floor').addEventListener('input', function () {
+            validateFloor();
+        });
+
+        document.getElementById('Area').addEventListener('input', function () {
+            validateArea();
+        });
+
+        document.getElementById('StartedDate').addEventListener('change', function () {
+            validateDate();
+        });
+
+        document.getElementById('ExpiredDate').addEventListener('change', function () {
+            validateDate();
+        });
+
+        document.getElementById('FreeInFutureDate').addEventListener('change', function () {
+            validateDate2();
+        });
+
+        // Hàm validate cho từng trường
+        function validatePrice() {
+            const price = document.getElementById('Price').value;
+            const priceError = document.getElementById('priceError');
+            if (parseFloat(price) <= 0) {
+                priceError.style.display = 'inline';
+            } else {
+                priceError.style.display = 'none';
+            }
+        }
+
+        function validateFloor() {
+            const floor = document.getElementById('Floor').value;
+            const floorError = document.getElementById('floorError');
+            if (parseInt(floor) <= 0 || !Number.isInteger(parseFloat(floor))) {
+                floorError.style.display = 'inline';
+            } else {
+                floorError.style.display = 'none';
+            }
+        }
+
+        function validateArea() {
+            const area = document.getElementById('Area').value;
+            const areaError = document.getElementById('areaError');
+            if (parseFloat(area) <= 0) {
+                areaError.style.display = 'inline';
+            } else {
+                areaError.style.display = 'none';
+            }
+        }
+
+        function validateDate() {
+            const startedDate = document.getElementById('StartedDate').value;
+            const expiredDate = document.getElementById('ExpiredDate').value;
+            const dateError = document.getElementById('dateError');
+
+            if (startedDate && expiredDate) {
+                if (new Date(expiredDate) <= new Date(startedDate)) {
+                    dateError.style.display = 'inline';
+                    dateError.textContent = 'Ngày hết hạn phải sau ngày bắt đầu thuê';
+                } else {
+                    dateError.style.display = 'none';
+                }
+            }
+        }
+
+        function validateDate2() {
+            const freeInFutureDate = document.getElementById('FreeInFutureDate').value;
+            const expiredDate = document.getElementById('ExpiredDate').value;
+            const dateError2 = document.getElementById('dateError2');
+
+            if (freeInFutureDate && expiredDate) {
+                if (new Date(freeInFutureDate) < new Date(expiredDate)) {
+                    dateError2.style.display = 'inline';
+                    dateError2.textContent = 'Ngày Phòng sẽ trống sẽ phải sau hoặc cùng ngày hết hạn phòng';
+                } else {
+                    dateError2.style.display = 'none';
+                }
+            }
+        }
+
+        document.getElementById('RoomNumber').addEventListener('blur', async function () {
+            const roomName = this.value;
+            const buildingId = document.getElementById('BuildingId').value;
+            const oldRoomName = '@Model.RoomNumber';  // Lấy tên phòng cũ từ model
+
+            // Nếu tên phòng chưa thay đổi, không cần kiểm tra lại
+            if (roomName === oldRoomName) {
+                document.getElementById('roomNumberError').style.display = 'none';
+                return;  // Không làm gì nếu tên phòng không thay đổi
+            }
+
+            const response = await fetch(`/Room/CheckRoomNameExists?roomName=${roomName}&buildingId=${buildingId}`);
+            const roomExists = await response.json();
+
+            const roomNumberError = document.getElementById('roomNumberError');
+            if (roomExists) {
+                roomNumberError.style.display = 'inline';
+                roomNumberError.textContent = 'Tên Phòng đã tồn tại trong tòa nhà này';
+            } else {
+                roomNumberError.style.display = 'none';
+            }
+        });
+
+        // Kiểm tra khi submit form
+        document.getElementById('editRoomForm').addEventListener('submit', function (event) {
+            validatePrice();
+            validateFloor();
+            validateArea();
+            validateDate();
+            validateDate2();
+
+            // Nếu có lỗi, ngăn form submit
+            if (document.querySelectorAll('.error-message[style="display: inline;"]').length > 0) {
+                event.preventDefault();
+            }
+        });
+    </script>
 </body>
 
 </html>

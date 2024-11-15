@@ -316,7 +316,9 @@ namespace RMS_API.Models
                     .HasColumnType("money")
                     .HasColumnName("price");
 
-                entity.Property(e => e.RoomNumber).HasColumnName("roomNumber");
+                entity.Property(e => e.RoomNumber)
+                    .HasMaxLength(50)
+                    .HasColumnName("RoomNumber");
 
                 entity.Property(e => e.RoomStatusId).HasColumnName("roomStatusId");
 
@@ -335,6 +337,10 @@ namespace RMS_API.Models
                     .HasForeignKey(d => d.RoomStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Rooms_RoomStatus");
+
+                entity.Property(e => e.FreeInFutureDate)
+                    .HasColumnType("date")
+                    .HasColumnName("freeInFutureDate");
             });
 
             modelBuilder.Entity<RoomHistory>(entity =>

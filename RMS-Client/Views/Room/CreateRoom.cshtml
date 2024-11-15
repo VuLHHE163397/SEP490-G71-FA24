@@ -1,67 +1,475 @@
-﻿@* @model RMS_API.DTOs.RoomLlDTO
+﻿@model RMS_API.DTOs.RoomLlDTO
 
-<div class="container">
-    <h4 class="text-primary">Thêm phòng mới</h4>
-    <form asp-action="CreateRoom" method="post">
-        <!-- Cập nhật lại thành asp-action="CreateRoom" -->
-        <div class="form-group">
-            <label for="RoomNumber">Số phòng</label>
-            <input asp-for="RoomNumber" class="form-control" required />
-            <span asp-validation-for="RoomNumber" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label for="Price">Giá phòng</label>
-            <input asp-for="Price" type="number" class="form-control" required />
-            <span asp-validation-for="Price" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label for="Area">Diện tích</label>
-            <input asp-for="Area" type="number" class="form-control" required />
-            <span asp-validation-for="Area" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label for="Description">Mô tả</label>
-            <textarea asp-for="Description" class="form-control"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label for="Floor">Tầng</label>
-            <input asp-for="Floor" type="number" class="form-control" required />
-            <span asp-validation-for="Floor" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="BuildingId">Tòa nhà</label>
-            <select asp-for="BuildingId" class="form-control" required>
-                <option value="">Chọn tòa nhà</option>
-                @foreach (var building in ViewBag.Buildings)
-                {
-                    <option value="@building.Id">@building.Name</option>
-                }
-            </select>
-            <span asp-validation-for="BuildingId" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="RoomStatusId">Trạng thái phòng</label>
-            <select asp-for="RoomStatusId" class="form-control" required>
-                <option value="">Chọn trạng thái</option>
-                @foreach (var status in ViewBag.Status)
-                {
-                    <option value="@status.Id">@status.Name</option>
-                }
-            </select>
-            <span asp-validation-for="RoomStatusId" class="text-danger"></span>
-        </div>
-        <button type="submit" class="btn btn-primary mt-3">Thêm phòng</button>
-    </form>
-</div>
+@{
+    ViewBag.Title = "Tạo Phòng";
+}
 
+<!doctype html>
+<html lang="en">
 
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="alert alert-danger">
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <p>@error.ErrorMessage</p>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RMS</title>
+    <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
+    <link rel="stylesheet" href="~/css/styles.min.css" />
+
+    <!-- Custom CSS Styles -->
+    <style>
+
+        /* CSS for AddBuilding Form */
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+            .form-group label {
+                font-weight: bold;
+                color: #555;
+            }
+
+        .form-control {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+            .form-control:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            }
+
+        .btn-primary, .btn-secondary {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+
+            .btn-secondary:hover {
+                background-color: #5a6268;
+            }
+
+
+
+        /* Sidebar styling */
+        .sidebar-submenu {
+            padding-left: 15px;
+            display: none;
+        }
+
+        .sidebar-sublink {
+            color: #6c757d;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+            .sidebar-sublink:hover {
+                color: #0d6efd;
+            }
+
+        /* Sidebar arrow rotation */
+        .rotate {
+            transform: rotate(180deg);
+            transition: transform 0.3s;
+        }
+
+        /* Table styling */
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Button styles */
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        /* Page wrapper styles */
+        .page-wrapper {
+            display: flex;
+        }
+
+        /* Main content area padding */
+        .body-wrapper {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        /* Header navbar icon */
+        .nav-icon-hover {
+            cursor: pointer;
+        }
+
+        /* Profile image in dropdown */
+        .navbar-nav .dropdown-menu img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+    </style>
+</head>
+<body>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+         data-sidebar-position="fixed" data-header-position="fixed">
+        <aside class="left-sidebar">
+
+            <div>
+                <div class="brand-logo d-flex align-items-center justify-content-between">
+                    <a asp-controller="Building" asp-action="ListBuilding" class="text-nowrap logo-img">
+                        <img src="~/images/logo.jpg" width="180" alt="" />
+                    </a>
+                    <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+                        <i class="ti ti-x fs-8"></i>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+                    <ul id="sidebarnav">
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">Trang chủ</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding">
+                                <span><i class="ti ti-layout-dashboard"></i></span>
+                                <span class="hide-menu">Trang chủ</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">Quản lý</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
+                                <span><i class="ti ti-layout-dashboard"></i></span>
+                                <span class="hide-menu">Quản lý phòng</span>
+                                <span><i class="ti ti-chevron-down"></i></span>
+                            </a>
+                            <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
+                                @{
+                                    var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
+                                }
+                                @if (buildingsss != null && buildingsss.Any())
+                                {
+                                    foreach (var buildingss in buildingsss)
+                                    {
+                                        <li class="sidebar-subitem">
+                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
+                                                <i class="ti ti-file"></i>
+                                                @buildingss.Name
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                }
+                            </ul>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Facility" asp-action="ListFacility" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-alien"></i>
+                                </span>
+                                <span class="hide-menu">Cơ sở vật chất</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Service" asp-action="ListService" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-menu"></i>
+                                </span>
+                                <span class="hide-menu">Dịch vụ</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-report"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">-------------------------</span>
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./authentication-register.html" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-user-plus"></i>
+                                </span>
+                                <span class="hide-menu">Register</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-login"></i>
+                                </span>
+                                <span class="hide-menu">Đăng xuất</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">EXTRA</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./icon-tabler.html" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-mood-happy"></i>
+                                </span>
+                                <span class="hide-menu">Icons</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="./sample-page.html" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-aperture"></i>
+                                </span>
+                                <span class="hide-menu">Sample Page</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">
+                        <div class="d-flex">
+                            <div class="unlimited-access-title me-3">
+                                <h6 class="fw-semibold fs-4 mb-6 text-dark w-85">Upgrade to pro</h6>
+                                <a href="https://adminmart.com/product/modernize-bootstrap-5-admin-template/" target="_blank"
+                                   class="btn btn-primary fs-2 fw-semibold lh-sm">Buy Pro</a>
+                            </div>
+                            <div class="unlimited-access-img">
+                                <img src="~/images/backgrounds/rocket.png" alt="" class="img-fluid">
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+            </div>
+
+        </aside>
+
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <header class="app-header">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <ul class="navbar-nav">
+                        <li class="nav-item d-block d-xl-none">
+                            <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
+                                <i class="ti ti-menu-2"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
+                                <i class="ti ti-bell-ringing"></i>
+                                <div class="notification bg-primary rounded-circle"></div>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+                        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    <img src="~/images/profile/user-1.jpg" alt="" width="50" height="50" class="rounded-circle">
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                                    <div class="message-body">
+                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-user fs-6"></i>
+                                            <p class="mb-0 fs-3">My Profile</p>
+                                        </a>
+                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-mail fs-6"></i>
+                                            <p class="mb-0 fs-3">My Account</p>
+                                        </a>
+                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-list-check fs-6"></i>
+                                            <p class="mb-0 fs-3">My Task</p>
+                                        </a>
+                                        <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <!--  Header End -->
+            <div class="container-fluid">
+                <div class="container mt-4">
+                    <h1>@ViewData["Title"]</h1>
+
+                    <form asp-action="CreateRoom" method="post" id="createRoomForm">
+
+                        <div class="form-group row">
+                            <label for="RoomNumber">Tên Phòng</label>
+                            <input class="form-control" id="RoomNumber" name="RoomNumber" required />
+                            <span class="error-message" id="roomNumberError" style="color: red; display: none;">Tên phòng đã tồn tại trong tòa nhà này.</span>
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label for="Price">Giá Phòng</label>
+                            <input step="0.01" class="form-control" id="Price" name="Price" required />
+                            <span class="error-message" id="priceError" style="color: red; display: none;">Giá Phòng phải là một số dương</span>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="Floor">Tầng</label>
+                            <input class="form-control" id="Floor" name="Floor" required />
+                            <span class="error-message" id="floorError" style="color: red; display: none;">Số Tầng phải là một số nguyên dương.</span>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="Area">Diện Tích</label>
+                            <input step="0.01" class="form-control" id="Area" name="Area" required />
+                            <span class="error-message" id="areaError" style="color: red; display: none;">Diện tích phải là một số dương.</span>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="Description">Mô Tả Phòng</label>
+                            <textarea class="form-control" id="Description" name="Description" required></textarea>
+                        </div>
+
+                        <div class="form-group row" style="display:none">
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="BuildingId">BuildingId</label>
+                            <div class="col-sm-9">
+                                <select asp-for="BuildingId" asp-items="ViewBag.Buildingss" class="form-select">
+                                    <option value="">-- Select BuildingId --</option>
+                                </select>
+                                <span asp-validation-for="BuildingId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Tạo Phòng</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
     </div>
-} *@
+    <script src="~/lib/simplebar/dist/simplebar.js"></script>
+    <script>
+        // Thiết lập BuildingId mặc định
+        document.getElementById("BuildingId").value = '@ViewBag.SelectedBuildingId';
+
+        // Kiểm tra giá trị nhập vào của các trường ngay khi người dùng gõ
+        document.getElementById('Price').addEventListener('input', function () {
+            validatePrice();
+        });
+
+        document.getElementById('Floor').addEventListener('input', function () {
+            validateFloor();
+        });
+
+        document.getElementById('Area').addEventListener('input', function () {
+            validateArea();
+        });
+
+        // Hàm validate cho từng trường
+        function validatePrice() {
+            const price = document.getElementById('Price').value;
+            const priceError = document.getElementById('priceError');
+            if (parseFloat(price) <= 0) {
+                priceError.style.display = 'inline';
+            } else {
+                priceError.style.display = 'none';
+            }
+        }
+
+        function validateFloor() {
+            const floor = document.getElementById('Floor').value;
+            const floorError = document.getElementById('floorError');
+            if (parseInt(floor) <= 0 || !Number.isInteger(parseFloat(floor))) {
+                floorError.style.display = 'inline';
+            } else {
+                floorError.style.display = 'none';
+            }
+        }
+
+        function validateArea() {
+            const area = document.getElementById('Area').value;
+            const areaError = document.getElementById('areaError');
+            if (parseFloat(area) <= 0) {
+                areaError.style.display = 'inline';
+            } else {
+                areaError.style.display = 'none';
+            }
+        }
+
+        // Kiểm tra RoomNumber ngay khi người dùng nhập xong và rời khỏi trường input
+        document.getElementById('RoomNumber').addEventListener('blur', async function () {
+            const roomName = this.value;
+            const buildingId = '@ViewBag.SelectedBuildingId';
+
+            const response = await fetch(`/Room/CheckRoomNameExists?roomName=${roomName}&buildingId=${buildingId}`);
+            const roomExists = await response.json();
+
+            const roomNumberError = document.getElementById('roomNumberError');
+            if (roomExists) {
+                roomNumberError.style.display = 'inline';
+                roomNumberError.textContent = 'Tên Phòng đã tồn tại trong tòa nhà này';
+            } else {
+                roomNumberError.style.display = 'none';
+            }
+        });
+
+        // Kiểm tra khi submit form
+        document.getElementById('createRoomForm').addEventListener('submit', function (event) {
+            validatePrice();
+            validateFloor();
+            validateArea();
+
+            // Nếu có lỗi, ngăn form submit
+            if (document.querySelectorAll('.error-message[style="display: inline;"]').length > 0) {
+                event.preventDefault();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
