@@ -297,7 +297,7 @@
                             </select>
                         </div>
                         <div class="d-flex align-items-center">
-                            <span style="margin-right: 8px;"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></span>
+                            <span style="margin-right: 8px;"><i class="fa-solid fa-magnifying-glass fa-beat"></i></span>
                             <input type="text" class="form-control" id="searchInput" style="min-width: 200px" onkeyup="filterServices()" placeholder="Tìm kiếm..." />
                         </div>
                     </div>
@@ -340,12 +340,16 @@
                             }
                         </tbody>
                     </table>
+                    <!-- Phân trang -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>Đang xem 0 đến 0 trong tổng số 0 mục</div>
+                        <div>
+                            <button class="btn btn-light" disabled>Trước</button>
+                            <button class="btn btn-light" disabled>Tiếp</button>
+                        </div>
+                    </div>
                 </div>
-
-
-
-
-
+                </div>
             </div>
         </div>
     </div>
@@ -372,17 +376,21 @@
             }
         }
         function DeleteService(id) {
-            $.ajax({
-                url: `https://localhost:7056/api/Service?id=${id}`,  // Đảm bảo URL API đúng
-                type: "DELETE",  // Sử dụng phương thức DELETE
-                success: function (response) {
-                    alert("Xóa dịch vụ thành công");  // Thông báo khi xóa thành công
-                    window.location.reload();  // Reload lại trang sau khi xóa
-                },
-                error: function (xhr, status, error) {
-                    alert("Không thể xóa dịch vụ");  // Thông báo lỗi khi xóa không thành công
-                }
-            });
+            if (confirm("Bạn có chắc chắn muốn xóa dịch vụ này không?")) {  // Hộp thoại xác nhận xóa
+                $.ajax({
+                    url: `https://localhost:7056/api/Service?id=${id}`,  // Đảm bảo URL API đúng
+                    type: "DELETE",  // Sử dụng phương thức DELETE
+                    success: function (response) {
+                        alert("Xóa dịch vụ thành công");  // Thông báo khi xóa thành công
+                        window.location.reload();  // Reload lại trang sau khi xóa
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Không thể xóa dịch vụ");  // Thông báo lỗi khi xóa không thành công
+                    }
+                });
+            } else {
+                alert("Hủy xóa dịch vụ");  // Thông báo khi hủy xóa
+            }
         }
     </script>
     

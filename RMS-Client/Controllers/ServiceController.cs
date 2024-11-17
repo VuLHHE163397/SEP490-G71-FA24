@@ -10,6 +10,8 @@ namespace RMS_Client.Controllers
     {
         private readonly HttpClient client;
         private string ServiceApiUri = "https://localhost:7056/api/Service";
+        private string RoomApiUri = "https://localhost:7056/api/Room";
+        private string BuildingApiUri = "https://localhost:7056/api/Building";
 
         public ServiceController()
         {
@@ -31,6 +33,27 @@ namespace RMS_Client.Controllers
                 var json = await serviceResponse.Content.ReadAsStringAsync();
                 services = JsonConvert.DeserializeObject<List<ServiceDTO>>(json) ?? new List<ServiceDTO>();
             }
+            // Lấy danh sách tòa nhà và trạng thái (như trước đây)
+            string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";
+            var buildings = new List<Building>();
+            var responseBuilding = await client.GetAsync(apiUrlBuilding);
+            if (responseBuilding.IsSuccessStatusCode)
+            {
+                var json = await responseBuilding.Content.ReadAsStringAsync();
+                buildings = JsonConvert.DeserializeObject<List<Building>>(json);
+            }
+
+            string apiUrlStatusRo = RoomApiUri + "/GetAllStatus";
+            var status = new List<RoomStatus>();
+            var responseStatusRo = await client.GetAsync(apiUrlStatusRo);
+            if (responseStatusRo.IsSuccessStatusCode)
+            {
+                var json = await responseStatusRo.Content.ReadAsStringAsync();
+                status = JsonConvert.DeserializeObject<List<RoomStatus>>(json);
+            }
+            ViewBag.Buildings = buildings;
+            ViewBag.Status = status;
+            
             return View(services);
         }
         public IActionResult AddService()

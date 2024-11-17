@@ -303,13 +303,26 @@
 
                         <!-- Tìm kiếm -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
-
+                            <div class="d-flex align-items-center">
+                                <div class="text-nowrap">Xem </div>
+                                <select class="form-select mx-2" id="pageSizeEvent" onchange="onSelectPageSize()">
+                                    <option value="2">2</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                <div class="text-nowrap"> mục</div>
+                            </div>
                             <div class="form-group d-flex align-items-center">
-                                <label for="search" class="mr-2" style="margin-top: 5px;"> <i class="fa-sharp fa-solid fa-magnifying-glass"></i>  </label>
+                                <label for="search" class="mr-2" style="margin-top: 5px;"> <i class="fa-solid fa-magnifying-glass fa-beat"></i>  </label>
                                 <input type="text" id="keyword" class="form-control" style="width: 200px;" onchange="search()" placeholder="Tìm kiếm...">
                             </div>
                         </div>
-
+                        @{
+                            int stt = 1;
+                        }
                         <!-- Bảng dữ liệu -->
                         <table class="table table-bordered">
                             <thead>
@@ -330,7 +343,7 @@
                                     foreach (var facilities in Model)
                                     {
                                         <tr>
-                                            <td>@facilities.Id</td>
+                                            <td>@(stt++ )</td>
                                             <td>@facilities.Name</td>
                                             <td>@facilities.RoomNumber</td>
                                             <td>@facilities.FacilityStatus</td>
@@ -358,10 +371,10 @@
 
                         <!-- Phân trang -->
                         <div class="d-flex justify-content-between align-items-center">
-                            <div>Đang xem 0 đến 0 trong tổng số 0 mục</div>
+                            <div>Đang xem <span id="startAt"></span> đến <span id="endAt"></span> trên tổng số @ViewBag.TotalRecord mục</div>
                             <div>
-                                <button class="btn btn-light" disabled>Trước</button>
-                                <button class="btn btn-light" disabled>Tiếp</button>
+                                <button class="btn btn-light" onclick="onPrevPage()">Trước</button>
+                                <button class="btn btn-light" onclick="onNextPage()">Tiếp</button>
                             </div>
                         </div>
                     </div>
@@ -384,11 +397,63 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
     <script>
+        var totalRecord = @Html.Raw(ViewBag.TotalRecord);
         $(document).ready(function () {
             loadBuilding();
             loadRoom();
             setKeyword();
+            loadPaging();
         })
+        function onSelectPageSize() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var pageSize = $("#pageSizeEvent").val();
+            var buildingId = $("#buildings").val();
+            var roomId = $("#rooms").val();
+            var keyword = $("#keyword").val();
+            var pageIndex = urlParams.get('pageIndex') ?? 1;
+            //https://localhost:7056/api/Facility/GetAllFacility?pageSize=10&pageIndex=1&keyword=test&buildingId=1&roomId=1
+            var route = `/Facility/ListFacility?pageSize=${pageSize}&pageIndex=${pageIndex}&buildingId=${buildingId}&roomId=${roomId}&keyword=${keyword}`;
+            window.location.href = route;
+        }
+        function loadPaging() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var pageIndex = urlParams.get('pageIndex') ?? 1;
+            var pageSize = urlParams.get('pageSize') ?? 10;
+            var startAt = parseInt((pageIndex - 1) * pageSize) + 1;
+            var endAt = startAt + parseInt(pageSize) - 1;
+            if (endAt > totalRecord) endAt = totalRecord;
+            $("#pageSizeEvent").val(pageSize)
+            $("#startAt").text(startAt);
+            $("#endAt").text(endAt);
+        }
+        function onPrevPage() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var pageIndex = urlParams.get('pageIndex') ?? 1;
+            var pageSize = urlParams.get('pageSize') ?? 10;
+            var buildingId = $("#buildings").val();
+            var roomId = $("#rooms").val();
+            var keyword = $("#keyword").val();
+            if (pageIndex > 1) {
+                pageIndex = pageIndex - 1;
+                var route = `/Facility/ListFacility?pageIndex=${pageIndex}&pageSize=${pageSize}&buildingId=${buildingId}&roomId=${roomId}&keyword=${keyword}`;
+                window.location.href = route;
+            }
+        }
+        function onNextPage() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var pageIndex = urlParams.get('pageIndex') ?? 1;
+            var pageSize = urlParams.get('pageSize') ?? 10;
+            var buildingId = $("#buildings").val();
+            var roomId = $("#rooms").val();
+            var keyword = $("#keyword").val();
+            var startAt = parseInt((pageIndex - 1) * pageSize) + 1;
+            var endAt = startAt + parseInt(pageSize) - 1;
+            if (endAt < totalRecord) {
+                var next = parseInt(pageIndex) + 1;
+                var route = `/Facility/ListFacility?pageIndex=${next}&pageSize=${pageSize}&buildingId=${buildingId}&roomId=${roomId}&keyword=${keyword}`;
+                window.location.href = route;
+            }
+        }
         function setKeyword() {
             var urlParams = new URLSearchParams(window.location.search);
             var keyword = urlParams.get('keyword');
@@ -439,11 +504,14 @@
             $("#rooms").html(html);
         }
         function search() {
+            var urlParams = new URLSearchParams(window.location.search);
             var buildingId = $("#buildings").val();
             var roomId = $("#rooms").val();
             var keyword = $("#keyword").val();
+            var pageIndex = urlParams.get('pageIndex') ?? 1;
+            var pageSize = urlParams.get('pageIndex') ?? 10;
             //https://localhost:7056/api/Facility/GetAllFacility?pageSize=10&pageIndex=1&keyword=test&buildingId=1&roomId=1
-            var route = `/Facility/ListFacility?pageSize=10&buildingId=${buildingId}&roomId=${roomId}&keyword=${keyword}`;
+            var route = `/Facility/ListFacility?pageSize=${pageSize}$pageIndex=${pageIndex}&buildingId=${buildingId}&roomId=${roomId}&keyword=${keyword}`;
             window.location.href = route;
         }
 

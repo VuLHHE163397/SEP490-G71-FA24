@@ -45,16 +45,22 @@ namespace RMS_API.Controllers
                     RoomNumber = f.Room.RoomNumber,
                     FacilityStatus = f.FacilityStatus.Description,
                 })
-                .Where(e => filter.roomId <= 0 || e.RoomId == filter.roomId)
+                .ToListAsync();
+            int total = facilities.Count;
+            facilities = facilities.Where(e => filter.roomId <= 0 || e.RoomId == filter.roomId)
                 .Skip((filter.pageIndex - 1) * filter.pageSize)
                 .Take(filter.pageSize)
-                .ToListAsync();
-            if(filter.keyword != null)
+                .ToList();
+            if (filter.keyword != null)
             {
                 filter.keyword = filter.keyword.Trim().ToLower();
                 facilities = facilities.Where(e => e.Name.ToLower().Contains(filter.keyword) || e.FacilityStatus.ToLower().Contains(filter.keyword)).ToList();
             }
-            return Ok(facilities);
+            return Ok(new FacilityTableView
+            {
+                Facilities = facilities,
+                Total = total,
+            });
         }
 
         //thêm cơ sở vật chất
