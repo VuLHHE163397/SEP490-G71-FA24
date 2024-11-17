@@ -354,29 +354,11 @@
                                     }
                                 }
                             </div>
-
-
-                            @* <div class="upload-section">
-                            <h3>Upload Ảnh Phòng</h3>
-                            <form asp-action="UploadImageToDropbox" asp-controller="Room" method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="roomId" value="@Model.Id" />
-                            <div class="mb-3">
-                            <input type="file" name="imageFile" class="form-control" required />
+                            <div>
+                                <input type="file" id="file-input" />
+                                <button type="button" id="upload-button" onclick="uploadImage()">Upload</button>
                             </div>
-                            <button type="submit" class="btn btn-primary">Upload Ảnh</button>
-                            </form>
-                            </div> *@
 
-                            <div class="upload-section">
-                                <h3>Upload Ảnh Phòng</h3>
-                                <form asp-action="UploadImageToCloudinary" asp-controller="Room" method="post" enctype="multipart/form-data">
-                                    <input type="hidden" name="roomId" value="@Model.Id" />
-                                    <div class="mb-3">
-                                        <input type="file" name="imageFile" class="form-control" required />
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Upload Ảnh</button>
-                                </form>
-                            </div>
 
                         </div>
                         <div class="">Đặc điểm Phòng</div>
@@ -491,6 +473,45 @@
                         console.error('Error:', error);
                         alert("Có lỗi xảy ra khi kết nối với server.");
                     });
+            }
+        }
+
+        async function uploadImage() {
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+            const roomId = @Model.Id; // Thay bằng RoomId tương ứng nếu RoomId có sẵn trong ViewModel
+
+            if (!file) {
+                alert("Please select a file.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                // Sửa lại cú pháp URL với backticks
+                const response = await fetch(`/api/Room/upload-image/${roomId}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to upload image.");
+                }
+
+                const data = await response.json();
+                alert("Image uploaded successfully!");
+
+                // Bạn có thể thêm ảnh vào gallery mà không cần phải tải lại trang
+                const imageContainer = document.querySelector(".thumbnail-container");
+                const newImageElement = document.createElement("div");
+                newImageElement.classList.add("thumbnail-item");
+                newImageElement.innerHTML = `<img src="${data.imageUrl}" alt="Room Image" class="thumbnail">`;
+                imageContainer.appendChild(newImageElement);
+            } catch (error) {
+                console.error(error);
+                alert("An error occurred while uploading the image.");
             }
         }
 

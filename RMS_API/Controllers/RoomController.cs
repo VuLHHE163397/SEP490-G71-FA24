@@ -91,115 +91,162 @@ namespace RMS_API.Controllers
             return Ok(image);
         }
 
-        [HttpPost("ImportRooms")]
-        public async Task<IActionResult> ImportRooms(IFormFile file)
+        // Tạo một dictionary ánh xạ trạng thái phòng sang RoomStatusId
+        private static readonly Dictionary<string, int> RoomStatusMapping = new Dictionary<string, int>
+        {
+            { "Đang trống", 1 },
+            { "Đang cho thuê", 2 },
+            { "Đang bảo trì", 3 },
+            { "Sắp trống", 4 }
+        };
+
+        [HttpPost("ImportRooms/{buildingId}")]
+        public async Task<IActionResult> ImportRooms(IFormFile file, int buildingId)
         {
             if (file == null || file.Length == 0)
             {
                 return BadRequest("No file uploaded.");
             }
 
-            using (var stream = new MemoryStream())
+            // Kiểm tra nếu file là file Excel
+            if (file.FileName.EndsWith(".xlsx"))
             {
-                await file.CopyToAsync(stream);
-                using (var package = new ExcelPackage(stream))
-                {
-                    var worksheet = package.Workbook.Worksheets[0];
-                    var rowCount = worksheet.Dimension.Rows;
+                var rooms = new List<Room>();
 
-                    for (int row = 2; row <= rowCount; row++)
+                // Đọc dữ liệu từ file Excel
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);
+                    using (var package = new ExcelPackage(stream))
                     {
-                        var room = new Room
+                        var worksheet = package.Workbook.Worksheets[0];  // Đọc sheet đầu tiên
+
+                        var rowCount = worksheet.Dimension.Rows;
+                        var colCount = worksheet.Dimension.Columns;
+
+                        // Lấy tên các cột từ hàng đầu tiên (tiêu đề cột)
+                        var headers = new Dictionary<string, int>();
+                        for (int col = 1; col <= colCount; col++)
                         {
-                            RoomNumber = worksheet.Cells[row, 1].Text,
-                            Area = double.Parse(worksheet.Cells[row, 2].Text),
-                            Floor = int.Parse(worksheet.Cells[row, 3].Text),
-                            Price = decimal.Parse(worksheet.Cells[row, 4].Text),
-                            RoomStatusId = int.Parse(worksheet.Cells[row, 5].Text),
-                            Description = worksheet.Cells[row, 6].Text,
-                            StartedDate = DateTime.Parse(worksheet.Cells[row, 7].Text),
-                            ExpiredDate = DateTime.Parse(worksheet.Cells[row, 8].Text),
-                            FreeInFutureDate = DateTime.Parse(worksheet.Cells[row, 9].Text),
+                            headers[worksheet.Cells[1, col].Text.Trim()] = col;
+                        }
 
-                        };
+                        // Kiểm tra xem các cột cần thiết có tồn tại không
+                        if (!headers.ContainsKey("Số phòng") ||
+                            !headers.ContainsKey("Giá phòng") ||
+                            !headers.ContainsKey("Diện tích") ||
+                            !headers.ContainsKey("Mô tả phòng") ||
+                            !headers.ContainsKey("Tầng") ||
+                            !headers.ContainsKey("Ngày bắt đầu thuê phòng") ||
+                            !headers.ContainsKey("Ngày hết hạn phòng thuê") ||
+                            !headers.ContainsKey("Trạng thái") ||
+                            !headers.ContainsKey("Ngày phòng sẽ trống trong tương lai"))
+                        {
+                            return BadRequest("Missing required columns in the Excel file.");
+                        }
 
-                        _context.Rooms.Add(room);
+                        // Lặp qua các dòng trong Excel (bỏ qua dòng đầu tiên vì đó là header)
+                        for (int row = 2; row <= rowCount; row++)
+                        {
+                            // Lấy giá trị từ các cột bằng tên cột
+                            var roomNumber = worksheet.Cells[row, headers["Số phòng"]].Text;
+                            var price = decimal.Parse(worksheet.Cells[row, headers["Giá phòng"]].Text);
+                            var area = double.Parse(worksheet.Cells[row, headers["Diện tích"]].Text);
+                            var description = worksheet.Cells[row, headers["Mô tả phòng"]].Text;
+                            var floor = int.Parse(worksheet.Cells[row, headers["Tầng"]].Text);
+                            var status = worksheet.Cells[row, headers["Trạng thái"]].Text;
+                            // Kiểm tra và chuyển đổi giá trị của các ngày để cho phép null
+                            DateTime? startedDate = null;
+                            if (DateTime.TryParse(worksheet.Cells[row, headers["Ngày bắt đầu thuê phòng"]].Text, out var startDate))
+                            {
+                                startedDate = startDate;
+                            }
+
+                            DateTime? expiredDate = null;
+                            if (DateTime.TryParse(worksheet.Cells[row, headers["Ngày hết hạn phòng thuê"]].Text, out var endDate))
+                            {
+                                expiredDate = endDate;
+                            }
+                            DateTime? freeInFutureDate = null;
+                            if (DateTime.TryParse(worksheet.Cells[row, headers["Ngày phòng sẽ trống trong tương lai"]].Text, out var freeDate))
+                            {
+                                freeInFutureDate = freeDate;
+                            }
+
+                            // Kiểm tra trạng thái và ánh xạ sang RoomStatusId
+                            if (!RoomStatusMapping.ContainsKey(status))
+                            {
+                                return BadRequest($"Invalid room status '{status}' in row {row}. Valid statuses are: 'Đang trống', 'Đang cho thuê', 'Đang bảo trì', 'Sắp trống'.");
+                            }
+                            var roomStatusId = RoomStatusMapping[status];
+
+                            // Tạo đối tượng Room từ dữ liệu dòng trong Excel
+                            var room = new Room
+                            {
+                                BuildingId = buildingId,
+                                RoomNumber = roomNumber,
+                                Price = price,
+                                Area = area,
+                                Description = description,
+                                Floor = floor,
+                                StartedDate = startedDate,
+                                ExpiredDate = expiredDate,
+                                RoomStatusId = roomStatusId,
+                                FreeInFutureDate = freeInFutureDate
+                            };
+
+                            rooms.Add(room);  // Thêm phòng vào danh sách
+                        }
                     }
-
-                    await _context.SaveChangesAsync();
                 }
-            }
 
-            return Ok("Rooms imported successfully.");
-        }
-
-
-
-        //[HttpPost("UploadImage/{roomId}")]
-        //public async Task<IActionResult> UploadImage(int roomId, [FromBody] ImageDTO imageDto)
-        //{
-        //    if (imageDto == null || string.IsNullOrEmpty(imageDto.Link))
-        //    {
-        //        return BadRequest("Đường link ảnh không hợp lệ.");
-        //    }
-
-        //    // Lưu imageDto vào cơ sở dữ liệu
-        //    var room = await _context.Rooms.FindAsync(roomId);
-        //    if (room == null)
-        //    {
-        //        return NotFound("Room không tồn tại.");
-        //    }
-
-        //    var image = new Models.Image
-        //    {
-        //        Link = imageDto.Link,
-        //        RoomId = roomId
-        //    };
-
-        //    _context.Images.Add(image);
-        //    await _context.SaveChangesAsync();
-
-        //    return Ok("Ảnh đã được lưu thành công.");
-        //}
-
-        [HttpPost]
-        public async Task<IActionResult> UploadImageToCloudinary(IFormFile imageFile, int roomId)
-        {
-            if (imageFile == null || imageFile.Length == 0)
-            {
-                ModelState.AddModelError("Image", "Vui lòng chọn một ảnh.");
-            }
-
-            // Thiết lập tham số upload cho Cloudinary
-            var uploadParams = new ImageUploadParams
-            {
-                File = new FileDescription(imageFile.FileName, imageFile.OpenReadStream()),
-                Folder = "RoomImages"
-            };
-
-            // Upload ảnh lên Cloudinary
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-
-            if (uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                // Lấy link ảnh từ Cloudinary và lưu vào database
-                var imageUrl = uploadResult.SecureUrl.ToString();
-                var image = new Models.Image
-                {
-                    Link = imageUrl,
-                    RoomId = roomId
-                };
-                _context.Images.Add(image);
+                // Thêm các phòng vào database
+                _context.Rooms.AddRange(rooms);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { imageUrl = imageUrl });  // Trả về link ảnh sau khi upload thành công
-
+                return Ok(new { message = "Rooms imported successfully!", roomsCount = rooms.Count });
             }
             else
             {
-                return StatusCode(500, "Lỗi khi tải ảnh lên Cloudinary.");
+                return BadRequest("Only Excel files are allowed.");
             }
         }
+
+        [HttpPost("upload-image/{roomId}")]
+        public async Task<IActionResult> UploadImage(IFormFile file, int roomId)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            // Upload ảnh lên Cloudinary
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(file.FileName, file.OpenReadStream()),
+                Folder = "room_images"
+            };
+
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+            if (uploadResult.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                return StatusCode(500, "Failed to upload image.");
+            }
+
+            // Lưu link ảnh vào database
+            var image = new Models.Image
+            {
+                Link = uploadResult.SecureUrl.AbsoluteUri,
+                RoomId = roomId
+            };
+
+            _context.Images.Add(image);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { imageId = image.Id, imageUrl = image.Link });
+        }
+
 
         [HttpDelete("DeleteImageById/{id}")]
         public IActionResult DeleteImageById(int id)

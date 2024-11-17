@@ -527,6 +527,14 @@ namespace RMS_API.Models
 
                 entity.Property(e => e.UserStatusId).HasColumnName("userStatusId");
 
+                entity.Property(e => e.FbUrl)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ZaloUrl)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.RoleId)
