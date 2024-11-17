@@ -16,6 +16,44 @@
     <link rel="stylesheet" href="~/css/styles.min.css" />
     <style>
 
+        .image-gallery {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 500px; /* Đảm bảo container chính không bị quá lớn */
+            margin: 0 auto;
+        }
+
+        .main-image {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 10px;
+        }
+
+            .main-image img {
+                width: 100%;
+                border-radius: 5px;
+            }
+
+        .thumbnail-container {
+            width: 100%;
+            overflow: hidden; /* Đảm bảo các ảnh nhỏ không tràn ra */
+        }
+
+            .thumbnail-container .thumbnail {
+                width: 80px;
+                height: 80px;
+                cursor: pointer;
+                border-radius: 5px;
+                object-fit: cover;
+                transition: transform 0.2s;
+            }
+
+                .thumbnail-container .thumbnail:hover {
+                    transform: scale(1.1);
+                }
+
+
         .map-container {
             margin-top: 20px;
             border-radius: 8px;
@@ -296,11 +334,17 @@
                             <div class="container">
                                 <div class="left-column">
                                     <div class="room-details">
-                                        <div>
-                                            <div>
-                                                <img class="img-fluid" src="~/images/room1.jpg" alt="Room Image">
+                                        <div class="image-gallery">
+                                            <div class="main-image">
+                                                <img src="~/images/room1.jpg" alt="Main Room Image" id="displayed-image">
                                             </div>
-                                            <div>
+
+                                            <div class="thumbnail-container slick-carousel">
+                                                <img src="~/images/room1.jpg" alt="Room Image" class="thumbnail" onclick="changeImage(this)">
+                                                <img src="~/images/room2.jpg" alt="Room Image" class="thumbnail" onclick="changeImage(this)">
+                                                <img src="~/images/room3.jpg" alt="Room Image" class="thumbnail" onclick="changeImage(this)">
+                                                <img src="~/images/room4.jpg" alt="Room Image" class="thumbnail" onclick="changeImage(this)">
+                                                <img src="~/images/room5.jpg" alt="Room Image" class="thumbnail" onclick="changeImage(this)">
                                             </div>
                                         </div>
                                         <div class="">Đặc điểm Phòng</div>
@@ -368,11 +412,35 @@
         </div>
     </div>
     <script>
+        $(document).ready(function () {
+            // Khởi tạo slick cho container ảnh nhỏ
+            $('.slick-carousel').slick({
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                arrows: true,
+                dots: false,
+                centerMode: true,       // Căn giữa ảnh trong carousel
+                focusOnSelect: true,    // Cho phép chọn ảnh khi nhấn vào thumbnail
+                variableWidth: true     // Tự điều chỉnh kích thước để tránh tràn
+            });
+        });
+
+        // Hàm thay đổi hình ảnh lớn khi nhấn vào thumbnail
+        function changeImage(element) {
+            document.getElementById("displayed-image").src = element.src;
+        }
+
+
         function toggleSubmenu(event) {
             event.preventDefault();
             var submenu = event.currentTarget.nextElementSibling;
             submenu.style.display = submenu.style.display === "none" ? "block" : "none";
         }
     </script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
 </body>
 </html>

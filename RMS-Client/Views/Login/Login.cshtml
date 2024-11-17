@@ -80,7 +80,7 @@
                 success: function (response) {
                     alert("Login successful!");
                     localStorage.setItem("token", response.token);
-                    window.location.href = "views/newsfeed.html";
+                    window.location.href = "User/ListUser.cshtml";
                 },
                 error: function (xhr, status, error) {
                     alert("Login failed: " + xhr.responseText);

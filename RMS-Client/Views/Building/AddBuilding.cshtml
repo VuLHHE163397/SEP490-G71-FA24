@@ -156,7 +156,7 @@ h1 {
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a asp-controller="Building" asp-action="ListBuilding" class="text-nowrap logo-img">
-                        <img src="~/images/logos/dark-logo.svg" width="180" alt="" />
+                        <img src="~/images/logo.jpg" width="180" alt="" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
@@ -368,7 +368,7 @@ h1 {
                         </div>
                         <div class="form-group">
                             <label for="Distance">Khoảng cách</label>
-                            <input type="number" class="form-control" id="Distance" name="Distance" required />
+                            <input type="number" class="form-control" id="Distance" name="Distance" step="0.1" min="0.1" max="100" required />
                         </div>
 
                         <div class="form-group">
@@ -442,6 +442,7 @@ h1 {
                             } else {
                                 $('#DistrictId').empty();
                                 $('#DistrictId').append('<option value="">Chọn Quận</option>');
+                                $('#WardId').empty().append('<option value="">Chọn Xã</option>');
                             }
                         });
 
@@ -476,6 +477,7 @@ h1 {
                             // Validate TotalFloors and NumberOfRooms
                             var totalFloors = parseInt($('#TotalFloors').val(), 10);
                             var numberOfRooms = parseInt($('#NumberOfRooms').val(), 10);
+                            var distance = parseFloat($('#Distance').val());
 
                             if (totalFloors < 1 || totalFloors > 100) {
                                 alert('Số tầng phải là số dương.');
@@ -490,11 +492,13 @@ h1 {
                                 Name: $('#Name').val(),
                                 TotalFloors: totalFloors,
                                 NumberOfRooms: numberOfRooms,
+                                Distance : distance,
                                 ProvinceName: $('#ProvinceId').val(),
                                 DistrictName: $('#DistrictId').val(),
                                 WardName: $('#WardId').val(),
                                 AddressDetails: $('#AddressDetails').val(),
-                                BuildingStatus: $('#BuildingStatus').val()
+                                BuildingStatus: $('#BuildingStatus').val(),
+                                LinkEmbedMap: $('#LinkEmbedMap').val()
                             };
 
                             $.ajax({
