@@ -88,28 +88,53 @@ namespace RMS_API.Controllers
                 return BadRequest(new { Message = "Invalid input data." });
             }
 
-            // Find the user by Id
-            var user = await _context.Users.FindAsync(request.Id);
+            // Tìm user theo Id
+            var user = await _context.Users
+                .Include(u => u.Buildings) // Include Buildings liên quan
+                .FirstOrDefaultAsync(u => u.Id == request.Id);
+
             if (user == null)
             {
                 return NotFound(new { Message = "User not found." });
             }
 
-            // Find the status by the new status ID to validate it exists
-            var status = await _context.UserStatuses.FindAsync(request.NewStatusId);
-            if (status == null)
+            // Xác thực trạng thái UserStatus
+            var userStatus = await _context.UserStatuses.FindAsync(request.NewStatusId);
+            if (userStatus == null)
             {
-                return NotFound(new { Message = "Status not found." });
+                return NotFound(new { Message = "User status not found." });
             }
 
-            // Update the user's status
+            // Cập nhật UserStatus
             user.UserStatusId = request.NewStatusId;
 
-            // Save changes to the database
+            // Map UserStatusId sang BuildingStatusId
+            int newBuildingStatusId = MapUserStatusToBuildingStatus(request.NewStatusId);
+
+            // Cập nhật BuildingStatus cho tất cả Buildings của User này
+            foreach (var building in user.Buildings)
+            {
+                building.BuildingStatusId = newBuildingStatusId;
+            }
+
+            // Lưu thay đổi
             await _context.SaveChangesAsync();
 
-            return Ok(new { Message = "User status updated successfully." });
+            return Ok(new { Message = "Trạng thái người dùng và các trạng thái tòa nhà liên quan được cập nhật thành công." });
         }
 
+        private int MapUserStatusToBuildingStatus(int userStatusId)
+        {
+            // Logic ánh xạ UserStatusId -> BuildingStatusId
+            // Ví dụ:
+            switch (userStatusId)
+            {
+                case 1: return 1; // UserStatusId 1 -> BuildingStatusId 1
+                case 2: return 2; // UserStatusId 2 -> BuildingStatusId 2
+                case 3: return 2; // UserStatusId 3 -> BuildingStatusId 3
+                default: return 0; // Mặc định là 0 nếu không có ánh xạ
+            }
+
+        }
     }
 }
