@@ -258,7 +258,7 @@
                         // JavaScript function để lọc bảng theo từ khóa tìm kiếm
                         function filterTable() {
                             const input = document.getElementById("searchInput");
-                            const filter = input.value.toLowerCase();
+                            const filter = input.value.toLowerCase()
                             const table = document.getElementById("userTable");
                             const rows = table.getElementsByTagName("tr");
 
@@ -277,7 +277,7 @@
 
                         // JavaScript function để thay đổi trạng thái người dùng
                         function changeStatus(userId, newStatusId) {
-                            const data = { Id: userId, NewStatusId: newStatusId };
+                            const data = { id: userId, newStatusId: newStatusId };
                             fetch('https://localhost:7056/api/User/UpdateStatus', {
                                 method: 'POST',
                                 headers: {
@@ -285,33 +285,38 @@
                                 },
                                 body: JSON.stringify(data)
                             })
-                                .then(response => response.json())
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error(`HTTP status ${response.status}`);
+                                    }
+                                    return response.json();
+                                })
                                 .then(result => {
-                                    if (!result.success) {
-                                        // Cập nhật trạng thái thành công, hiển thị thông báo và cập nhật bảng
-                                        alert('Cập nhật trạng thái thành công!');
+                                    if (result.message) {
+                                        alert(result.message);
 
-                                        // Cập nhật trạng thái mới trực tiếp trên giao diện
+                                        // Cập nhật lại giao diện
                                         const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
                                         const statusButtonContainer = userRow.querySelector("td:nth-child(7) div");
 
-                                        // Cập nhật lại màu và trạng thái của các button
+                                        // Cập nhật lại trạng thái các nút
                                         statusButtonContainer.innerHTML = `
-                                                        <button onclick="changeStatus(${userId}, 1)" class="status-button ${newStatusId === 1 ? "active" : ""}">Active</button>
-                                                        <button onclick="changeStatus(${userId}, 2)" class="status-button ${newStatusId === 2 ? "deactive" : ""}">Deactive</button>
-                                                        <button onclick="changeStatus(${userId}, 3)" class="status-button ${newStatusId === 3 ? "banned" : ""}">Banned</button>
-                                                    `;
+                                                    <button onclick="changeStatus(${userId}, 1)" class="status-button ${newStatusId === 1 ? "active" : ""}">Active</button>
+                                                    <button onclick="changeStatus(${userId}, 2)" class="status-button ${newStatusId === 2 ? "deactive" : ""}">Deactive</button>
+                                                    <button onclick="changeStatus(${userId}, 3)" class="status-button ${newStatusId === 3 ? "banned" : ""}">Banned</button>
+                                                `;
                                     } else {
-                                        alert('Có lỗi xảy ra: ' + result.message);
+                                        alert("Cập nhật trạng thái thất bại!");
                                     }
                                 })
                                 .catch(error => {
+                                    console.error('Error:', error);
                                     alert('Có lỗi xảy ra: ' + error.message);
                                 });
                         }
                     </script>
-
-
+                </div>
+            </div>
 
 </body>
 
