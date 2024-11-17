@@ -354,6 +354,7 @@ namespace RMS_API.Controllers
             building.DistrictId = district.Id;
             building.WardId = ward.Id;
             building.BuildingStatusId = buildingStatus.Id;
+            building.LinkEmbedMap = buildingDto.LinkEmbedMap;
 
             // Update the address details
             if (building.Address != null)

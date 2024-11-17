@@ -426,9 +426,9 @@ namespace RMS_Client.Controllers
                 var worksheet = package.Workbook.Worksheets.Add("Rooms");
 
                 worksheet.Cells[1, 1].Value = "Số phòng";
-                worksheet.Cells[1, 2].Value = "Diện tích (m²)";
+                worksheet.Cells[1, 2].Value = "Diện tích";
                 worksheet.Cells[1, 3].Value = "Tầng";
-                worksheet.Cells[1, 4].Value = "Giá phòng(VNĐ)";
+                worksheet.Cells[1, 4].Value = "Giá phòng";
                 worksheet.Cells[1, 5].Value = "Trạng thái";
                 worksheet.Cells[1, 6].Value = "Mô tả phòng";
                 worksheet.Cells[1, 7].Value = "Ngày bắt đầu thuê phòng";
@@ -449,12 +449,12 @@ namespace RMS_Client.Controllers
                     worksheet.Cells[row, 1].Value = room.RoomNumber;
                     worksheet.Cells[row, 2].Value = room.Area;
                     worksheet.Cells[row, 3].Value = room.Floor;
-                    worksheet.Cells[row, 4].Value = room.Price.ToString("N0") + " VNĐ";
+                    worksheet.Cells[row, 4].Value = room.Price;
                     worksheet.Cells[row, 5].Value = room.RoomStatusId switch
                     {
-                        1 => "Trống",
-                        2 => "Đã có người",
-                        3 => "Đang sửa chữa",
+                        1 => "Đang trống",
+                        2 => "Đang cho thuê",
+                        3 => "Đang bảo trì",
                         4 => "Sắp trống",
                         _ => "Không xác định"
                     };
@@ -475,104 +475,5 @@ namespace RMS_Client.Controllers
                 return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
         }
-
-        // Action để hiển thị form nhập liệu
-        public IActionResult ImportRooms()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ImportRooms(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-            {
-                TempData["ErrorMessage"] = "No file uploaded.";
-                return RedirectToAction("ImportRooms");
-            }
-
-            var formData = new MultipartFormDataContent();
-            var fileContent = new StreamContent(file.OpenReadStream());
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-            formData.Add(fileContent, "file", file.FileName);
-
-            // Gửi yêu cầu POST đến API để nhập Rooms
-            var response = await client.PostAsync($"{RoomApiUri}/ImportRooms", formData);
-
-            if (response.IsSuccessStatusCode)
-            {
-                TempData["SuccessMessage"] = "Rooms imported successfully.";
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "An error occurred while importing rooms.";
-            }
-
-            return RedirectToAction("ImportRooms");
-        }
-
-        //[HttpPost]
-        //public async Task<IActionResult> ImportRooms(IFormFile excelFile)
-        //{
-        //    if (excelFile == null || excelFile.Length == 0)
-        //    {
-        //        ModelState.AddModelError("File", "Vui lòng chọn một file Excel.");
-        //        return View();
-        //    }
-
-        //    var rooms = new List<Room>();
-
-        //    using (var stream = new MemoryStream())
-        //    {
-        //        await excelFile.CopyToAsync(stream);
-        //        stream.Position = 0;
-
-        //        using (var package = new ExcelPackage(stream))
-        //        {
-        //            var worksheet = package.Workbook.Worksheets[0]; // Giả sử dữ liệu ở worksheet đầu tiên
-        //            int rowCount = worksheet.Dimension.Rows;
-
-        //            for (int row = 2; row <= rowCount; row++) // Bỏ qua dòng đầu vì đó là tiêu đề
-        //            {
-        //                var room = new Room
-        //                {
-        //                    RoomNumber = worksheet.Cells[row, 1].Value?.ToString(),
-        //                    Area = double.TryParse(worksheet.Cells[row, 2].Value?.ToString(), out double area) ? area : 0,
-        //                    Floor = int.TryParse(worksheet.Cells[row, 3].Value?.ToString(), out int floor) ? floor : 0,
-        //                    Price = decimal.TryParse(worksheet.Cells[row, 4].Value?.ToString(), out decimal price) ? price : 0,
-        //                    RoomStatusId = worksheet.Cells[row, 5].Value.ToString() switch
-        //                    {
-        //                        "Trống" => 1,
-        //                        "Đã có người" => 2,
-        //                        "Đang sửa chữa" => 3,
-        //                        "Sắp trống" => 4,
-        //                        _ => 0
-        //                    },
-        //                    Description = worksheet.Cells[row, 6].Value?.ToString()
-        //                };
-
-        //                rooms.Add(room);
-        //            }
-        //        }
-        //    }
-
-        //    // Gửi dữ liệu phòng lên API để lưu vào cơ sở dữ liệu
-        //    var json = JsonConvert.SerializeObject(rooms);
-        //    var content = new StringContent(json, Encoding.UTF8, "application/json");
-        //    var response = await client.PostAsync($"{RoomApiUri}/ImportRooms", content);
-
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        return RedirectToAction("ListRoom", "Room"); // Chuyển hướng về danh sách phòng sau khi import thành công
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError("API", "Lỗi khi lưu dữ liệu vào API.");
-        //        return View();
-        //    }
-        //}
-
-
-
     }
 }
