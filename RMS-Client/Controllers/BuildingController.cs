@@ -18,6 +18,7 @@ namespace RMS_Client.Controllers
         private readonly string GetBuildingById = "https://localhost:7056/api/Building/GetBuildingById";
         private readonly string GetDistrictsByProvince = "https://localhost:7056/api/Building/GetDistrictsByProvince";
         private readonly string GetBuildinImformationgById = "https://localhost:7056/api/Building/GetBuildinImformationgById";
+        private readonly string GetBuildingByEmail = "https://localhost:7056/api/Building/GetBuildingsByEmail";
         public BuildingController()
         {
             _client = new HttpClient();

@@ -18,6 +18,47 @@ namespace RMS_API.Controllers
             _context = context;
         }
 
+        [HttpGet("GetBuildingsByUserId/{userId}")]
+        public async Task<IActionResult> GetBuildingsByUserId(int userId)
+        {
+            // Lấy các tòa nhà thuộc về userId từ database
+            var buildings = await _context.Buildings
+                .Include(b => b.Address)
+                .Include(b => b.BuildingStatus)
+                .Include(b => b.Province)
+                .Include(b => b.District)
+                .Include(b => b.Ward)
+                .Where(b => b.UserId == userId) // Lọc theo UserId
+                .Select(b => new BuildingDTO
+                {
+                    Id = b.Id,
+                    Name = b.Name,
+                    TotalFloors = b.TotalFloors,
+                    NumberOfRooms = (int)b.NumberOfRooms,
+                    Distance = b.Distance,
+                    LinkEmbedMap = b.LinkEmbedMap,
+                    CreatedDate = b.CreatedDate,
+                    UpdatedDate = b.UpdatedDate,
+                    ProvinceName = b.Province.Name,
+                    DistrictName = b.District.Name,
+                    WardName = b.Ward.Name,
+                    AddressDetails = $"{b.Address.Information}",
+                    BuildingStatus = b.BuildingStatus.Name
+                })
+                .ToListAsync();
+
+            // Kiểm tra nếu không có tòa nhà nào
+            if (!buildings.Any())
+            {
+                return NotFound($"No buildings found for user with ID {userId}.");
+            }
+
+            // Trả về danh sách các tòa nhà dưới dạng JSON
+            return Ok(buildings);
+        }
+
+
+
         [HttpGet("GetAllBuildings")]
         public IActionResult GetAllBuildings()
         {
@@ -161,7 +202,6 @@ namespace RMS_API.Controllers
                 UserId = 2,
                 LinkEmbedMap = buildingDto.LinkEmbedMap
 
-
             };
 
             // Thêm tòa nhà vào cơ sở dữ liệu
@@ -210,6 +250,8 @@ namespace RMS_API.Controllers
 
             return View();
         }*/
+
+
 
         [HttpGet("GetBuildinImformationgById/{id}")]
         public async Task<IActionResult> GetBuildinImformationgById(int id)

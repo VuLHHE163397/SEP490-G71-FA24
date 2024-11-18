@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "tjhFAc0POBH744K97TMPQFD7hNposMUsFBPVM8kb+iGm9iEbKJ9B8XvGg+Z8v1gqDXkZx0F9QSuj/Wrd/Hvzcg==",
+  "dgSpecHash": "9aPPJAjYykNQX2HM1nX5ePrWws+RE2GooU/EbPHe7UaZTLOU1nvOT/Yg3nHrBJ7FjtCb/xB85qBdgfSKOHT+gw==",
   "success": true,
   "projectFilePath": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\DEll\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\cloudinarydotnet\\1.26.2\\cloudinarydotnet.1.26.2.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\epplus\\6.2.19\\epplus.6.2.19.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\epplus.interfaces\\6.1.1\\epplus.interfaces.6.1.1.nupkg.sha512",

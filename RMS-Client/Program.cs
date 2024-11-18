@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 //using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,11 +24,11 @@ builder.Services.AddCors(options =>
                           .AllowAnyHeader());
 });
 
-//builder.Services.AddDbContext<RMS_SEP490Context>(options =>
-//{
-//    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-//    options.UseSqlServer(connectionString);
-//});
+builder.Services.AddDbContext<RMS_SEP490Context>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseSqlServer(connectionString);
+});
 
 var app = builder.Build();
 

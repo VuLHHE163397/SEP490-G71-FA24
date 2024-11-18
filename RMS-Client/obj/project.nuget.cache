@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "do9YlEWfobMQdV2SKRIpnkrf/XOiP+NtV1++wjSqsX6xLWLP+cqW0F57fE99t3j/LNRmqVEAVIMebX/eCcYyNA==",
+  "dgSpecHash": "2Zul2yONznnOoaL/szTzMrK3d2Ke4kw0873hujXBLb6nCrIYNBT5W8ugL6DRcJ4PfKiiH7xulh6hH55Fu19BlA==",
   "success": true,
   "projectFilePath": "C:\\Users\\DEll\\Documents\\GitHub\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\DEll\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\cloudinarydotnet\\1.26.2\\cloudinarydotnet.1.26.2.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\dropbox.api\\7.0.0\\dropbox.api.7.0.0.nupkg.sha512",
     "C:\\Users\\DEll\\.nuget\\packages\\epplus\\7.4.2\\epplus.7.4.2.nupkg.sha512",
