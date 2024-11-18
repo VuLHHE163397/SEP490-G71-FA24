@@ -1,0 +1,29 @@
+﻿@model RoomQrViewModel
+
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Room Maintenance</h2>
+        </div>
+        <div class="card-body">
+            <div class="mb-4">
+                <h4 class="text-secondary">Room: <span class="fw-bold">@Model.RoomNumber</span></h4>
+                <p class="mb-1"><strong>Building:</strong> @Model.BuildingName</p>
+                <p class="mb-1"><strong>Address:</strong> @Model.Address</p>
+                <p><strong>Owner:</strong> @Model.Owner</p>
+            </div>
+
+            <form method="post" asp-action="SaveMaintenanceRequest">
+                <input type="hidden" name="Id" value="@Model.Id" />
+
+                <div class="mb-3">
+                    <label for="maintenanceDescription" class="form-label">Maintenance Description</label>
+                    <textarea id="maintenanceDescription" name="MaintenanceDescription" rows="4"
+                              class="form-control" placeholder="Describe the issue in detail"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
