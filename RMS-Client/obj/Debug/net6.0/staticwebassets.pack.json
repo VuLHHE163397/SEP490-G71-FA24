@@ -69,8 +69,8 @@
       "PackagePath": "staticwebassets\\images\\logos\\dark-logo.svg"
     },
     {
-      "Id": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logos\\favicon.png",
-      "PackagePath": "staticwebassets\\images\\logos\\favicon.png"
+      "Id": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logos\\house.png",
+      "PackagePath": "staticwebassets\\images\\logos\\house.png"
     },
     {
       "Id": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\products\\s1.jpg",
@@ -95,10 +95,6 @@
     {
       "Id": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\profile\\user-1.jpg",
       "PackagePath": "staticwebassets\\images\\profile\\user-1.jpg"
-    },
-    {
-      "Id": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\rms_logo.png",
-      "PackagePath": "staticwebassets\\images\\rms_logo.png"
     },
     {
       "Id": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\room1.jpg",
