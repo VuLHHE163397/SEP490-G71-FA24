@@ -3,7 +3,7 @@
     public class RoomLlDTO
     {
         public decimal Price { get; set; }
-        public int RoomNumber { get; set; }
+        public string? RoomNumber { get; set; }
         public double Area { get; set; }
         public string Description { get; set; } = string.Empty;
         public int Floor { get; set; }

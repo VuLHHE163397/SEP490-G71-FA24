@@ -10,6 +10,11 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Dropbox.Api;
+using Dropbox.Api.Files;
+using static Dropbox.Api.Files.ListRevisionsMode;
+
 
 namespace RMS_Client.Controllers
 {
@@ -17,7 +22,6 @@ namespace RMS_Client.Controllers
     {
         private readonly HttpClient client = null;
         private string RoomApiUri = "https://localhost:7056/api/Room";
-        private string BuildingApiUri = "https://localhost:7056/api/Building";
 
         public RoomController()
         {
@@ -73,6 +77,7 @@ namespace RMS_Client.Controllers
             // Truyền ViewBag
             ViewBag.Buildings = buildings;
             ViewBag.Status = status;
+            ViewBag.RoomStatuses = new SelectList(status, "Id", "Name");
             ViewBag.SelectedStatusIds = statusIds; // Lưu trữ trạng thái đã chọn
             ViewBag.SelectedBuildingId = buildingId; // Lưu trữ BuildingId đã chọn
 
@@ -132,9 +137,71 @@ namespace RMS_Client.Controllers
             return View(room);
         }
 
+
+        //[HttpPost]
+        //public async Task<IActionResult> UploadImageToDropbox(int roomId, IFormFile imageFile)
+        //{
+        //    if (imageFile == null || imageFile.Length == 0)
+        //    {
+        //        TempData["Error"] = "Vui lòng chọn một ảnh hợp lệ.";
+        //        return RedirectToAction("RoomDetail", new { id = roomId });
+        //    }
+
+        //    // Thay bằng Access Token của bạn
+        //    string dropboxAccessToken = "sl.CAiWPncIvfMfTkK1523MNHia8kAdj04ahFTov_tt28Fv1htlTOGkt8J3vmxmx3Qca8e3vthAgR31ZFKRJCIOLN7HayLE4SgetqCSmb7crFeFFZ44AdtCrTi5wLtZpQN1Iyw0L-6ukXomz0g";
+        //    string dropboxFolderPath = "/Images";
+
+        //    using (var dropboxClient = new DropboxClient(dropboxAccessToken))
+        //    {
+        //        var fileName = $"{Guid.NewGuid()}_{imageFile.FileName}";
+        //        string imageUrl;
+
+        //        using (var memoryStream = new MemoryStream())
+        //        {
+        //            await imageFile.CopyToAsync(memoryStream);
+        //            memoryStream.Position = 0;
+
+        //            var uploadResponse = await dropboxClient.Files.UploadAsync(
+        //                $"{dropboxFolderPath}/{fileName}",
+        //                WriteMode.Overwrite.Instance,
+        //                body: memoryStream);
+
+        //            var sharedLink = await dropboxClient.Sharing.CreateSharedLinkWithSettingsAsync(uploadResponse.PathLower);
+        //            imageUrl = sharedLink.Url.Replace("dl=0", "dl=1");
+        //        }
+
+        //        // Gửi yêu cầu đến API để lưu đường link ảnh
+        //        using (var httpClient = new HttpClient())
+        //        {
+        //            var imageDto = new ImageDTO
+        //            {
+        //                Link = imageUrl,
+        //                RoomId = roomId
+        //            };
+
+        //            var content = new StringContent(JsonConvert.SerializeObject(imageDto), Encoding.UTF8, "application/json");
+        //            var response = await httpClient.PostAsync($"{RoomApiUri}/UploadImage/{roomId}", content);
+
+        //            if (response.IsSuccessStatusCode)
+        //            {
+        //                TempData["Success"] = "Ảnh đã được upload và lưu thành công!";
+        //            }
+        //            else
+        //            {
+        //                TempData["Error"] = "Có lỗi xảy ra khi lưu ảnh vào cơ sở dữ liệu.";
+        //            }
+        //        }
+        //    }
+
+        //    return RedirectToAction("RoomDetail", new { id = roomId });
+        //}
+
+
+
         [HttpGet]
-        public async Task<IActionResult> CreateRoom()
+        public async Task<IActionResult> CreateRoom(int? buildingId)
         {
+
             // Lấy danh sách Building từ API
             string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";
             var buildingss = new List<BuildingDTO>();
@@ -170,6 +237,8 @@ namespace RMS_Client.Controllers
 
             ViewBag.Buildings = buildings;
 
+            ViewBag.SelectedBuildingId = buildingId;
+
             return View();
         }
 
@@ -178,6 +247,7 @@ namespace RMS_Client.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 // Nếu RoomStatusId không có giá trị, gán mặc định là 1 (Trạng thái "Trống")
                 roomDTO.RoomStatusId = roomDTO.RoomStatusId != 0 ? roomDTO.RoomStatusId : 1;
 
@@ -187,7 +257,7 @@ namespace RMS_Client.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("ListRoom", new { buildingId = buildingId });
+                    return RedirectToAction("ListRoom", "Room", new { buildingId = buildingId });
                 }
                 else
                 {
@@ -198,8 +268,18 @@ namespace RMS_Client.Controllers
             return View(roomDTO);
         }
 
-
-
+        [HttpGet]
+        public async Task<IActionResult> CheckRoomNameExists(int roomName, int buildingId)
+        {
+            string apiUrl = $"{RoomApiUri}/CheckRoomNameExists?roomName={roomName}&buildingId={buildingId}";
+            var response = await client.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var exists = await response.Content.ReadAsStringAsync();
+                return Json(bool.Parse(exists)); // Trả về true nếu phòng đã tồn tại, false nếu chưa
+            }
+            return Json(false);
+        }
 
         [HttpGet]
         public async Task<IActionResult> EditRoom(int id)
@@ -283,7 +363,9 @@ namespace RMS_Client.Controllers
                 // Sau khi xóa, giữ lại các tham số lọc và chuyển hướng về danh sách phòng
                 return RedirectToAction("ListRoom", new { buildingId = buildingId, statusIds = statusIds });
             }
-            return NotFound("Room could not be deleted.");
+            // Đọc thông báo lỗi từ phản hồi
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            return NotFound($"Room could not be deleted. Error: {errorMessage}");
         }
 
         [HttpPost]
@@ -325,7 +407,7 @@ namespace RMS_Client.Controllers
 
 
             // Gọi API với buildingId để lấy danh sách phòng
-            var response = await client.GetAsync(RoomApiUri + $"/GetRoomByBuilding?buildingId={buildingId}");
+            var response = await client.GetAsync(RoomApiUri + $"/GetRoomByBuilding/{buildingId}");
             if (!response.IsSuccessStatusCode)
             {
                 return Content("Không thể kết nối đến API.");
@@ -343,14 +425,17 @@ namespace RMS_Client.Controllers
             {
                 var worksheet = package.Workbook.Worksheets.Add("Rooms");
 
-                worksheet.Cells[1, 1].Value = "Room Number";
-                worksheet.Cells[1, 2].Value = "Area (m²)";
-                worksheet.Cells[1, 3].Value = "Floor";
-                worksheet.Cells[1, 4].Value = "Price (VNĐ)";
-                worksheet.Cells[1, 5].Value = "Status";
-                worksheet.Cells[1, 6].Value = "Description";
+                worksheet.Cells[1, 1].Value = "Số phòng";
+                worksheet.Cells[1, 2].Value = "Diện tích (m²)";
+                worksheet.Cells[1, 3].Value = "Tầng";
+                worksheet.Cells[1, 4].Value = "Giá phòng(VNĐ)";
+                worksheet.Cells[1, 5].Value = "Trạng thái";
+                worksheet.Cells[1, 6].Value = "Mô tả phòng";
+                worksheet.Cells[1, 7].Value = "Ngày bắt đầu thuê phòng";
+                worksheet.Cells[1, 8].Value = "Ngày hết hạn phòng thuê";
+                worksheet.Cells[1, 9].Value = "Ngày phòng sẽ trống trong tương lai";
 
-                using (var range = worksheet.Cells[1, 1, 1, 6])
+                using (var range = worksheet.Cells[1, 1, 1, 9])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -374,7 +459,9 @@ namespace RMS_Client.Controllers
                         _ => "Không xác định"
                     };
                     worksheet.Cells[row, 6].Value = room.Description;
-
+                    worksheet.Cells[row, 7].Value = room.StartedDate?.ToString("yyyy-MM-dd") ?? "Null";
+                    worksheet.Cells[row, 8].Value = room.ExpiredDate?.ToString("yyyy-MM-dd") ?? "Null";
+                    worksheet.Cells[row, 9].Value = room.FreeInFutureDate?.ToString("yyyy-MM-dd") ?? "Null";
                     row++;
                 }
 
@@ -388,6 +475,104 @@ namespace RMS_Client.Controllers
                 return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
         }
+
+        // Action để hiển thị form nhập liệu
+        public IActionResult ImportRooms()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ImportRooms(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                TempData["ErrorMessage"] = "No file uploaded.";
+                return RedirectToAction("ImportRooms");
+            }
+
+            var formData = new MultipartFormDataContent();
+            var fileContent = new StreamContent(file.OpenReadStream());
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+            formData.Add(fileContent, "file", file.FileName);
+
+            // Gửi yêu cầu POST đến API để nhập Rooms
+            var response = await client.PostAsync($"{RoomApiUri}/ImportRooms", formData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["SuccessMessage"] = "Rooms imported successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "An error occurred while importing rooms.";
+            }
+
+            return RedirectToAction("ImportRooms");
+        }
+
+        //[HttpPost]
+        //public async Task<IActionResult> ImportRooms(IFormFile excelFile)
+        //{
+        //    if (excelFile == null || excelFile.Length == 0)
+        //    {
+        //        ModelState.AddModelError("File", "Vui lòng chọn một file Excel.");
+        //        return View();
+        //    }
+
+        //    var rooms = new List<Room>();
+
+        //    using (var stream = new MemoryStream())
+        //    {
+        //        await excelFile.CopyToAsync(stream);
+        //        stream.Position = 0;
+
+        //        using (var package = new ExcelPackage(stream))
+        //        {
+        //            var worksheet = package.Workbook.Worksheets[0]; // Giả sử dữ liệu ở worksheet đầu tiên
+        //            int rowCount = worksheet.Dimension.Rows;
+
+        //            for (int row = 2; row <= rowCount; row++) // Bỏ qua dòng đầu vì đó là tiêu đề
+        //            {
+        //                var room = new Room
+        //                {
+        //                    RoomNumber = worksheet.Cells[row, 1].Value?.ToString(),
+        //                    Area = double.TryParse(worksheet.Cells[row, 2].Value?.ToString(), out double area) ? area : 0,
+        //                    Floor = int.TryParse(worksheet.Cells[row, 3].Value?.ToString(), out int floor) ? floor : 0,
+        //                    Price = decimal.TryParse(worksheet.Cells[row, 4].Value?.ToString(), out decimal price) ? price : 0,
+        //                    RoomStatusId = worksheet.Cells[row, 5].Value.ToString() switch
+        //                    {
+        //                        "Trống" => 1,
+        //                        "Đã có người" => 2,
+        //                        "Đang sửa chữa" => 3,
+        //                        "Sắp trống" => 4,
+        //                        _ => 0
+        //                    },
+        //                    Description = worksheet.Cells[row, 6].Value?.ToString()
+        //                };
+
+        //                rooms.Add(room);
+        //            }
+        //        }
+        //    }
+
+        //    // Gửi dữ liệu phòng lên API để lưu vào cơ sở dữ liệu
+        //    var json = JsonConvert.SerializeObject(rooms);
+        //    var content = new StringContent(json, Encoding.UTF8, "application/json");
+        //    var response = await client.PostAsync($"{RoomApiUri}/ImportRooms", content);
+
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        return RedirectToAction("ListRoom", "Room"); // Chuyển hướng về danh sách phòng sau khi import thành công
+        //    }
+        //    else
+        //    {
+        //        ModelState.AddModelError("API", "Lỗi khi lưu dữ liệu vào API.");
+        //        return View();
+        //    }
+        //}
+
+
 
     }
 }
