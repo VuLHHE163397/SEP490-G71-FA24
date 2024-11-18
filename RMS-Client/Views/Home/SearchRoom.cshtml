@@ -11,7 +11,7 @@
     <meta content="" name="description">
 
     <!-- Favicon -->
-    <link href="~/images/favicon.ico" rel="icon">
+    <link href="~/images/logos/house.png" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -358,6 +358,23 @@
                         <label><input type="radio" name="roomStatus" value="Sắp trống"> Sắp trống</label>
                     </div>
                 </div>
+                <!-- Sort Section (Right Side and Higher Up) -->
+                <div style="margin-top:30px;margin-right:40px" class="row mb-4">
+                    <div class="col-lg-4 offset-lg-8 text-end mt-4">
+                        <!-- Added mt-4 for top margin -->
+                        <div class="sort-section">
+                            <select class="form-select d-inline-block w-50 me-2">
+                                <option value="price-asc">Giá Tăng Dần</option>
+                                <option value="price-desc">Giá Giảm Dần</option>
+                                <option value="area-asc">Diện Tích Tăng Dần</option>
+                                <option value="area-desc">Diện Tích Giảm Dần</option>
+                                <option value="date-new">Khoảng cách tăng dần</option>
+                                <option value="date-old">Khoảng cách giảm dần</option>
+                            </select>
+                            <button class="btn btn-primary">Sắp Xếp</button>
+                        </div>
+                    </div>
+                </div>
                 <!-- Search Button -->
                 <div class="text-center mt-4">
                     <button id="searchButton" onclick="searchRooms()"><i class="fas fa-search"></i>Tìm kiếm</button>
@@ -432,15 +449,16 @@
                 <div class="container">
                     <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                         <h1 class="section-title text-center text-primary text-uppercase">Danh sách kết quả</h1>
-                        <h4 id="resultCount" class="result-count" style="color:blue;font-weight:bold;"></h4>
+                        <!-- Message Container -->
+                        <div id="messageContainer" style="color:blue;font-weight:bold;" class="mt-3"></div>
                     </div>
                     <!-- Result Container -->
                     <div id="resultContainer" class="mt-5">
                         <!-- Room results or messages will be injected here -->
                     </div>
                 </div>
-
             </div>
+
             <!-- Footer Start -->
             <div class="container-fluid bg-dark text-light footer wow fadeIn" data-wow-delay="0.1s">
                 <div class="container">
@@ -567,11 +585,11 @@
                 const priceSlider = document.getElementById('price-slider');
 
                 noUiSlider.create(priceSlider, {
-                    start: [1000000, 5000000], // Default range values
+                    start: [0, 30000000], // Default range values
                     connect: true,
                     range: {
                         'min': 0,
-                        'max': 20000000
+                        'max': 30000000
                     },
                     step: 500000, // Step value for slider
                     format: {
@@ -609,7 +627,7 @@
 
                 // Create the area slider
                 noUiSlider.create(areaSlider, {
-                    start: [20, 50], // Default range values for area
+                    start: [0, 100], // Default range values for area
                     connect: true,
                     range: {
                         'min': 0,
@@ -651,7 +669,7 @@
 
                 // Create the distance slider
                 noUiSlider.create(distanceSlider, {
-                    start: [2, 5], // Default range values for distance
+                    start: [0, 20], // Default range values for distance
                     connect: true,
                     range: {
                         'min': 0,
@@ -691,21 +709,21 @@
                 // Function to reset all sliders to default values
                 function resetValues() {
                     // Reset price slider to default values
-                    priceSlider.noUiSlider.set([1000000, 3000000]); // Default price range
-                    document.getElementById('slider-min-value').textContent = '1000000';
-                    document.getElementById('slider-max-value').textContent = '3000000';
+                    priceSlider.noUiSlider.set([0, 300000000]); // Default price range
+                    document.getElementById('slider-min-value').textContent = '0';
+                    document.getElementById('slider-max-value').textContent = '300000000';
                     document.getElementById('selected-price-range').textContent = 'Giá tiền';
 
                     // Reset area slider to default values
-                    areaSlider.noUiSlider.set([10, 50]); // Default area range
-                    document.getElementById('slider-area-min-value').textContent = '10';
-                    document.getElementById('slider-area-max-value').textContent = '50';
+                    areaSlider.noUiSlider.set([0,100]); // Default area range
+                    document.getElementById('slider-area-min-value').textContent = '0';
+                    document.getElementById('slider-area-max-value').textContent = '100';
                     document.getElementById('selected-area-range').textContent = 'Diện tích';
 
                     // Reset distance slider to default values
-                    distanceSlider.noUiSlider.set([0, 5]); // Default distance range
+                    distanceSlider.noUiSlider.set([0, 20]); // Default distance range
                     document.getElementById('slider-distance-min-value').textContent = '0';
-                    document.getElementById('slider-distance-max-value').textContent = '5';
+                    document.getElementById('slider-distance-max-value').textContent = '20';
                     document.getElementById('selected-distance-range').textContent = 'Khoảng cách';
                 }
 
@@ -753,20 +771,66 @@
                         });
                 }
 
-                function displayRooms(rooms) {
+                function searchRooms() {
+                    console.log("Search button clicked"); // Debugging line to check if function is triggered
+
+                    // Collect form data
+                    const provinceId = document.getElementById("province").value || 0;
+                    const districtId = document.getElementById("district").value || 0;
+                    const wardId = document.getElementById("ward").value || 0;
+                    const roomStatus = document.querySelector('input[name="roomStatus"]:checked')?.value || 0;
+                    const minDistance = document.getElementById("slider-distance-min-value").textContent || 0;
+                    const maxDistance = document.getElementById("slider-distance-max-value").textContent || 0;
+                    const minPrice = document.getElementById("slider-min-value").textContent || 0;
+                    const maxPrice = document.getElementById("slider-max-value").textContent || 0;
+                    const minArea = document.getElementById("slider-area-min-value").textContent || 0;
+                    const maxArea = document.getElementById("slider-area-max-value").textContent || 0;
+
+                    console.log("Collected data:", {
+                        provinceId, districtId, wardId, roomStatus, minDistance, maxDistance, minPrice, maxPrice, minArea, maxArea
+                    }); // Debugging line to check collected data
+
+                    // Reset message and result containers
+                    const messageContainer = document.getElementById("messageContainer");
                     const resultContainer = document.getElementById("resultContainer");
-                    const resultCount = document.getElementById("resultCount");
+                    messageContainer.innerHTML = ""; // Clear previous message
                     resultContainer.innerHTML = ""; // Clear previous results
 
-                    // Display count of results
-                    resultCount.innerText = `Tìm thấy: ${rooms.length} phòng phù hợp`;
+                    // Prepare search parameters
+                    const searchParams = new URLSearchParams({
+                        provinceId, districtId, wardId, roomStatus, minDistance, maxDistance, minPrice, maxPrice, minArea, maxArea
+                    });
+
+                    // Send GET request to API
+                    fetch(`/api/room/search?${searchParams}`, { method: 'GET' })
+                        .then(response => {
+                            if (!response.ok) throw new Error("Network response was not ok");
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log("Received data:", data); // Debugging line to check the API response
+                            if (data && data.length > 0) {
+                                messageContainer.innerHTML = `<p class="text-success">Tìm thấy ${data.length} phòng phù hợp.</p>`;
+                                displayRooms(data);
+                            } else {
+                                messageContainer.innerHTML = `<p class="text-warning">Không tìm thấy phòng nào phù hợp.</p>`;
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error fetching rooms:", error);
+                            messageContainer.innerHTML = `<p class="text-danger">Không tìm thấy phòng nào phù hợp.</p>`;
+                        });
+                }
+
+                function displayRooms(rooms) {
+                    const resultContainer = document.getElementById("resultContainer");
 
                     const row = document.createElement("div");
-                    row.classList.add("row"); // Thêm lớp row để chứa các cột
+                    row.classList.add("row"); // Add row class for layout
 
                     rooms.forEach(room => {
                         const roomElement = document.createElement("div");
-                        roomElement.classList.add("col-lg-3", "col-md-4", "col-sm-6", "wow", "fadeInUp"); // Đảm bảo 5 phần tử trên 1 hàng
+                        roomElement.classList.add("col-lg-3", "col-md-4", "col-sm-6", "wow", "fadeInUp");
                         roomElement.setAttribute("data-wow-delay", "0.1s");
 
                         const priceInMillions = (room.price / 1_000_000).toFixed(1);
@@ -800,17 +864,10 @@
                                 </div>
                             </div>
                         `;
-
                         row.appendChild(roomElement);
                     });
 
-                    resultContainer.appendChild(row); // Thêm hàng vào container kết quả
-                }
-
-                // Function to show error messages
-                function showError(message) {
-                    const resultContainer = document.getElementById("resultContainer");
-                    resultContainer.innerHTML = `<p class="text-danger">${message}</p>`;
+                    resultContainer.appendChild(row); // Add row to results container
                 }
                 // Function to get favorites from cookies
                 function getFavorites() {
