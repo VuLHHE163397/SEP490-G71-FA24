@@ -1,0 +1,171 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RMS - Verification</title>
+    <link rel="icon" type="image/png" href="~/images/logo.jpg" />
+    <link rel="stylesheet" href="~/css/styles.min.css" />
+    <style>
+        /* Popup styling */
+        #popupMessage, #popupErrorMessage, #popupMessage1, #popupErrorMessage1 {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            z-index: 1000;
+        }
+
+        #popupMessage, #popupMessage1 {
+            background-color: #4caf50;
+        }
+
+        #popupErrorMessage, #popupErrorMessage1 {
+            background-color: #C53500;
+        }
+
+        .code-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 24px;
+            margin-right: 10px;
+            border: 2px solid #ccc;
+            border-radius: 15px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+
+            .code-input:focus {
+                border-color: #4caf50;
+                background-color: #e9f8e3;
+                box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+                outline: none;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper">
+        <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+            <div class="d-flex align-items-center justify-content-center w-100">
+                <div class="row justify-content-center w-100">
+                    <div class="col-md-8 col-lg-6 col-xxl-4">
+                        <div class="card mb-0">
+                            <div class="card-body">
+                                <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                                    <img src="~/images/logo.jpg" width="180" alt="">
+                                </a>
+                                <p class="text-center">RMS_Quản lý trọ theo cách của bạn</p>
+                                <form id="verificationForm">
+                                    <div class="mb-3">
+                                        <label for="verificationCode" class="form-label">Chúng tôi đã gửi mã qua mail bạn cung cấp. Xin nhập mã xác thực</label>
+                                        <div class="d-flex justify-content-between">
+                                            <input type="text" class="code-input" id="verificationCode1" maxlength="1" oninput="moveFocus(this, 'verificationCode2')" onclick="this.select()" />
+                                            <input type="text" class="code-input" id="verificationCode2" maxlength="1" oninput="moveFocus(this, 'verificationCode3')" onclick="this.select()" />
+                                            <input type="text" class="code-input" id="verificationCode3" maxlength="1" oninput="moveFocus(this, 'verificationCode4')" onclick="this.select()" />
+                                            <input type="text" class="code-input" id="verificationCode4" maxlength="1" oninput="moveFocus(this, 'verificationCode5')" onclick="this.select()" />
+                                            <input type="text" class="code-input" id="verificationCode5" maxlength="1" oninput="moveFocus(this, 'verificationCode6')" onclick="this.select()" />
+                                            <input type="text" class="code-input" id="verificationCode6" maxlength="1" onclick="this.select()" />
+                                        </div>
+                                    </div>
+                                    <a onclick="verifyCode()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Xác thực</a>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <p class="fs-4 mb-0 fw-bold">Chưa nhận được mã?</p>
+                                        <a class="text-primary fw-bold ms-2" href="#" onclick="resendCode()">Gửi lại mã</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="popupMessage">Xác thực thành công!</div>
+    <div id="popupMessage1">Mã mới đã được gửi qua email.</div>
+    <div id="popupErrorMessage">Xác thực thất bại!</div>
+    <div id="popupErrorMessage1">Lỗi khi gửi mã mới!</div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function moveFocus(current, nextId) {
+            if (current.value.length === current.maxLength) {
+                document.getElementById(nextId).focus();
+            }
+        }
+
+        function verifyCode() {
+            var code = $("#verificationCode1").val() + $("#verificationCode2").val() + $("#verificationCode3").val() +
+                $("#verificationCode4").val() + $("#verificationCode5").val() + $("#verificationCode6").val();
+
+            if (code.length !== 6) {
+                showErrorPopup("Mã xác thực không hợp lệ! Yêu cầu 6 chữ số!", "popupErrorMessage");
+                return;
+            }
+            var firstName = sessionStorage.getItem("firstName");
+            var midName = sessionStorage.getItem("midName");
+            var lastName = sessionStorage.getItem("lastName");
+            var email = sessionStorage.getItem("email");
+            var phone = sessionStorage.getItem("phone");
+            var password = sessionStorage.getItem("password");
+
+            const user = {
+                firstName: firstName,
+                midName: midName,
+                lastName: lastName,
+                email: email,
+                phone: phone,
+                password: password,
+                verificationCode: code
+            };           
+
+            $.ajax({
+                url: "https://localhost:7056/api/Auth/register",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(user),
+                success: function (response) {
+                    showPopup("Đăng ký thành công!", "popupMessage");
+                    setTimeout(function () {
+                        window.location.href = "/Auth/Login";
+                    }, 2000);
+                },
+                error: function (xhr) {
+                    showErrorPopup("Đăng ký thất bại: " + xhr.responseText, "popupErrorMessage");
+                }
+            });
+        }
+
+        function resendCode() {
+            $.ajax({
+                url: "https://localhost:7056/api/Auth/sendVerificationCode",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(user),
+                success: function (response) {
+                    showPopup("Mã mới đã được gửi qua email.", "popupMessage1");
+                },
+                error: function () {
+                    showErrorPopup("Lỗi khi gửi mã mới!", "popupErrorMessage1");
+                }
+            });
+        }
+
+        function showPopup(message, popupId) {
+            $("#" + popupId).text(message).fadeIn().delay(2000).fadeOut();
+        }
+
+        function showErrorPopup(message, popupId) {
+            $("#" + popupId).text(message).fadeIn().delay(4000).fadeOut();
+        }
+    </script>
+</body>
+</html>
