@@ -1,7 +1,7 @@
 ﻿@using RMS_API.DTOs
 @model IEnumerable<RMS_API.Models.Room>
 @{
-    var buildingId = Model.FirstOrDefault()?.BuildingId; // Lấy BuildingId từ phòng đầu tiên, nếu có
+    var buildingId = ViewBag.SelectedBuildingId; // Lấy BuildingId từ phòng đầu tiên, nếu có
 }
 
 <!doctype html>
@@ -87,7 +87,7 @@
 
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a asp-controller="Statistic" asp-action="ViewStatistic" class="text-nowrap logo-img">
+                    <a asp-controller="Building" asp-action="ListBuilding" class="text-nowrap logo-img">
                         <img src="~/images/logo.jpg" width="180" alt="" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
@@ -310,9 +310,15 @@
 
                         <div class="col-md-3 offset-md-1 d-flex flex-column align-items-end">
                             <div class="btn-group-vertical">
-                                <a class="btn btn-success mb-2" style="width: 200px;">
-                                    <i class="ti ti-upload"></i> Nhập phòng từ excel
-                                </a>
+                                <form asp-action="ImportRooms" method="post" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label for="fileInput">Choose Excel file:</label>
+                                        <input type="file" name="file" id="fileInput" class="form-control" required />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Import Rooms</button>
+                                </form>
+
+
                                 <a class="btn btn-success mb-2" style="width: 200px;">
                                     <i class="ti ti-user"></i> Khách thuê
                                 </a>
@@ -354,25 +360,8 @@
                                 <td>@string.Format("{0:N0} VNĐ", room.Price)</td>
                                 <td>
                                     @{
-                                        string statusNameVi;
-                                        switch (room.RoomStatusId)
-                                        {
-                                            case 1:
-                                                statusNameVi = "Đang Trống";
-                                                break;
-                                            case 2:
-                                                statusNameVi = "Đang cho thuê";
-                                                break;
-                                            case 3:
-                                                statusNameVi = "Đang bảo trì";
-                                                break;
-                                            case 4:
-                                                statusNameVi = "Sắp trống";
-                                                break;
-                                            default:
-                                                statusNameVi = room.RoomStatusId.ToString();
-                                                break;
-                                        }
+                                        var roomStatus = ((SelectList)ViewBag.RoomStatuses).FirstOrDefault(s => s.Value == room.RoomStatusId.ToString());
+                                        var statusNameVi = roomStatus?.Text ?? "Unknown"; // Lấy tên hoặc để "Unknown" nếu không tìm thấy
                                     }
                                     @statusNameVi
                                 </td>
@@ -400,8 +389,6 @@
                     }
                 </tbody>
             </table>
-
-
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -419,6 +406,8 @@
         function submitFilterForm() {
             document.getElementById("statusFilterForm").submit();
         }
+
     </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>

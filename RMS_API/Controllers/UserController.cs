@@ -20,6 +20,107 @@ namespace RMS_API.Controllers
             _context = context;
         }
 
+        [HttpGet("GetUserByEmail")]
+        public async Task<IActionResult> GetUserByEmail([FromQuery] string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Email is required.");
+            }
+
+            var user = await _context.Users               
+               .Where(u => u.Email == email)
+               .Select(b => new RegisterModel
+               {                   
+                   FirstName = b.FirstName,
+                   LastName = b.LastName,
+                   MidName = b.MidName,
+                   Email = b.Email,
+                   Phone = b.Phone                  
+               })
+               .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound("Building not found.");
+            }
+            return Ok(user);
+        }
+
+        [HttpPut("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromQuery] string email, [FromQuery] string currentPassword, [FromQuery] string newPassword)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(currentPassword) || string.IsNullOrEmpty(newPassword))
+            {
+                return BadRequest("Email hoặc current password và new password không được trống.");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            if (user.Password != currentPassword) // Adjust according to your password hashing method if applicable
+            {
+                return BadRequest("Current password is incorrect.");
+            }
+
+            user.Password = newPassword; // Hash the password if needed
+            await _context.SaveChangesAsync();
+
+            return Ok("Password updated successfully.");
+        }
+
+        [HttpPut("UpdateProfile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] RegisterModel userDTO)
+        {
+            if (userDTO == null || string.IsNullOrEmpty(userDTO.Email))
+            {
+                return BadRequest("Invalid user data.");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userDTO.Email);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            user.FirstName = userDTO.FirstName;
+            user.LastName = userDTO.LastName;
+            user.MidName = userDTO.MidName;
+            user.Phone = userDTO.Phone;
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Profile updated successfully.");
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromQuery] string resetToken, [FromQuery] string newPassword)
+        {
+            if (string.IsNullOrEmpty(resetToken) || string.IsNullOrEmpty(newPassword))
+            {
+                return BadRequest("Token and new password are required.");
+            }
+
+            //var user = await _context.Users.FirstOrDefaultAsync(u => u.ResetToken == resetToken && u.ResetTokenExpiry > DateTime.UtcNow);
+            var user= new RegisterModel();
+            if (user == null)
+            {
+                return BadRequest("Invalid or expired token.");
+            }
+
+            // Update password and clear the reset token
+            user.Password = newPassword; // Hash the password if needed
+            //user.ResetToken = null;
+            //user.ResetTokenExpiry = null;
+            await _context.SaveChangesAsync();
+
+            return Ok("Password has been reset successfully.");
+        }
         [HttpGet("GetAllUserByRoleId")]
         public async Task<IActionResult> GetAllUserByRoleId(int roleId)
         {
@@ -88,28 +189,53 @@ namespace RMS_API.Controllers
                 return BadRequest(new { Message = "Invalid input data." });
             }
 
-            // Find the user by Id
-            var user = await _context.Users.FindAsync(request.Id);
+            // Tìm user theo Id
+            var user = await _context.Users
+                .Include(u => u.Buildings) // Include Buildings liên quan
+                .FirstOrDefaultAsync(u => u.Id == request.Id);
+
             if (user == null)
             {
                 return NotFound(new { Message = "User not found." });
             }
 
-            // Find the status by the new status ID to validate it exists
-            var status = await _context.UserStatuses.FindAsync(request.NewStatusId);
-            if (status == null)
+            // Xác thực trạng thái UserStatus
+            var userStatus = await _context.UserStatuses.FindAsync(request.NewStatusId);
+            if (userStatus == null)
             {
-                return NotFound(new { Message = "Status not found." });
+                return NotFound(new { Message = "User status not found." });
             }
 
-            // Update the user's status
+            // Cập nhật UserStatus
             user.UserStatusId = request.NewStatusId;
 
-            // Save changes to the database
+            // Map UserStatusId sang BuildingStatusId
+            int newBuildingStatusId = MapUserStatusToBuildingStatus(request.NewStatusId);
+
+            // Cập nhật BuildingStatus cho tất cả Buildings của User này
+            foreach (var building in user.Buildings)
+            {
+                building.BuildingStatusId = newBuildingStatusId;
+            }
+
+            // Lưu thay đổi
             await _context.SaveChangesAsync();
 
-            return Ok(new { Message = "User status updated successfully." });
+            return Ok(new { Message = "Trạng thái người dùng và các trạng thái tòa nhà liên quan được cập nhật thành công." });
         }
 
+        private int MapUserStatusToBuildingStatus(int userStatusId)
+        {
+            // Logic ánh xạ UserStatusId -> BuildingStatusId
+            // Ví dụ:
+            switch (userStatusId)
+            {
+                case 1: return 1; // UserStatusId 1 -> BuildingStatusId 1
+                case 2: return 2; // UserStatusId 2 -> BuildingStatusId 2
+                case 3: return 2; // UserStatusId 3 -> BuildingStatusId 3
+                default: return 0; // Mặc định là 0 nếu không có ánh xạ
+            }
+
+        }
     }
 }

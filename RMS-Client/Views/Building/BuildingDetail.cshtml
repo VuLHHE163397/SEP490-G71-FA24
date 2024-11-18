@@ -333,7 +333,6 @@
                 <div class="container mt-4">
                     <h1>@ViewData["Title"]</h1>
 
-                    <!-- Form for Editing Building -->
                     <form id="editBuilding" onsubmit="editBuilding(); return false;">
                         <input type="hidden" id="BuildingId" name="BuildingId" value="@Model.Id" />
 
@@ -399,6 +398,7 @@
                         TotalFloors: parseInt($('#TotalFloors').val()),
                         NumberOfRooms: parseInt($('#NumberOfRooms').val()),
                         AddressDetails: $('#AddressDetails').val(),
+                        Distance: $('Distance').val(),
                         ProvinceName: $('#ProvinceId').val(),
                         DistrictName: $('#DistrictId').val(),
                         WardName: $('#WardId').val(),

@@ -153,7 +153,7 @@
 
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a asp-controller="Statistic" asp-action="ViewStatistic" class="text-nowrap logo-img">
+                    <a asp-controller="Building" asp-action="ListBuilding" class="text-nowrap logo-img">
                         <img src="~/images/logo.jpg" width="180" alt="" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
@@ -341,34 +341,40 @@
                 <div class="container mt-4">
                     <h1>@ViewData["Title"]</h1>
 
-                    <form asp-action="CreateRoom" method="post">
+                    <form asp-action="CreateRoom" method="post" id="createRoomForm">
 
                         <div class="form-group row">
-                            <label for="RoomNumber">Room Number</label>
-                            <input type="number" class="form-control" id="RoomNumber" name="RoomNumber" required />
+                            <label for="RoomNumber">Tên Phòng</label>
+                            <input class="form-control" id="RoomNumber" name="RoomNumber" required />
+                            <span class="error-message" id="roomNumberError" style="color: red; display: none;">Tên phòng đã tồn tại trong tòa nhà này.</span>
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label for="Price">Giá Phòng</label>
+                            <input step="0.01" class="form-control" id="Price" name="Price" required />
+                            <span class="error-message" id="priceError" style="color: red; display: none;">Giá Phòng phải là một số dương</span>
                         </div>
 
                         <div class="form-group row">
-                            <label for="Price">Price</label>
-                            <input type="number" step="0.01" class="form-control" id="Price" name="Price" required />
+                            <label for="Floor">Tầng</label>
+                            <input class="form-control" id="Floor" name="Floor" required />
+                            <span class="error-message" id="floorError" style="color: red; display: none;">Số Tầng phải là một số nguyên dương.</span>
                         </div>
 
                         <div class="form-group row">
-                            <label for="Floor">Floor</label>
-                            <input type="number" class="form-control" id="Floor" name="Floor" required />
+                            <label for="Area">Diện Tích</label>
+                            <input step="0.01" class="form-control" id="Area" name="Area" required />
+                            <span class="error-message" id="areaError" style="color: red; display: none;">Diện tích phải là một số dương.</span>
                         </div>
 
                         <div class="form-group row">
-                            <label for="Area">Area</label>
-                            <input type="number" step="0.01" class="form-control" id="Area" name="Area" required />
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="Description">Description</label>
+                            <label for="Description">Mô Tả Phòng</label>
                             <textarea class="form-control" id="Description" name="Description" required></textarea>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" style="display:none">
                             <label class="col-sm-3 fw-bold text-end align-middle" for="BuildingId">BuildingId</label>
                             <div class="col-sm-9">
                                 <select asp-for="BuildingId" asp-items="ViewBag.Buildingss" class="form-select">
@@ -377,16 +383,92 @@
                                 <span asp-validation-for="BuildingId" class="text-danger"></span>
                             </div>
                         </div>
+
                         <button type="submit" class="btn btn-primary w-100">Tạo Phòng</button>
                     </form>
 
                 </div>
             </div>
-
         </div>
+    </div>
+    <script src="~/lib/simplebar/dist/simplebar.js"></script>
+    <script>
+        // Thiết lập BuildingId mặc định
+        document.getElementById("BuildingId").value = '@ViewBag.SelectedBuildingId';
 
-        <script src="~/lib/simplebar/dist/simplebar.js"></script>
+        // Kiểm tra giá trị nhập vào của các trường ngay khi người dùng gõ
+        document.getElementById('Price').addEventListener('input', function () {
+            validatePrice();
+        });
 
+        document.getElementById('Floor').addEventListener('input', function () {
+            validateFloor();
+        });
+
+        document.getElementById('Area').addEventListener('input', function () {
+            validateArea();
+        });
+
+        // Hàm validate cho từng trường
+        function validatePrice() {
+            const price = document.getElementById('Price').value;
+            const priceError = document.getElementById('priceError');
+            if (parseFloat(price) <= 0) {
+                priceError.style.display = 'inline';
+            } else {
+                priceError.style.display = 'none';
+            }
+        }
+
+        function validateFloor() {
+            const floor = document.getElementById('Floor').value;
+            const floorError = document.getElementById('floorError');
+            if (parseInt(floor) <= 0 || !Number.isInteger(parseFloat(floor))) {
+                floorError.style.display = 'inline';
+            } else {
+                floorError.style.display = 'none';
+            }
+        }
+
+        function validateArea() {
+            const area = document.getElementById('Area').value;
+            const areaError = document.getElementById('areaError');
+            if (parseFloat(area) <= 0) {
+                areaError.style.display = 'inline';
+            } else {
+                areaError.style.display = 'none';
+            }
+        }
+
+        // Kiểm tra RoomNumber ngay khi người dùng nhập xong và rời khỏi trường input
+        document.getElementById('RoomNumber').addEventListener('blur', async function () {
+            const roomName = this.value;
+            const buildingId = '@ViewBag.SelectedBuildingId';
+
+            const response = await fetch(`/Room/CheckRoomNameExists?roomName=${roomName}&buildingId=${buildingId}`);
+            const roomExists = await response.json();
+
+            const roomNumberError = document.getElementById('roomNumberError');
+            if (roomExists) {
+                roomNumberError.style.display = 'inline';
+                roomNumberError.textContent = 'Tên Phòng đã tồn tại trong tòa nhà này';
+            } else {
+                roomNumberError.style.display = 'none';
+            }
+        });
+
+        // Kiểm tra khi submit form
+        document.getElementById('createRoomForm').addEventListener('submit', function (event) {
+            validatePrice();
+            validateFloor();
+            validateArea();
+
+            // Nếu có lỗi, ngăn form submit
+            if (document.querySelectorAll('.error-message[style="display: inline;"]').length > 0) {
+                event.preventDefault();
+            }
+        });
+    </script>
 
 </body>
 
