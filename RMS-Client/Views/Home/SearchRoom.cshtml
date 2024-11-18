@@ -65,20 +65,6 @@
         .small-label {
             font-size: 0.9em;
         }
-        /* Thu hẹp khoảng cách giữa các thẻ chọn */
-        .select-container {
-            flex: 1;
-        }
-
-            .select-container .form-select-sm {
-                width: 90%; /* Đảm bảo mỗi thẻ chiếm toàn bộ không gian cột */
-                font-size: 1rem;
-                padding: 0.3rem 0.5rem;
-            }
-
-        .row.mb-2.align-items-center .gap-2 {
-            gap: 8px; /* Đảm bảo khoảng cách giữa các phần tử */
-        }
 
         .selected-range {
             min-width: 150px;
@@ -95,6 +81,7 @@
         .content {
             padding-bottom: 70px; /* Ensure body content doesn't overlap with footer */
         }
+
         /* Additional styles for the slider, case buttons, and popup */
         .slider-container {
             margin-top: 20px;
@@ -204,20 +191,6 @@
             color: black;
         }
 
-        .reset-button {
-            margin-top: 10px;
-            background-color: orange;
-            color: black;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem; /* Match font size */
-        }
-
-            .reset-button:hover {
-                background-color: #e53935; /* Darker red for hover effect */
-            }
-
         .room-item {
             height: 450px; /* Chiều cao cố định cho tất cả các khung ảnh */
             margin-bottom: 30px; /* Khoảng cách giữa các hàng */
@@ -282,7 +255,7 @@
                         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                             <div class="navbar-nav mr-auto py-0">
                                 <a asp-controller="Home" asp-action="Home" class="nav-item nav-link active">Trang chủ</a>
-                                <a asp-controller="Home" asp-action="SearchRoom" class="nav-item nav-link active">Tìm phòng</a>
+                                <a asp-controller="Home" asp-action="Search" class="nav-item nav-link active">Tìm phòng</a>
                                 <!-- Conditional rendering for roles -->
                                 @if (User.IsInRole("Admin"))
                                 {
@@ -312,72 +285,53 @@
         <!-- Header End -->
         <!-- Search Start -->
         <div class="container-xxl py-5 content">
-
-            <div class="container" style="border: 2px solid green; padding: 15px; border-radius: 5px;">
-                <h1 style="color: #FEA116" class="text-center text-uppercase">Tìm phòng</h1>
+            <div class="container" style="border: 5px solid green; padding: 10px; border-radius: 8px;">
+                <h1 style="color: #FEA116; margin:30px" class="text-center text-uppercase">Tìm phòng</h1>
                 <!-- Search and Filter Options -->
-                <div class="row mb-2 align-items-center">
+                <div class="row mb-2 align-items-center" style="display: flex; gap: 15px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
                     <!-- Location Filters (Left Side) -->
-                    <div class="col-lg-8 d-flex gap-2 align-items-center">
-                        <form id="selectAddressForm">
+                    <div class="col-lg-8 d-flex gap-2 align-items-center" style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center; flex: 1;margin-bottom:30px">
+                        <form id="selectAddressForm" style="display: flex; gap: 10px; align-items: center; margin: 0;">
                             <!-- Row for select elements -->
-                            <div class="d-flex gap-2 align-items-center select-row">
-                                <select id="province" name="provinceId" required>
+                            <div class="d-flex gap-2 align-items-center select-row" style="display: flex; gap: 10px;">
+                                <select id="province" name="provinceId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 150px;">
                                     <option value="">Tỉnh/Thành phố</option>
                                 </select>
 
-                                <select id="district" name="districtId" required>
+                                <select id="district" name="districtId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 150px;">
                                     <option value="">Quận/Huyện/Thị xã</option>
                                 </select>
 
-                                <select id="ward" name="wardId" required>
+                                <select id="ward" name="wardId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 150px;">
                                     <option value="">Xã/Phường/Thị trấn</option>
                                 </select>
                             </div>
                         </form>
-                    </div>
-
-                    <!-- Room Status Filter and Buttons (Right Side) -->
-                    <div style="margin-bottom:10px;padding-right:50px" class="col-lg-4 d-flex flex-column align-items-end gap-3 ms-auto">
-                        <!-- Filter Buttons -->
-                        <div class="d-flex gap-2">
-                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-distance-range" onclick="toggleDistanceModal(true)">Khoảng cách</button>
-                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-price-range" onclick="toggleModal(true)">Giá tiền</button>
-                            <button class="selected-range btn btn-outline-secondary btn-sm" id="selected-area-range" onclick="toggleAreaModal(true)">Diện tích</button>
-                            <button class="reset-button" onclick="resetValues()">
-                                <i class="fas fa-undo-alt"></i> Đặt lại
-                            </button>
+                        <button class="d-flex gap-2 align-items-center select-row" id="selected-distance-range"
+                                style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; white-space: nowrap; cursor: pointer;"
+                                onclick="toggleDistanceModal(true)">
+                            Khoảng cách
+                        </button>
+                        <button class="d-flex gap-2 align-items-center select-row" id="selected-price-range"
+                                style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; white-space: nowrap; cursor: pointer;"
+                                onclick="toggleModal(true)">
+                            Giá tiền
+                        </button>
+                        <button class="d-flex gap-2 align-items-center select-row" id="selected-area-range"
+                                style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; white-space: nowrap; cursor: pointer;"
+                                onclick="toggleAreaModal(true)">
+                            Diện tích
+                        </button>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <label style="white-space: nowrap;">
+                                <input type="radio" name="roomStatus" value="Đang trống" checked style="margin-right: 5px;"> Đang trống
+                            </label>
+                            <label style="white-space: nowrap;">
+                                <input type="radio" name="roomStatus" value="Sắp trống" style="margin-right: 5px;"> Sắp trống
+                            </label>
                         </div>
+                        <button id="searchButton" onclick="searchRooms()"><i class="fas fa-search"></i>Tìm kiếm</button>
                     </div>
-                </div>
-                <!-- Room Status Filter -->
-                <div style="margin-top:30px;margin-right:40px" class="text-end mb-3">
-                    <h6>Trạng thái phòng</h6>
-                    <div>
-                        <label><input type="radio" name="roomStatus" value="Đang trống" checked> Đang trống</label>
-                        <label><input type="radio" name="roomStatus" value="Sắp trống"> Sắp trống</label>
-                    </div>
-                </div>
-                <!-- Sort Section (Right Side and Higher Up) -->
-                <div style="margin-top:30px;margin-right:40px" class="row mb-4">
-                    <div class="col-lg-4 offset-lg-8 text-end mt-4">
-                        <!-- Added mt-4 for top margin -->
-                        <div class="sort-section">
-                            <select class="form-select d-inline-block w-50 me-2">
-                                <option value="price-asc">Giá Tăng Dần</option>
-                                <option value="price-desc">Giá Giảm Dần</option>
-                                <option value="area-asc">Diện Tích Tăng Dần</option>
-                                <option value="area-desc">Diện Tích Giảm Dần</option>
-                                <option value="date-new">Khoảng cách tăng dần</option>
-                                <option value="date-old">Khoảng cách giảm dần</option>
-                            </select>
-                            <button class="btn btn-primary">Sắp Xếp</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Search Button -->
-                <div class="text-center mt-4">
-                    <button id="searchButton" onclick="searchRooms()"><i class="fas fa-search"></i>Tìm kiếm</button>
                 </div>
             </div>
             <!-- Popup Modals for Filters -->
@@ -449,6 +403,18 @@
                 <div class="container">
                     <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                         <h1 class="section-title text-center text-primary text-uppercase">Danh sách kết quả</h1>
+                        <!-- Sort Section -->
+                        <div id="sort-section" class="mt-4" style="text-align: right;width: 50%; margin-left: auto;">
+                            <h4 style="color: #FEA116;margin-left:200px" class="text-center text-uppercase">Sắp xếp</h4>
+                            <select id="sort-order" class="form-select d-inline-block w-50">
+                                <option value="price-asc">Giá Tăng Dần</option>
+                                <option value="price-desc">Giá Giảm Dần</option>
+                                <option value="area-asc">Diện Tích Tăng Dần</option>
+                                <option value="area-desc">Diện Tích Giảm Dần</option>
+                                <option value="distance-asc">Khoảng cách Tăng Dần</option>
+                                <option value="distance-desc">Khoảng cách Giảm Dần</option>
+                            </select>
+                        </div>
                         <!-- Message Container -->
                         <div id="messageContainer" style="color:blue;font-weight:bold;" class="mt-3"></div>
                     </div>
@@ -706,29 +672,13 @@
                     document.getElementById('selected-distance-range').textContent = `${minDistanceValue} - ${maxDistanceValue} km`;
                     toggleDistanceModal(false); // Close the modal after confirming
                 }
-                // Function to reset all sliders to default values
-                function resetValues() {
-                    // Reset price slider to default values
-                    priceSlider.noUiSlider.set([0, 300000000]); // Default price range
-                    document.getElementById('slider-min-value').textContent = '0';
-                    document.getElementById('slider-max-value').textContent = '300000000';
-                    document.getElementById('selected-price-range').textContent = 'Giá tiền';
 
-                    // Reset area slider to default values
-                    areaSlider.noUiSlider.set([0,100]); // Default area range
-                    document.getElementById('slider-area-min-value').textContent = '0';
-                    document.getElementById('slider-area-max-value').textContent = '100';
-                    document.getElementById('selected-area-range').textContent = 'Diện tích';
+                // Đặt một biến toàn cục để lưu trữ danh sách kết quả đã tìm
+                let searchResults = [];
 
-                    // Reset distance slider to default values
-                    distanceSlider.noUiSlider.set([0, 20]); // Default distance range
-                    document.getElementById('slider-distance-min-value').textContent = '0';
-                    document.getElementById('slider-distance-max-value').textContent = '20';
-                    document.getElementById('selected-distance-range').textContent = 'Khoảng cách';
-                }
-
+                // Cập nhật hàm searchRooms để lưu kết quả tìm kiếm vào biến searchResults
                 function searchRooms() {
-                    console.log("Search button clicked"); // Debugging line to check if function is triggered
+                    console.log("Search button clicked");
 
                     // Collect form data
                     const provinceId = document.getElementById("province").value || 0;
@@ -743,56 +693,14 @@
                     const maxArea = document.getElementById("slider-area-max-value").textContent || 0;
 
                     console.log("Collected data:", {
-                        provinceId, districtId, wardId, roomStatus, minDistance, maxDistance, minPrice, maxPrice, minArea, maxArea
-                    }); // Debugging line to check collected data
-
-                    // Prepare search parameters
-                    const searchParams = new URLSearchParams({
                         provinceId, districtId, wardId, roomStatus, minDistance, maxDistance, minPrice, maxPrice, minArea, maxArea
                     });
-
-                    // Send GET request to API
-                    fetch(`/api/room/search?${searchParams}`, { method: 'GET' })
-                        .then(response => {
-                            if (!response.ok) throw new Error("Network response was not ok");
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log("Received data:", data); // Debugging line to check the API response
-                            if (data && data.length > 0) {
-                                displayRooms(data);
-                            } else {
-                                showError("Không tìm thấy phòng nào phù hợp.");
-                            }
-                        })
-                        .catch(error => {
-                            console.error("Error fetching rooms:", error);
-                            showError("Không tìm thấy phòng phù hợp");
-                        });
-                }
-
-                function searchRooms() {
-                    console.log("Search button clicked"); // Debugging line to check if function is triggered
-
-                    // Collect form data
-                    const provinceId = document.getElementById("province").value || 0;
-                    const districtId = document.getElementById("district").value || 0;
-                    const wardId = document.getElementById("ward").value || 0;
-                    const roomStatus = document.querySelector('input[name="roomStatus"]:checked')?.value || 0;
-                    const minDistance = document.getElementById("slider-distance-min-value").textContent || 0;
-                    const maxDistance = document.getElementById("slider-distance-max-value").textContent || 0;
-                    const minPrice = document.getElementById("slider-min-value").textContent || 0;
-                    const maxPrice = document.getElementById("slider-max-value").textContent || 0;
-                    const minArea = document.getElementById("slider-area-min-value").textContent || 0;
-                    const maxArea = document.getElementById("slider-area-max-value").textContent || 0;
-
-                    console.log("Collected data:", {
-                        provinceId, districtId, wardId, roomStatus, minDistance, maxDistance, minPrice, maxPrice, minArea, maxArea
-                    }); // Debugging line to check collected data
 
                     // Reset message and result containers
                     const messageContainer = document.getElementById("messageContainer");
                     const resultContainer = document.getElementById("resultContainer");
+                    const sortOrderDropdown = document.getElementById("sort-order");
+
                     messageContainer.innerHTML = ""; // Clear previous message
                     resultContainer.innerHTML = ""; // Clear previous results
 
@@ -801,6 +709,9 @@
                         provinceId, districtId, wardId, roomStatus, minDistance, maxDistance, minPrice, maxPrice, minArea, maxArea
                     });
 
+                    // Disable sort dropdown until we have search results
+                    sortOrderDropdown.disabled = true;
+
                     // Send GET request to API
                     fetch(`/api/room/search?${searchParams}`, { method: 'GET' })
                         .then(response => {
@@ -808,20 +719,63 @@
                             return response.json();
                         })
                         .then(data => {
-                            console.log("Received data:", data); // Debugging line to check the API response
+                            console.log("Received data:", data);
                             if (data && data.length > 0) {
-                                messageContainer.innerHTML = `<p class="text-success">Tìm thấy ${data.length} phòng phù hợp.</p>`;
-                                displayRooms(data);
+                                messageContainer.innerHTML = `<p style="font-size: 20px;" class="text-success">Tìm thấy ${data.length} phòng phù hợp.</p>`;
+                                searchResults = data; // Lưu kết quả vào biến toàn cục
+                                sortOrderDropdown.disabled = false; // Kích hoạt dropdown sắp xếp
+                                displayRooms(searchResults);
                             } else {
                                 messageContainer.innerHTML = `<p class="text-warning">Không tìm thấy phòng nào phù hợp.</p>`;
+                                searchResults = []; // Đặt lại danh sách phòng nếu không tìm được
+                                sortOrderDropdown.disabled = true; // Vô hiệu hóa dropdown sắp xếp nếu không có kết quả
                             }
                         })
                         .catch(error => {
                             console.error("Error fetching rooms:", error);
                             messageContainer.innerHTML = `<p class="text-danger">Không tìm thấy phòng nào phù hợp.</p>`;
+                            searchResults = []; // Đặt lại danh sách phòng nếu có lỗi
+                            sortOrderDropdown.disabled = true; // Vô hiệu hóa dropdown sắp xếp nếu có lỗi
                         });
                 }
 
+                // Thêm sự kiện lắng nghe thay đổi giá trị trong dropdown sắp xếp
+                document.getElementById("sort-order").addEventListener("change", function () {
+                    if (searchResults.length === 0) {
+                        return; // Nếu không có kết quả tìm kiếm, không thực hiện sắp xếp
+                    }
+
+                    const selectedSortOption = this.value; // Lấy giá trị sắp xếp đã chọn
+                    let sortedResults;
+
+                    switch (selectedSortOption) {
+                        case "price-asc":
+                            sortedResults = searchResults.sort((a, b) => a.price - b.price);
+                            break;
+                        case "price-desc":
+                            sortedResults = searchResults.sort((a, b) => b.price - a.price);
+                            break;
+                        case "area-asc":
+                            sortedResults = searchResults.sort((a, b) => a.area - b.area);
+                            break;
+                        case "area-desc":
+                            sortedResults = searchResults.sort((a, b) => b.area - a.area);
+                            break;
+                        case "distance-asc":
+                            sortedResults = searchResults.sort((a, b) => a.distance - b.distance);
+                            break;
+                        case "distance-desc":
+                            sortedResults = searchResults.sort((a, b) => b.distance - a.distance);
+                            break;
+                        default:
+                            sortedResults = searchResults; // Nếu không có lựa chọn sắp xếp, giữ nguyên danh sách
+                            break;
+                    }
+
+                    displayRooms(sortedResults); // Hiển thị lại danh sách đã sắp xếp
+                });
+
+                // Hàm hiển thị danh sách phòng
                 function displayRooms(rooms) {
                     const resultContainer = document.getElementById("resultContainer");
 
@@ -836,39 +790,41 @@
                         const priceInMillions = (room.price / 1_000_000).toFixed(1);
 
                         roomElement.innerHTML = `
-                            <div class="room-item shadow rounded overflow-hidden">
-                                <div class="position-relative">
-                                    <img class="img-fluid" src="/images/room1.jpg" alt="Room Image">
-                                    <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
-                                        onclick="toggleFavorite(this)" data-room-id="${room.id}" data-room-address="${room.address}">
-                                        <i class="fa fa-heart"></i>
-                                    </a>
-                                </div>
-                                <div class="room-details p-3">
-                                    <h6 class="mb-2">
-                                        <i class="fa fa-map-marker-alt text-primary me-2"></i>${room.address}
-                                    </h6>
-                                    <div class="room-status">${room.roomStatusName}</div>
-                                    <div class="mt-2">
-                                        <small class="text-muted d-block">
-                                            <i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT ${room.distance.toFixed(0)} km
-                                        </small>
-                                        <small class="text-muted d-block">
-                                            <i class="fa fa-dollar-sign text-primary me-2"></i>${priceInMillions} triệu VND
-                                        </small>
-                                        <small class="text-muted d-block">
-                                            <i class="fa fa-expand text-primary me-2"></i>${room.area} m²
-                                        </small>
-                                    </div>
-                                    <a style="color:red" href="/Home/RoomDetail/${room.id}">Xem chi tiết</a>
-                                </div>
-                            </div>
-                        `;
+                                                            <div class="room-item shadow rounded overflow-hidden">
+                                                                <div class="position-relative">
+                                                                    <img class="img-fluid" src="/images/room1.jpg" alt="Room Image">
+                                                                    <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
+                                                                        onclick="toggleFavorite(this)" data-room-id="${room.id}" data-room-address="${room.address}">
+                                                                        <i class="fa fa-heart"></i>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="room-details p-3">
+                                                                    <h6 class="mb-2">
+                                                                        <i class="fa fa-map-marker-alt text-primary me-2"></i>${room.address}
+                                                                    </h6>
+                                                                    <div class="room-status">${room.roomStatusName}</div>
+                                                                    <div class="mt-2">
+                                                                        <small class="text-muted d-block">
+                                                                            <i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT ${room.distance.toFixed(0)} km
+                                                                        </small>
+                                                                        <small class="text-muted d-block">
+                                                                            <i class="fa fa-dollar-sign text-primary me-2"></i>${priceInMillions} triệu VND
+                                                                        </small>
+                                                                        <small class="text-muted d-block">
+                                                                            <i class="fa fa-expand text-primary me-2"></i>${room.area} m²
+                                                                        </small>
+                                                                    </div>
+                                                                    <a style="color:red" href="/Home/RoomDetail/${room.id}">Xem chi tiết</a>
+                                                                </div>
+                                                            </div>
+                                                        `;
                         row.appendChild(roomElement);
                     });
 
+                    resultContainer.innerHTML = ""; // Clear previous results
                     resultContainer.appendChild(row); // Add row to results container
                 }
+
                 // Function to get favorites from cookies
                 function getFavorites() {
                     const favorites = document.cookie
