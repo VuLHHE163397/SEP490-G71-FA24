@@ -363,6 +363,32 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
+        var totalRecord = @Html.Raw(ViewBag.TotalRecord);
+        $(document).ready(function () {
+            loadBuilding();
+        })
+        function loadBuilding() {
+            $.ajax({
+                url: 'https://localhost:7056/api/Building/GetAllBuildings',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    renderBuilding(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderBuilding(data) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var buildingId = urlParams.get('buildingId');
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            for (var item of data) {
+                html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
+            }
+            $("#buildings").html(html);
+        }
         function filterServices() {
             const input = document.getElementById('searchInput');
             const filter = input.value.toLowerCase();

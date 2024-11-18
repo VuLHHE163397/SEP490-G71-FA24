@@ -9,7 +9,7 @@ namespace RMS_API.DTOs
         public string Name { get; set; } = null!;
        
         public int? RoomId { get; set; }
-        public int? RoomNumber { get; set; }
+        public string? RoomNumber { get; set; }
         public int? statusId {  get; set; }
         public string? FacilityStatus { get; set; } = null!;
 

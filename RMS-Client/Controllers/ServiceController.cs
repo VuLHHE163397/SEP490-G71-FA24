@@ -23,7 +23,7 @@ namespace RMS_Client.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> ListService()
+        public async Task<IActionResult> ListService(string? keyword, int buildingId)
         {
             string apiUrlService = ServiceApiUri + "/GetAllService";
             var serviceResponse = await client.GetAsync(apiUrlService);
