@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+
+//using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RMS_API.Models;
@@ -12,6 +14,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
 
+
+
 // Cấu hình CORS
 builder.Services.AddCors(options =>
 {
@@ -20,6 +24,7 @@ builder.Services.AddCors(options =>
                           .AllowAnyMethod()
                           .AllowAnyHeader());
 });
+
 builder.Services.AddDbContext<RMS_SEP490Context>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
