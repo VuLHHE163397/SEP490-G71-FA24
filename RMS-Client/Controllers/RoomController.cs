@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Dropbox.Api;
 using Dropbox.Api.Files;
 using static Dropbox.Api.Files.ListRevisionsMode;
+using RMS_Client.Models;
 
 
 namespace RMS_Client.Controllers
@@ -510,7 +511,55 @@ namespace RMS_Client.Controllers
 
             return RedirectToAction("ImportRooms");
         }
+        public async Task<IActionResult> RoomMaintainance([FromRoute] int id)
+        {
+            string apiUrl = $"{RoomApiUri}/RoomMaintainance/{id}";
+            var viewModel = new RoomQrViewModel();
 
+            // Gửi request tới API
+            var response = await client.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                viewModel = JsonConvert.DeserializeObject<RoomQrViewModel>(json);
+            }
+
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> SaveMaintenanceRequest(RoomQrViewModel model)
+        {
+            if (model != null)
+            {
+                // Tạo đối tượng gửi API
+                var maintenanceDto = new MaintainanceDTO
+                {
+                    Description = model.MaintenanceDescription,
+                    newDate = DateTime.Now,
+                    Status = 1,
+                    RoomId = model.Id
+                };
+
+                // Gửi API POST để lưu thông tin bảo trì
+                string apiUrl = $"{RoomApiUri}/SaveMaintenanceRequest";
+                var content = new StringContent(JsonConvert.SerializeObject(maintenanceDto), Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(apiUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Chuyển hướng về trang Building sau khi lưu thành công
+                    return RedirectToAction("ListBuilding", "Building", new { id = model.Id });
+                }
+                else
+                {
+                    // Hiển thị thông báo lỗi nếu lưu không thành công
+                    ModelState.AddModelError(string.Empty, "Failed to save maintenance request.");
+                }
+            }
+
+            // Trả về form với dữ liệu hiện tại nếu có lỗi
+            return View("RoomMaintainance", model);
+        }
         //[HttpPost]
         //public async Task<IActionResult> ImportRooms(IFormFile excelFile)
         //{

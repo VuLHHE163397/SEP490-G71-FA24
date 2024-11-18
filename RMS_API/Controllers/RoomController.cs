@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using OfficeOpenXml;
 using RMS_API.DTOs;
 using RMS_API.Models;
+using System.Net.NetworkInformation;
 using System.Security.Principal;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -392,7 +393,7 @@ namespace RMS_API.Controllers
         public IActionResult GetActiveRooms()
         {
             var rooms = _context.Rooms
-                .Where(r => r.RoomStatusId == 1 || r.RoomStatusId == 4) // Lọc các phòng có trạng thái đang hoạt động
+                .Where(r => r.RoomStatusId == 1 & r.Building.BuildingStatusId == 1) // Lọc các phòng có trạng thái đang hoạt động
                 .Select(r => new
                 {
                     Id = r.Id,
@@ -401,7 +402,7 @@ namespace RMS_API.Controllers
                     Price = r.Price,
                     Area = r.Area,
                     RoomStatusName = r.RoomStatus.Name,
-                    //Images = r.Images.Select(i => i.Link).ToList()
+                    //images = r.images.select(i => i.link).tolist()
                 })
                 .ToList();
 
@@ -413,6 +414,7 @@ namespace RMS_API.Controllers
         {
             // Lấy thông tin phòng theo ID
             var room = _context.Rooms
+                .Where(r => r.RoomStatusId == 1 || r.RoomStatusId == 4 & r.Building.BuildingStatusId == 1)
                 .Include(r => r.Building)
                     .ThenInclude(b => b.Address)
                 .Include(r => r.Building)
@@ -468,13 +470,14 @@ namespace RMS_API.Controllers
             // Lấy danh sách các phòng gợi ý trong cùng BuildingId và RoomStatusId là 1 hoặc 4
             var suggestedRooms = _context.Rooms
                 .Where(r => r.BuildingId == currentRoom.BuildingId &&
-                            (r.RoomStatusId == 1 || r.RoomStatusId == 4) &&
+                            (r.RoomStatusId == 1) &&
                             r.Id != roomId) // Loại trừ phòng hiện tại
                 .OrderBy(r => r.Price) // Sắp xếp theo giá tiền, nếu cần
-                .Take(8) // Lấy top 8 phòng
+                .Take(5) // Lấy top 5 phòng
                 .Select(r => new SuggestedRoomDTO
                 {
                     Id = r.Id,
+                    RoomNumber = r.RoomNumber,
                     Price = r.Price,
                     Area = r.Area,
                     RoomStatusName = r.RoomStatus.Name,
@@ -489,6 +492,7 @@ namespace RMS_API.Controllers
         public async Task<IActionResult> SearchRooms([FromQuery] RoomSearchDTO searchDto)
         {
             var rooms = await _context.Rooms
+                .Where(r => r.Building.BuildingStatusId == 1)
                 .Include(r => r.Building)
                 .ThenInclude(b => b.Province)
                 .Include(r => r.Building.District)
@@ -527,6 +531,96 @@ namespace RMS_API.Controllers
             return Ok(rooms);
         }
 
+        [HttpGet("qr/{roomId}")]
+        public IActionResult GetRoomQrCode(int roomId)
+        {
+            string baseUrl = $"https://localhost:5001";
+            string qrContent = $"{baseUrl}/Room/RoomMaintainance/{roomId}";
 
+            // Tạo mã QR
+            var writer = new ZXing.BarcodeWriterPixelData
+            {
+                Format = ZXing.BarcodeFormat.QR_CODE,
+                Options = new ZXing.Common.EncodingOptions
+                {
+                    Height = 300, // Chiều cao hình ảnh
+                    Width = 300,  // Chiều rộng hình ảnh
+                    Margin = 1    // Lề
+                }
+            };
+
+            var pixelData = writer.Write(qrContent);
+
+            // Chuyển dữ liệu pixel thành ảnh PNG
+            using var ms = new MemoryStream();
+            using (var bitmap = new System.Drawing.Bitmap(pixelData.Width, pixelData.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb))
+            {
+                var bitmapData = bitmap.LockBits(
+                    new System.Drawing.Rectangle(0, 0, pixelData.Width, pixelData.Height),
+                    System.Drawing.Imaging.ImageLockMode.WriteOnly,
+                    bitmap.PixelFormat);
+                try
+                {
+                    System.Runtime.InteropServices.Marshal.Copy(pixelData.Pixels, 0, bitmapData.Scan0, pixelData.Pixels.Length);
+                }
+                finally
+                {
+                    bitmap.UnlockBits(bitmapData);
+                }
+                bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            }
+
+            // Trả về hình ảnh dưới dạng response
+            return File(ms.ToArray(), "image/png");
+        }
+        [HttpGet("RoomMaintainance/{roomId}")]
+        public IActionResult GetByQR(int roomId)
+        {
+            // Lấy thông tin phòng theo ID
+            var room = _context.Rooms
+                .Include(r => r.Building)
+                    .ThenInclude(b => b.Address)
+                .Include(r => r.Building)
+                    .ThenInclude(b => b.Ward)
+                .Include(r => r.Building)
+                    .ThenInclude(b => b.District)
+                .Include(r => r.Building)
+                    .ThenInclude(b => b.Province)
+                .Include(r => r.Building)
+                    .ThenInclude(b => b.User)
+                .FirstOrDefault(r => r.Id == roomId);
+
+            string address = room.Building.Address.Information + " " + room.Building.Ward.Name + " " + room.Building.District.Name + " " + room.Building.Province.Name;
+
+            var qrData = new
+            {
+                Id = room.Id,
+                RoomNumber = room.RoomNumber,
+                BuildingName = room.Building.Name,
+                Address = address,
+                Owner = room.Building.User.FirstName,
+            };
+
+            return Ok(qrData);
+        }
+
+        [HttpPost("SaveMaintenanceRequest")]
+        public IActionResult SaveMaintainancebyQR([FromBody] MaintainanceDTO dto)
+        {
+            if (dto == null)
+                return BadRequest("Invalid maintenance request data.");
+
+            var maintainance = new MaintainanceRequest
+            {
+                Description = dto.Description,
+                Status = dto.Status,
+                RoomId = dto.RoomId,
+            };
+
+            _context.MaintainanceRequests.Add(maintainance);
+            _context.SaveChanges();
+
+            return Ok("Maintenance request saved successfully.");
+        }
     }
 }
