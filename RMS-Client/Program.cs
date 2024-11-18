@@ -12,6 +12,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
 
+
+
 // Cấu hình CORS
 builder.Services.AddCors(options =>
 {
