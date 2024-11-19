@@ -349,91 +349,12 @@
                                 <th>Hành động</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @if (Model != null && Model.Any())
-                            {
-                                foreach (var building in Model)
-                                {
-                                    <tr>
-                                        <td>@building.Id</td>
-                                        <td>@building.Name</td>
-                                        <td>@building.TotalFloors</td>
-                                        <td>@building.NumberOfRooms</td>
-                                        <td>@building.AddressDetails</td>
-                                        <td>@building.BuildingStatus</td>
-                                        <td>
-                                            <!-- Edit Link with Black Icon -->
-                                            <a asp-action="EditBuilding" asp-controller="Building" asp-route-id="@building.Id" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
-                                                <i class="fas fa-edit"></i> <!-- Edit icon -->
-                                            </a>
-
-                                            <!-- Detail Link with White Icon -->
-                                            <a asp-action="BuildingDetail" asp-controller="Building" asp-route-id="@building.Id" title="Xem Chi tiết" style="font-size: 1.5em;">
-                                                <i class="ti ti-eye"></i> <!-- Eye icon for "View Details" -->
-                                            </a>
-
-                                        </td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
-                                </tr>
-                            }
+                        <tbody id="buildingsContainer">
+                           
                         </tbody>
                     </table>
                 </div>
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                <script>
-                    $(document).ready(function () {
-                        const token = localStorage.getItem("token");
-                        if (token) {
-                            const tokenParts = token.split('.');
-                            const payload = JSON.parse(atob(tokenParts[1]));  // Giải mã JWT token để lấy payload
-                            const userId = payload.UserId;
-
-                            // Thêm userId vào headers
-                            $.ajax({
-                                url: "/api/Building/GetBuildingsByUserId/" + userId,  // Truyền userId vào API
-                                type: "GET",
-                                headers: {
-                                    "Authorization": `Bearer ${token}`
-                                },
-                                success: function (data) {
-                                    console.log("Buildings:", data);
-                                },
-                                error: function (err) {
-                                    console.log("Error:", err);
-                                }
-                            });
-                        }
-
-                    // Các hàm khác có thể sử dụng UserId khi đã lấy được nó
-                    function editBuilding(id) {
-                        const userId = getUserIdFromToken();
-                        window.location.href = `/Building/EditBuilding/${id}?userId=${userId}`;
-                    }
-
-                    function buildingDetail(id) {
-                        const userId = getUserIdFromToken();
-                        window.location.href = `/Building/BuildingDetail/${id}?userId=${userId}`;
-                    }
-
-                    function getUserIdFromToken() {
-                        const token = localStorage.getItem("token");
-                        if (token) {
-                            const tokenParts = token.split('.');
-                            const payload = JSON.parse(atob(tokenParts[1]));
-                            return payload.UserId;
-                        }
-                        return null;
-                    }
-
-                </script>
-
-
+               
 
             </div>
         </div>
@@ -447,7 +368,121 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
 
+    @* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> *@
+    <script>
+        $(document).ready(function () {
+            console.log('abcbi')
+            getListBuilding();
 
+        })
+
+        function getListBuilding() {
+            var userId = getUserIdFromToken();
+            const url = `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`;
+            const token = "your_token_here"; // Replace with your actual token
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                contentType: 'application/json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                },
+                success: function (response) {
+                    console.log(response); // Handle the response data
+                    // alert('Buildings fetched successfully!');
+                    // // Update the UI with the fetched buildings
+                    displayBuildings(response);
+                },
+                error: function (xhr) {
+                    console.error('Error fetching buildings:', xhr.responseText);
+                    alert('Error: Unable to fetch buildings.');
+                }
+            });
+        }
+
+        // Function to display buildings in the UI (example)
+        function displayBuildings(buildings) {
+            const container1 = $('.sidebar-submenu'); // Ensure your sidebar has this class
+            container1.empty(); // Clear previous content
+
+            if (buildings && buildings.length > 0) {
+                buildings.forEach(building => {
+                    container1.append(`
+                        <li class="sidebar-subitem">
+                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                <i class="ti ti-file"></i> ${building.name}
+                            </a>
+                        </li>
+                    `);
+                });
+            } else {
+                // Display a fallback message if no buildings exist
+                container1.append(`
+                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                `);
+            }
+            const container = $('#buildingsContainer'); // Ensure you have a container element with this ID
+            container.empty(); // Clear any previous content
+
+            if (buildings && buildings.length > 0) {
+                buildings.forEach(building => {
+                    container.append(`
+                        <tr>
+                            <td>${building.id}</td>
+                            <td>${building.name}</td>
+                            <td>${building.totalFloors}</td>
+                            <td>${building.numberOfRooms}</td>
+                            <td>${building.addressDetails}</td>
+                            <td>${building.buildingStatus}</td>
+                            <td>
+                                <!-- Edit Link -->
+                                <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
+                                    <i class="fas fa-edit"></i> <!-- Edit icon -->
+                                </a>
+                                <!-- Detail Link -->
+                                <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
+                                    <i class="ti ti-eye"></i> <!-- Eye icon for "View Details" -->
+                                </a>
+                            </td>
+                        </tr>
+                    `);
+                });
+            } else {
+                // Display a message if no buildings are found
+                container.append(`
+                    <tr>
+                        <td colspan="7" class="text-center">Không có dữ liệu</td>
+                    </tr>
+                `);
+            }
+
+        }
+
+        
+
+        // Các hàm khác có thể sử dụng UserId khi đã lấy được nó
+        function editBuilding(id) {
+            const userId = getUserIdFromToken();
+            window.location.href = `/Building/EditBuilding/${id}?userId=${userId}`;
+        }
+
+        function buildingDetail(id) {
+            const userId = getUserIdFromToken();
+            window.location.href = `/Building/BuildingDetail/${id}?userId=${userId}`;
+        }
+
+        function getUserIdFromToken() {
+            const token = localStorage.getItem("token");
+            if (token) {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            }
+            return null;
+        }
+
+    </script>
 
 </body>
 

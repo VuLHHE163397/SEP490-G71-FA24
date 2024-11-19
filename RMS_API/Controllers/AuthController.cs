@@ -117,7 +117,6 @@ namespace RMS_API.Controllers
             return Ok("Đăng ký thành công.");
         }
 
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
@@ -146,9 +145,10 @@ namespace RMS_API.Controllers
             var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024");
 
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Email)
-            };
+{
+    new Claim(ClaimTypes.Name, user.Email),
+    new Claim("UserId", user.Id.ToString())
+};
 
             if (user.Role != null && !string.IsNullOrEmpty(user.Role.Name))
             {
@@ -161,14 +161,12 @@ namespace RMS_API.Controllers
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };            
+            };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
 
-
-        
 
         //Model login
         public class LoginModel

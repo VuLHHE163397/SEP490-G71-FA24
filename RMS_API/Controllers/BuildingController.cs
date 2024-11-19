@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -42,7 +43,7 @@ namespace RMS_API.Controllers
                     ProvinceName = b.Province.Name,
                     DistrictName = b.District.Name,
                     WardName = b.Ward.Name,
-                    AddressDetails = $"{b.Address.Information}",
+                    AddressDetails = $"{b.Address.Information},{b.Address.Ward.Name}, {b.Address.District.Name}, {b.Address.Province.Name}",
                     BuildingStatus = b.BuildingStatus.Name
                 })
                 .ToListAsync();
@@ -130,6 +131,7 @@ namespace RMS_API.Controllers
 
 
 
+        
         [HttpPost("AddBuilding")]
         public async Task<IActionResult> AddBuilding([FromBody] AddBuildingDTO buildingDto)
         {
@@ -138,13 +140,20 @@ namespace RMS_API.Controllers
                 return BadRequest(ModelState);
             }
 
+            // Extract UserId from the token and parse it to int
+            var userId = buildingDto.UserId;
+            if (userId == null)
+            {
+                return Unauthorized("UserId not found in token or invalid.");
+            }
+
             // Tìm Province
             var province = await _context.Provinces
                 .FirstOrDefaultAsync(p => p.Name.Equals(buildingDto.ProvinceName));
 
             if (province == null)
             {
-                return BadRequest($"Tinh/Thanh pho '{buildingDto.ProvinceName}' not found.");
+                return BadRequest($"Province '{buildingDto.ProvinceName}' not found.");
             }
 
             // Tìm District
@@ -165,7 +174,7 @@ namespace RMS_API.Controllers
                 return BadRequest($"Ward '{buildingDto.WardName}' not found in district '{buildingDto.DistrictName}'.");
             }
 
-            // Tìm BuildingStatus 
+            // Tìm BuildingStatus
             var buildingStatus = await _context.BuildingStatuses
                 .FirstOrDefaultAsync(bs => bs.Name.Equals(buildingDto.BuildingStatus));
 
@@ -173,8 +182,8 @@ namespace RMS_API.Controllers
             {
                 return BadRequest($"Building status '{buildingDto.BuildingStatus}' not found.");
             }
-
-            // Tìm hoặc tạo địa chỉ mới
+            //add o duoi a
+            // Create Address
             var address = new Address
             {
                 Information = buildingDto.AddressDetails,
@@ -185,7 +194,7 @@ namespace RMS_API.Controllers
             _context.Addresses.Add(address);
             await _context.SaveChangesAsync();
 
-            // Tạo đối tượng Building mới
+            // Create Building
             var building = new Building
             {
                 Name = buildingDto.Name,
@@ -199,17 +208,29 @@ namespace RMS_API.Controllers
                 WardId = ward.Id,
                 AddressId = address.Id,
                 BuildingStatusId = buildingStatus.Id,
-                UserId = 2,
+                UserId = userId, // Use the parsed UserId
                 LinkEmbedMap = buildingDto.LinkEmbedMap
-
             };
 
-            // Thêm tòa nhà vào cơ sở dữ liệu
             _context.Buildings.Add(building);
             await _context.SaveChangesAsync();
 
-            return Ok(buildingDto);
+            // Return created building details (you could return a DTO here)
+            var responseDto = new
+            {
+                building.Name,
+                building.TotalFloors,
+                building.NumberOfRooms,
+                building.Distance,
+                building.AddressId,
+                building.UserId,
+                building.BuildingStatusId
+            };
+
+            return Ok(responseDto);
         }
+
+
 
         [HttpGet("AddBuilding")]
         public IActionResult AddBuilding()
@@ -332,7 +353,7 @@ namespace RMS_API.Controllers
 
 
         [HttpPut("EditBuilding/{id}")]
-        public async Task<IActionResult> EditBuildingById(int id, [FromBody] BuildingDTO buildingDto)
+        public async Task<ActionResult<BuildingDTO>> EditBuildingById(int id, [FromBody] BuildingDTO buildingDto)
         {
             if (!ModelState.IsValid)
             {
@@ -386,7 +407,6 @@ namespace RMS_API.Controllers
             }
 
             // Update the building details
-
             building.Name = buildingDto.Name;
             building.Distance = buildingDto.Distance;
             building.TotalFloors = buildingDto.TotalFloors;
@@ -398,7 +418,7 @@ namespace RMS_API.Controllers
             building.BuildingStatusId = buildingStatus.Id;
             building.LinkEmbedMap = buildingDto.LinkEmbedMap;
 
-            // Update the address details
+            // Update the address details (if address exists)
             if (building.Address != null)
             {
                 building.Address.Information = buildingDto.AddressDetails;
@@ -406,12 +426,26 @@ namespace RMS_API.Controllers
                 building.Address.WardId = ward.Id;
                 building.Address.ProvinceId = province.Id;
             }
+            else
+            {
+                // Handle the case if Address is null
+                building.Address = new Address
+                {
+                    Information = buildingDto.AddressDetails,
+                    DistrictId = district.Id,
+                    WardId = ward.Id,
+                    ProvinceId = province.Id
+                };
+                _context.Add(building.Address);
+            }
 
             // Save changes to the database
             await _context.SaveChangesAsync();
 
-            return Ok("Building updated successfully.");
+            // Return the updated building DTO
+            return Ok(buildingDto);
         }
+
 
         [HttpGet("GetBuildingStatus")]
         public async Task<IActionResult> GetBuildingStaus()
