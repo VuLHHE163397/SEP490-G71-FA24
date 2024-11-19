@@ -157,6 +157,68 @@
             height: 400px;
         }
 
+        .upload-and-qr-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        .upload-section, .qr-code-section {
+            width: 100%;
+            max-width: 400px; /* Giới hạn chiều rộng */
+            background-color: #f8f9fa; /* Màu nền nhẹ */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        button {
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+            button:hover {
+                transform: scale(1.05);
+            }
+
+        .qr-image {
+            margin-top: 15px;
+            width: 200px;
+            height: auto;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .qr-code-section {
+            width: 100%;
+            max-width: 400px; /* Giới hạn chiều rộng */
+            background-color: #f8f9fa; /* Màu nền nhẹ */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .qr-image {
+            margin-top: 15px;
+            width: 200px;
+            height: auto;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            display: block; /* Thêm dòng này để căn giữa */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
     </style>
 </head>
 
@@ -393,6 +455,30 @@
                             </div>
 
 
+
+
+
+
+                            <div class="upload-section">
+                                <h3>Upload Ảnh Phòng</h3>
+                                <form asp-action="UploadImageToCloudinary" asp-controller="Room" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="roomId" value="@Model.Id" />
+                                    <div class="mb-3">
+                                        <input type="file" name="imageFile" class="form-control" required />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Upload Ảnh</button>
+                                </form>
+                            </div>
+                            <!-- QR Code Section -->
+                            <div class="qr-code-section mt-4">
+                                <button id="generateQrButton" class="btn btn-success btn-lg px-4 py-2 mb-3">
+                                    <i class="fas fa-qrcode"></i> Tạo QR Code
+                                </button>
+                                <div>
+                                    <img id="qrImage" src="" alt="QR Code" class="qr-image" style="display: none;" />
+                                </div>
+                            </div>
+                        
                         </div>
                         <div class="">Đặc điểm Phòng</div>
                         <div class="container"></div>
@@ -553,6 +639,26 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script>
+        document.getElementById("generateQrButton").addEventListener("click", function () {
+            var roomId = @Model.Id;  // Giả sử @Model.Id chứa ID phòng hiện tại
 
+            // Gọi API tạo QR Code
+            fetch(`https://localhost:5001/api/room/qr/${roomId}`)
+                .then(response => response.blob())  // Chúng ta lấy dữ liệu ảnh dưới dạng blob
+                .then(imageBlob => {
+                    // Tạo URL cho ảnh
+                    var imageUrl = URL.createObjectURL(imageBlob);
+
+                    // Hiển thị ảnh QR
+                    var qrImage = document.getElementById("qrImage");
+                    qrImage.src = imageUrl;
+                    qrImage.style.display = "block";  // Hiển thị ảnh
+                })
+                .catch(error => {
+                    console.error('Error generating QR code:', error);
+                });
+        });
+    </script>
 </body>
 </html>
