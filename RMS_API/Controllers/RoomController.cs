@@ -635,6 +635,7 @@ namespace RMS_API.Controllers
             // Trả về hình ảnh dưới dạng response
             return File(ms.ToArray(), "image/png");
         }
+
         [HttpGet("RoomMaintainance/{roomId}")]
         public IActionResult GetByQR(int roomId)
         {
@@ -671,20 +672,21 @@ namespace RMS_API.Controllers
         [HttpPost("SaveMaintenanceRequest")]
         public IActionResult SaveMaintainancebyQR([FromBody] MaintainanceDTO dto)
         {
-            if (dto == null)
-                return BadRequest("Invalid maintenance request data.");
+            if (dto == null || string.IsNullOrWhiteSpace(dto.Description))
+                return BadRequest(new { Success = false, Message = "Nội dung báo cáo không được để trống." });
 
             var maintainance = new MaintainanceRequest
             {
                 Description = dto.Description,
                 Status = dto.Status,
                 RoomId = dto.RoomId,
+                RequestDate = dto.RequestDate
             };
 
             _context.MaintainanceRequests.Add(maintainance);
             _context.SaveChanges();
 
-            return Ok("Maintenance request saved successfully.");
+            return Ok(new { Success = true, Message = "Gửi báo cáo thành công!" });
         }
     }
 }

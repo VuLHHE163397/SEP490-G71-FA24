@@ -1,24 +1,24 @@
 ﻿@model RoomQrViewModel
+
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
     <script>
         setTimeout(function () {
             window.location.href = '@TempData["RedirectUrl"]';
-        }, 3000); // Chuyển hướng sau 3 giây
+        }, 2000); 
     </script>
 }
 
 @if (!string.IsNullOrEmpty(ViewData.ModelState[string.Empty]?.Errors.FirstOrDefault()?.ErrorMessage))
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @ViewData.ModelState[string.Empty].Errors.FirstOrDefault().ErrorMessage
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        @ViewData.ModelState[string.Empty]?.Errors.FirstOrDefault()?.ErrorMessage
     </div>
+
 }
 
 <!doctype html>
@@ -46,8 +46,9 @@
                     <div class="mb-4">
                         <h4 class="text-secondary">Phòng: <span class="fw-bold">@Model.RoomNumber</span></h4>
                         <p class="mb-1"><strong>Tòa nhà:</strong> @Model.BuildingName</p>
-                        <p class="mb-1"><strong>Address:</strong> @Model.Address</p>
+                        <p class="mb-1"><strong>Địa chỉ:</strong> @Model.Address</p>
                         <p><strong>Chủ nhà:</strong> @Model.Owner</p>
+                        
                     </div>
 
                     <form method="post" asp-action="SaveMaintenanceRequest">
@@ -56,7 +57,7 @@
                         <div class="mb-3">
                             <label for="maintenanceDescription" class="form-label">Mô tả</label>
                             <textarea id="maintenanceDescription" name="MaintenanceDescription" rows="4"
-                                      class="form-control" placeholder="Điền mô tả vào đây"></textarea>
+                                      class="form-control" placeholder="Điền mô tả vào đây">@Model.MaintenanceDescription</textarea>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Gửi</button>
@@ -74,5 +75,15 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
+    <script>
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const description = document.getElementById('maintenanceDescription').value.trim();
+            if (!description) {
+                e.preventDefault();
+                alert('Nội dung mô tả không được để trống.');
+            }
+        });
+    </script>
+
 </body>
 </html>
