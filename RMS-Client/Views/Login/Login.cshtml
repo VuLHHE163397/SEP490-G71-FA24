@@ -5,8 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RMS</title>
-
-    <link rel="shortcut icon" type="image/png" href="~/images/logos/house.jpg" />
+    <link rel="icon" type="image/png" href="~/images/logo.jpg" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
     <style>
         /* Popup styling */
@@ -35,62 +34,23 @@
             font-size: 16px;
             z-index: 1000;
         }
-
-        .card {
-            max-width: 500px;
-            width: 100%;
-            height: 500px;
-            margin: auto;
-            / position: relative;
-        }
-
-        .page-wrapper {
-            padding: 20px;
-        }
-
-        body {
-            background-image: url('~/images/bg1.jpg'); /* Đường dẫn tới ảnh */
-            background-size: cover; /* Bao phủ toàn bộ màn hình */
-            background-repeat: no-repeat; /* Không lặp lại ảnh */
-            background-position: center; /* Căn giữa ảnh */
-            position: relative;
-            margin: 0; /* Xóa margin mặc định của body */
-            padding: 0;
-            height: 100vh; /* Chiều cao toàn màn hình */
-        }
-
-        /* Overlay for opacity effect */
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.5); /* Màu trắng mờ, thay đổi giá trị 0.5 để điều chỉnh */
-            z-index: -1; /* Đảm bảo lớp phủ ở phía dưới */
-        }
-
-        .page-wrapper {
-            position: relative;
-            z-index: 1; /* Nội dung nằm trên lớp nền */
-            padding: 20px;
-        }
     </style>
 </head>
 
 <body>
-    <div class="overlay"></div> <!-- Lớp phủ nền -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
         <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
             <div class="d-flex align-items-center justify-content-center w-100">
                 <div class="row justify-content-center w-100">
-                    <div class="col-md-10 col-lg-8 col-xxl-6">
+                    <div class="col-md-8 col-lg-6 col-xxl-3">
                         <div class="card mb-0">
                             <div class="card-body">
+                                <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-80">
+                                    <img src="~/images/logo.jpg" width="100" alt="">
+                                </a>
+                                <p class="text-center">RMS_Quản lý trọ theo cách của bạn</p>
                                 <form id="loginForm">
                                     <div class="mb-3">
-                                        <script>
-                                            console.log("token:", token);</script>
                                         <label for="email" class="form-label">Tài khoản</label>
                                         <input type="email" class="form-control" id="email" required>
                                     </div>
@@ -99,10 +59,15 @@
                                         <input type="password" class="form-control" id="password" required>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-between mb-4">
-                                        <a class="text-primary fw-bold" href="/Home/Home">Về trang chủ</a>
+                                        <div class="form-check">
+                                            <input class="form-check-input primary" type="checkbox" value="" id="flexCheckChecked" checked>
+                                            <label class="form-check-label text-dark" for="flexCheckChecked">
+                                                Ghi nhớ thiết bị này
+                                            </label>
+                                        </div>
                                         <a class="text-primary fw-bold" href="./index.html">Quên mật khẩu</a>
                                     </div>
-                                    <button type="button" onclick="login()" class="btn btn-primary w-100">Đăng nhập</button>
+                                    <button type="button" onclick="login()" class="btn btn-primary w-100">Login</button>
                                     <div class="d-flex align-items-center justify-content-center">
                                         <p class="fs-4 mb-0 fw-bold">Chưa có tài khoản?</p>
                                         <a class="text-primary fw-bold ms-2" href="Register">Đăng ký</a>
@@ -139,7 +104,6 @@
                     localStorage.setItem("token", response.token);
                     showPopup("Đăng nhập thành công!");
 
-                    // const token = localStorage.getItem("token");
                     try {
                         // Giải mã token jwt
                         const tokenParts = response.token.split('.');
@@ -148,12 +112,12 @@
                         // xét role chuyển trang
                         setTimeout(function () {
                             if (payload.role === "Admin") {
-                                window.location.href = "/User/ListUser";
-                            }
+                                window.location.href = "/User/ListUser";                                
+                            }  
                             if (payload.role === "Landlord") {
-                                window.location.href = "/Building/ListBuilding";
-                            }
-                        }, 1000);
+                                window.location.href = "/Building/ListBuilding";                                
+                            } 
+                        }, 1000); 
                     } catch (error) {
                         console.error("Failed to decode token", error);
                         alert("Đăng nhập thành công, nhưng có lỗi xảy ra khi xử lý thông tin người dùng.");
@@ -172,7 +136,7 @@
             popup.fadeIn();
             setTimeout(function () {
                 popup.fadeOut();
-            }, 2000);
+            }, 2000); 
         }
 
         function showErrorPopup(message) {
