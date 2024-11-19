@@ -660,7 +660,9 @@ namespace RMS_API.Controllers
                 RoomNumber = room.RoomNumber,
                 BuildingName = room.Building.Name,
                 Address = address,
-                Owner = room.Building.User.FirstName,
+                Owner = $"{room.Building?.User?.LastName ?? ""} " +
+                            $"{room.Building?.User?.MidName ?? ""} " +
+                            $"{room.Building?.User?.FirstName ?? ""}".Trim(),
             };
 
             return Ok(qrData);

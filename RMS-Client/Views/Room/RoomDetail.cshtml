@@ -136,7 +136,7 @@
 
         /* Main content area padding */
         .body-wrapper {
-            padding: 20px;
+            padding-top: 20px;
             flex-grow: 1;
         }
 
@@ -217,6 +217,18 @@
             display: block; /* Thêm dòng này để căn giữa */
             margin-left: auto;
             margin-right: auto;
+        }
+
+        .app-header {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 9999; /* Đảm bảo navbar luôn ở trên cùng */
+        }
+
+        .navbar {
+            margin-top: 0;
+            padding-top: 0; /* Loại bỏ padding nếu có */
         }
 
     </style>
@@ -370,168 +382,162 @@
 
         <div class="body-wrapper">
 
-            <header class="app-header">
-                @* <nav class="navbar navbar-expand-lg navbar-light">
-                <ul class="navbar-nav">
-                <li class="nav-item d-block d-xl-none">
-                <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
-                <i class="ti ti-menu-2"></i>
-                </a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link nav-icon-hover" asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingId">
-                <i class="ti ti-arrow-back" style="font-size: 30px;"></i>
-                </a>
-                <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                <i class="ti ti-bell-ringing"></i>
-                <div class="notification bg-primary rounded-circle"></div>
-                </a>
-                </li>
-                </ul>
-                <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-                <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                <li class="nav-item dropdown">
-                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <img src="~/images/profile/user-1.jpg" alt="" width="50" height="50" class="rounded-circle">
-                </a>
-                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
-                <div class="message-body">
-                <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                <i class="ti ti-user fs-6"></i>
-                <p class="mb-0 fs-3">My Profile</p>
-                </a>
-                <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                <i class="ti ti-mail fs-6"></i>
-                <p class="mb-0 fs-3">My Account</p>
-                </a>
-                <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                <i class="ti ti-list-check fs-6"></i>
-                <p class="mb-0 fs-3">My Task</p>
-                </a>
-                <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
-                </div>
-                </div>
-                </li>
-                </ul>
-                </div>
+            <header class="app-header" style="background-color:  whitesmoke">
+                <nav class="navbar navbar-expand-lg navbar-light custom-navbar mt-0">
+                    <ul class="navbar-nav">
+                        <li class="nav-item d-block d-xl-none">
+                            <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
+                                <i class="ti ti-menu-2"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item d-flex align-items-center">
+                            <a class="nav-link nav-icon-hover" asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingId">
+                                <i class="ti ti-arrow-back" style="font-size: 30px;"></i>
+                            </a>
+                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
+                                <i class="ti ti-bell-ringing"></i>
+                                <div class="notification bg-primary rounded-circle"></div>
+                            </a>
+                        </li>
 
-                </nav> *@
+                    </ul>
+                    <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+                        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    <img src="~/images/profile/user-1.jpg" alt="" width="50" height="50" class="rounded-circle">
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                                    <div class="message-body">
+                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-user fs-6"></i>
+                                            <p class="mb-0 fs-3">My Profile</p>
+                                        </a>
+                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-mail fs-6"></i>
+                                            <p class="mb-0 fs-3">My Account</p>
+                                        </a>
+                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-list-check fs-6"></i>
+                                            <p class="mb-0 fs-3">My Task</p>
+                                        </a>
+                                        <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </nav>
             </header>
 
-            <div class="container-fluid">
+            <div class="container-fluid py-5">
                 <div class="container">
+                    <!-- Title Section -->
                     <div class="text-center wow fadeInUp mb-5">
-                        <h1>Chi Tiết Phòng @Model.RoomNumber </h1>
+                        <h6 class="display-4 text-primary"><strong> Chi Tiết Phòng @Model.RoomNumber</strong></h6>
                     </div>
+
+                    <!-- Room Details Section -->
                     <div class="row g-4">
-                        <div class="image-gallery">
-                            <div class="main-image">
-                                @{
-                                    var images = ViewBag.Images as List<RMS_API.Models.Image>;
-                                }
-                                @if (images != null && images.Any())
-                                {
-                                    <img src="@images[0].Link" alt="Main Room Image" id="displayed-image">
-                                }
-                            </div>
-
-                            <div class="thumbnail-container slick-carousel">
-                                @if (images != null && images.Any())
-                                {
-                                    @for (int i = 0; i < images.Count; i++)
-                                    {
-                                        <div class="thumbnail-item position-relative" style="position: relative;">
-                                            <img src="@images[i].Link" alt="Room Image" class="thumbnail" onmouseover="changeImage(this)">
-                                            <i class="delete-button ti ti-circle-x" data-id="@images[i].Id" onclick="deleteImage(@images[i].Id)"></i>
-                                        </div>
-
+                        <!-- Image Gallery -->
+                        <div class="col-lg-6">
+                            <div class="image-gallery shadow rounded" style="padding:10px">
+                                <div class="main-image text-center mb-4">
+                                    @{
+                                        var images = ViewBag.Images as List<RMS_API.Models.Image>;
                                     }
+                                    @if (images != null && images.Any())
+                                    {
+                                        <img src="@images[0].Link" alt="Main Room Image" id="displayed-image" class="img-fluid rounded">
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted">Chưa có ảnh phòng</p>
+                                    }
+                                </div>
+
+                                <!-- Thumbnails -->
+                                <div class="thumbnail-container d-flex flex-wrap justify-content-center gap-2">
+                                    @if (images != null && images.Any())
+                                    {
+                                        @foreach (var image in images)
+                                        {
+                                            <div class="thumbnail-item position-relative">
+                                                <img src="@image.Link" alt="Room Image" class="thumbnail img-thumbnail" onmouseover="changeImage(this)" />
+                                                <button class="delete-button btn btn-sm btn-danger rounded-circle position-absolute top-0 end-0"
+                                                        data-id="@image.Id" onclick="deleteImage(@image.Id)">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+
+                                <!-- Simple Upload Section -->
+                                <div class="mt-4 text-center">
+                                    <input type="file" id="file-input" class="form-control mb-2" />
+                                    <button type="button" id="upload-button" class="btn btn-primary" onclick="uploadImage()">Thêm ảnh</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Room Information -->
+                        <div class="col-lg-6">
+                            <div class="room-details shadow rounded p-4 bg-white">
+                                <h3 class="mb-4 text-secondary">Thông Tin Phòng</h3>
+
+                                <p><strong>Giá:</strong> @string.Format("{0:N0} VNĐ", Model.Price)</p>
+                                <p><strong>Diện tích:</strong> @Model.Area.ToString("0") m²</p>
+
+                                @if (ViewBag.Facilities is List<RMS_API.Models.Facility> facilities && facilities.Any())
+                                {
+                                    <p>
+                                        <strong>Cơ sở vật chất:</strong>
+                                        @for (int i = 0; i < facilities.Count; i++)
+                                        {
+                                            <span class="badge bg-primary">@facilities[i].Name</span>
+                                        }
+                                    </p>
                                 }
+                                else
+                                {
+                                    <p><strong>Cơ sở vật chất:</strong> Hiện tại chưa có thông tin.</p>
+                                }
+
+                                <p>
+                                    <strong>Trạng thái:</strong>
+                                    @{
+                                        string statusNameVi = Model.RoomStatusId switch
+                                        {
+                                            1 => "Trống",
+                                            2 => "Đã có người",
+                                            3 => "Đang sửa chữa",
+                                            4 => "Sắp trống",
+                                            _ => "Không xác định"
+                                        };
+                                    }
+                                    <span class="badge bg-info text-dark">@statusNameVi</span>
+                                </p>
+
+                                <p><strong>Mô tả:</strong> @Model.Description</p>
                             </div>
 
-
-
-
-                            <div class="upload-section">
-                                <h3>Upload Ảnh Phòng</h3>
-                                <form asp-action="UploadImageToCloudinary" asp-controller="Room" method="post" enctype="multipart/form-data">
-                                    <input type="hidden" name="roomId" value="@Model.Id" />
-                                    <div class="mb-3">
-                                        <input type="file" name="imageFile" class="form-control" required />
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Upload Ảnh</button>
-                                </form>
-                            </div>
                             <!-- QR Code Section -->
-                            <div class="qr-code-section mt-4">
+                            <div class="qr-code-section mt-4 text-center">
                                 <button id="generateQrButton" class="btn btn-success btn-lg px-4 py-2 mb-3">
                                     <i class="fas fa-qrcode"></i> Tạo QR Code
                                 </button>
                                 <div>
-                                    <img id="qrImage" src="" alt="QR Code" class="qr-image" style="display: none;" />
+                                    <img id="qrImage" src="" alt="QR Code" class="qr-image img-thumbnail" style="display: none;" />
                                 </div>
                             </div>
-                        
                         </div>
-                        <div class="">Đặc điểm Phòng</div>
-                        <div class="container"></div>
-                        <div><strong>Giá:</strong> @string.Format("{0:N0} VNĐ", Model.Price)</div>
-                        <div><strong>Diện tích:</strong> @Model.Area.ToString("0") m²</div>
-                        @{
-                            var facilities = ViewBag.Facilities as List<RMS_API.Models.Facility>;
-                        }
-
-                        @if (facilities != null && facilities.Any())
-                        {
-                            <div>
-                                <strong>Cơ sở vật chất: </strong>
-                                @for (int i = 0; i < facilities.Count; i++)
-                                {
-                                    <span>@facilities[i].Name</span>
-                                    @if (i < facilities.Count - 1)
-                                    {
-                                        <span>, </span>
-                                    }
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="sidebar-subitem">
-                                <strong>Cơ sở vật chất: </strong> Hiện tại chưa có cơ sở vật chất nào!
-                            </div>
-                        }
-
-                        <p>
-                            <strong>Trạng thái phòng:</strong>
-                            @{
-                                string statusNameVi;
-                                switch (Model.RoomStatusId)
-                                {
-                                    case 1:
-                                        statusNameVi = "Trống";
-                                        break;
-                                    case 2:
-                                        statusNameVi = "Đã có người";
-                                        break;
-                                    case 3:
-                                        statusNameVi = "Đang sửa chữa";
-                                        break;
-                                    case 4:
-                                        statusNameVi = "Sắp trống";
-                                        break;
-                                    default:
-                                        statusNameVi = @Model.RoomStatusId.ToString();
-                                        break;
-                                }
-                            }
-                            @statusNameVi
-                        </p>
-                        <p><strong>Mô tả chi tiết:</strong> @Model.Description</p>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
     <script>
@@ -586,6 +592,46 @@
                         console.error('Error:', error);
                         alert("Có lỗi xảy ra khi kết nối với server.");
                     });
+            }
+        }
+
+        async function uploadImage() {
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+            const roomId = @Model.Id; // Thay bằng RoomId tương ứng nếu RoomId có sẵn trong ViewModel
+
+            if (!file) {
+                alert("Please select a file.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                // Sửa lại cú pháp URL với backticks
+                const response = await fetch(`/api/Room/upload-image/${roomId}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to upload image.");
+                }
+
+                const data = await response.json();
+                alert("Image uploaded successfully!");
+                location.reload();
+
+                // Bạn có thể thêm ảnh vào gallery mà không cần phải tải lại trang
+                const imageContainer = document.querySelector(".thumbnail-container");
+                const newImageElement = document.createElement("div");
+                newImageElement.classList.add("thumbnail-item");
+                newImageElement.innerHTML = `<img src="${data.imageUrl}" alt="Room Image" class="thumbnail">`;
+                imageContainer.appendChild(newImageElement);
+            } catch (error) {
+                console.error(error);
+                alert("An error occurred while uploading the image.");
             }
         }
 

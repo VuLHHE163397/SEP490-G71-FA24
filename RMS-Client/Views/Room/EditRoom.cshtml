@@ -135,7 +135,7 @@
 
         /* Main content area padding */
         .body-wrapper {
-            padding: 20px;
+            /* padding: 20px; */
             flex-grow: 1;
         }
 
@@ -301,7 +301,7 @@
         <!--  Main wrapper -->
         <div class="body-wrapper">
             <!--  Header Start -->
-            <header class="app-header">
+            <header class="app-header" style="background-color:whitesmoke">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
@@ -309,7 +309,7 @@
                                 <i class="ti ti-menu-2"></i>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item d-flex align-items-center" " >
                             <a class="nav-link nav-icon-hover" asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingId">
                                 <i class="ti ti-arrow-back" style="font-size: 30px;"></i>
                             </a>
