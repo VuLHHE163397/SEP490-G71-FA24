@@ -1,29 +1,78 @@
 ﻿@model RoomQrViewModel
-
-<div class="container mt-5">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h2 class="mb-0">Room Maintenance</h2>
-        </div>
-        <div class="card-body">
-            <div class="mb-4">
-                <h4 class="text-secondary">Room: <span class="fw-bold">@Model.RoomNumber</span></h4>
-                <p class="mb-1"><strong>Building:</strong> @Model.BuildingName</p>
-                <p class="mb-1"><strong>Address:</strong> @Model.Address</p>
-                <p><strong>Owner:</strong> @Model.Owner</p>
-            </div>
-
-            <form method="post" asp-action="SaveMaintenanceRequest">
-                <input type="hidden" name="Id" value="@Model.Id" />
-
-                <div class="mb-3">
-                    <label for="maintenanceDescription" class="form-label">Maintenance Description</label>
-                    <textarea id="maintenanceDescription" name="MaintenanceDescription" rows="4"
-                              class="form-control" placeholder="Describe the issue in detail"></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Save</button>
-            </form>
-        </div>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-</div>
+
+    <script>
+        setTimeout(function () {
+            window.location.href = '@TempData["RedirectUrl"]';
+        }, 3000); // Chuyển hướng sau 3 giây
+    </script>
+}
+
+@if (!string.IsNullOrEmpty(ViewData.ModelState[string.Empty]?.Errors.FirstOrDefault()?.ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @ViewData.ModelState[string.Empty].Errors.FirstOrDefault().ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RMS</title>
+    <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
+    <link rel="stylesheet" href="~/css/styles.min.css" />
+</head>
+
+<body>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+         data-sidebar-position="fixed" data-header-position="fixed">
+        <!--  Main wrapper -->
+        <div class="container mt-5">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Gửi báo cáo cho chủ nhà</h2>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h4 class="text-secondary">Phòng: <span class="fw-bold">@Model.RoomNumber</span></h4>
+                        <p class="mb-1"><strong>Tòa nhà:</strong> @Model.BuildingName</p>
+                        <p class="mb-1"><strong>Address:</strong> @Model.Address</p>
+                        <p><strong>Chủ nhà:</strong> @Model.Owner</p>
+                    </div>
+
+                    <form method="post" asp-action="SaveMaintenanceRequest">
+                        <input type="hidden" name="Id" value="@Model.Id" />
+
+                        <div class="mb-3">
+                            <label for="maintenanceDescription" class="form-label">Mô tả</label>
+                            <textarea id="maintenanceDescription" name="MaintenanceDescription" rows="4"
+                                      class="form-control" placeholder="Điền mô tả vào đây"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Gửi</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/sidebarmenu.js"></script>
+    <script src="~/js/app.min.js"></script>
+    <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="~/lib/simplebar/dist/simplebar.js"></script>
+    <script src="~/js/dashboard.js"></script>
+</body>
+</html>

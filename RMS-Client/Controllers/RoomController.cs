@@ -547,19 +547,19 @@ namespace RMS_Client.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Chuyển hướng về trang Building sau khi lưu thành công
-                    return RedirectToAction("ListBuilding", "Building", new { id = model.Id });
+                    TempData["SuccessMessage"] = "Báo cáo đã được gửi thành công! Bạn sẽ được chuyển hướng về Trang chủ sau 3s";
+                    TempData["RedirectUrl"] = Url.Action("Home", "Home");
+                    return RedirectToAction("RoomMaintainance"); // Trả về cùng view với TempData
                 }
                 else
                 {
-                    // Hiển thị thông báo lỗi nếu lưu không thành công
-                    ModelState.AddModelError(string.Empty, "Failed to save maintenance request.");
+                    ModelState.AddModelError(string.Empty, "Không thể gửi báo cáo. Vui lòng điền nội dung và thử lại");
                 }
             }
 
-            // Trả về form với dữ liệu hiện tại nếu có lỗi
-            return View("RoomMaintainance", model);
+            return View("RoomMaintainance", model); // Trả về view nếu xảy ra lỗi
         }
+
         //[HttpPost]
         //public async Task<IActionResult> ImportRooms(IFormFile excelFile)
         //{
