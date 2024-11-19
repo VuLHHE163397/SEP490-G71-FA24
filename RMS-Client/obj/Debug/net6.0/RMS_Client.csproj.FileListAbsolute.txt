@@ -255,3 +255,4 @@ D:\FULearning\FALL2024\DATN\SEP490-G71-FA24\SEP490-G71-FA24\RMS-Client\obj\Debug
 D:\FULearning\FALL2024\DATN\SEP490-G71-FA24\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\RMS_Client.pdb
 D:\FULearning\FALL2024\DATN\SEP490-G71-FA24\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\RMS_Client.genruntimeconfig.cache
 D:\FULearning\FALL2024\DATN\SEP490-G71-FA24\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\ref\RMS_Client.dll
+D:\GitHub\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\BCrypt.Net-Next.dll

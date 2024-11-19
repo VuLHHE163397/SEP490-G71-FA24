@@ -384,7 +384,7 @@
                                 <td>@string.Format("{0:N0} VNĐ", room.Price)</td>
                                 <td>
                                     <form asp-action="UpdateRoomStatus" method="post" id="updateStatusRoom">
-                                        <select class="form-select form-select-lg w-50 room-status-dropdown" onchange="submitUpdateStatus()"
+                                        <select class="form-select form-select-lg w-50 room-status-dropdown" onchange="submitUpdateStatus(this)"
                                                 data-room-id="@room.Id">
                                             @if (ViewBag.RoomStatuses is SelectList roomStatuses)
                                             {
@@ -473,8 +473,8 @@
         //     });
         // }
 
-        function submitUpdateStatus() {
-            var selectElement = document.querySelector('.room-status-dropdown');
+        function submitUpdateStatus(selectElement) {
+            // var selectElement = document.querySelector('.room-status-dropdown');
             var roomId = selectElement.getAttribute('data-room-id');
             var statusId = selectElement.value;
 

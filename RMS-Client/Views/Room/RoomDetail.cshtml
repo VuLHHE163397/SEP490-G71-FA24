@@ -380,7 +380,7 @@
                                     @for (int i = 0; i < images.Count; i++)
                                     {
                                         <div class="thumbnail-item position-relative" style="position: relative;">
-                                            <img src="@images[i].Link" alt="Room Image" class="thumbnail" onclick="changeImage(this)">
+                                            <img src="@images[i].Link" alt="Room Image" class="thumbnail" onmouseover="changeImage(this)">
                                             <i class="delete-button ti ti-circle-x" data-id="@images[i].Id" onclick="deleteImage(@images[i].Id)"></i>
                                         </div>
 

@@ -18,6 +18,78 @@
     <title>RMS</title>
     <link rel="shortcut icon" type="image/png" href="~/images/logos/rms_logo.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
+
+    <style>
+        .popupErrorMessage {
+            display: none;
+            position: fixed;
+            top: 30px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #C53500;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            z-index: 1000;
+            margin-top: 10px; /* Optional spacing for stacked alerts */
+        }
+        /* Popup styling */
+        #popupMessage {
+            display: none;
+            position: fixed;
+            top: 30px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #4caf50;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            z-index: 1000;
+            margin-top: 10px;
+        }
+
+        .spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+            .spinner .spin {
+                width: 50px;
+                height: 50px;
+                border: 5px solid rgba(0, 0, 0, 0.1);
+                border-top-color: #007bff;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+        @@keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner p {
+            margin-top: 10px;
+            color: #007bff;
+            font-size: 18px;
+        }
+
+        .card {
+            max-width: 500px; /* Ensure a reasonable width */
+            width: 100%;
+            margin: auto; /* Center horizontally */
+            position: relative;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -27,64 +99,68 @@
         <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
             <div class="d-flex align-items-center justify-content-center w-100">
                 <div class="row justify-content-center w-100">
-                    <div class="col-md-8 col-lg-6 col-xxl-3">
+                    <div class="col-md-10 col-lg-8 col-xxl-6">
                         <div class="card mb-0">
                             <div class="card-body">
-                                <a href="Home" class="text-nowrap logo-img text-center d-block py-3 w-100">
-                                    <img src="~/images/logos/rms_logo.svg">
-                                    @* <img src="~/images/logos/rms_logo.svg" width="180" alt=""> *@
-                                </a>
+                                @* <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                                    <img src="~/images/logo.jpg" width="180" alt="">
+                                </a> *@
                                 <p class="text-center">RMS_Quản lý trọ theo cách của bạn</p>
-                                <form>
+                                <form id="registerForm" style="max-width: 1000px; margin: auto;">
                                     <div class="mb-3">
-                                        <label for="exampleInputtext1" class="form-label">Tên</label>
-                                        <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputtext1" class="form-label">Tên đệm</label>
-                                        <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputtext1" class="form-label">Họ</label>
-                                        <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputtext1" class="form-label">Số điện thoại</label>
-                                        <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="exampleInputPassword1" class="form-label">Mật khẩu</label>
-                                        <input type="password" class="form-control" id="exampleInputPassword1">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="exampleInputPassword2" class="form-label">Xác nhận mật khẩu</label>
-                                        <input type="password" class="form-control" id="exampleInputPassword1">
-                                    </div>
-                                    <div class="mb-4">
-                                        <button type="button" class="btn btn-primary">Gửi mã qua email</button>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="exampleInputPin1" class="form-label">Mã xác nhận qua mail</label>
-                                        <div id="verificationCode" class="d-flex justify-content-between">
-                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 1">
-                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 2">
-                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 3">
-                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 4">
-                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 5">
-                                            <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 6">
+                                        <label class="form-label">Tên đầy đủ</label>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" required id="lastName" placeholder="Họ">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" required id="midName" placeholder="Tên đệm">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" required id="firstName" placeholder="Tên">
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label">Số điện thoại</label>
+                                        <input type="text" class="form-control" required pattern="[0-9]{10}" id="phone">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" required pattern="^[^@@\s]+@@[^@@\s]+\.[^@@\s]+$" id="email">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="password" class="form-label">Mật khẩu</label>
+                                        <input type="password" class="form-control" required id="password">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
+                                        <input type="password" class="form-control" required id="confirmPassword">
+                                    </div>
+                                    @* <div class="mb-4">
+                                    <button type="button" class="btn btn-primary" onclick="sendVerificationCode()">Gửi mã qua email</button>
+                                    </div> *@
+                                    @* <div class="mb-4">
+                                    <label for="verificationCode" class="form-label">Mã xác nhận qua mail</label>
+                                    <input type="text" class="form-control" id="verificationCode">
+                                    </div> *@
+                                    @* <div class="mb-4">
+                                    <label for="verificationCode" class="form-label">Mã xác nhận qua mail</label>
+                                    <div id="verificationCode" class="d-flex justify-content-between">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 1">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 2">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 3">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 4">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 5">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 6">
+                                    </div>
+                                    </div> *@
 
-                                    <a href="./index.html" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</a>
+                                    <a onclick="sendVerificationCode()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</a>
                                     <div class="d-flex align-items-center justify-content-center">
                                         <p class="fs-4 mb-0 fw-bold">Bạn đã có tài khoản?</p>
-                                        <a class="text-primary fw-bold ms-2" href="Login">Đăng nhập</a>
+                                        <a class="text-primary fw-bold ms-2" href="/Auth/Login">Đăng nhập</a>
                                     </div>
-
                                 </form>
                             </div>
                         </div>
@@ -93,12 +169,20 @@
             </div>
         </div>
     </div>
+
+    <div id="popupContainer"></div>
+    <div id="loadingSpinner" class="spinner" style="display: none;">
+        <div class="spin"></div>
+        <p>Đang xử lý...</p>
+    </div>
+
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         function validateEmail(email) {
-             const emailRegex = /^[^\sa]+a[^\sa]+\.[^\sa]+$/;   // a = a cong
+            const emailRegex = /^[^@@\s]+@@[^@@\s]+\.[^@@\s]+$/;
             return emailRegex.test(email);
         }
 
@@ -107,47 +191,158 @@
             return phoneRegex.test(phone);
         }
 
-        function validateForm() {
-            const email = document.getElementById("exampleInputEmail1").value;
-            const phone = document.getElementById("exampleInputPhone1").value;
-            if (!validateEmail(email)) {
-                alert("Invalid email format");
-                return false;
-            }
-            if (!validatePhone(phone)) {
-                alert("Invalid phone number format");
-                return false;
-            }
-            return true;
+        function sendVerificationCode() {
+            // Send verification code via email API call here
+            alert("Mã xác nhận đã được gửi tới email của bạn!");
         }
 
-        function register() {
-            var username = $("#registerUsername").val();
-            var fullname = $("#registerFullname").val();
-            var password = $("#registerPassword").val();
-            var confirmPassword = $("#confirmPassword").val();
 
-            if (password !== confirmPassword) {
-                alert("Passwords do not match!");
+
+        function sendVerificationCode() {
+            const firstName = $("#firstName").val().trim();
+            const midName = $("#midName").val().trim();
+            const lastName = $("#lastName").val().trim();
+            const email = $("#email").val().trim();
+            const phone = $("#phone").val().trim();
+            const password = $("#password").val().trim();
+            const confirmPassword = $("#confirmPassword").val().trim();
+
+
+            if (!lastName) {
+                showErrorPopup("Vui lòng nhập Họ!");
                 return;
             }
 
+            if (!midName) {
+                showErrorPopup("Vui lòng nhập Tên đệm!");
+                return;
+            }
+
+            if (!firstName) {
+                showErrorPopup("Vui lòng nhập Tên!");
+                return;
+            }
+
+            if (!phone) {
+                showErrorPopup("Vui lòng nhập số điện thoại!");
+                return;
+            }
+
+            if (!validatePhone(phone)) {
+                showErrorPopup("Số điện thoại không hợp lệ! Cần bắt đầu bằng 0 và có 10 chữ số");
+                return;
+            }
+
+            if (!email) {
+                showErrorPopup("Vui lòng nhập email!");
+                return;
+            }
+
+            if (!validateEmail(email)) {
+                showErrorPopup("Email không hợp lệ! Email cần theo cấu trúc example@gmail.com");
+                return;
+            }
+
+            if (!password) {
+                showErrorPopup("Vui lòng nhập mật khẩu!");
+                return;
+            }
+
+            if (password.length < 5) {
+                showErrorPopup("Mật khẩu ít nhất có 6 kí tự!");
+                return;
+            }
+
+            if (!confirmPassword) {
+                showErrorPopup("Vui lòng nhập xác nhận mật khẩu!");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showErrorPopup("Mật khẩu xác nhận không khớp!");
+                return;
+            }
+
+            const user = {
+                firstName: firstName,
+                midName: midName,
+                lastName: lastName,
+                email: email,
+                phone: phone,
+                password: password
+            };
+
+            // Show the loading spinner
+            $("#loadingSpinner").show();
+
             $.ajax({
-                url: "http://localhost:5109/api/Auth/register",
+                url: "https://localhost:7056/api/Auth/sendVerificationCode",
                 type: "POST",
                 contentType: "application/json",
-                data: JSON.stringify({ Username: username, Fullname: fullname, Password: password }),
+                data: JSON.stringify(user),
                 success: function (response) {
-                    alert("Registration successful!");
-                    $(".Sign-In").css("display", "block");
-                    $(".registration").css("display", "none");
+                    $("#loadingSpinner").hide();
+                    showPopup("Đăng nhập thành công!");
+                    sessionStorage.setItem("firstName", firstName);
+                    sessionStorage.setItem("midName", midName);
+                    sessionStorage.setItem("lastName", lastName);
+                    sessionStorage.setItem("email", email);
+                    sessionStorage.setItem("phone", phone);
+                    sessionStorage.setItem("password", password);
+                    window.location.href = "/Auth/VerifyEmail";
+
+                    showPopup("Đăng nhập thành công");
                 },
                 error: function (xhr, status, error) {
-                    alert("Registration failed: " + xhr.responseText);
+                    $("#loadingSpinner").hide();
+                    showErrorPopup("Đăng ký thất bại: " + xhr.responseText);
                 }
             });
         }
+
+        function showPopup(message) {
+            var popup = $("#popupMessage");
+            popup.text(message);
+            popup.fadeIn();
+            setTimeout(function () {
+                popup.fadeOut();
+            }, 2000);
+        }
+
+        function showErrorPopup(message) {
+            // Create a unique ID for each alert to avoid overlap
+            var popupId = "popupError_" + Date.now();
+            var popup = $(`<div id="${popupId}" class="popupErrorMessage">${message}</div>`);
+
+            // Append popup to the container
+            $("#popupContainer").append(popup);
+
+            // Show and fade out the alert
+            popup.fadeIn();
+            setTimeout(function () {
+                popup.fadeOut(function () {
+                    popup.remove(); // Remove the popup from the DOM after fading out
+                });
+            }, 2000); // Display time in milliseconds
+        }
+
+        function showPopup(message) {
+            // Create a unique ID for each alert to avoid overlap
+            var popupId = "popup_" + Date.now();
+            var popup = $(`<div id="${popupId}" class="popupMessage">${message}</div>`);
+
+            // Append popup to the container
+            $("#popupContainer").append(popup);
+
+            // Show and fade out the alert
+            popup.fadeIn();
+            setTimeout(function () {
+                popup.fadeOut(function () {
+                    popup.remove(); // Remove the popup from the DOM after fading out
+                });
+            }, 2000); // Display time in milliseconds
+        }
+
     </script>
 </body>
-
 </html>

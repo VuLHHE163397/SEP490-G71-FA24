@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "D1DDg6rViDSsbeaA87Oyp69SmoWazvNXIS9NVjKjSA8=",
+  "Hash": "rm4IAf9py/zCLEqD1XuCgbB3PUdA9nDiZ95y/gIntmE=",
   "Source": "RMS_Client",
   "BasePath": "_content/RMS_Client",
   "Mode": "Default",
@@ -314,6 +314,25 @@
       "OriginalItemSpec": "wwwroot\\images\\backgrounds\\rocket.png"
     },
     {
+      "Identity": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\bg1.jpg",
+      "SourceId": "RMS_Client",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\",
+      "BasePath": "_content/RMS_Client",
+      "RelativePath": "images/bg1.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\bg1.jpg"
+    },
+    {
       "Identity": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logo.jpg",
       "SourceId": "RMS_Client",
       "SourceType": "Discovered",
@@ -352,12 +371,12 @@
       "OriginalItemSpec": "wwwroot\\images\\logos\\dark-logo.svg"
     },
     {
-      "Identity": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logos\\favicon.png",
+      "Identity": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logos\\house.png",
       "SourceId": "RMS_Client",
       "SourceType": "Discovered",
       "ContentRoot": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\",
       "BasePath": "_content/RMS_Client",
-      "RelativePath": "images/logos/favicon.png",
+      "RelativePath": "images/logos/house.png",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -368,7 +387,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\images\\logos\\favicon.png"
+      "OriginalItemSpec": "wwwroot\\images\\logos\\house.png"
     },
     {
       "Identity": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\products\\s1.jpg",
@@ -483,25 +502,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\profile\\user-1.jpg"
-    },
-    {
-      "Identity": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\rms_logo.png",
-      "SourceId": "RMS_Client",
-      "SourceType": "Discovered",
-      "ContentRoot": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\",
-      "BasePath": "_content/RMS_Client",
-      "RelativePath": "images/rms_logo.png",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\images\\rms_logo.png"
     },
     {
       "Identity": "D:\\GitHub\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\room1.jpg",
