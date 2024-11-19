@@ -247,69 +247,6 @@
     ]
   },
   {
-    "ContainingType": "RMS_API.Controllers.LocationController",
-    "Method": "GetDistricts",
-    "RelativePath": "api/Location/districts/{provinceId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "provinceId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.LocationController",
-    "Method": "GetProvinces",
-    "RelativePath": "api/Location/provinces",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.LocationController",
-    "Method": "GetWards",
-    "RelativePath": "api/Location/wards/{districtId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "districtId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "UploadImageToCloudinary",
-    "RelativePath": "api/Room",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "imageFile",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
-      },
-      {
-        "Name": "roomId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "GetSuggestedRooms",
     "RelativePath": "api/Room/{roomId}/suggestedrooms",
@@ -343,27 +280,6 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "CheckRoomNameExists",
-    "RelativePath": "api/Room/CheckRoomNameExists",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "roomName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "buildingId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "DeleteAllRoomByBuildingId",
     "RelativePath": "api/Room/DeleteAllRoom/{buildingId}",
     "HttpMethod": "DELETE",
@@ -372,22 +288,6 @@
     "Parameters": [
       {
         "Name": "buildingId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "DeleteImageById",
-    "RelativePath": "api/Room/DeleteImageById/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -448,22 +348,6 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "GetImageByRoom",
-    "RelativePath": "api/Room/GetAllImage/{roomId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "roomId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "GetAllRoom",
     "RelativePath": "api/Room/GetAllRoom",
     "HttpMethod": "GET",
@@ -517,7 +401,7 @@
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "GetRoomByBuilding",
-    "RelativePath": "api/Room/GetRoomByBuilding/{buildingId}",
+    "RelativePath": "api/Room/GetRoomByBuilding",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -525,7 +409,7 @@
       {
         "Name": "buildingId",
         "Type": "System.Int32",
-        "IsRequired": true
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -542,131 +426,6 @@
         "Name": "roomId",
         "Type": "System.Int32",
         "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "ImportRooms",
-    "RelativePath": "api/Room/ImportRooms",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "file",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "GetRoomQrCode",
-    "RelativePath": "api/Room/qr/{roomId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "roomId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "GetByQR",
-    "RelativePath": "api/Room/RoomMaintainance/{roomId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "roomId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "SaveMaintainancebyQR",
-    "RelativePath": "api/Room/SaveMaintenanceRequest",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "dto",
-        "Type": "RMS_API.DTOs.MaintainanceDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "SearchRooms",
-    "RelativePath": "api/Room/search",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "ProvinceId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "DistrictId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "WardId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "MinDistance",
-        "Type": "System.Nullable\u00601[[System.Double, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "MaxDistance",
-        "Type": "System.Nullable\u00601[[System.Double, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "MinPrice",
-        "Type": "System.Nullable\u00601[[System.Decimal, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "MaxPrice",
-        "Type": "System.Nullable\u00601[[System.Decimal, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "MinArea",
-        "Type": "System.Nullable\u00601[[System.Double, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "MaxArea",
-        "Type": "System.Nullable\u00601[[System.Double, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "RoomStatus",
-        "Type": "System.String",
-        "IsRequired": false
       }
     ],
     "ReturnTypes": []

@@ -102,7 +102,7 @@ namespace RMS_API.Controllers
         };
 
         [HttpPost("ImportRooms/{buildingId}")]
-        public async Task<IActionResult> ImportRooms(IFormFile file, int buildingId)
+        public async Task<IActionResult> ImportRooms([FromForm]IFormFile file, int buildingId)
         {
             if (file == null || file.Length == 0)
             {
@@ -358,6 +358,21 @@ namespace RMS_API.Controllers
 
             return Ok("Cập nhật phòng thành công");
         }
+
+        [HttpPut("updateRoomStatus/{roomId}")]
+        public IActionResult UpdateRoomStatus(int roomId, [FromBody] int statusId)
+        {
+            var room = _context.Rooms.FirstOrDefault(r => r.Id == roomId);
+            if (room == null)
+            {
+                return NotFound("Không tìm thấy phòng có id = " + roomId);
+            }
+
+            room.RoomStatusId = statusId;
+            _context.SaveChanges();
+            return Ok("Cập nhật trạng thái phòng thành công!!!");
+        }
+
 
         [HttpDelete("DeleteRoomById/{roomId}")]
         public IActionResult DeteleRoomById(int roomId)

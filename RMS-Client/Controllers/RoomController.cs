@@ -135,68 +135,9 @@ namespace RMS_Client.Controllers
             ViewBag.Images = images;
             ViewBag.Buildings = buildings;
             ViewBag.Facilities = facs;
+            ViewBag.BuildingId = room?.BuildingId;
             return View(room);
         }
-
-
-        //[HttpPost]
-        //public async Task<IActionResult> UploadImageToDropbox(int roomId, IFormFile imageFile)
-        //{
-        //    if (imageFile == null || imageFile.Length == 0)
-        //    {
-        //        TempData["Error"] = "Vui lòng chọn một ảnh hợp lệ.";
-        //        return RedirectToAction("RoomDetail", new { id = roomId });
-        //    }
-
-        //    // Thay bằng Access Token của bạn
-        //    string dropboxAccessToken = "sl.CAiWPncIvfMfTkK1523MNHia8kAdj04ahFTov_tt28Fv1htlTOGkt8J3vmxmx3Qca8e3vthAgR31ZFKRJCIOLN7HayLE4SgetqCSmb7crFeFFZ44AdtCrTi5wLtZpQN1Iyw0L-6ukXomz0g";
-        //    string dropboxFolderPath = "/Images";
-
-        //    using (var dropboxClient = new DropboxClient(dropboxAccessToken))
-        //    {
-        //        var fileName = $"{Guid.NewGuid()}_{imageFile.FileName}";
-        //        string imageUrl;
-
-        //        using (var memoryStream = new MemoryStream())
-        //        {
-        //            await imageFile.CopyToAsync(memoryStream);
-        //            memoryStream.Position = 0;
-
-        //            var uploadResponse = await dropboxClient.Files.UploadAsync(
-        //                $"{dropboxFolderPath}/{fileName}",
-        //                WriteMode.Overwrite.Instance,
-        //                body: memoryStream);
-
-        //            var sharedLink = await dropboxClient.Sharing.CreateSharedLinkWithSettingsAsync(uploadResponse.PathLower);
-        //            imageUrl = sharedLink.Url.Replace("dl=0", "dl=1");
-        //        }
-
-        //        // Gửi yêu cầu đến API để lưu đường link ảnh
-        //        using (var httpClient = new HttpClient())
-        //        {
-        //            var imageDto = new ImageDTO
-        //            {
-        //                Link = imageUrl,
-        //                RoomId = roomId
-        //            };
-
-        //            var content = new StringContent(JsonConvert.SerializeObject(imageDto), Encoding.UTF8, "application/json");
-        //            var response = await httpClient.PostAsync($"{RoomApiUri}/UploadImage/{roomId}", content);
-
-        //            if (response.IsSuccessStatusCode)
-        //            {
-        //                TempData["Success"] = "Ảnh đã được upload và lưu thành công!";
-        //            }
-        //            else
-        //            {
-        //                TempData["Error"] = "Có lỗi xảy ra khi lưu ảnh vào cơ sở dữ liệu.";
-        //            }
-        //        }
-        //    }
-
-        //    return RedirectToAction("RoomDetail", new { id = roomId });
-        //}
-
 
 
         [HttpGet]
@@ -321,6 +262,8 @@ namespace RMS_Client.Controllers
 
             ViewBag.RoomStatuses = new SelectList(status, "Id", "Name");
             ViewBag.Buildings = buildings;
+            // Lấy buildingId từ room và truyền vào ViewBag
+            ViewBag.BuildingId = room?.BuildingId;
             return View(room);
         }
 
@@ -351,6 +294,34 @@ namespace RMS_Client.Controllers
                 return View(room); // Trả lại view với lỗi
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateRoomStatus(RoomLlUpdateDTO room, int? buildingId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(room); // Trả lại view nếu model không hợp lệ
+            }
+
+            // Lấy chỉ statusId từ room DTO
+            var jsonContent = JsonConvert.SerializeObject(room.RoomStatusId); // Gửi chỉ statusId
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            string apiUrl = $"{RoomApiUri}/updateRoomStatus/{room.Id}";
+            var response = await client.PutAsync(apiUrl, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["Success"] = "Cập nhật trạng thái phòng thành công!";
+                return RedirectToAction("ListRoom", new { buildingId = buildingId });
+            }
+            else
+            {
+                TempData["Error"] = "Cập nhật phòng thất bại: " + await response.Content.ReadAsStringAsync();
+                return Conflict("Cập nhật trạng thái phòng thất bại");
+            }
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Delete(int id, int? buildingId, List<int> statusIds)
