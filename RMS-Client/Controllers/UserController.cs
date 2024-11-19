@@ -22,12 +22,9 @@ namespace RMS_Client.Controllers
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public IActionResult GetUser()
+        public IActionResult ViewProfile()
         {
-            return View("~/Views/Profile/ViewProfile.cshtml");
-            // Method to fetch and display the list of users
-
-            
+            return View("~/Views/Profile/ViewProfile.cshtml");      
         }
 
         public async Task<IActionResult> ListUser()

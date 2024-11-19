@@ -138,12 +138,13 @@
                 success: function (response) {
                     localStorage.setItem("token", response.token);
                     showPopup("Đăng nhập thành công!");
-
+                    
                     // const token = localStorage.getItem("token");
                     try {
                         // Giải mã token jwt
                         const tokenParts = response.token.split('.');
                         const payload = JSON.parse(atob(tokenParts[1]));
+                        localStorage.setItem("email", payload.unique_name);
 
                         // xét role chuyển trang
                         setTimeout(function () {
@@ -172,7 +173,7 @@
             popup.fadeIn();
             setTimeout(function () {
                 popup.fadeOut();
-            }, 2000);
+            }, 500);
         }
 
         function showErrorPopup(message) {
