@@ -27,11 +27,11 @@ namespace RMS_Client.Controllers
         {
             string apiUrlService = ServiceApiUri + "/GetAllService";
             var serviceResponse = await client.GetAsync(apiUrlService);
-            var services = new List<ServiceDTO>();
+            var services = new ServiceTableView();
             if(serviceResponse.IsSuccessStatusCode)
             {
                 var json = await serviceResponse.Content.ReadAsStringAsync();
-                services = JsonConvert.DeserializeObject<List<ServiceDTO>>(json) ?? new List<ServiceDTO>();
+                services = JsonConvert.DeserializeObject<ServiceTableView>(json) ?? new ServiceTableView();
             }
             // Lấy danh sách tòa nhà và trạng thái (như trước đây)
             string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";
@@ -53,8 +53,10 @@ namespace RMS_Client.Controllers
             }
             ViewBag.Buildings = buildings;
             ViewBag.Status = status;
-            
-            return View(services);
+            ViewBag.TotalRecord = services.TotalRecord;
+
+
+            return View(services.services);
         }
         public IActionResult AddService()
         {
@@ -71,6 +73,14 @@ namespace RMS_Client.Controllers
                 service = JsonConvert.DeserializeObject<ServiceDTO>(json) ?? new ServiceDTO();
             }
             return View(service);
+        }
+        public IActionResult ServicesBills()
+        {
+            return View();
+        }
+        public IActionResult ServiceRecord()
+        {
+            return View();
         }
     }
 }
