@@ -25,7 +25,7 @@ namespace RMS_API.Controllers
         {
             if (string.IsNullOrEmpty(email))
             {
-                return BadRequest("Email Không được để trống.");
+                return BadRequest("Email is required.");
             }
 
             var user = await _context.Users               
@@ -42,7 +42,7 @@ namespace RMS_API.Controllers
 
             if (user == null)
             {
-                return NotFound("Không tìm thấy người dùng.");
+                return NotFound("Building not found.");
             }
             return Ok(user);
         }
@@ -52,25 +52,25 @@ namespace RMS_API.Controllers
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(currentPassword) || string.IsNullOrEmpty(newPassword))
             {
-                return BadRequest("Email,mật khẩu hiện tại và mật khẩu mới không được trống.");
+                return BadRequest("Email hoặc current password và new password không được trống.");
             }
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
             if (user == null)
             {
-                return NotFound("Email không tồn tại.");
+                return NotFound("User not found.");
             }
 
-            if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.Password)) // Adjust according to your password hashing method if applicable
+            if (user.Password != currentPassword) // Adjust according to your password hashing method if applicable
             {
-                return BadRequest("Mật khẩu hiện tại sai.");
+                return BadRequest("Current password is incorrect.");
             }
 
-            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword); // Hash the password if needed
+            user.Password = newPassword; // Hash the password if needed
             await _context.SaveChangesAsync();
 
-            return Ok("Cập nhật mật khẩu thành công.");
+            return Ok("Password updated successfully.");
         }
 
         [HttpPut("UpdateProfile")]
@@ -78,14 +78,14 @@ namespace RMS_API.Controllers
         {
             if (userDTO == null || string.IsNullOrEmpty(userDTO.Email))
             {
-                return BadRequest("Không tìm thấy người dùng.");
+                return BadRequest("Invalid user data.");
             }
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userDTO.Email);
 
             if (user == null)
             {
-                return NotFound("Không tìm thấy người dùng.");
+                return NotFound("User not found.");
             }
 
             user.FirstName = userDTO.FirstName;
@@ -95,7 +95,7 @@ namespace RMS_API.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok("Cập nhật profile thành công.");
+            return Ok("Profile updated successfully.");
         }
 
         [HttpPost("ResetPassword")]
@@ -103,14 +103,14 @@ namespace RMS_API.Controllers
         {
             if (string.IsNullOrEmpty(resetToken) || string.IsNullOrEmpty(newPassword))
             {
-                return BadRequest("Xin vui lòng nhập mật khẩu mới.");
+                return BadRequest("Token and new password are required.");
             }
 
             //var user = await _context.Users.FirstOrDefaultAsync(u => u.ResetToken == resetToken && u.ResetTokenExpiry > DateTime.UtcNow);
             var user= new RegisterModel();
             if (user == null)
             {
-                return BadRequest("Token không hợp lệ.");
+                return BadRequest("Invalid or expired token.");
             }
 
             // Update password and clear the reset token
@@ -119,9 +119,8 @@ namespace RMS_API.Controllers
             //user.ResetTokenExpiry = null;
             await _context.SaveChangesAsync();
 
-            return Ok("Thay đổi mật khẩu thành công.");
+            return Ok("Password has been reset successfully.");
         }
-
         [HttpGet("GetAllUserByRoleId")]
         public async Task<IActionResult> GetAllUserByRoleId(int roleId)
         {
@@ -180,6 +179,7 @@ namespace RMS_API.Controllers
 
             return Ok(users);
         }
+
 
         [HttpPost("UpdateStatus")]
         public async Task<IActionResult> UpdateStatus([FromBody] UpdateStatusRequest request)

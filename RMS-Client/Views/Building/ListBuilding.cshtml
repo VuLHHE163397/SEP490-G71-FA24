@@ -10,7 +10,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>RMS</title>
+    <title>RMS</title>    
     <link rel="shortcut icon" type="image/png" href="~/images/logos/house.jpg" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -39,23 +39,23 @@
             }
 
         /*  .btn-warning {
-                                                            background-color: #ffc107;
-                                                            border-color: #ffc107;
-                                                            color: #fff;
-                                                        }
+                                    background-color: #ffc107;
+                                    border-color: #ffc107;
+                                    color: #fff;
+                                }
 
-                                                            .btn-warning:hover {
-                                                                background-color: #e0a800;
-                                                                border-color: #e0a800;
-                                                                transform: scale(1.05);
-                                                            }
+                                    .btn-warning:hover {
+                                        background-color: #e0a800;
+                                        border-color: #e0a800;
+                                        transform: scale(1.05);
+                                    }
 
-                                                            .btn-warning:active {
-                                                                background-color: #c69500;
-                                                                border-color: #c69500;
-                                                                transform: scale(1);
-                                                            }
-                                                 */
+                                    .btn-warning:active {
+                                        background-color: #c69500;
+                                        border-color: #c69500;
+                                        transform: scale(1);
+                                    }
+                         */
         /* Icon styling inside buttons */
         .btn i {
             margin-right: 8px;
@@ -304,7 +304,7 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a class="d-flex align-items-center gap-2 dropdown-item" onclick="viewProfile()">
+                                        <a href="/Profile/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
                                             <p class="mb-0 fs-3">My Profile</p>
                                         </a>
@@ -392,8 +392,7 @@
 
                     const token = localStorage.getItem("token");
                     console.log("token:", token);
-
-                    if (token == 1 || !token) {
+                    if (token == 1) {
                         window.location.href = "/Auth/Login";
                     }
                     const tokenParts = token.split('.');
@@ -408,7 +407,6 @@
                         console.log("Token set to 1 on logout.");
                     }
 
-                    
 
                     function editBuilding(id) {
                         // Redirect to the edit page for the specific building
@@ -427,8 +425,6 @@
                     }
 
 
-
-
                     $(document).ready(function () {
                         if (typeof ApexCharts === 'undefined') {
                             console.error("ApexCharts is not loaded.");
@@ -438,7 +434,7 @@
                         }
                     });
 
-
+                    
 
                 </script>
 
