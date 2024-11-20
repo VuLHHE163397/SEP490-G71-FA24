@@ -13,6 +13,7 @@ namespace RMS_Client.Controllers
 
         private readonly HttpClient client;
         private string FacilityApiUri = "https://localhost:7056/api/Facility";
+        private string RoomApiUri = "https://localhost:7056/api/Room";
 
         public FacilityController()
         {
@@ -24,17 +25,39 @@ namespace RMS_Client.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> ListFacility()
+        public async Task<IActionResult> ListFacility(string? keyword, int buildingId, int roomId, int pageIndex = 1, int pageSize = 10)
         {
-            string apiUrlFacility = FacilityApiUri + "/GetAllFacility";
+            string apiUrlFacility = FacilityApiUri + $"/GetAllFacility?pageIndex={pageIndex}&pageSize={pageSize}";
+            if(keyword != null)
+            {
+                apiUrlFacility += $"&keyword={keyword}";
+            }
+            if(buildingId > 0)
+            {
+                apiUrlFacility += $"&buildingId={buildingId}";
+            }
+            if(roomId > 0)
+            {
+                apiUrlFacility += $"&roomId={roomId}";
+            }
             var facilityResponse = await client.GetAsync(apiUrlFacility);
-            var facilities = new List<FacilityDTO>();
+            var tableView = new FacilityTableView();
             if (facilityResponse.IsSuccessStatusCode)
             {
                 var json = await facilityResponse.Content.ReadAsStringAsync();
-                facilities = JsonConvert.DeserializeObject<List<FacilityDTO>>(json) ?? new List<FacilityDTO>();
+                tableView = JsonConvert.DeserializeObject<FacilityTableView>(json) ?? new FacilityTableView();
             }
-            return View(facilities);
+            string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";
+            var buildings = new List<Building>();
+            var responseBuilding = await client.GetAsync(apiUrlBuilding);
+            if (responseBuilding.IsSuccessStatusCode)
+            {
+                var json = await responseBuilding.Content.ReadAsStringAsync();
+                buildings = JsonConvert.DeserializeObject<List<Building>>(json);
+            }
+            ViewBag.Buildings = buildings;
+            ViewBag.TotalRecord = tableView.Total;
+            return View(tableView.Facilities);
         }
         public IActionResult AddFacility()
         {

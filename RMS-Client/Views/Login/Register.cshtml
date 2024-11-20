@@ -282,7 +282,7 @@
                 data: JSON.stringify(user),
                 success: function (response) {
                     $("#loadingSpinner").hide();
-                    showPopup("Đăng nhập thành công!");
+                    showPopup("Đăng ký thành công!");
                     sessionStorage.setItem("firstName", firstName);
                     sessionStorage.setItem("midName", midName);
                     sessionStorage.setItem("lastName", lastName);
@@ -291,7 +291,7 @@
                     sessionStorage.setItem("password", password);
                     window.location.href = "/Auth/VerifyEmail";
 
-                    showPopup("Đăng nhập thành công");
+                    showPopup("Đăng ký thành công");
                 },
                 error: function (xhr, status, error) {
                     $("#loadingSpinner").hide();
