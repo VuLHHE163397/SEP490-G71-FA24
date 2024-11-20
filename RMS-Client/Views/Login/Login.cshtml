@@ -49,8 +49,7 @@
         }
 
         body {
-            background-image: url('~/images/bg1.jpg'); /* Đường dẫn tới ảnh */
-            background-size: cover; /* Bao phủ toàn bộ màn hình */
+            /* background-image: url('images/logo.jpg'); /* Đường dẫn tới ảnh */ */ background-size: cover; /* Bao phủ toàn bộ màn hình */
             background-repeat: no-repeat; /* Không lặp lại ảnh */
             background-position: center; /* Căn giữa ảnh */
             position: relative;
@@ -87,10 +86,11 @@
                     <div class="col-md-10 col-lg-8 col-xxl-6">
                         <div class="card mb-0">
                             <div class="card-body">
+                                <a href="#" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                                    <img src="~/images/logo.jpg" width="180" alt="">
+                                </a>
                                 <form id="loginForm">
                                     <div class="mb-3">
-                                        <script>
-                                            console.log("token:", token);</script>
                                         <label for="email" class="form-label">Tài khoản</label>
                                         <input type="email" class="form-control" id="email" required>
                                     </div>
@@ -130,6 +130,16 @@
             var email = $("#email").val();
             var password = $("#password").val();
 
+            if (!email) {
+                showErrorPopup("Vui lòng nhập tên tài khoản!");
+                return;
+            }
+
+            if (!password) {
+                showErrorPopup("Vui lòng nhập mật khẩu!");
+                return;
+            }
+
             $.ajax({
                 url: "https://localhost:7056/api/Auth/login",
                 type: "POST",
@@ -144,6 +154,7 @@
                         // Giải mã token jwt
                         const tokenParts = response.token.split('.');
                         const payload = JSON.parse(atob(tokenParts[1]));
+                        localStorage.setItem("email", payload.unique_name);
 
                         // xét role chuyển trang
                         setTimeout(function () {
@@ -153,7 +164,7 @@
                             if (payload.role === "Landlord") {
                                 window.location.href = "/Building/ListBuilding";
                             }
-                        }, 1000);
+                        }, 800);
                     } catch (error) {
                         console.error("Failed to decode token", error);
                         alert("Đăng nhập thành công, nhưng có lỗi xảy ra khi xử lý thông tin người dùng.");
@@ -172,7 +183,7 @@
             popup.fadeIn();
             setTimeout(function () {
                 popup.fadeOut();
-            }, 2000);
+            }, 500);
         }
 
         function showErrorPopup(message) {
@@ -181,7 +192,7 @@
             popup.fadeIn();
             setTimeout(function () {
                 popup.fadeOut();
-            }, 4000);
+            }, 3000);
         }
     </script>
 </body>

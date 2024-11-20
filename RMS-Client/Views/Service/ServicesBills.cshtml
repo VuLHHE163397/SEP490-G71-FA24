@@ -1,4 +1,8 @@
-﻿<!doctype html>
+﻿@model List<RMS_API.DTOs.ServiceDTO>
+@{
+    ViewData["Title"] = "Thanh toán dịch vụ"; // Page title
+}
+<!doctype html>
 <html lang="en">
 
 <head>
@@ -7,6 +11,70 @@
     <title>RMS</title>
     <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+
+        /* Sidebar styling */
+        .sidebar-submenu {
+            padding-left: 15px;
+            display: none;
+        }
+
+        .sidebar-sublink {
+            color: #6c757d;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+            .sidebar-sublink:hover {
+                color: #0d6efd;
+            }
+
+        /* Sidebar arrow rotation */
+        .rotate {
+            transform: rotate(180deg);
+            transition: transform 0.3s;
+        }
+
+        /* Table styling */
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Button styles */
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        /* Page wrapper styles */
+        .page-wrapper {
+            display: flex;
+        }
+
+        /* Main content area padding */
+        .body-wrapper {
+            /* padding: 20px; */
+            flex-grow: 1;
+        }
+
+        /* Header navbar icon */
+        .nav-icon-hover {
+            cursor: pointer;
+        }
+
+        /* Profile image in dropdown */
+        .navbar-nav .dropdown-menu img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+    </style>
 </head>
 
 <body>
@@ -86,6 +154,7 @@
                                 <span class="hide-menu">Dịch vụ</span>
                             </a>
                         </li>
+
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Service" asp-action="ServiceRecord" aria-expanded="false">
                                 <span>
@@ -154,65 +223,117 @@
                 </nav>
             </header>
             <!--  Header End -->
+
             <div class="container-fluid">
-                @*
-                For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-                *@
-                @{
-                }
                 <link rel="stylesheet" href="~/css/styles.min.css" />
-                <div class="container" style="margin-top: 1rem; max-width: 900px;">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2>Sửa dịch vụ</h2>
-                        <div>
-                            <a href="/Service/ListService" class="btn btn-warning">Quay về</a>
-                            <button type="submit" class="btn btn-success" onclick="UpdateService(@Model.Id)">Lưu</button>
+                <div class="container-fluid" style="margin-top: 1rem">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 center>@ViewData["Title"]</h1>
+                        <style>
+                            .btn-spacing > button {
+                                margin-right: 10px; /* Tạo khoảng cách 10px giữa các nút */
+                            }
+                        </style>
+                        <div class="d-flex align-items-center btn-spacing">
+                            <button class="btn btn-info">In</button>
+                            <button class="btn btn-warning">Xuất file Excel</button>
+                            <button class="btn btn-secondary">In danh sách</button>
+                            <button class="btn btn-success"> <i class="fa-solid fa-calculator"></i> Tính</button>
                         </div>
                     </div>
                     <hr />
-                    <form method="post">
-                        <div class="row mb-3">
-                            <!-- Tên dịch vụ -->
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <label for="ServiceName">Tên <span class="text-danger">*</span></label>
-                                    <input type="text" id="ServiceName" name="ServiceName" class="form-control" required value="@Model.Name" />
-                                </div>
+                    <!-- Notes -->
+                    <div class="alert alert-light border mb-3">
+                        <strong style="color: red;">Lưu ý:</strong>
+                        <ul class="mb-0">
+                            <li>
+                                - Ở chức năng "Quản lý phòng", bạn phải gắn các dịch vụ cho khách thuê trước khi tính tiền.</li>
+                                
+                            <li>- Nếu có bất kỳ thay đổi liên quan đến tiền nhà tháng đang tính (...), bạn phải tính lại cho tháng đó.</li>
+                        </ul>
+                    </div>
+
+                    <div class="container mt-4">
+                        <!-- Bộ lọc -->
+                        <div class="row g-3 align-items-center mb-3">
+                            <div class="col-md-3">
+                                <label for="monthYear" class="form-label">Tháng/năm</label>
+                                <input type="month" class="form-control" id="monthYear" value="2024-11">
                             </div>
-                            
+
+                            <div class="col-md-2">
+                                <label for="building" class="form-label">Nhà</label>
+                                <select class="form-select" id="building">
+                                    <option>Tất cả</option>
+                                    <option>Nhà 1</option>
+                                    <option>Nhà 2</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label for="room" class="form-label">Phòng</label>
+                                <select class="form-select" id="room">
+                                    <option>Tất cả</option>
+                                    <option>Phòng 101</option>
+                                    <option>Phòng 201</option>
+                                </select>
+                            </div>
+
                         </div>
 
-                        <div class="row mb-3">
-                            <!-- Đơn giá -->
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <label for="Price">Đơn giá <span class="text-danger">*</span> (VNĐ)</label>
-                                    <div class="input-group">
-                                        <input type="number" id="Price" name="Price" class="form-control" required value="@Model.Price" />
-                                        <span class="input-group-text">VNĐ</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <!-- Ghi chú -->
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="Notes">Ghi chú</label>
-                                    <textarea id="Notes" name="Notes" class="form-control" rows="3"></textarea>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                    <table class="table table-bordered" style="margin-top: 0.5rem">
 
-                        <p class="text-danger">(*): Thông tin bắt buộc</p>
-                    </form>
+
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th scope="col">Nhà</th>
+                                <th scope="col">Phòng</th>
+                                <th scope="col">Tên khách</th>
+                                <th scope="col">Số tiền (VND)</th>
+                                <th scope="col">Đã trả (VND)</th>
+                                <th scope="col">Còn lại (VND)</th>
+                                <th scope="col">Tùy chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Tầng 1</td>
+                                <td>2</td>
+                                <td>Tien Dung</td>
+                                <td>21,943,000</td>
+                                <td>0</td>
+                                <td>21,943,000</td>
+                                <td class="action-icons">
+                                    <button class="btn btn-primary">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+        
+                                    <button class="btn btn-danger">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <!-- Phân trang -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>Đang xem 0 đến 0 trong tổng số 0 mục</div>
+                        <div>
+                            <button class="btn btn-light" disabled>Trước</button>
+                            <button class="btn btn-light" disabled>Tiếp</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/sidebarmenu.js"></script>
@@ -237,28 +358,11 @@
             console.log("Token set to 1 on logout.");
         }
 
-        function UpdateService(id) {
-            var service = {
-                id: id,
-                name: $("#ServiceName").val(),
-                price: $("#Price").val(),
-            }
-            $.ajax({
-                url: "https://localhost:7056/api/Service",
-                type: "PUT",
-                contentType: "application/json",
-                data: JSON.stringify(service),
-                success: function (response) {
-                    alert('Cật nhật vụ thành công');
-                    window.location.href = "/Service/ListService"
-                },
-                error: function (xhr, status, error) {
-                    console.log(error)
-                    alert("Lỗi khi cật nhật dịch vụ");
-                }
-            })
-        }
     </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
 </body>
 
 </html>

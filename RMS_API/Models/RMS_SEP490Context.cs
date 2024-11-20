@@ -38,6 +38,7 @@ namespace RMS_API.Models
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<UserStatus> UserStatuses { get; set; } = null!;
         public virtual DbSet<Ward> Wards { get; set; } = null!;
+        public object FacilityStatus { get; internal set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
