@@ -39,23 +39,23 @@
             }
 
         /*  .btn-warning {
-                                                            background-color: #ffc107;
-                                                            border-color: #ffc107;
-                                                            color: #fff;
-                                                        }
+                                                                    background-color: #ffc107;
+                                                                    border-color: #ffc107;
+                                                                    color: #fff;
+                                                                }
 
-                                                            .btn-warning:hover {
-                                                                background-color: #e0a800;
-                                                                border-color: #e0a800;
-                                                                transform: scale(1.05);
-                                                            }
+                                                                    .btn-warning:hover {
+                                                                        background-color: #e0a800;
+                                                                        border-color: #e0a800;
+                                                                        transform: scale(1.05);
+                                                                    }
 
-                                                            .btn-warning:active {
-                                                                background-color: #c69500;
-                                                                border-color: #c69500;
-                                                                transform: scale(1);
-                                                            }
-                                                 */
+                                                                    .btn-warning:active {
+                                                                        background-color: #c69500;
+                                                                        border-color: #c69500;
+                                                                        transform: scale(1);
+                                                                    }
+                                                         */
         /* Icon styling inside buttons */
         .btn i {
             margin-right: 8px;
@@ -351,7 +351,6 @@
                             </tr>
                         </thead>
                         <tbody id="buildingsContainer">
-                           
                         </tbody>
                     </table>
                 </div>
@@ -423,6 +422,23 @@
 
     @* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> *@
     <script>
+        const token = localStorage.getItem("token");       
+        if (token == 1 || !token) {
+            window.location.href = "/Auth/Login";
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+
+        if (payload.role !== "Landlord") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            localStorage.setItem("token", 1);
+            console.log("Token set to 1 on logout.");
+        }
+
+
         $(document).ready(function () {
             console.log('abcbi')
             getListBuilding();
@@ -462,18 +478,18 @@
             if (buildings && buildings.length > 0) {
                 buildings.forEach(building => {
                     container1.append(`
-                        <li class="sidebar-subitem">
-                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                <i class="ti ti-file"></i> ${building.name}
-                            </a>
-                        </li>
-                    `);
+                                <li class="sidebar-subitem">
+                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                        <i class="ti ti-file"></i> ${building.name}
+                                    </a>
+                                </li>
+                            `);
                 });
             } else {
                 // Display a fallback message if no buildings exist
                 container1.append(`
-                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                `);
+                            <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                        `);
             }
             const container = $('#buildingsContainer'); // Ensure you have a container element with this ID
             container.empty(); // Clear any previous content
@@ -481,38 +497,38 @@
             if (buildings && buildings.length > 0) {
                 buildings.forEach(building => {
                     container.append(`
-                        <tr>
-                            <td>${building.id}</td>
-                            <td>${building.name}</td>
-                            <td>${building.totalFloors}</td>
-                            <td>${building.numberOfRooms}</td>
-                            <td>${building.addressDetails}</td>
-                            <td>${building.buildingStatus}</td>
-                            <td>
-                                <!-- Edit Link -->
-                                <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
-                                    <i class="fas fa-edit"></i> <!-- Edit icon -->
-                                </a>
-                                <!-- Detail Link -->
-                                <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
-                                    <i class="ti ti-eye"></i> <!-- Eye icon for "View Details" -->
-                                </a>
-                            </td>
-                        </tr>
-                    `);
+                                <tr>
+                                    <td>${building.id}</td>
+                                    <td>${building.name}</td>
+                                    <td>${building.totalFloors}</td>
+                                    <td>${building.numberOfRooms}</td>
+                                    <td>${building.addressDetails}</td>
+                                    <td>${building.buildingStatus}</td>
+                                    <td>
+                                        <!-- Edit Link -->
+                                        <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
+                                            <i class="fas fa-edit"></i> <!-- Edit icon -->
+                                        </a>
+                                        <!-- Detail Link -->
+                                        <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
+                                            <i class="ti ti-eye"></i> <!-- Eye icon for "View Details" -->
+                                        </a>
+                                    </td>
+                                </tr>
+                            `);
                 });
             } else {
                 // Display a message if no buildings are found
                 container.append(`
-                    <tr>
-                        <td colspan="7" class="text-center">Không có dữ liệu</td>
-                    </tr>
-                `);
+                            <tr>
+                                <td colspan="7" class="text-center">Không có dữ liệu</td>
+                            </tr>
+                        `);
             }
 
         }
 
-        
+
 
         // Các hàm khác có thể sử dụng UserId khi đã lấy được nó
         function editBuilding(id) {
