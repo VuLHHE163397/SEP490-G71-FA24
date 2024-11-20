@@ -99,6 +99,9 @@ ClientBin/
 
 *.publishsettings
 
+# App settings file
+appsettings.json
+
 # RIA/Silverlight projects
 Generated_Code/
 
