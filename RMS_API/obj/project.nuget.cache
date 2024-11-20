@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "rOyGM/xamMSiTbywArZ8DbfK5Wji6Svsynkbgmc33ntTOX34oPnXPpbfFVQkJ5YgPitt2+RA51QcqK4C31ubXg==",
+  "dgSpecHash": "Bds4W8C60HHuh9bJZMutG/i8ysPcNGOydhJmvTKBk5XgKeL8lfvDEBao+wZ8Wgl3V8RGm6PAl3R330uc33aBRQ==",
   "success": true,
   "projectFilePath": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
   "expectedPackageFiles": [
@@ -130,7 +130,8 @@
     "C:\\Users\\Phong Vu\\.nuget\\packages\\system.text.regularexpressions\\4.3.1\\system.text.regularexpressions.4.3.1.nupkg.sha512",
     "C:\\Users\\Phong Vu\\.nuget\\packages\\system.threading\\4.3.0\\system.threading.4.3.0.nupkg.sha512",
     "C:\\Users\\Phong Vu\\.nuget\\packages\\system.threading.tasks\\4.3.0\\system.threading.tasks.4.3.0.nupkg.sha512",
-    "C:\\Users\\Phong Vu\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
+    "C:\\Users\\Phong Vu\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512",
+    "C:\\Users\\Phong Vu\\.nuget\\packages\\zxing.net\\0.16.9\\zxing.net.0.16.9.nupkg.sha512"
   ],
   "logs": []
 }

@@ -57,6 +57,10 @@
       "PackagePath": "staticwebassets\\images\\backgrounds\\rocket.png"
     },
     {
+      "Id": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\bg1.jpg",
+      "PackagePath": "staticwebassets\\images\\bg1.jpg"
+    },
+    {
       "Id": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logo.jpg",
       "PackagePath": "staticwebassets\\images\\logo.jpg"
     },
@@ -65,8 +69,8 @@
       "PackagePath": "staticwebassets\\images\\logos\\dark-logo.svg"
     },
     {
-      "Id": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logos\\favicon.png",
-      "PackagePath": "staticwebassets\\images\\logos\\favicon.png"
+      "Id": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logos\\house.png",
+      "PackagePath": "staticwebassets\\images\\logos\\house.png"
     },
     {
       "Id": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\products\\s1.jpg",
@@ -91,10 +95,6 @@
     {
       "Id": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\profile\\user-1.jpg",
       "PackagePath": "staticwebassets\\images\\profile\\user-1.jpg"
-    },
-    {
-      "Id": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\rms_logo.png",
-      "PackagePath": "staticwebassets\\images\\rms_logo.png"
     },
     {
       "Id": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\room1.jpg",

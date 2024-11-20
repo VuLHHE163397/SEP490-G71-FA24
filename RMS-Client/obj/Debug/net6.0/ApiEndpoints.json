@@ -384,27 +384,6 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "UploadImageToCloudinary",
-    "RelativePath": "api/Room",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "imageFile",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
-      },
-      {
-        "Name": "roomId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "GetSuggestedRooms",
     "RelativePath": "api/Room/{roomId}/suggestedrooms",
     "HttpMethod": "GET",
@@ -643,15 +622,45 @@
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "ImportRooms",
-    "RelativePath": "api/Room/ImportRooms",
+    "RelativePath": "api/Room/ImportRooms/{buildingId}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "file",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "Name": "ContentType",
+        "Type": "System.String",
         "IsRequired": false
+      },
+      {
+        "Name": "ContentDisposition",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Headers",
+        "Type": "Microsoft.AspNetCore.Http.IHeaderDictionary",
+        "IsRequired": false
+      },
+      {
+        "Name": "Length",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "FileName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "buildingId",
+        "Type": "System.Int32",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -776,6 +785,48 @@
       {
         "Name": "roomDto",
         "Type": "RMS_API.DTOs.RoomLlUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "UpdateRoomStatus",
+    "RelativePath": "api/Room/updateRoomStatus/{roomId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roomId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "statusId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.RoomController",
+    "Method": "UploadImage",
+    "RelativePath": "api/Room/upload-image/{roomId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "roomId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

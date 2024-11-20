@@ -118,7 +118,13 @@ namespace RMS_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-    }
+        ////lấy danh sách thanh toán dịch vụ
+        //[HttpGet("GetServicesBill")]
+        //public async Task<IActionResult> GetServicesBill()
+        //{
+
+        //}
+}
 }
 
 

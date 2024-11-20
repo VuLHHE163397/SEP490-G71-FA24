@@ -261,6 +261,9 @@
                             <input type="text" class="form-control" id="searchInput" style="min-width: 200px" onkeyup="filterServices()" placeholder="Tìm kiếm..." />
                         </div>
                     </div>
+                    @{
+                        int stt = 1;
+                    }
                     <table class="table table-bordered" style="margin-top: 0.5rem">
                         <thead>
                             <tr>
@@ -277,7 +280,7 @@
                                 foreach (var services in Model)
                                 {
                                     <tr>
-                                        <td>@services.Id</td>
+                                        <td>@(stt++)</td>
                                         <td>@services.Name</td>
                                         <td>@String.Format("{0:0,0} VNĐ", services.Price)</td>
                                         <td>
