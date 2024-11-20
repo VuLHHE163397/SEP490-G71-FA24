@@ -153,7 +153,6 @@
             padding-bottom: 70px; /* Ensure body content doesn't overlap with footer */
         }
 
-
     </style>
 </head>
 
@@ -211,50 +210,51 @@
         </div>
         <!-- Header End -->
         <!-- Search Start -->
-       
-            <div class="container-xxl py-5 content">
-                <div class="container">
-                    <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                        <h1 class="section-title text-center text-primary text-uppercase">Tất cả phòng đang trống</h1>
-                    </div>
+
+        <div class="container-xxl py-5 content">
+            <div class="container">
+                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                    <h1 class="section-title text-center text-primary text-uppercase">Tất cả phòng đang trống</h1>
+                </div>
+
                 <div class="row">
                     @foreach (var room in Model)
                     {
                         <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                            <a style="text-decoration: none; color: inherit;" asp-controller="Home" asp-action="RoomDetail" asp-route-id="@room.Id">
-                                <div class="room-item shadow rounded overflow-hidden">
-                                    <div class="position-relative">
-                                        <img class="img-fluid" src="~/images/room1.jpg" alt="Room Image">
-                                        <!-- Nút trái tim ở góc trên phải -->
-                                        <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
-                                           onclick="toggleFavorite(this)" data-room-id="@room.Id" data-room-address="@room.Address">
-                                            <i class="fa fa-heart"></i>
-                                        </a>
-                                    </div>
-                                    <div class="room-details p-3">
-                                        <h5 class="mb-2">
-                                            <i class="fa fa-map-marker-alt text-primary me-2"></i>@room.Address
-                                        </h5>
-                                        <div class="room-status">@room.RoomStatusName</div>
-                                        <div class="mt-2" style="font-weight:bold;">
-                                            <small class="text-muted d-block"><i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT @room.Distance?.ToString("0") km</small>
-                                            @{
-                                                decimal priceInMillions = room.Price / 1_000_000;
-                                                string formattedPrice = priceInMillions.ToString("0.0");
-                                            }
-                                            <small class="text-muted d-block"><i class="fa fa-dollar-sign text-primary me-2"></i>@formattedPrice triệu VND</small>
-                                            <small class="text-muted d-block"><i class="fa fa-expand text-primary me-2"></i>@room.Area m²</small>
-                                        </div>
+                            <!-- Toàn bộ khung bao gồm thông tin phòng sẽ chuyển đến detail -->
+                            <div class="room-item shadow rounded overflow-hidden"
+                                 style="cursor: pointer;"
+                                 onclick="navigateToDetail('@Url.Action("RoomDetail", "Home", new { id = room.Id })')">
+                                <div class="position-relative">
+                                    <img class="img-fluid" src="~/images/room1.jpg" alt="Room Image">
+                                    <!-- Nút trái tim không kích hoạt chuyển trang -->
+                                    <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
+                                       onclick="event.stopPropagation(); toggleFavorite(this)"
+                                       data-room-id="@room.Id"
+                                       data-room-address="@room.Address">
+                                        <i class="fa fa-heart"></i>
+                                    </a>
+                                </div>
+                                <div class="room-details p-3">
+                                    <h5 class="mb-2">
+                                        <i class="fa fa-map-marker-alt text-primary me-2"></i>@room.Address
+                                    </h5>
+                                    <div class="room-status">@room.RoomStatusName</div>
+                                    <div class="mt-2" style="font-weight:bold;">
+                                        <small class="text-muted d-block"><i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT @room.Distance?.ToString("0") km</small>
+                                        @{
+                                            decimal priceInMillions = room.Price / 1_000_000;
+                                            string formattedPrice = priceInMillions.ToString("0.0");
+                                        }
+                                        <small class="text-muted d-block"><i class="fa fa-dollar-sign text-primary me-2"></i>@formattedPrice triệu VND</small>
+                                        <small class="text-muted d-block"><i class="fa fa-expand text-primary me-2"></i>@room.Area m²</small>
                                     </div>
                                 </div>
-                            </a>
+                            </div>
                         </div>
                     }
                 </div>
-
-                </div>
             </div>
-
         </div>
         <!-- Footer Start -->
         <div class="container-fluid bg-dark text-light footer wow fadeIn" data-wow-delay="0.1s">
@@ -284,8 +284,10 @@
         <script src="~/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
         <!-- JavaScript for noUiSlider and modal control -->
-        <script>      
-         
+        <script>
+            function navigateToDetail(url) {
+                window.location.href = url;
+            }
             // Function to get favorites from cookies
             function getFavorites() {
                 const favorites = document.cookie
@@ -340,7 +342,7 @@
 
             // Initialize favorite count on page load
             document.addEventListener('DOMContentLoaded', () => {
-                updateFavoriteCount(); // Hiển thị số lượng yêu thích từ cookie khi trang tải              
+                updateFavoriteCount(); // Hiển thị số lượng yêu thích từ cookie khi trang tải
             });
 
         </script>

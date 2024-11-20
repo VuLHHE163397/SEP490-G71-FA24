@@ -527,7 +527,7 @@ namespace RMS_API.Models
 
                 entity.Property(e => e.UserStatusId).HasColumnName("userStatusId");
 
-                entity.Property(e => e.FbUrl)
+                entity.Property(e => e.FacebookUrl)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
