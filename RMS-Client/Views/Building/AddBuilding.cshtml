@@ -419,6 +419,7 @@
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>
                     $(document).ready(function () {
+                        // Province to District Fetch
                         $('#ProvinceId').change(function () {
                             var provinceName = encodeURIComponent($(this).val());
                             var url = `https://localhost:7056/api/Building/GetDistrictsByProvince/${provinceName}`;
@@ -439,12 +440,12 @@
                                     }
                                 });
                             } else {
-                                $('#DistrictId').empty();
-                                $('#DistrictId').append('<option value="">Chọn Quận</option>');
+                                $('#DistrictId').empty().append('<option value="">Chọn Quận</option>');
                                 $('#WardId').empty().append('<option value="">Chọn Xã</option>');
                             }
                         });
 
+                        // District to Ward Fetch
                         $('#DistrictId').change(function () {
                             var districtName = encodeURIComponent($(this).val());
                             var url = `https://localhost:7056/api/Building/GetWardsByDistrict/${districtName}`;
@@ -465,28 +466,37 @@
                                     }
                                 });
                             } else {
-                                $('#WardId').empty();
-                                $('#WardId').append('<option value="">Chọn Xã</option>');
+                                $('#WardId').empty().append('<option value="">Chọn Xã</option>');
                             }
                         });
 
+                        // Form Submission
                         $('#addBuildingForm').submit(function (event) {
-                            event.preventDefault(); // Prevent default form action
+                            event.preventDefault(); // Prevent default form submission
 
                             // Validate TotalFloors and NumberOfRooms
                             var totalFloors = parseInt($('#TotalFloors').val(), 10);
                             var numberOfRooms = parseInt($('#NumberOfRooms').val(), 10);
                             var distance = parseFloat($('#Distance').val());
 
-                            if (totalFloors < 1 || totalFloors > 100) {
-                                alert('Số tầng phải là số dương.');
+                            if (isNaN(totalFloors) || totalFloors < 1 || totalFloors > 100) {
+                                alert('Số tầng phải là số dương và không vượt quá 100.');
                                 return;
                             }
-                            if (numberOfRooms < 1 || numberOfRooms > 500) {
-                                alert('Số phòng phải phải là số dương.');
+                            if (isNaN(numberOfRooms) || numberOfRooms < 1 || numberOfRooms > 500) {
+                                alert('Số phòng phải là số dương và không vượt quá 500.');
                                 return;
                             }
 
+                            // Get UserId from Token
+                            var userId = getUserIdFromToken();
+                            if (!userId) {
+                                alert('Không thể lấy UserId từ token. Vui lòng đăng nhập lại.');
+                                return;
+                            }
+                            console.log(userId);
+
+                            // Prepare Data
                             var buildingData = {
                                 Name: $('#Name').val(),
                                 TotalFloors: totalFloors,
@@ -497,9 +507,11 @@
                                 WardName: $('#WardId').val(),
                                 AddressDetails: $('#AddressDetails').val(),
                                 BuildingStatus: $('#BuildingStatus').val(),
-                                LinkEmbedMap: $('#LinkEmbedMap').val()
+                                LinkEmbedMap: $('#LinkEmbedMap').val(),
+                                UserId: userId // Include UserId in the request
                             };
 
+                            // Send Data to API
                             $.ajax({
                                 url: 'https://localhost:7056/api/Building/AddBuilding',
                                 type: 'POST',
@@ -507,23 +519,33 @@
                                 data: JSON.stringify(buildingData),
                                 success: function (response) {
                                     alert('Tòa nhà đã được tạo thành công.');
-                                    // You can redirect or perform another action here if needed
-
-                                    window.location.href = '/Building/ListBuilding';
+                                    window.location.href = '/Building/ListBuilding'; // Redirect to the list page
                                 },
                                 error: function (xhr) {
                                     alert('Có lỗi xảy ra: ' + xhr.responseText);
                                 }
                             });
                         });
-                    });
 
-                    function toggleSubmenu(event) {
-                        event.preventDefault();
-                        var submenu = event.currentTarget.nextElementSibling;
-                        submenu.style.display = submenu.style.display === "none" ? "block" : "none";
-                    }
+                        // Utility Function: Extract UserId from Token
+                        function getUserIdFromToken() {
+                            const token = localStorage.getItem("token");
+                           
+                            if (token) {
+                                try {
+                                    const tokenParts = token.split('.');
+                                    const payload = JSON.parse(atob(tokenParts[1]));
+                                   
+                                    return payload.UserId;
+                                } catch (e) {
+                                    console.error('Token parsing error:', e);
+                                }
+                            }
+                            return null;
+                        }
+                    });
                 </script>
+
             </div>
 
 
