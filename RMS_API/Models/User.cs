@@ -19,6 +19,8 @@ namespace RMS_API.Models
         public string Phone { get; set; } = null!;
         public int UserStatusId { get; set; }
         public int RoleId { get; set; }
+        public string? FacebookUrl { get; set; }
+        public string? ZaloUrl { get; set; }
 
         public virtual Role Role { get; set; } = null!;
         public virtual UserStatus UserStatus { get; set; } = null!;

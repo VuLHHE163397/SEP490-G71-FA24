@@ -11,7 +11,7 @@
     <meta charset="utf-8">
     <title>RMS-Thông tin chi tiết</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <link href="~/images/favicon.ico" rel="icon">
+    <link href="~/images/logos/house.png" rel="icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -175,27 +175,29 @@
                                 foreach (var room in suggestedRooms)
                                 {
                                     <div class="col-md-12">
-                                        <div class="card mb-4">
-                                            <!-- Hiển thị ảnh phòng, nếu có -->
-                                            <img class="img-fluid" src="~/images/room4.jpg" alt="Room Image">
-                                            @* <img class="img-fluid" src="@room.Images?.FirstOrDefault() ?? " ~ /images/room2.jpg"" alt="Room Image"> *@
-                                            <div class="card-body">
-                                                @{
-                                                    // Chuyển đổi giá từ VND sang triệu VND
-                                                    decimal priceMillions = room.Price / 1_000_000;
-                                                    string formatPrice = priceInMillions.ToString("0");
-                                                }
-                                                <p class="card-title"><strong>Giá:</strong> @formatPrice triệu VND</p>
-                                                <p class="card-text"><strong>Diện tích:</strong> @room.Area m²</p>
-                                                <p class="card-text">
-                                                    <strong>Trạng thái:</strong>
-                                                    <span style="color: green; text-transform: uppercase; font-weight: bold;">
-                                                        @room.RoomStatusName
-                                                    </span>
-                                                </p>
-                                                <a style="color:red" asp-controller="Home" asp-action="RoomDetail" asp-route-id="@room.Id">Xem chi tiết</a>
+                                        <a style="text-decoration: none; color: inherit;" asp-controller="Home" asp-action="RoomDetail" asp-route-id="@room.Id">
+                                            <div class="card mb-4">
+                                                <!-- Hiển thị ảnh phòng, nếu có -->
+                                                <img class="img-fluid" src="~/images/room4.jpg" alt="Room Image">
+                                                @* <img class="img-fluid" src="@room.Images?.FirstOrDefault() ?? " ~ /images/room2.jpg"" alt="Room Image"> *@
+                                                <div class="card-body">
+                                                    <p class="card-text"><strong>Tên phòng:</strong> @room.RoomNumber</p>
+                                                    @{
+                                                        // Chuyển đổi giá từ VND sang triệu VND
+                                                        decimal priceMillions = room.Price / 1_000_000;
+                                                        string formatPrice = priceInMillions.ToString("0");
+                                                    }
+                                                    <p class="card-title"><strong>Giá:</strong> @formatPrice triệu VND</p>
+                                                    <p class="card-text"><strong>Diện tích:</strong> @room.Area m²</p>
+                                                    <p class="card-text">
+                                                        <strong>Trạng thái:</strong>
+                                                        <span style="color: green; text-transform: uppercase; font-weight: bold;">
+                                                            @room.RoomStatusName
+                                                        </span>
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </a>
                                     </div>
                                 }
                             }
@@ -205,7 +207,7 @@
                             }
                         </div>
                     </div>
-                  
+
                 </div>
             </div>
 
