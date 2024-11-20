@@ -422,7 +422,8 @@
                                             <i class="ti ti-list-check fs-6"></i>
                                             <p class="mb-0 fs-3">My Task</p>
                                         </a>
-                                        <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                                        <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
+
                                     </div>
                                 </div>
                             </li>
@@ -541,6 +542,23 @@
         </div>
     </div>
     <script>
+
+        const token = localStorage.getItem("token");
+        if (token == 1 || !token) {
+            window.location.href = "/Auth/Login";
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+
+        if (payload.role !== "Landlord") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            localStorage.setItem("token", 1);
+            console.log("Token set to 1 on logout.");
+        }
+
         $(document).ready(function () {
             // Khởi tạo slick cho container ảnh nhỏ
             $('.slick-carousel').slick({

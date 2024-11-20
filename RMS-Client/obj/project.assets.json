@@ -6572,24 +6572,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Phong Vu\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\dell\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
+      "projectUniqueName": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
       "projectName": "RMS_Client",
-      "projectPath": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
-      "packagesPath": "C:\\Users\\Phong Vu\\.nuget\\packages\\",
-      "outputPath": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS-Client\\obj\\",
+      "projectPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
+      "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
+      "outputPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Phong Vu\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -6597,15 +6592,14 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
-              "projectPath": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj"
+            "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
+              "projectPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj"
             }
           }
         }
@@ -6653,7 +6647,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
       }
     }
   }
