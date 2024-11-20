@@ -102,7 +102,7 @@ namespace RMS_API.Controllers
         };
 
         [HttpPost("ImportRooms/{buildingId}")]
-        public async Task<IActionResult> ImportRooms([FromForm]IFormFile file, int buildingId)
+        public async Task<IActionResult> ImportRooms([FromForm] IFormFile file, int buildingId)
         {
             if (file == null || file.Length == 0)
             {
@@ -391,9 +391,6 @@ namespace RMS_API.Controllers
             var roomHistories = _context.RoomHistories.Where(h => h.RoomId == roomId);
             _context.RoomHistories.RemoveRange(roomHistories);
 
-            var servicesOfRooms = _context.ServicesOfRooms.Where(s => s.RoomId == roomId);
-            _context.ServicesOfRooms.RemoveRange(servicesOfRooms);
-
             var tenants = _context.Tennants.Where(t => t.RoomId == roomId);
             _context.Tennants.RemoveRange(tenants);
 
@@ -429,10 +426,6 @@ namespace RMS_API.Controllers
                 // Xóa RoomHistories liên quan đến room
                 var roomHistories = _context.RoomHistories.Where(h => h.RoomId == room.Id);
                 _context.RoomHistories.RemoveRange(roomHistories);
-
-                // Xóa ServicesOfRooms liên quan đến room
-                var servicesOfRooms = _context.ServicesOfRooms.Where(s => s.RoomId == room.Id);
-                _context.ServicesOfRooms.RemoveRange(servicesOfRooms);
 
                 // Xóa Tennants liên quan đến room
                 var tenants = _context.Tennants.Where(t => t.RoomId == room.Id);

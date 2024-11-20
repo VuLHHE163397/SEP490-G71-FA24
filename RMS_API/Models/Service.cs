@@ -9,6 +9,7 @@ namespace RMS_API.Models
         {
             ServicesBills = new HashSet<ServicesBill>();
             ServicesRecords = new HashSet<ServicesRecord>();
+            Rooms = new HashSet<Room>();
         }
 
         public int Id { get; set; }
@@ -17,5 +18,7 @@ namespace RMS_API.Models
 
         public virtual ICollection<ServicesBill> ServicesBills { get; set; }
         public virtual ICollection<ServicesRecord> ServicesRecords { get; set; }
+
+        public virtual ICollection<Room> Rooms { get; set; }
     }
 }
