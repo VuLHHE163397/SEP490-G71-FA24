@@ -15,7 +15,6 @@
         public string WardName { get; set; } = null!;
         public string AddressDetails { get; set; } = null!;
         public string BuildingStatus { get; set; } = null!;
-        public int UserId { get; set; }
         
     }
 }

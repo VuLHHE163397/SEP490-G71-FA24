@@ -12,7 +12,7 @@
     <meta content="" name="description">
 
     <!-- Favicon -->
-    <link href="~/images/favicon.ico" rel="icon">
+    <link href="~/images/logos/house.png" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -88,7 +88,7 @@
         }
 
         .room-item {
-            height: 450px; /* Chiều cao cố định cho tất cả các khung ảnh */
+            height: 400px; /* Chiều cao cố định cho tất cả các khung ảnh */
             margin-bottom: 30px; /* Khoảng cách giữa các hàng */
             display: flex;
             flex-direction: column; /* Để bố trí các phần tử bên trong theo cột */
@@ -96,20 +96,30 @@
         }
 
             .room-item img {
-                height: 200px; /* Chiều cao cố định cho tất cả các hình ảnh */
+                height: 180px; /* Chiều cao cố định cho tất cả các hình ảnh */
                 width: 100%; /* Đảm bảo hình ảnh đầy đủ chiều rộng của khung */
                 object-fit: cover; /* Giữ tỷ lệ hình ảnh và cắt bớt nếu cần */
             }
 
         .room-status {
-            font-size: 1.2rem;
-            background-color: green;
-            color: azure;
-            font-weight: bold;
-            text-align: center;
-            padding: 10px; /* Padding để căn chỉnh tốt hơn */
-            margin-bottom: auto; /* Đẩy nó lên trên cùng */
+            font-size: 1.1rem; /* Giảm kích thước chữ */
+            background-color: rgba(0, 128, 0, 0.8); /* Màu nền xanh lá nổi bật với độ mờ */
+            color: #fff; /* Màu chữ trắng */
+            font-weight: bold; /* Chữ đậm */
+            text-align: center; /* Canh giữa chữ */
+            padding: 5px 10px; /* Padding nhỏ gọn */
+            margin-bottom: 5px; /* Khoảng cách phía dưới */
+            border-radius: 20px; /* Bo góc */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Tạo hiệu ứng nổi */
+            display: inline-block; /* Kích thước gọn vừa chữ */
+            transition: all 0.3s ease; /* Hiệu ứng mượt khi hover */
         }
+
+            .room-status:hover {
+                background-color: rgba(0, 200, 0, 1); /* Nổi bật hơn khi hover */
+                transform: scale(1.1); /* Phóng to nhẹ khi hover */
+            }
+
 
         .room-details {
             flex-grow: 1; /* Để chiếm không gian còn lại giữa ảnh và các nút */
@@ -119,7 +129,7 @@
         }
 
             .room-details h5 {
-                font-size: 1.1rem; /* Đảm bảo kích thước đồng nhất cho tiêu đề */
+                font-size: 1rem; /* Đảm bảo kích thước đồng nhất cho tiêu đề */
                 color: #333; /* Màu sắc đồng nhất cho tiêu đề */
                 margin: 0; /* Để xóa khoảng cách mặc định */
             }
@@ -205,16 +215,16 @@
             <div class="container-xxl py-5 content">
                 <div class="container">
                     <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                        <h1 class="section-title text-center text-primary text-uppercase">Danh sách phòng</h1>
+                        <h1 class="section-title text-center text-primary text-uppercase">Tất cả phòng đang trống</h1>
                     </div>
-                    <div class="row">
-                        @foreach (var room in Model)
-                        {
-                            <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="row">
+                    @foreach (var room in Model)
+                    {
+                        <div class="col-lg-3 col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <a style="text-decoration: none; color: inherit;" asp-controller="Home" asp-action="RoomDetail" asp-route-id="@room.Id">
                                 <div class="room-item shadow rounded overflow-hidden">
                                     <div class="position-relative">
                                         <img class="img-fluid" src="~/images/room1.jpg" alt="Room Image">
-                                        @* <img class="img-fluid" src="@(room.Images?.FirstOrDefault())" alt="Room Image"> *@
                                         <!-- Nút trái tim ở góc trên phải -->
                                         <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
                                            onclick="toggleFavorite(this)" data-room-id="@room.Id" data-room-address="@room.Address">
@@ -226,22 +236,22 @@
                                             <i class="fa fa-map-marker-alt text-primary me-2"></i>@room.Address
                                         </h5>
                                         <div class="room-status">@room.RoomStatusName</div>
-                                        <!-- Các thông tin cách nhau bằng hàng -->
-                                        <div class="mt-2">
+                                        <div class="mt-2" style="font-weight:bold;">
                                             <small class="text-muted d-block"><i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT @room.Distance?.ToString("0") km</small>
                                             @{
-                                                decimal priceInMillions = room.Price / 1_000_000; // Chia giá tiền cho 1 triệu
-                                                string formattedPrice = priceInMillions.ToString("0.0"); // Định dạng số với 1 chữ số thập phân
+                                                decimal priceInMillions = room.Price / 1_000_000;
+                                                string formattedPrice = priceInMillions.ToString("0.0");
                                             }
                                             <small class="text-muted d-block"><i class="fa fa-dollar-sign text-primary me-2"></i>@formattedPrice triệu VND</small>
                                             <small class="text-muted d-block"><i class="fa fa-expand text-primary me-2"></i>@room.Area m²</small>
                                         </div>
-                                        <a style="color:red" asp-controller="Home" asp-action="RoomDetail" asp-route-id="@room.Id">Xem chi tiết</a>
                                     </div>
                                 </div>
-                            </div>
-                        }
-                    </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+
                 </div>
             </div>
 
