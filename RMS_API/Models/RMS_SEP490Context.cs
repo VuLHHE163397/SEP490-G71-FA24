@@ -406,6 +406,14 @@ namespace RMS_API.Models
                 entity.Property(e => e.Price)
                     .HasColumnType("money")
                     .HasColumnName("price");
+
+                entity.Property(e => e.BuildingId).HasColumnName("buildingId");
+
+                entity.HasOne(d => d.Building)
+                    .WithMany(p => p.Services)
+                    .HasForeignKey(d => d.BuildingId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Services_Buildings");
             });
 
             modelBuilder.Entity<ServicesBill>(entity =>

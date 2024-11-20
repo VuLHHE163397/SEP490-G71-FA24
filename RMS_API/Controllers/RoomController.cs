@@ -92,6 +92,43 @@ namespace RMS_API.Controllers
             return Ok(image);
         }
 
+        [HttpGet("GetAllService/{buildingId}")]
+        public IActionResult GetServiceByBuilding(int buildingId)
+        {
+            var service = _context.Services.Where(p => p.BuildingId == buildingId).ToList();
+            return Ok(service);
+        }
+
+        [HttpGet("GetServiceByRoom/{roomId}")]
+        public IActionResult GetServiceByRoom(int roomId)
+        {
+            try
+            {
+                // Lấy danh sách dịch vụ liên quan đến buildingId
+                var services = _context.Services
+
+                    .Where(s => s.Rooms.Any(r => r.Id == roomId))
+                    .Select(s => new
+                    {
+                        s.Id,
+                        s.Name,
+                        s.Price
+                    })
+                    .ToList();
+
+                if (services == null || !services.Any())
+                {
+                    return NotFound(new { message = "Không tìm thây dịch vụ của phòng !!!" });
+                }
+
+                return Ok(services);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while fetching the services.", details = ex.Message });
+            }
+        }
+
         // Tạo một dictionary ánh xạ trạng thái phòng sang RoomStatusId
         private static readonly Dictionary<string, int> RoomStatusMapping = new Dictionary<string, int>
         {
