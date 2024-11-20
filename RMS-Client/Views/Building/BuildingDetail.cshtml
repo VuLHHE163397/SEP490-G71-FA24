@@ -334,6 +334,7 @@
                 <div class="container mt-4">
                     <h1>@ViewData["Title"]</h1>
 
+                    <!-- Form for Editing Building -->
                     <form id="editBuilding" onsubmit="editBuilding(); return false;">
                         <input type="hidden" id="BuildingId" name="BuildingId" value="@Model.Id" />
 
@@ -343,7 +344,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Distance">Khoảng cách(Km)</label>
-                            <input type="number" class="form-control" id="Distance" name="Distance" value="@Model.Distance" required readonly />
+                            <input class="form-control" id="Distance" name="Distance" value="@Model.Distance" required readonly />
                         </div>
                         <div class="form-group">
                             <label for="TotalFloors">Số Tầng</label>
@@ -396,14 +397,16 @@
 
                     var buildingData = {
                         Name: $('#Name').val(),
+                        Distance: parseFloat($('#Distance').val()),
                         TotalFloors: parseInt($('#TotalFloors').val()),
                         NumberOfRooms: parseInt($('#NumberOfRooms').val()),
                         AddressDetails: $('#AddressDetails').val(),
-                        Distance: $('Distance').val(),
                         ProvinceName: $('#ProvinceId').val(),
                         DistrictName: $('#DistrictId').val(),
                         WardName: $('#WardId').val(),
-                        BuildingStatus: $('#BuildingStatus').val()
+                        BuildingStatus: $('#BuildingStatus').val(),
+                        LinkEmbedMap: $('#LinkEmbedMap').val()
+
                     };
 
                     $.ajax({

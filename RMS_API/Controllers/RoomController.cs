@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using OfficeOpenXml;
 using RMS_API.DTOs;
 using RMS_API.Models;
+using System.Net.NetworkInformation;
 using System.Security.Principal;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -91,115 +92,162 @@ namespace RMS_API.Controllers
             return Ok(image);
         }
 
-        [HttpPost("ImportRooms")]
-        public async Task<IActionResult> ImportRooms(IFormFile file)
+        // Tạo một dictionary ánh xạ trạng thái phòng sang RoomStatusId
+        private static readonly Dictionary<string, int> RoomStatusMapping = new Dictionary<string, int>
+        {
+            { "Đang trống", 1 },
+            { "Đang cho thuê", 2 },
+            { "Đang bảo trì", 3 },
+            { "Sắp trống", 4 }
+        };
+
+        [HttpPost("ImportRooms/{buildingId}")]
+        public async Task<IActionResult> ImportRooms([FromForm] IFormFile file, int buildingId)
         {
             if (file == null || file.Length == 0)
             {
                 return BadRequest("No file uploaded.");
             }
 
-            using (var stream = new MemoryStream())
+            // Kiểm tra nếu file là file Excel
+            if (file.FileName.EndsWith(".xlsx"))
             {
-                await file.CopyToAsync(stream);
-                using (var package = new ExcelPackage(stream))
-                {
-                    var worksheet = package.Workbook.Worksheets[0];
-                    var rowCount = worksheet.Dimension.Rows;
+                var rooms = new List<Room>();
 
-                    for (int row = 2; row <= rowCount; row++)
+                // Đọc dữ liệu từ file Excel
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);
+                    using (var package = new ExcelPackage(stream))
                     {
-                        var room = new Room
+                        var worksheet = package.Workbook.Worksheets[0];  // Đọc sheet đầu tiên
+
+                        var rowCount = worksheet.Dimension.Rows;
+                        var colCount = worksheet.Dimension.Columns;
+
+                        // Lấy tên các cột từ hàng đầu tiên (tiêu đề cột)
+                        var headers = new Dictionary<string, int>();
+                        for (int col = 1; col <= colCount; col++)
                         {
-                            RoomNumber = worksheet.Cells[row, 1].Text,
-                            Area = double.Parse(worksheet.Cells[row, 2].Text),
-                            Floor = int.Parse(worksheet.Cells[row, 3].Text),
-                            Price = decimal.Parse(worksheet.Cells[row, 4].Text),
-                            RoomStatusId = int.Parse(worksheet.Cells[row, 5].Text),
-                            Description = worksheet.Cells[row, 6].Text,
-                            StartedDate = DateTime.Parse(worksheet.Cells[row, 7].Text),
-                            ExpiredDate = DateTime.Parse(worksheet.Cells[row, 8].Text),
-                            FreeInFutureDate = DateTime.Parse(worksheet.Cells[row, 9].Text),
+                            headers[worksheet.Cells[1, col].Text.Trim()] = col;
+                        }
 
-                        };
+                        // Kiểm tra xem các cột cần thiết có tồn tại không
+                        if (!headers.ContainsKey("Số phòng") ||
+                            !headers.ContainsKey("Giá phòng") ||
+                            !headers.ContainsKey("Diện tích") ||
+                            !headers.ContainsKey("Mô tả phòng") ||
+                            !headers.ContainsKey("Tầng") ||
+                            !headers.ContainsKey("Ngày bắt đầu thuê phòng") ||
+                            !headers.ContainsKey("Ngày hết hạn phòng thuê") ||
+                            !headers.ContainsKey("Trạng thái") ||
+                            !headers.ContainsKey("Ngày phòng sẽ trống trong tương lai"))
+                        {
+                            return BadRequest("Missing required columns in the Excel file.");
+                        }
 
-                        _context.Rooms.Add(room);
+                        // Lặp qua các dòng trong Excel (bỏ qua dòng đầu tiên vì đó là header)
+                        for (int row = 2; row <= rowCount; row++)
+                        {
+                            // Lấy giá trị từ các cột bằng tên cột
+                            var roomNumber = worksheet.Cells[row, headers["Số phòng"]].Text;
+                            var price = decimal.Parse(worksheet.Cells[row, headers["Giá phòng"]].Text);
+                            var area = double.Parse(worksheet.Cells[row, headers["Diện tích"]].Text);
+                            var description = worksheet.Cells[row, headers["Mô tả phòng"]].Text;
+                            var floor = int.Parse(worksheet.Cells[row, headers["Tầng"]].Text);
+                            var status = worksheet.Cells[row, headers["Trạng thái"]].Text;
+                            // Kiểm tra và chuyển đổi giá trị của các ngày để cho phép null
+                            DateTime? startedDate = null;
+                            if (DateTime.TryParse(worksheet.Cells[row, headers["Ngày bắt đầu thuê phòng"]].Text, out var startDate))
+                            {
+                                startedDate = startDate;
+                            }
+
+                            DateTime? expiredDate = null;
+                            if (DateTime.TryParse(worksheet.Cells[row, headers["Ngày hết hạn phòng thuê"]].Text, out var endDate))
+                            {
+                                expiredDate = endDate;
+                            }
+                            DateTime? freeInFutureDate = null;
+                            if (DateTime.TryParse(worksheet.Cells[row, headers["Ngày phòng sẽ trống trong tương lai"]].Text, out var freeDate))
+                            {
+                                freeInFutureDate = freeDate;
+                            }
+
+                            // Kiểm tra trạng thái và ánh xạ sang RoomStatusId
+                            if (!RoomStatusMapping.ContainsKey(status))
+                            {
+                                return BadRequest($"Invalid room status '{status}' in row {row}. Valid statuses are: 'Đang trống', 'Đang cho thuê', 'Đang bảo trì', 'Sắp trống'.");
+                            }
+                            var roomStatusId = RoomStatusMapping[status];
+
+                            // Tạo đối tượng Room từ dữ liệu dòng trong Excel
+                            var room = new Room
+                            {
+                                BuildingId = buildingId,
+                                RoomNumber = roomNumber,
+                                Price = price,
+                                Area = area,
+                                Description = description,
+                                Floor = floor,
+                                StartedDate = startedDate,
+                                ExpiredDate = expiredDate,
+                                RoomStatusId = roomStatusId,
+                                FreeInFutureDate = freeInFutureDate
+                            };
+
+                            rooms.Add(room);  // Thêm phòng vào danh sách
+                        }
                     }
-
-                    await _context.SaveChangesAsync();
                 }
-            }
 
-            return Ok("Rooms imported successfully.");
-        }
-
-
-
-        //[HttpPost("UploadImage/{roomId}")]
-        //public async Task<IActionResult> UploadImage(int roomId, [FromBody] ImageDTO imageDto)
-        //{
-        //    if (imageDto == null || string.IsNullOrEmpty(imageDto.Link))
-        //    {
-        //        return BadRequest("Đường link ảnh không hợp lệ.");
-        //    }
-
-        //    // Lưu imageDto vào cơ sở dữ liệu
-        //    var room = await _context.Rooms.FindAsync(roomId);
-        //    if (room == null)
-        //    {
-        //        return NotFound("Room không tồn tại.");
-        //    }
-
-        //    var image = new Models.Image
-        //    {
-        //        Link = imageDto.Link,
-        //        RoomId = roomId
-        //    };
-
-        //    _context.Images.Add(image);
-        //    await _context.SaveChangesAsync();
-
-        //    return Ok("Ảnh đã được lưu thành công.");
-        //}
-
-        [HttpPost]
-        public async Task<IActionResult> UploadImageToCloudinary(IFormFile imageFile, int roomId)
-        {
-            if (imageFile == null || imageFile.Length == 0)
-            {
-                ModelState.AddModelError("Image", "Vui lòng chọn một ảnh.");
-            }
-
-            // Thiết lập tham số upload cho Cloudinary
-            var uploadParams = new ImageUploadParams
-            {
-                File = new FileDescription(imageFile.FileName, imageFile.OpenReadStream()),
-                Folder = "RoomImages"
-            };
-
-            // Upload ảnh lên Cloudinary
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-
-            if (uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                // Lấy link ảnh từ Cloudinary và lưu vào database
-                var imageUrl = uploadResult.SecureUrl.ToString();
-                var image = new Models.Image
-                {
-                    Link = imageUrl,
-                    RoomId = roomId
-                };
-                _context.Images.Add(image);
+                // Thêm các phòng vào database
+                _context.Rooms.AddRange(rooms);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { imageUrl = imageUrl });  // Trả về link ảnh sau khi upload thành công
-
+                return Ok(new { message = "Rooms imported successfully!", roomsCount = rooms.Count });
             }
             else
             {
-                return StatusCode(500, "Lỗi khi tải ảnh lên Cloudinary.");
+                return BadRequest("Only Excel files are allowed.");
             }
         }
+
+        [HttpPost("upload-image/{roomId}")]
+        public async Task<IActionResult> UploadImage(IFormFile file, int roomId)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            // Upload ảnh lên Cloudinary
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(file.FileName, file.OpenReadStream()),
+                Folder = "room_images"
+            };
+
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+            if (uploadResult.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                return StatusCode(500, "Failed to upload image.");
+            }
+
+            // Lưu link ảnh vào database
+            var image = new Models.Image
+            {
+                Link = uploadResult.SecureUrl.AbsoluteUri,
+                RoomId = roomId
+            };
+
+            _context.Images.Add(image);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { imageId = image.Id, imageUrl = image.Link });
+        }
+
 
         [HttpDelete("DeleteImageById/{id}")]
         public IActionResult DeleteImageById(int id)
@@ -311,6 +359,21 @@ namespace RMS_API.Controllers
             return Ok("Cập nhật phòng thành công");
         }
 
+        [HttpPut("updateRoomStatus/{roomId}")]
+        public IActionResult UpdateRoomStatus(int roomId, [FromBody] int statusId)
+        {
+            var room = _context.Rooms.FirstOrDefault(r => r.Id == roomId);
+            if (room == null)
+            {
+                return NotFound("Không tìm thấy phòng có id = " + roomId);
+            }
+
+            room.RoomStatusId = statusId;
+            _context.SaveChanges();
+            return Ok("Cập nhật trạng thái phòng thành công!!!");
+        }
+
+
         [HttpDelete("DeleteRoomById/{roomId}")]
         public IActionResult DeteleRoomById(int roomId)
         {
@@ -327,9 +390,6 @@ namespace RMS_API.Controllers
 
             var roomHistories = _context.RoomHistories.Where(h => h.RoomId == roomId);
             _context.RoomHistories.RemoveRange(roomHistories);
-
-            var servicesOfRooms = _context.ServicesOfRooms.Where(s => s.RoomId == roomId);
-            _context.ServicesOfRooms.RemoveRange(servicesOfRooms);
 
             var tenants = _context.Tennants.Where(t => t.RoomId == roomId);
             _context.Tennants.RemoveRange(tenants);
@@ -367,10 +427,6 @@ namespace RMS_API.Controllers
                 var roomHistories = _context.RoomHistories.Where(h => h.RoomId == room.Id);
                 _context.RoomHistories.RemoveRange(roomHistories);
 
-                // Xóa ServicesOfRooms liên quan đến room
-                var servicesOfRooms = _context.ServicesOfRooms.Where(s => s.RoomId == room.Id);
-                _context.ServicesOfRooms.RemoveRange(servicesOfRooms);
-
                 // Xóa Tennants liên quan đến room
                 var tenants = _context.Tennants.Where(t => t.RoomId == room.Id);
                 _context.Tennants.RemoveRange(tenants);
@@ -392,7 +448,7 @@ namespace RMS_API.Controllers
         public IActionResult GetActiveRooms()
         {
             var rooms = _context.Rooms
-                .Where(r => r.RoomStatusId == 1 || r.RoomStatusId == 4) // Lọc các phòng có trạng thái đang hoạt động
+                .Where(r => r.RoomStatusId == 1 & r.Building.BuildingStatusId == 1) // Lọc các phòng có trạng thái đang hoạt động
                 .Select(r => new
                 {
                     Id = r.Id,
@@ -401,7 +457,7 @@ namespace RMS_API.Controllers
                     Price = r.Price,
                     Area = r.Area,
                     RoomStatusName = r.RoomStatus.Name,
-                    //Images = r.Images.Select(i => i.Link).ToList()
+                    //images = r.images.select(i => i.link).tolist()
                 })
                 .ToList();
 
@@ -413,6 +469,7 @@ namespace RMS_API.Controllers
         {
             // Lấy thông tin phòng theo ID
             var room = _context.Rooms
+                .Where(r => r.RoomStatusId == 1 || r.RoomStatusId == 4 & r.Building.BuildingStatusId == 1)
                 .Include(r => r.Building)
                     .ThenInclude(b => b.Address)
                 .Include(r => r.Building)
@@ -468,13 +525,14 @@ namespace RMS_API.Controllers
             // Lấy danh sách các phòng gợi ý trong cùng BuildingId và RoomStatusId là 1 hoặc 4
             var suggestedRooms = _context.Rooms
                 .Where(r => r.BuildingId == currentRoom.BuildingId &&
-                            (r.RoomStatusId == 1 || r.RoomStatusId == 4) &&
+                            (r.RoomStatusId == 1) &&
                             r.Id != roomId) // Loại trừ phòng hiện tại
                 .OrderBy(r => r.Price) // Sắp xếp theo giá tiền, nếu cần
-                .Take(8) // Lấy top 8 phòng
+                .Take(5) // Lấy top 5 phòng
                 .Select(r => new SuggestedRoomDTO
                 {
                     Id = r.Id,
+                    RoomNumber = r.RoomNumber,
                     Price = r.Price,
                     Area = r.Area,
                     RoomStatusName = r.RoomStatus.Name,
@@ -489,6 +547,7 @@ namespace RMS_API.Controllers
         public async Task<IActionResult> SearchRooms([FromQuery] RoomSearchDTO searchDto)
         {
             var rooms = await _context.Rooms
+                .Where(r => r.Building.BuildingStatusId == 1)
                 .Include(r => r.Building)
                 .ThenInclude(b => b.Province)
                 .Include(r => r.Building.District)
@@ -527,6 +586,98 @@ namespace RMS_API.Controllers
             return Ok(rooms);
         }
 
+        [HttpGet("qr/{roomId}")]
+        public IActionResult GetRoomQrCode(int roomId)
+        {
+            string baseUrl = $"https://localhost:5001";
+            string qrContent = $"{baseUrl}/Room/RoomMaintainance/{roomId}";
 
+            // Tạo mã QR
+            var writer = new ZXing.BarcodeWriterPixelData
+            {
+                Format = ZXing.BarcodeFormat.QR_CODE,
+                Options = new ZXing.Common.EncodingOptions
+                {
+                    Height = 300, // Chiều cao hình ảnh
+                    Width = 300,  // Chiều rộng hình ảnh
+                    Margin = 1    // Lề
+                }
+            };
+
+            var pixelData = writer.Write(qrContent);
+
+            // Chuyển dữ liệu pixel thành ảnh PNG
+            using var ms = new MemoryStream();
+            using (var bitmap = new System.Drawing.Bitmap(pixelData.Width, pixelData.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb))
+            {
+                var bitmapData = bitmap.LockBits(
+                    new System.Drawing.Rectangle(0, 0, pixelData.Width, pixelData.Height),
+                    System.Drawing.Imaging.ImageLockMode.WriteOnly,
+                    bitmap.PixelFormat);
+                try
+                {
+                    System.Runtime.InteropServices.Marshal.Copy(pixelData.Pixels, 0, bitmapData.Scan0, pixelData.Pixels.Length);
+                }
+                finally
+                {
+                    bitmap.UnlockBits(bitmapData);
+                }
+                bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            }
+
+            // Trả về hình ảnh dưới dạng response
+            return File(ms.ToArray(), "image/png");
+        }
+        [HttpGet("RoomMaintainance/{roomId}")]
+        public IActionResult GetByQR(int roomId)
+        {
+            // Lấy thông tin phòng theo ID
+            var room = _context.Rooms
+                .Include(r => r.Building)
+                    .ThenInclude(b => b.Address)
+                .Include(r => r.Building)
+                    .ThenInclude(b => b.Ward)
+                .Include(r => r.Building)
+                    .ThenInclude(b => b.District)
+                .Include(r => r.Building)
+                    .ThenInclude(b => b.Province)
+                .Include(r => r.Building)
+                    .ThenInclude(b => b.User)
+                .FirstOrDefault(r => r.Id == roomId);
+
+            string address = room.Building.Address.Information + " " + room.Building.Ward.Name + " " + room.Building.District.Name + " " + room.Building.Province.Name;
+
+            var qrData = new
+            {
+                Id = room.Id,
+                RoomNumber = room.RoomNumber,
+                BuildingName = room.Building.Name,
+                Address = address,
+                Owner = $"{room.Building?.User?.LastName ?? ""} " +
+                            $"{room.Building?.User?.MidName ?? ""} " +
+                            $"{room.Building?.User?.FirstName ?? ""}".Trim(),
+            };
+
+            return Ok(qrData);
+        }
+
+        [HttpPost("SaveMaintenanceRequest")]
+        public IActionResult SaveMaintainancebyQR([FromBody] MaintainanceDTO dto)
+        {
+            if (dto == null)
+                return BadRequest("Invalid maintenance request data.");
+
+            var maintainance = new MaintainanceRequest
+            {
+                Description = dto.Description,
+                Status = dto.Status,
+                RoomId = dto.RoomId,
+            };
+
+            _context.MaintainanceRequests.Add(maintainance);
+            _context.SaveChanges();
+
+            return Ok("Maintenance request saved successfully.");
+        }
     }
 }

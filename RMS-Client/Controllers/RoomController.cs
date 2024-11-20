@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Dropbox.Api;
 using Dropbox.Api.Files;
 using static Dropbox.Api.Files.ListRevisionsMode;
+using RMS_Client.Models;
 
 
 namespace RMS_Client.Controllers
@@ -134,68 +135,9 @@ namespace RMS_Client.Controllers
             ViewBag.Images = images;
             ViewBag.Buildings = buildings;
             ViewBag.Facilities = facs;
+            ViewBag.BuildingId = room?.BuildingId;
             return View(room);
         }
-
-
-        //[HttpPost]
-        //public async Task<IActionResult> UploadImageToDropbox(int roomId, IFormFile imageFile)
-        //{
-        //    if (imageFile == null || imageFile.Length == 0)
-        //    {
-        //        TempData["Error"] = "Vui lòng chọn một ảnh hợp lệ.";
-        //        return RedirectToAction("RoomDetail", new { id = roomId });
-        //    }
-
-        //    // Thay bằng Access Token của bạn
-        //    string dropboxAccessToken = "sl.CAiWPncIvfMfTkK1523MNHia8kAdj04ahFTov_tt28Fv1htlTOGkt8J3vmxmx3Qca8e3vthAgR31ZFKRJCIOLN7HayLE4SgetqCSmb7crFeFFZ44AdtCrTi5wLtZpQN1Iyw0L-6ukXomz0g";
-        //    string dropboxFolderPath = "/Images";
-
-        //    using (var dropboxClient = new DropboxClient(dropboxAccessToken))
-        //    {
-        //        var fileName = $"{Guid.NewGuid()}_{imageFile.FileName}";
-        //        string imageUrl;
-
-        //        using (var memoryStream = new MemoryStream())
-        //        {
-        //            await imageFile.CopyToAsync(memoryStream);
-        //            memoryStream.Position = 0;
-
-        //            var uploadResponse = await dropboxClient.Files.UploadAsync(
-        //                $"{dropboxFolderPath}/{fileName}",
-        //                WriteMode.Overwrite.Instance,
-        //                body: memoryStream);
-
-        //            var sharedLink = await dropboxClient.Sharing.CreateSharedLinkWithSettingsAsync(uploadResponse.PathLower);
-        //            imageUrl = sharedLink.Url.Replace("dl=0", "dl=1");
-        //        }
-
-        //        // Gửi yêu cầu đến API để lưu đường link ảnh
-        //        using (var httpClient = new HttpClient())
-        //        {
-        //            var imageDto = new ImageDTO
-        //            {
-        //                Link = imageUrl,
-        //                RoomId = roomId
-        //            };
-
-        //            var content = new StringContent(JsonConvert.SerializeObject(imageDto), Encoding.UTF8, "application/json");
-        //            var response = await httpClient.PostAsync($"{RoomApiUri}/UploadImage/{roomId}", content);
-
-        //            if (response.IsSuccessStatusCode)
-        //            {
-        //                TempData["Success"] = "Ảnh đã được upload và lưu thành công!";
-        //            }
-        //            else
-        //            {
-        //                TempData["Error"] = "Có lỗi xảy ra khi lưu ảnh vào cơ sở dữ liệu.";
-        //            }
-        //        }
-        //    }
-
-        //    return RedirectToAction("RoomDetail", new { id = roomId });
-        //}
-
 
 
         [HttpGet]
@@ -320,6 +262,8 @@ namespace RMS_Client.Controllers
 
             ViewBag.RoomStatuses = new SelectList(status, "Id", "Name");
             ViewBag.Buildings = buildings;
+            // Lấy buildingId từ room và truyền vào ViewBag
+            ViewBag.BuildingId = room?.BuildingId;
             return View(room);
         }
 
@@ -350,6 +294,34 @@ namespace RMS_Client.Controllers
                 return View(room); // Trả lại view với lỗi
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateRoomStatus(RoomLlUpdateDTO room, int? buildingId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(room); // Trả lại view nếu model không hợp lệ
+            }
+
+            // Lấy chỉ statusId từ room DTO
+            var jsonContent = JsonConvert.SerializeObject(room.RoomStatusId); // Gửi chỉ statusId
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            string apiUrl = $"{RoomApiUri}/updateRoomStatus/{room.Id}";
+            var response = await client.PutAsync(apiUrl, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["Success"] = "Cập nhật trạng thái phòng thành công!";
+                return RedirectToAction("ListRoom", new { buildingId = buildingId });
+            }
+            else
+            {
+                TempData["Error"] = "Cập nhật phòng thất bại: " + await response.Content.ReadAsStringAsync();
+                return Conflict("Cập nhật trạng thái phòng thất bại");
+            }
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Delete(int id, int? buildingId, List<int> statusIds)
@@ -426,9 +398,9 @@ namespace RMS_Client.Controllers
                 var worksheet = package.Workbook.Worksheets.Add("Rooms");
 
                 worksheet.Cells[1, 1].Value = "Số phòng";
-                worksheet.Cells[1, 2].Value = "Diện tích (m²)";
+                worksheet.Cells[1, 2].Value = "Diện tích";
                 worksheet.Cells[1, 3].Value = "Tầng";
-                worksheet.Cells[1, 4].Value = "Giá phòng(VNĐ)";
+                worksheet.Cells[1, 4].Value = "Giá phòng";
                 worksheet.Cells[1, 5].Value = "Trạng thái";
                 worksheet.Cells[1, 6].Value = "Mô tả phòng";
                 worksheet.Cells[1, 7].Value = "Ngày bắt đầu thuê phòng";
@@ -449,12 +421,12 @@ namespace RMS_Client.Controllers
                     worksheet.Cells[row, 1].Value = room.RoomNumber;
                     worksheet.Cells[row, 2].Value = room.Area;
                     worksheet.Cells[row, 3].Value = room.Floor;
-                    worksheet.Cells[row, 4].Value = room.Price.ToString("N0") + " VNĐ";
+                    worksheet.Cells[row, 4].Value = room.Price;
                     worksheet.Cells[row, 5].Value = room.RoomStatusId switch
                     {
-                        1 => "Trống",
-                        2 => "Đã có người",
-                        3 => "Đang sửa chữa",
+                        1 => "Đang trống",
+                        2 => "Đang cho thuê",
+                        3 => "Đang bảo trì",
                         4 => "Sắp trống",
                         _ => "Không xác định"
                     };
@@ -509,6 +481,54 @@ namespace RMS_Client.Controllers
             }
 
             return RedirectToAction("ImportRooms");
+        }
+        public async Task<IActionResult> RoomMaintainance([FromRoute] int id)
+        {
+            string apiUrl = $"{RoomApiUri}/RoomMaintainance/{id}";
+            var viewModel = new RoomQrViewModel();
+
+            // Gửi request tới API
+            var response = await client.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                viewModel = JsonConvert.DeserializeObject<RoomQrViewModel>(json);
+            }
+
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> SaveMaintenanceRequest(RoomQrViewModel model)
+        {
+            if (model != null)
+            {
+                // Tạo đối tượng gửi API
+                var maintenanceDto = new MaintainanceDTO
+                {
+                    Description = model.MaintenanceDescription,
+                    newDate = DateTime.Now,
+                    Status = 1,
+                    RoomId = model.Id
+                };
+
+                // Gửi API POST để lưu thông tin bảo trì
+                string apiUrl = $"{RoomApiUri}/SaveMaintenanceRequest";
+                var content = new StringContent(JsonConvert.SerializeObject(maintenanceDto), Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(apiUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["SuccessMessage"] = "Báo cáo đã được gửi thành công! Bạn sẽ được chuyển hướng về Trang chủ sau 3s";
+                    TempData["RedirectUrl"] = Url.Action("Home", "Home");
+                    return RedirectToAction("RoomMaintainance"); // Trả về cùng view với TempData
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Không thể gửi báo cáo. Vui lòng điền nội dung và thử lại");
+                }
+            }
+
+            return View("RoomMaintainance", model); // Trả về view nếu xảy ra lỗi
         }
 
         //[HttpPost]

@@ -3,6 +3,7 @@
     public class RoomDTO
     {
         public int Id { get; set; }
+        public string Building { get; set; }
         public string Address { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public double Area { get; set; }

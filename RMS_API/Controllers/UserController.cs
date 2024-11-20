@@ -189,53 +189,28 @@ namespace RMS_API.Controllers
                 return BadRequest(new { Message = "Invalid input data." });
             }
 
-            // Tìm user theo Id
-            var user = await _context.Users
-                .Include(u => u.Buildings) // Include Buildings liên quan
-                .FirstOrDefaultAsync(u => u.Id == request.Id);
-
+            // Find the user by Id
+            var user = await _context.Users.FindAsync(request.Id);
             if (user == null)
             {
                 return NotFound(new { Message = "User not found." });
             }
 
-            // Xác thực trạng thái UserStatus
-            var userStatus = await _context.UserStatuses.FindAsync(request.NewStatusId);
-            if (userStatus == null)
+            // Find the status by the new status ID to validate it exists
+            var status = await _context.UserStatuses.FindAsync(request.NewStatusId);
+            if (status == null)
             {
-                return NotFound(new { Message = "User status not found." });
+                return NotFound(new { Message = "Status not found." });
             }
 
-            // Cập nhật UserStatus
+            // Update the user's status
             user.UserStatusId = request.NewStatusId;
 
-            // Map UserStatusId sang BuildingStatusId
-            int newBuildingStatusId = MapUserStatusToBuildingStatus(request.NewStatusId);
-
-            // Cập nhật BuildingStatus cho tất cả Buildings của User này
-            foreach (var building in user.Buildings)
-            {
-                building.BuildingStatusId = newBuildingStatusId;
-            }
-
-            // Lưu thay đổi
+            // Save changes to the database
             await _context.SaveChangesAsync();
 
-            return Ok(new { Message = "Trạng thái người dùng và các trạng thái tòa nhà liên quan được cập nhật thành công." });
+            return Ok(new { Message = "User status updated successfully." });
         }
 
-        private int MapUserStatusToBuildingStatus(int userStatusId)
-        {
-            // Logic ánh xạ UserStatusId -> BuildingStatusId
-            // Ví dụ:
-            switch (userStatusId)
-            {
-                case 1: return 1; // UserStatusId 1 -> BuildingStatusId 1
-                case 2: return 2; // UserStatusId 2 -> BuildingStatusId 2
-                case 3: return 2; // UserStatusId 3 -> BuildingStatusId 3
-                default: return 0; // Mặc định là 0 nếu không có ánh xạ
-            }
-
-        }
     }
 }
