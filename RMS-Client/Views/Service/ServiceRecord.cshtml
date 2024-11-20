@@ -158,22 +158,12 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Service" asp-action="ServiceRecord" aria-expanded="false">
                                 <span>
-                                    <i class="fa-solid fa-plug"></i>
+                                    <i class="fa-solid fa-bolt"></i>
                                 </span>
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
-                                <span>
-                                    <i class="fa-solid fa-shower"></i>
-                                </span>
-                                <span class="hide-menu"> Chỉ số nước</span>
-                            </a>
-                        </li>
-
-
-
+                       
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
                                 <span>
@@ -250,8 +240,7 @@
                                 margin-right: 10px; /* Tạo khoảng cách 10px giữa các nút */
                             }
                         </style>
-                        <div class="col-md-3 d-flex align-items-end">
-                            <button class="btn btn-primary me-2">Xem</button>
+                        <div class="d-flex align-items-center">
                             <button class="btn btn-success">Lưu</button>
                             <button class="btn btn-warning ms-2">Xuất file Excel</button>
                         </div>
@@ -270,13 +259,20 @@
                     <div class="container mt-4">
                         <!-- Bộ lọc -->
                         <div class="row g-3 align-items-center mb-3">
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <label for="monthYear" class="form-label">Tháng/năm</label>
-                                <input type="month" id="monthYear" class="form-control" value="2024-11">
+                                <input type="month" class="form-control" id="monthYear" value="2024-11">
                             </div>
                             <div class="col-md-2">
-                                <label for="house" class="form-label">Nhà</label>
-                                <select id="house" class="form-select">
+                                <label for="building" class="form-label">Nhà</label>
+                                <select id="building" class="form-select">
+                                    <option selected>Tất cả</option>
+                                    <!-- Các tùy chọn khác -->
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="room" class="form-label">Phòng</label>
+                                <select id="room" class="form-select">
                                     <option selected>Tất cả</option>
                                     <!-- Các tùy chọn khác -->
                                 </select>
@@ -300,7 +296,7 @@
                                     <th>CS Điện Cũ</th>
                                     <th>CS Điện Mới</th>
                                     <th>Sử dụng</th>
-                                    <th></th>
+                                    <th>Tính</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -311,7 +307,7 @@
                                     <td><input type="number" class="form-control" value="53"></td>
                                     <td><input type="number" class="form-control" value="656"></td>
                                     <td class="text-end">603.0</td>
-                                    <td><button class="btn btn-info btn-sm">Lưu</button></td>
+                                    <td><button class="btn btn-info btn-sm"><i class="fa-solid fa-calculator"></i></button></td>
                                 </tr>
                                 <tr>
                                     <td>Tầng 1</td>
@@ -320,7 +316,7 @@
                                     <td><input type="number" class="form-control" value="0"></td>
                                     <td><input type="number" class="form-control" value="0"></td>
                                     <td class="text-end">0.0</td>
-                                    <td><button class="btn btn-info btn-sm">Lưu</button></td>
+                                    <td><button class="btn btn-info btn-sm"><i class="fa-solid fa-calculator"></i></button></td>
                                 </tr>
                                 <!-- Các dòng khác -->
                             </tbody>

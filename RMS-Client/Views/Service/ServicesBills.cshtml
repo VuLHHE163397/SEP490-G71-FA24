@@ -158,22 +158,12 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Service" asp-action="ServiceRecord" aria-expanded="false">
                                 <span>
-                                    <i class="fa-solid fa-plug"></i>
+                                    <i class="fa-solid fa-bolt"></i>
                                 </span>
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
-                                <span>
-                                    <i class="fa-solid fa-shower"></i>
-                                </span>
-                                <span class="hide-menu"> Chỉ số nước</span>
-                            </a>
-                        </li>
-
-
-
+                        
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
                                 <span>
@@ -269,21 +259,29 @@
                         </ul>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center" style="margin-top: 0.5rem">
-
-                        <!-- Filters -->
-                        <div class="row g-3 mb-3">
+                    <div class="container mt-4">
+                        <!-- Bộ lọc -->
+                        <div class="row g-3 align-items-center mb-3">
                             <div class="col-md-3">
                                 <label for="monthYear" class="form-label">Tháng/năm</label>
                                 <input type="month" class="form-control" id="monthYear" value="2024-11">
                             </div>
 
                             <div class="col-md-2">
-                                <label for="house" class="form-label">Nhà</label>
-                                <select class="form-select" id="house">
+                                <label for="building" class="form-label">Nhà</label>
+                                <select class="form-select" id="building">
                                     <option>Tất cả</option>
                                     <option>Nhà 1</option>
                                     <option>Nhà 2</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label for="room" class="form-label">Phòng</label>
+                                <select class="form-select" id="room">
+                                    <option>Tất cả</option>
+                                    <option>Phòng 101</option>
+                                    <option>Phòng 201</option>
                                 </select>
                             </div>
 
@@ -316,9 +314,13 @@
                                 <td>0</td>
                                 <td>21,943,000</td>
                                 <td class="action-icons">
-                                    <i class="fa-solid fa-eye"></i>
-                                    <i class="fa-solid fa-xmark"></i>
-
+                                    <button class="btn btn-primary">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+        
+                                    <button class="btn btn-danger">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
                                 </td>
                             </tr>
 

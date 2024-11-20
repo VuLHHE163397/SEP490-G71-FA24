@@ -71,6 +71,8 @@ namespace RMS_Client.Controllers
             {
                 var json = await serviceResponse.Content.ReadAsStringAsync();
                 service = JsonConvert.DeserializeObject<ServiceDTO>(json) ?? new ServiceDTO();
+                // Làm tròn giá trị để loại bỏ phần thập phân
+                service.Price = Math.Round(service.Price, 0);
             }
             return View(service);
         }
