@@ -131,6 +131,16 @@
             var email = $("#email").val();
             var password = $("#password").val();
 
+            if (!email) {
+                showErrorPopup("Vui lòng nhập tên tài khoản!");
+                return;
+            }
+
+            if (!password) {
+                showErrorPopup("Vui lòng nhập mật khẩu!");
+                return;
+            }
+
             $.ajax({
                 url: "https://localhost:7056/api/Auth/login",
                 type: "POST",
@@ -163,7 +173,8 @@
                 },
 
                 error: function (xhr, status, error) {
-                    showErrorPopup("Đăng nhập thất bại: " + xhr.responseText);
+                    showErrorPopup("Tài khoản hoặc mật khẩu không tồn tại");
+                    // showErrorPopup("Đăng nhập thất bại: " + xhr.responseText);
                 }
             });
         }
