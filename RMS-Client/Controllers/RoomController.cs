@@ -519,9 +519,9 @@ namespace RMS_Client.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                TempData["SuccessMessage"] = "Gửi báo cáo thành công! Bạn sẽ trở về trang chủ sau 3s!";
-                TempData["RedirectUrl"] = Url.Action("Home", "Home");
-                return View("RoomMaintainance", model);
+                ViewBag.SuccessMessage = "Gửi báo cáo thành công! Nhấn OK để quay về trang chủ.";
+                ViewBag.RedirectUrl = Url.Action("Home", "Home"); // URL của trang chủ
+                return View("RoomMaintainance", model); // Giữ nguyên model trên form
             }
 
             ModelState.AddModelError(string.Empty, "Không thể gửi báo cáo. Vui lòng thử lại.");

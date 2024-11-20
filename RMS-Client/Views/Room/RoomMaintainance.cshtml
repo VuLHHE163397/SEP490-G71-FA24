@@ -1,26 +1,13 @@
-﻿@model RoomQrViewModel
+﻿@using Newtonsoft.Json
+@model RoomQrViewModel
 
-@if (TempData["SuccessMessage"] != null)
+@if (ViewBag.SuccessMessage != null)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["SuccessMessage"]
-    </div>
-
-    <script>
-        setTimeout(function () {
-            window.location.href = '@TempData["RedirectUrl"]';
-        }, 2000); 
+    <script>    
+        alert(@Html.Raw(JsonConvert.SerializeObject(ViewBag.SuccessMessage)));
+        window.location.href = '@ViewBag.RedirectUrl';
     </script>
 }
-
-@if (!string.IsNullOrEmpty(ViewData.ModelState[string.Empty]?.Errors.FirstOrDefault()?.ErrorMessage))
-{
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @ViewData.ModelState[string.Empty]?.Errors.FirstOrDefault()?.ErrorMessage
-    </div>
-
-}
-
 <!doctype html>
 <html lang="en">
 
