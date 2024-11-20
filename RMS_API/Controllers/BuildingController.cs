@@ -19,6 +19,17 @@ namespace RMS_API.Controllers
             _context = context;
         }
 
+        [HttpGet("CheckBuildingName/{name}")]
+        public IActionResult CheckBuildingName(string name)
+        {
+            var building = _context.Buildings.FirstOrDefault(b => b.Name == name);
+            if (building != null)
+            {
+                return Ok(true); // Name exists
+            }
+            return Ok(false); // Name doesn't exist
+        }
+
         [HttpGet("GetBuildingsByUserId/{userId}")]
         public async Task<IActionResult> GetBuildingsByUserId(int userId)
         {
@@ -135,6 +146,13 @@ namespace RMS_API.Controllers
         [HttpPost("AddBuilding")]
         public async Task<IActionResult> AddBuilding([FromBody] AddBuildingDTO buildingDto)
         {
+            var existingBuilding = _context.Buildings
+        .FirstOrDefault(b => b.Name == buildingDto.Name);
+
+            if (existingBuilding != null)
+            {
+                return BadRequest("Tên tòa nhà đã tồn tại.");
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

@@ -352,22 +352,25 @@
                     <h1>@ViewData["Title"]</h1>
 
                     <form id="addBuildingForm">
-                        <div class="form-group">
+                        <div class="form-group ">
                             <label for="Name">Tên Tòa Nhà</label>
                             <input type="text" class="form-control" id="Name" name="Name" required />
                         </div>
-                        <div class="form-group">
+                        <div class="form-group ">
                             <label for="TotalFloors">Số Tầng</label>
                             <input type="number" class="form-control" id="TotalFloors" name="TotalFloors" required />
+                            <span id="totalFloorsError" class="error-message" style="color: red; display: none;">Số tầng phải là số dương và không vượt quá 100.</span>
                         </div>
 
                         <div class="form-group">
                             <label for="NumberOfRooms">Số Phòng</label>
                             <input type="number" class="form-control" id="NumberOfRooms" name="NumberOfRooms" required />
+                            <span id="numberOfRoomsError" class="error-message" style="color: red; display: none;">Số phòng phải là số dương và không vượt quá 500.</span>
                         </div>
                         <div class="form-group">
                             <label for="Distance">Khoảng cách</label>
-                            <input type="number" class="form-control" id="Distance" name="Distance" step="0.1" min="0.1" max="100" required />
+                            <input type="number" class="form-control" id="Distance" name="Distance"  required />
+                            <span id="distanceError" class="error-message" style="color: red; display: none;">Khoảng cách phải là một số dương.</span>
                         </div>
 
                         <div class="form-group">
@@ -474,24 +477,43 @@
                         $('#addBuildingForm').submit(function (event) {
                             event.preventDefault(); // Prevent default form submission
 
-                            // Validate TotalFloors and NumberOfRooms
+                            // Reset previous error messages
+                            $('.error-message').hide();
+
+                            // Validate TotalFloors, NumberOfRooms, and Distance
                             var totalFloors = parseInt($('#TotalFloors').val(), 10);
                             var numberOfRooms = parseInt($('#NumberOfRooms').val(), 10);
                             var distance = parseFloat($('#Distance').val());
 
+                            let formIsValid = true;
+
+                            // Validate TotalFloors
                             if (isNaN(totalFloors) || totalFloors < 1 || totalFloors > 100) {
-                                alert('Số tầng phải là số dương và không vượt quá 100.');
-                                return;
+                                $('#totalFloorsError').show(); // Show error below the input field
+                                formIsValid = false;
                             }
+
+                            // Validate NumberOfRooms
                             if (isNaN(numberOfRooms) || numberOfRooms < 1 || numberOfRooms > 500) {
-                                alert('Số phòng phải là số dương và không vượt quá 500.');
+                                $('#numberOfRoomsError').show(); // Show error below the input field
+                                formIsValid = false;
+                            }
+
+                            // Validate Distance
+                            if (isNaN(distance) || distance <= 0) {
+                                $('#distanceError').show(); // Show error below the input field
+                                formIsValid = false;
+                            }
+
+                            // If any validation fails, prevent form submission
+                            if (!formIsValid) {
                                 return;
                             }
 
                             // Get UserId from Token
                             var userId = getUserIdFromToken();
                             if (!userId) {
-                                alert('Không thể lấy UserId từ token. Vui lòng đăng nhập lại.');
+                                $('#userIdError').show(); // Show error if UserId is missing
                                 return;
                             }
                             console.log(userId);
@@ -530,12 +552,12 @@
                         // Utility Function: Extract UserId from Token
                         function getUserIdFromToken() {
                             const token = localStorage.getItem("token");
-                           
+
                             if (token) {
                                 try {
                                     const tokenParts = token.split('.');
                                     const payload = JSON.parse(atob(tokenParts[1]));
-                                   
+
                                     return payload.UserId;
                                 } catch (e) {
                                     console.error('Token parsing error:', e);
@@ -543,6 +565,7 @@
                             }
                             return null;
                         }
+
                     });
                 </script>
 
