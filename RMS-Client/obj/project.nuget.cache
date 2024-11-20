@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "XxVUh2w23BHI8NIWu+HsCUCZXLULiiEXNK6dGnSN8bYsqtiOyEoZmfKXsai42dNjuylCZurBZf+hvh8RWHsNPw==",
+  "dgSpecHash": "/HOt3iGMuNO0drYKpknhkSIFHeIxIiSEmW4bnWZRHOzWbLoYDmZDXPWEEORFeiYHjWkvPllaeVm4XHlLuv2lxw==",
   "success": true,
   "projectFilePath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\RMS_Client.csproj",
   "expectedPackageFiles": [
@@ -128,7 +128,8 @@
     "C:\\Users\\dell\\.nuget\\packages\\system.text.regularexpressions\\4.3.1\\system.text.regularexpressions.4.3.1.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\system.threading\\4.3.0\\system.threading.4.3.0.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\system.threading.tasks\\4.3.0\\system.threading.tasks.4.3.0.nupkg.sha512",
-    "C:\\Users\\dell\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
+    "C:\\Users\\dell\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512",
+    "C:\\Users\\dell\\.nuget\\packages\\zxing.net\\0.16.9\\zxing.net.0.16.9.nupkg.sha512"
   ],
   "logs": []
 }
