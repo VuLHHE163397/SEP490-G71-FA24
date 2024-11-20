@@ -49,7 +49,7 @@
         }
 
         body {
-            background-image: url('~/images/bg1.jpg'); /* Đường dẫn tới ảnh */
+            /* background-image: url('images/logo.jpg'); /* Đường dẫn tới ảnh */ */
             background-size: cover; /* Bao phủ toàn bộ màn hình */
             background-repeat: no-repeat; /* Không lặp lại ảnh */
             background-position: center; /* Căn giữa ảnh */
@@ -87,10 +87,11 @@
                     <div class="col-md-10 col-lg-8 col-xxl-6">
                         <div class="card mb-0">
                             <div class="card-body">
+                                <a href="#" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                                    <img src="~/images/logo.jpg" width="180" alt="">
+                                </a>
                                 <form id="loginForm">
-                                    <div class="mb-3">
-                                        <script>
-                                            console.log("token:", token);</script>
+                                    <div class="mb-3">                                        
                                         <label for="email" class="form-label">Tài khoản</label>
                                         <input type="email" class="form-control" id="email" required>
                                     </div>
