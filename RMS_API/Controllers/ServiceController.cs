@@ -36,7 +36,7 @@ namespace RMS_API.Controllers
 
         //lấy danh sách dịch vụ
         [HttpGet("GetAllService")]
-        public async Task<ActionResult<IEnumerable<ServiceDTO>>> GetAllServices()
+        public async Task<ActionResult<IEnumerable<ServiceDTO>>> GetAllServices([FromQuery] ServiceFilter filter)
         {
             var services = await _context.Services
                 .Select(s => new ServiceDTO
@@ -45,9 +45,17 @@ namespace RMS_API.Controllers
                     Name = s.Name,
                     Price = s.Price
                 })
+                .Where(e => string.IsNullOrWhiteSpace(filter.keyword) || e.Name.ToLower().Contains(filter.keyword.ToLower()))
                 .ToListAsync();
-
-            return Ok(services);
+            var total = services.Count();
+            services = services.Skip((filter.pageIndex - 1) * filter.pageSize)
+                .Take(filter.pageSize)
+                .ToList();
+            return Ok(new ServiceTableView
+            {
+                TotalRecord = total,
+                services = services
+            });
         }
 
         //add dịch vụ
@@ -91,6 +99,7 @@ namespace RMS_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        //Xóa dịch vụ
         [HttpDelete]
         public async Task<IActionResult> DeleteAsync(int id)
         {
