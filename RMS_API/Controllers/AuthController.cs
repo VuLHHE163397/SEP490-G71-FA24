@@ -117,7 +117,6 @@ namespace RMS_API.Controllers
             return Ok("Đăng ký thành công.");
         }
 
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {

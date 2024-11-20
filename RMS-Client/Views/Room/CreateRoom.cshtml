@@ -3,6 +3,9 @@
 @{
     ViewBag.Title = "Tạo Phòng";
 }
+@{
+    var buildingId = ViewBag.SelectedBuildingId; // Lấy BuildingId từ phòng đầu tiên, nếu có
+}
 
 <!doctype html>
 <html lang="en">
@@ -301,6 +304,9 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link nav-icon-hover" asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingId">
+                                <i class="ti ti-arrow-back" style="font-size: 30px;"></i>
+                            </a>
                             <a class="nav-link nav-icon-hover" href="javascript:void(0)">
                                 <i class="ti ti-bell-ringing"></i>
                                 <div class="notification bg-primary rounded-circle"></div>
@@ -384,7 +390,10 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100">Tạo Phòng</button>
+                        <div class="form-group row">
+                            <input type="submit" class="btn btn-primary w-100" id="buttonSave" value="Tạo phòng"></input>
+                            <span class="error-message" id="submitError" style="color: red; display: none;">Thông tin nhập không hợp lệ, vui lòng kiểm tra lại !!!</span>
+                        </div>
                     </form>
 
                 </div>
@@ -409,14 +418,20 @@
             validateArea();
         });
 
+        const submitError = document.getElementById('submitError');
+
         // Hàm validate cho từng trường
         function validatePrice() {
             const price = document.getElementById('Price').value;
             const priceError = document.getElementById('priceError');
             if (parseFloat(price) <= 0) {
                 priceError.style.display = 'inline';
+                document.getElementById('buttonSave').disabled = true;
+                submitError.style.display = 'inline';
             } else {
                 priceError.style.display = 'none';
+                document.getElementById('buttonSave').disabled = false;
+                submitError.style.display = 'none';
             }
         }
 
@@ -425,8 +440,12 @@
             const floorError = document.getElementById('floorError');
             if (parseInt(floor) <= 0 || !Number.isInteger(parseFloat(floor))) {
                 floorError.style.display = 'inline';
+                document.getElementById('buttonSave').disabled = true;
+                submitError.style.display = 'inline';
             } else {
                 floorError.style.display = 'none';
+                document.getElementById('buttonSave').disabled = false;
+                submitError.style.display = 'none';
             }
         }
 
@@ -435,8 +454,12 @@
             const areaError = document.getElementById('areaError');
             if (parseFloat(area) <= 0) {
                 areaError.style.display = 'inline';
+                document.getElementById('buttonSave').disabled = true;
+                submitError.style.display = 'inline';
             } else {
                 areaError.style.display = 'none';
+                document.getElementById('buttonSave').disabled = false;
+                submitError.style.display = 'none';
             }
         }
 
@@ -452,8 +475,13 @@
             if (roomExists) {
                 roomNumberError.style.display = 'inline';
                 roomNumberError.textContent = 'Tên Phòng đã tồn tại trong tòa nhà này';
+                document.getElementById('buttonSave').disabled = true;
+                submitError.style.display = 'inline';
+                return;
             } else {
                 roomNumberError.style.display = 'none';
+                document.getElementById('buttonSave').disabled = false;
+                submitError.style.display = 'none';
             }
         });
 

@@ -11,7 +11,9 @@ namespace RMS_API.Models
         public decimal Price { get; set; }
         public int ServiceId { get; set; }
         public int? ServiceRecordId { get; set; }
+        public int? RoomId { get; set; }
 
+        public virtual Room? Room { get; set; }
         public virtual Service Service { get; set; } = null!;
         public virtual ServicesRecord? ServiceRecord { get; set; }
     }
