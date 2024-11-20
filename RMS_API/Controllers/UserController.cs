@@ -18,6 +18,7 @@ namespace RMS_API.Controllers
         public UserController(RMS_SEP490Context context)
         {
             _context = context;
+            
         }
 
         [HttpGet("GetUserByEmail")]
