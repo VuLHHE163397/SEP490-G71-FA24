@@ -9,6 +9,6 @@
         public double Area { get; set; }
         public string RoomStatusName { get; set; } = string.Empty;
         public double? Distance { get; set; }
-        public List<string>? Images { get; set; }
+        public string? FirstImageLink { get; set; }
     }
 }

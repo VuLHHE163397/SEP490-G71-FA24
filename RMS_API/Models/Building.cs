@@ -32,6 +32,5 @@ namespace RMS_API.Models
         public virtual User User { get; set; } = null!;
         public virtual Ward Ward { get; set; } = null!;
         public virtual ICollection<Room> Rooms { get; set; }
-        public virtual ICollection<Service> Services { get; set; }
     }
 }
