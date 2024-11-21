@@ -82,6 +82,13 @@
             font-size: 18px;
         }
 
+        .card {
+            max-width: 500px; /* Ensure a reasonable width */
+            width: 100%;
+            margin: auto; /* Center horizontally */
+            position: relative;
+        }
+
     </style>
 </head>
 
@@ -92,12 +99,12 @@
         <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
             <div class="d-flex align-items-center justify-content-center w-100">
                 <div class="row justify-content-center w-100">
-                    <div class="col-md-8 col-lg-6 col-xxl-3">
+                    <div class="col-md-10 col-lg-8 col-xxl-6">
                         <div class="card mb-0">
                             <div class="card-body">
-                                <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                                @* <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
                                     <img src="~/images/logo.jpg" width="180" alt="">
-                                </a>
+                                </a> *@
                                 <p class="text-center">RMS_Quản lý trọ theo cách của bạn</p>
                                 <form id="registerForm" style="max-width: 1000px; margin: auto;">
                                     <div class="mb-3">
@@ -275,7 +282,7 @@
                 data: JSON.stringify(user),
                 success: function (response) {
                     $("#loadingSpinner").hide();
-                    showPopup("Đăng nhập thành công!");
+                    showPopup("Đăng ký thành công!");
                     sessionStorage.setItem("firstName", firstName);
                     sessionStorage.setItem("midName", midName);
                     sessionStorage.setItem("lastName", lastName);
@@ -284,11 +291,11 @@
                     sessionStorage.setItem("password", password);
                     window.location.href = "/Auth/VerifyEmail";
 
-                    showPopup("Đăng nhập thành công");
+                    showPopup("Đăng ký thành công");
                 },
                 error: function (xhr, status, error) {
                     $("#loadingSpinner").hide();
-                    showErrorPopup("Đăng nhập thất bại: " + xhr.responseText);
+                    showErrorPopup("Đăng ký thất bại: " + xhr.responseText);
                 }
             });
         }

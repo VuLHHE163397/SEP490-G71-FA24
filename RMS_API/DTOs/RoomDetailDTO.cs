@@ -12,7 +12,6 @@
         public string RoomStatus { get; set; }
         public string OwnerName { get; set; }
         public string OwnerPhone { get; set; }
-        public string ImageUrl { get; set; } // Nếu có thông tin về ảnh
-
+        public List<ImageDTO> Images { get; set; }
     }
 }

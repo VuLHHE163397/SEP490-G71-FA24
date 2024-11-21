@@ -18,15 +18,14 @@ namespace RMS_Client.Controllers
         private readonly string GetBuildingById = "https://localhost:7056/api/Building/GetBuildingById";
         private readonly string GetDistrictsByProvince = "https://localhost:7056/api/Building/GetDistrictsByProvince";
         private readonly string GetBuildinImformationgById = "https://localhost:7056/api/Building/GetBuildinImformationgById";
-        private readonly string GetBuildingByEmail = "https://localhost:7056/api/Building/GetBuildingsByEmail";
         public BuildingController()
         {
             _client = new HttpClient();
             var contentType = new MediaTypeWithQualityHeaderValue("application/json");
             _client.DefaultRequestHeaders.Accept.Add(contentType);
         }
-
-        public async Task<IActionResult> ListBuilding()
+        
+            public async Task<IActionResult> ListBuilding()
         {
             string apiUrlBuilding = BuildingApiUri + "/GetAllBuildings";
             var buildings = new List<BuildingDTO>();
@@ -86,7 +85,7 @@ namespace RMS_Client.Controllers
                 return BadRequest("Building ID is required");
             }
 
-
+            
             string apiUrlGetBuildingById = $"{GetBuildingById}/{id.Value}";
             var building = new BuildingDTO();
 
@@ -100,9 +99,9 @@ namespace RMS_Client.Controllers
                 }
                 else
                 {
-
+                    
                     ModelState.AddModelError(string.Empty, "Unable to retrieve building by id.");
-                    return View(building);
+                    return View(building);  
                 }
             }
             catch (Exception ex)
@@ -126,11 +125,11 @@ namespace RMS_Client.Controllers
 
 
 
-
+           
         }
 
 
-
+        
 
 
     }

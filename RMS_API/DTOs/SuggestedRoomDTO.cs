@@ -7,6 +7,6 @@
         public decimal Price { get; set; }
         public double Area { get; set; }
         public string RoomStatusName { get; set; } = string.Empty;
-        public List<string>? Images { get; set; }
+        public string? FirstImageLink { get; set; }
     }
 }

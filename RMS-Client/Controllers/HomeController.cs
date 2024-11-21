@@ -44,60 +44,64 @@ namespace RMS_Client.Controllers
             }
         }
 
-
         public async Task<IActionResult> RoomDetail(int id)
         {
             try
             {
-                // Gọi API chi tiết phòng dựa trên id
+                // Gọi API chi tiết phòng
                 var roomDetailResponse = await _httpClient.GetAsync($"api/Room/detail/{id}");
-
                 if (!roomDetailResponse.IsSuccessStatusCode)
                 {
                     _logger.LogWarning($"Room detail for ID {id} could not be retrieved. Status Code: {roomDetailResponse.StatusCode}");
-                    return NotFound(); // Nếu không có chi tiết phòng
+                    return NotFound("Room detail could not be retrieved.");
                 }
 
                 var roomDetailJson = await roomDetailResponse.Content.ReadAsStringAsync();
                 var roomDetail = JsonConvert.DeserializeObject<RoomDetailDTO>(roomDetailJson);
-
-                // Kiểm tra dữ liệu chi tiết phòng
                 if (roomDetail == null)
                 {
                     _logger.LogWarning($"Room detail data is null for ID {id}.");
-                    return NotFound();
+                    return NotFound("Room detail is missing.");
                 }
 
-                // Gọi API phòng gợi ý dựa trên ID phòng
-                var suggestedRoomsResponse = await _httpClient.GetAsync($"api/Room/{id}/suggestedrooms");
+                // Gọi API danh sách ảnh
+                var imageResponse = await _httpClient.GetAsync($"api/Room/GetAllImage/{id}");
+                if (!imageResponse.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning($"Images for Room ID {id} could not be retrieved. Status Code: {imageResponse.StatusCode}");
+                    roomDetail.Images = new List<ImageDTO>(); // Không có ảnh, gán danh sách rỗng
+                }
+                else
+                {
+                    var imageJson = await imageResponse.Content.ReadAsStringAsync();
+                    var images = JsonConvert.DeserializeObject<List<ImageDTO>>(imageJson);
+                    roomDetail.Images = images ?? new List<ImageDTO>();
+                }
 
-                if (!suggestedRoomsResponse.IsSuccessStatusCode)
+                // Gọi API phòng gợi ý
+                var suggestedRoomsResponse = await _httpClient.GetAsync($"api/Room/{id}/suggestedrooms");
+                var suggestedRooms = new List<SuggestedRoomDTO>();
+                if (suggestedRoomsResponse.IsSuccessStatusCode)
+                {
+                    var suggestedRoomsJson = await suggestedRoomsResponse.Content.ReadAsStringAsync();
+                    suggestedRooms = JsonConvert.DeserializeObject<List<SuggestedRoomDTO>>(suggestedRoomsJson) ?? new List<SuggestedRoomDTO>();
+                }
+                else
                 {
                     _logger.LogWarning($"Suggested rooms for Room ID {id} could not be retrieved. Status Code: {suggestedRoomsResponse.StatusCode}");
-                    return NotFound(); // Nếu không có phòng gợi ý
                 }
 
-                var suggestedRoomsJson = await suggestedRoomsResponse.Content.ReadAsStringAsync();
-                var suggestedRooms = JsonConvert.DeserializeObject<List<SuggestedRoomDTO>>(suggestedRoomsJson);
-
-                // Kiểm tra nếu có phòng gợi ý
-                if (suggestedRooms == null || !suggestedRooms.Any())
-                {
-                    _logger.LogWarning($"No suggested rooms found for Room ID {id}.");
-                    suggestedRooms = new List<SuggestedRoomDTO>(); // Đảm bảo không null
-                }
-
-                // Truyền cả dữ liệu chi tiết phòng và phòng gợi ý vào ViewData
+                // Truyền dữ liệu vào ViewData
                 ViewData["RoomDetail"] = roomDetail;
                 ViewData["SuggestedRooms"] = suggestedRooms;
 
-                // Trả về view với cả dữ liệu chi tiết phòng và phòng gợi ý
+                // Trả về view cùng tất cả thông tin
                 return View(roomDetail);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occurred while fetching room details for ID {id}.");
-                return View("Error"); // Nếu có lỗi xảy ra
+                _logger.LogError(ex, $"An error occurred while fetching data for Room ID {id}.");
+                return View("Error");
             }
         }
 

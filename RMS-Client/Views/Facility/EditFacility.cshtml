@@ -10,22 +10,22 @@
 </head>
 
 <body>
-    <!--  Body Wrapper -->
+
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
-        <!-- Sidebar Start -->
+
         <aside class="left-sidebar">
-            <!-- Sidebar scroll-->
+
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a asp-controller="Statistic" asp-action="ViewStatistic" class="text-nowrap logo-img">
-                        <img src="~/images/logos/dark-logo.svg" width="180" alt="" />
+                        <img src="~/images/logo.jpg" width="180" alt="" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
                     </div>
                 </div>
-                <!-- Sidebar navigation-->
+
                 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
                     <ul id="sidebarnav">
                         <li class="nav-small-cap">
@@ -33,10 +33,8 @@
                             <span class="hide-menu">Trang chủ</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
+                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding">
+                                <span><i class="ti ti-layout-dashboard"></i></span>
                                 <span class="hide-menu">Trang chủ</span>
                             </a>
                         </li>
@@ -44,111 +42,73 @@
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">Quản lý</span>
                         </li>
-
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-building"></i>
-                                </span>
-                                <span class="hide-menu">Quản lý tòa nhà</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Room" asp-action="ListRoom" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-home"></i>
-                                </span>
+                            <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
+                                <span><i class="ti ti-layout-dashboard"></i></span>
                                 <span class="hide-menu">Quản lý phòng</span>
+                                <span><i class="ti ti-chevron-down"></i></span>
                             </a>
+                            <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
+                                @{
+                                    var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
+                                }
+                                @if (buildingsss != null && buildingsss.Any())
+                                {
+                                    foreach (var buildingss in buildingsss)
+                                    {
+                                        <li class="sidebar-subitem">
+                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
+                                                <i class="ti ti-file"></i>
+                                                @buildingss.Name
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                }
+                            </ul>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-buttons.html" aria-expanded="false">
+                            <a class="sidebar-link" asp-controller="Facility" asp-action="ListFacility" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-alien"></i>
+                                    <i class="fa-solid fa-gears"></i>
                                 </span>
                                 <span class="hide-menu">Cơ sở vật chất</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
+                            <a class="sidebar-link" asp-controller="Service" asp-action="ListService" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-menu"></i>
                                 </span>
                                 <span class="hide-menu">Dịch vụ</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-report"></i>
-                                </span>
-                                <span class="hide-menu">Danh sách yêu cầu</span>
-                            </a>
-                        </li>
-                        <li class="nav-small-cap">
-                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                            <span class="hide-menu">-------------------------</span>
-                        </li>
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./authentication-register.html" aria-expanded="false">
+                            <a class="sidebar-link" asp-controller="Service" asp-action="ServiceRecord" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-user-plus"></i>
+                                    <i class="fa-solid fa-bolt"></i>
                                 </span>
-                                <span class="hide-menu">Register</span>
+                                <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-login"></i>
-                                </span>
-                                <span class="hide-menu">Đăng xuất</span>
-                            </a>
-                        </li>
-                        <li class="nav-small-cap">
-                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                            <span class="hide-menu">EXTRA</span>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./icon-tabler.html" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-mood-happy"></i>
-                                </span>
-                                <span class="hide-menu">Icons</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./sample-page.html" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-aperture"></i>
-                                </span>
-                                <span class="hide-menu">Sample Page</span>
-                            </a>
-                        </li>
+                        
+                        
+
                     </ul>
-                    <div class="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">
-                        <div class="d-flex">
-                            <div class="unlimited-access-title me-3">
-                                <h6 class="fw-semibold fs-4 mb-6 text-dark w-85">Upgrade to pro</h6>
-                                <a href="https://adminmart.com/product/modernize-bootstrap-5-admin-template/" target="_blank"
-                                   class="btn btn-primary fs-2 fw-semibold lh-sm">Buy Pro</a>
-                            </div>
-                            <div class="unlimited-access-img">
-                                <img src="~/images/backgrounds/rocket.png" alt="" class="img-fluid">
-                            </div>
-                        </div>
-                    </div>
+
                 </nav>
-                <!-- End Sidebar navigation -->
+
             </div>
-            <!-- End Sidebar scroll-->
+
         </aside>
-        <!--  Sidebar End -->
-        <!--  Main wrapper -->
+
         <div class="body-wrapper">
-            <!--  Header Start -->
-            <header class="app-header">
+
+            <header class="app-header" style="background-color:  #3385ff">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
@@ -184,12 +144,13 @@
                                             <i class="ti ti-list-check fs-6"></i>
                                             <p class="mb-0 fs-3">My Task</p>
                                         </a>
-                                        <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                                        <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
                                     </div>
                                 </div>
                             </li>
                         </ul>
                     </div>
+
                 </nav>
             </header>
             <!--  Header End -->
@@ -205,7 +166,7 @@
                         <h2>Sửa cơ sở vật chất</h2>
                         <div>
                             <a href="/Facility/ListFacility" class="btn btn-warning">Quay về</a>
-                            <button type="submit" class="btn btn-success" onclick="UpdateFacility(@Model.Id)">Lưu</button>
+                            <button type="submit" class="btn btn-success" onclick="UpdateFacility()">Lưu</button>
                         </div>
                     </div>
                     <hr />
@@ -214,7 +175,7 @@
                             <!-- Tên tài sản -->
                             <div class="col-md-8">
                                 <div class="form-group">
-                                    <label for="ServiceName">Tên <span class="text-danger">*</span></label>
+                                    <label for="FacilityName">Tên <span class="text-danger">*</span></label>
                                     <input type="text" id="FacilityName" name="FacilityName" class="form-control" required value="@Model.Name" />
                                 </div>
                             </div>
@@ -224,24 +185,20 @@
                         <div class="row mb-3">
                             <!-- Số Phòng -->
                             <div class="form-group col-md-3">
-                                <label for="room" class="form-label">Số phòng</label>
-                                <select id="room" class="form-control">
-                                    <option value="">@Model.RoomId</option>
-                                    
+                                <label for="RoomId" class="form-label">Số phòng</label>
+                                <select id="RoomId" class="form-control custom-select">
                                 </select>
                             </div>
+                        </div>
 
                         <div class="row mb-3">
-                            <!-- Trạng thái -->
-                          
+                            <!-- Tình trạng -->
                             <div class="form-group col-md-3">
-                                <label for="room" class="form-label">Tình trạng</label>
-                                <select id="room" class="form-control">
-                                    <option>@Model.FacilityStatusName</option>
-                                    <option>Tốt</option>
-                                    <option>Cũ</option>
+                                <label for="FacilityStatusId" class="form-label">Tình trạng</label>
+                                <select id="FacilityStatusId" class="form-control custom-select">
                                 </select>
                             </div>
+                        </div>
 
                         <div class="row mb-3">
                             <!-- Ghi chú -->
@@ -259,6 +216,8 @@
             </div>
         </div>
     </div>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/sidebarmenu.js"></script>
@@ -266,7 +225,92 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
-    
+    <script>
+        const token = localStorage.getItem("token");
+        if (token == 1 || !token) {
+            window.location.href = "/Auth/Login";
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+
+        if (payload.role !== "Landlord") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            localStorage.setItem("token", 1);
+            console.log("Token set to 1 on logout.");
+        }
+        $(document).ready(function () {
+            loadRoom();
+            loadStatus();
+        })
+        function UpdateFacility() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var id = urlParams.get('id');
+            var facility = {
+                id: id,
+                name: $("#FacilityName").val(),
+                roomId: $("#RoomId").val(),
+                statusId: $("#FacilityStatusId").val(),
+            }
+            $.ajax({
+                url: "https://localhost:7056/api/Facility",
+                type: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify(facility),
+                success: function (response) {
+                    alert('Cật nhật cơ sở vật chất thành công');
+                    window.location.href = "/Facility/ListFacility"
+                },
+                error: function (xhr, status, error) {
+                    console.log(error)
+                    alert("Lỗi khi cật nhật cơ sở vật chất");
+                }
+            })
+        }
+        function loadRoom() {
+            $.ajax({
+                url: 'https://localhost:7056/api/Room/GetAllRoom',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    renderRoom(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderRoom(data) {
+            let html = ``;
+            for (var item of data) {
+                html += `<option value="${item.id}">${item.roomNumber}</option>`
+            }
+            $("#RoomId").html(html);
+        }
+        function loadStatus() {
+            $.ajax({
+                url: 'https://localhost:7056/api/FacilityStatus/GetAllFacility',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    renderStatus(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderStatus(data) {
+            let html = ``;
+            for (var item of data) {
+                html += `<option value="${item.id}">${item.description}</option>`
+            }
+            $("#FacilityStatusId").html(html);
+        }
+    </script>
+
 </body>
 
 </html>

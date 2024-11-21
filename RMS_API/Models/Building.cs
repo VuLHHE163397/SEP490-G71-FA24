@@ -8,6 +8,7 @@ namespace RMS_API.Models
         public Building()
         {
             Rooms = new HashSet<Room>();
+            Services = new HashSet<Service>();
         }
 
         public int Id { get; set; }
