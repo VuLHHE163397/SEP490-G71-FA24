@@ -92,43 +92,6 @@ namespace RMS_API.Controllers
             return Ok(image);
         }
 
-        [HttpGet("GetAllService/{buildingId}")]
-        public IActionResult GetServiceByBuilding(int buildingId)
-        {
-            var service = _context.Services.Where(p => p.BuildingId == buildingId).ToList();
-            return Ok(service);
-        }
-
-        [HttpGet("GetServiceByRoom/{roomId}")]
-        public IActionResult GetServiceByRoom(int roomId)
-        {
-            try
-            {
-                // Lấy danh sách dịch vụ liên quan đến buildingId
-                var services = _context.Services
-
-                    .Where(s => s.Rooms.Any(r => r.Id == roomId))
-                    .Select(s => new
-                    {
-                        s.Id,
-                        s.Name,
-                        s.Price
-                    })
-                    .ToList();
-
-                if (services == null || !services.Any())
-                {
-                    return NotFound(new { message = "Không tìm thây dịch vụ của phòng !!!" });
-                }
-
-                return Ok(services);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "An error occurred while fetching the services.", details = ex.Message });
-            }
-        }
-
         // Tạo một dictionary ánh xạ trạng thái phòng sang RoomStatusId
         private static readonly Dictionary<string, int> RoomStatusMapping = new Dictionary<string, int>
         {
@@ -139,7 +102,7 @@ namespace RMS_API.Controllers
         };
 
         [HttpPost("ImportRooms/{buildingId}")]
-        public async Task<IActionResult> ImportRooms([FromForm] IFormFile file, int buildingId)
+        public async Task<IActionResult> ImportRooms([FromForm]IFormFile file, int buildingId)
         {
             if (file == null || file.Length == 0)
             {
@@ -428,6 +391,9 @@ namespace RMS_API.Controllers
             var roomHistories = _context.RoomHistories.Where(h => h.RoomId == roomId);
             _context.RoomHistories.RemoveRange(roomHistories);
 
+            var servicesOfRooms = _context.ServicesOfRooms.Where(s => s.RoomId == roomId);
+            _context.ServicesOfRooms.RemoveRange(servicesOfRooms);
+
             var tenants = _context.Tennants.Where(t => t.RoomId == roomId);
             _context.Tennants.RemoveRange(tenants);
 
@@ -463,6 +429,10 @@ namespace RMS_API.Controllers
                 // Xóa RoomHistories liên quan đến room
                 var roomHistories = _context.RoomHistories.Where(h => h.RoomId == room.Id);
                 _context.RoomHistories.RemoveRange(roomHistories);
+
+                // Xóa ServicesOfRooms liên quan đến room
+                var servicesOfRooms = _context.ServicesOfRooms.Where(s => s.RoomId == room.Id);
+                _context.ServicesOfRooms.RemoveRange(servicesOfRooms);
 
                 // Xóa Tennants liên quan đến room
                 var tenants = _context.Tennants.Where(t => t.RoomId == room.Id);
@@ -665,6 +635,7 @@ namespace RMS_API.Controllers
             // Trả về hình ảnh dưới dạng response
             return File(ms.ToArray(), "image/png");
         }
+
         [HttpGet("RoomMaintainance/{roomId}")]
         public IActionResult GetByQR(int roomId)
         {
@@ -701,20 +672,21 @@ namespace RMS_API.Controllers
         [HttpPost("SaveMaintenanceRequest")]
         public IActionResult SaveMaintainancebyQR([FromBody] MaintainanceDTO dto)
         {
-            if (dto == null)
-                return BadRequest("Invalid maintenance request data.");
+            if (dto == null || string.IsNullOrWhiteSpace(dto.Description))
+                return BadRequest(new { Success = false, Message = "Nội dung báo cáo không được để trống." });
 
             var maintainance = new MaintainanceRequest
             {
                 Description = dto.Description,
                 Status = dto.Status,
                 RoomId = dto.RoomId,
+                RequestDate = dto.RequestDate
             };
 
             _context.MaintainanceRequests.Add(maintainance);
             _context.SaveChanges();
 
-            return Ok("Maintenance request saved successfully.");
+            return Ok(new { Success = true, Message = "Gửi báo cáo thành công!" });
         }
     }
 }

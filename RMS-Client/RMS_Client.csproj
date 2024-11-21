@@ -29,4 +29,43 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Views\Building\AddBuilding.cshtml" />
+    <None Include="Views\Building\BuildingDetail.cshtml" />
+    <None Include="Views\Building\EditBuilding.cshtml" />
+    <None Include="Views\Building\ListBuilding.cshtml" />
+    <None Include="Views\Facility\AddFacility.cshtml" />
+    <None Include="Views\Facility\EditFacility.cshtml" />
+    <None Include="Views\Facility\ListFacility.cshtml" />
+    <None Include="Views\Home\Home.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\ListFavouriteRoom.cshtml" />
+    <None Include="Views\Home\Privacy.cshtml" />
+    <None Include="Views\Home\RoomDetail.cshtml" />
+    <None Include="Views\Login\Login.cshtml" />
+    <None Include="Views\Login\Register.cshtml" />
+    <None Include="Views\Login\ResetPassword.cshtml" />
+    <None Include="Views\Profile\ChangedPassword.cshtml" />
+    <None Include="Views\Profile\EditProfile.cshtml" />
+    <None Include="Views\Profile\ViewProfile.cshtml" />
+    <None Include="Views\Report\ListReport.cshtml" />
+    <None Include="Views\Report\ReportDetail.cshtml" />
+    <None Include="Views\Room\CreateRoom.cshtml" />
+    <None Include="Views\Room\EditRoom.cshtml" />
+    <None Include="Views\Room\ListRoom.cshtml" />
+    <None Include="Views\Room\RoomDetail.cshtml" />
+    <None Include="Views\Room\RoomHistory.cshtml" />
+    <None Include="Views\Service\AddService.cshtml" />
+    <None Include="Views\Service\EditService.cshtml" />
+    <None Include="Views\Service\ListService.cshtml" />
+    <None Include="Views\Service\ServiceRecord.cshtml" />
+    <None Include="Views\Shared\Error.cshtml" />
+    <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Views\Statistic\ViewStatistic.cshtml" />
+    <None Include="Views\Tennant\AddTennant.cshtml" />
+    <None Include="Views\Tennant\ListTennant.cshtml" />
+    <None Include="Views\User\ListUser.cshtml" />
+  </ItemGroup>
+
 </Project>

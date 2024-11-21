@@ -11,7 +11,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RMS</title>
-    <link rel="shortcut icon" type="image/png" href="~/images/logos/house.jpg" />
+    <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -39,23 +39,23 @@
             }
 
         /*  .btn-warning {
-                                                                    background-color: #ffc107;
-                                                                    border-color: #ffc107;
-                                                                    color: #fff;
-                                                                }
+                            background-color: #ffc107;
+                            border-color: #ffc107;
+                            color: #fff;
+                        }
 
-                                                                    .btn-warning:hover {
-                                                                        background-color: #e0a800;
-                                                                        border-color: #e0a800;
-                                                                        transform: scale(1.05);
-                                                                    }
+                            .btn-warning:hover {
+                                background-color: #e0a800;
+                                border-color: #e0a800;
+                                transform: scale(1.05);
+                            }
 
-                                                                    .btn-warning:active {
-                                                                        background-color: #c69500;
-                                                                        border-color: #c69500;
-                                                                        transform: scale(1);
-                                                                    }
-                                                         */
+                            .btn-warning:active {
+                                background-color: #c69500;
+                                border-color: #c69500;
+                                transform: scale(1);
+                            }
+                 */
         /* Icon styling inside buttons */
         .btn i {
             margin-right: 8px;
@@ -85,7 +85,7 @@
 
         /* Main content area padding */
         .body-wrapper {
-            padding: 20px;
+           /*  padding: 20px; */
             flex-grow: 1;
         }
 
@@ -194,7 +194,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Facility" asp-action="ListFacility" aria-expanded="false">
                                 <span>
-                                    <i class="fa-solid fa-gears"></i>
+                                    <i class="ti ti-alien"></i>
                                 </span>
                                 <span class="hide-menu">Cơ sở vật chất</span>
                             </a>
@@ -207,25 +207,18 @@
                                 <span class="hide-menu">Dịch vụ</span>
                             </a>
                         </li>
-
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
+                            <a class="sidebar-link" asp-controller="Service" asp-action="ServiceRecord" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-report"></i>
+                                    <i class="fa-solid fa-bolt"></i>
                                 </span>
-                                <span class="hide-menu">Danh sách yêu cầu</span>
+                                <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
                         
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false" onclick="logout()">
-                                <span>
-                                    <i class="ti ti-login"></i>
-                                </span>
-                                <span class="hide-menu">Đăng xuất</span>
-                            </a>
-                        </li>
-                    
+
+                        
+
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -234,8 +227,8 @@
         <!--  Sidebar End -->
         <!--  Main wrapper -->
         <div class="body-wrapper">
-            <!--  Header Start -->
-            <header class="app-header">
+
+            <header class="app-header" style="background-color:  #3385ff">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
@@ -259,7 +252,7 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a class="d-flex align-items-center gap-2 dropdown-item" onclick="viewProfile()">
+                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
                                             <p class="mb-0 fs-3">My Profile</p>
                                         </a>
@@ -272,14 +265,15 @@
                                             <p class="mb-0 fs-3">My Task</p>
                                         </a>
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
+
                                     </div>
                                 </div>
                             </li>
                         </ul>
                     </div>
+
                 </nav>
             </header>
-
             <!--  Header End -->
             <div class="container-fluid">
                 <div class="container mt-4">
@@ -309,58 +303,6 @@
                         </tbody>
                     </table>
                 </div>
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                <script>
-
-
-                    const token = localStorage.getItem("token");
-                    console.log("token:", token);
-                    if (token == 1 || !token) {
-                        window.location.href = "/Auth/Login";
-                    }
-                    const tokenParts = token.split('.');
-                    const payload = JSON.parse(atob(tokenParts[1]));
-
-                    if (payload.role !== "Landlord") {
-                        window.location.href = "/Auth/Login";
-                    }
-
-                    function logout() {
-                        localStorage.setItem("token", 1);
-                        console.log("Token set to 1 on logout.");
-                    }
-
-
-                    function editBuilding(id) {
-                        // Redirect to the edit page for the specific building
-                        window.location.href = `/Building/EditBuilding/${id}`;
-                    }
-
-                    function buildingDetail(id) {
-                        window.location.href = `/Building/BuildingDetail/${id}`;
-                    }
-
-
-                    function toggleSubmenu(event) {
-                        event.preventDefault();
-                        var submenu = event.currentTarget.nextElementSibling;
-                        submenu.style.display = submenu.style.display === "none" ? "block" : "none";
-                    }
-
-
-                    $(document).ready(function () {
-                        if (typeof ApexCharts === 'undefined') {
-                            console.error("ApexCharts is not loaded.");
-                        } else {
-                            console.log("ApexCharts is loaded successfully.");
-                            // Your chart initialization code can go here
-                        }
-                    });
-
-
-
-                </script>
-
 
 
             </div>
@@ -392,11 +334,6 @@
             localStorage.setItem("token", 1);
             console.log("Token set to 1 on logout.");
         }
-
-
-        $(document).ready(function () {
-            console.log('abcbi')
-            getListBuilding();
 
 
 
@@ -450,34 +387,34 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                        <li class="sidebar-subitem">
-                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                <i class="ti ti-file"></i> ${building.name}
-                            </a>
-                        </li>
-                    `);
+                                <li class="sidebar-subitem">
+                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                        <i class="ti ti-file"></i> ${building.name}
+                                    </a>
+                                </li>
+                            `);
                 });
 
                 // Update Table
                 buildings.forEach(building => {
                     tableContainer.append(`
-                        <tr>
-                            <td>${building.id}</td>
-                            <td>${building.name}</td>
-                            <td>${building.totalFloors}</td>
-                            <td>${building.numberOfRooms}</td>
-                            <td>${building.addressDetails}</td>
-                            <td>${building.buildingStatus}</td>
-                            <td>
-                                <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
-                                    <i class="ti ti-eye"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    `);
+                                <tr>
+                                    <td>${building.id}</td>
+                                    <td>${building.name}</td>
+                                    <td>${building.totalFloors}</td>
+                                    <td>${building.numberOfRooms}</td>
+                                    <td>${building.addressDetails}</td>
+                                    <td>${building.buildingStatus}</td>
+                                    <td>
+                                        <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
+                                            <i class="ti ti-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -491,16 +428,16 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-            `);
+                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                    `);
 
             // Notify in Table
             tableContainer.empty();
             tableContainer.append(`
-                <tr>
-                    <td colspan="7" class="text-center">Không có dữ liệu</td>
-                </tr>
-            `);
+                        <tr>
+                            <td colspan="7" class="text-center">Không có dữ liệu</td>
+                        </tr>
+                    `);
         }
 
         // Redirect to Edit Page
@@ -544,4 +481,4 @@
 
 </body>
 
-</html><a href="d:\prj_đồ án\sep490-g71-fa24\rms-client\views\building\listbuilding.cshtml">d:\prj_đồ án\sep490-g71-fa24\rms-client\views\building\listbuilding.cshtml</a>
+</html>

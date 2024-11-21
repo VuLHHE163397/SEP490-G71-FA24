@@ -192,7 +192,7 @@
         }
 
         .room-item {
-            height: 450px; /* Chiều cao cố định cho tất cả các khung ảnh */
+            height: 400px; /* Chiều cao cố định cho tất cả các khung ảnh */
             margin-bottom: 30px; /* Khoảng cách giữa các hàng */
             display: flex;
             flex-direction: column; /* Để bố trí các phần tử bên trong theo cột */
@@ -200,20 +200,30 @@
         }
 
             .room-item img {
-                height: 200px; /* Chiều cao cố định cho tất cả các hình ảnh */
+                height: 180px; /* Chiều cao cố định cho tất cả các hình ảnh */
                 width: 100%; /* Đảm bảo hình ảnh đầy đủ chiều rộng của khung */
                 object-fit: cover; /* Giữ tỷ lệ hình ảnh và cắt bớt nếu cần */
             }
 
         .room-status {
-            font-size: 1.2rem;
-            background-color: green;
-            color: azure;
-            font-weight: bold;
-            text-align: center;
-            padding: 10px; /* Padding để căn chỉnh tốt hơn */
-            margin-bottom: auto; /* Đẩy nó lên trên cùng */
+            font-size: 1.1rem; /* Giảm kích thước chữ */
+            background-color: rgba(0, 128, 0, 0.8); /* Màu nền xanh lá nổi bật với độ mờ */
+            color: #fff; /* Màu chữ trắng */
+            font-weight: bold; /* Chữ đậm */
+            text-align: center; /* Canh giữa chữ */
+            padding: 5px 10px; /* Padding nhỏ gọn */
+            margin-bottom: 5px; /* Khoảng cách phía dưới */
+            border-radius: 20px; /* Bo góc */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Tạo hiệu ứng nổi */
+            display: inline-block; /* Kích thước gọn vừa chữ */
+            transition: all 0.3s ease; /* Hiệu ứng mượt khi hover */
         }
+
+            .room-status:hover {
+                background-color: rgba(0, 200, 0, 1); /* Nổi bật hơn khi hover */
+                transform: scale(1.1); /* Phóng to nhẹ khi hover */
+            }
+
 
         .room-details {
             flex-grow: 1; /* Để chiếm không gian còn lại giữa ảnh và các nút */
@@ -223,7 +233,7 @@
         }
 
             .room-details h5 {
-                font-size: 1.1rem; /* Đảm bảo kích thước đồng nhất cho tiêu đề */
+                font-size: 1rem; /* Đảm bảo kích thước đồng nhất cho tiêu đề */
                 color: #333; /* Màu sắc đồng nhất cho tiêu đề */
                 margin: 0; /* Để xóa khoảng cách mặc định */
             }
@@ -790,41 +800,49 @@
                         const priceInMillions = (room.price / 1_000_000).toFixed(1);
 
                         roomElement.innerHTML = `
-                                                            <div class="room-item shadow rounded overflow-hidden">
-                                                                <div class="position-relative">
-                                                                    <img class="img-fluid" src="/images/room1.jpg" alt="Room Image">
-                                                                    <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
-                                                                        onclick="toggleFavorite(this)" data-room-id="${room.id}" data-room-address="${room.address}">
-                                                                        <i class="fa fa-heart"></i>
-                                                                    </a>
-                                                                </div>
-                                                                <div class="room-details p-3">
-                                                                    <h6 class="mb-2">
-                                                                        <i class="fa fa-map-marker-alt text-primary me-2"></i>${room.address}
-                                                                    </h6>
-                                                                    <div class="room-status">${room.roomStatusName}</div>
-                                                                    <div class="mt-2">
-                                                                        <small class="text-muted d-block">
-                                                                            <i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT ${room.distance.toFixed(0)} km
-                                                                        </small>
-                                                                        <small class="text-muted d-block">
-                                                                            <i class="fa fa-dollar-sign text-primary me-2"></i>${priceInMillions} triệu VND
-                                                                        </small>
-                                                                        <small class="text-muted d-block">
-                                                                            <i class="fa fa-expand text-primary me-2"></i>${room.area} m²
-                                                                        </small>
-                                                                    </div>
-                                                                    <a style="color:red" href="/Home/RoomDetail/${room.id}">Xem chi tiết</a>
-                                                                </div>
-                                                            </div>
-                                                        `;
+                    <div class="room-item shadow rounded overflow-hidden position-relative" style="cursor: pointer;"
+                         onclick="navigateToDetail('/Home/RoomDetail/${room.id}')">
+                        <!-- Hình ảnh phòng -->
+                        <div class="position-relative">
+                            <img class="img-fluid" src="/images/room1.jpg" alt="Room Image">
+                            <!-- Nút trái tim -->
+                            <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
+                               onclick="event.stopPropagation(); toggleFavorite(this)"
+                               data-room-id="${room.id}" data-room-address="${room.address}">
+                                <i class="fa fa-heart"></i>
+                            </a>
+                        </div>
+
+                        <!-- Thông tin phòng -->
+                        <div class="room-details p-3">
+                            <h6 class="mb-2">
+                                <i class="fa fa-map-marker-alt text-primary me-2"></i>${room.address}
+                            </h6>
+                            <div class="room-status">${room.roomStatusName}</div>
+                            <div class="mt-2">
+                                <small class="text-muted d-block">
+                                    <i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT ${room.distance.toFixed(0)} km
+                                </small>
+                                <small class="text-muted d-block">
+                                    <i class="fa fa-dollar-sign text-primary me-2"></i>${priceInMillions} triệu VND
+                                </small>
+                                <small class="text-muted d-block">
+                                    <i class="fa fa-expand text-primary me-2"></i>${room.area} m²
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                `;
                         row.appendChild(roomElement);
                     });
 
                     resultContainer.innerHTML = ""; // Clear previous results
                     resultContainer.appendChild(row); // Add row to results container
                 }
-
+                // Điều hướng đến trang chi tiết
+                function navigateToDetail(url) {
+                    window.location.href = url;
+                }
                 // Function to get favorites from cookies
                 function getFavorites() {
                     const favorites = document.cookie

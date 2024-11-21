@@ -398,9 +398,9 @@ namespace RMS_Client.Controllers
                 var worksheet = package.Workbook.Worksheets.Add("Rooms");
 
                 worksheet.Cells[1, 1].Value = "Số phòng";
-                worksheet.Cells[1, 2].Value = "Diện tích";
+                worksheet.Cells[1, 2].Value = "Diện tích (m²)";
                 worksheet.Cells[1, 3].Value = "Tầng";
-                worksheet.Cells[1, 4].Value = "Giá phòng";
+                worksheet.Cells[1, 4].Value = "Giá phòng(VNĐ)";
                 worksheet.Cells[1, 5].Value = "Trạng thái";
                 worksheet.Cells[1, 6].Value = "Mô tả phòng";
                 worksheet.Cells[1, 7].Value = "Ngày bắt đầu thuê phòng";
@@ -421,12 +421,12 @@ namespace RMS_Client.Controllers
                     worksheet.Cells[row, 1].Value = room.RoomNumber;
                     worksheet.Cells[row, 2].Value = room.Area;
                     worksheet.Cells[row, 3].Value = room.Floor;
-                    worksheet.Cells[row, 4].Value = room.Price;
+                    worksheet.Cells[row, 4].Value = room.Price.ToString("N0") + " VNĐ";
                     worksheet.Cells[row, 5].Value = room.RoomStatusId switch
                     {
-                        1 => "Đang trống",
-                        2 => "Đang cho thuê",
-                        3 => "Đang bảo trì",
+                        1 => "Trống",
+                        2 => "Đã có người",
+                        3 => "Đang sửa chữa",
                         4 => "Sắp trống",
                         _ => "Không xác định"
                     };
@@ -497,39 +497,37 @@ namespace RMS_Client.Controllers
 
             return View(viewModel);
         }
-
         public async Task<IActionResult> SaveMaintenanceRequest(RoomQrViewModel model)
         {
-            if (model != null)
+            if (model == null)
             {
-                // Tạo đối tượng gửi API
-                var maintenanceDto = new MaintainanceDTO
-                {
-                    Description = model.MaintenanceDescription,
-                    newDate = DateTime.Now,
-                    Status = 1,
-                    RoomId = model.Id
-                };
-
-                // Gửi API POST để lưu thông tin bảo trì
-                string apiUrl = $"{RoomApiUri}/SaveMaintenanceRequest";
-                var content = new StringContent(JsonConvert.SerializeObject(maintenanceDto), Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(apiUrl, content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    TempData["SuccessMessage"] = "Báo cáo đã được gửi thành công! Bạn sẽ được chuyển hướng về Trang chủ sau 3s";
-                    TempData["RedirectUrl"] = Url.Action("Home", "Home");
-                    return RedirectToAction("RoomMaintainance"); // Trả về cùng view với TempData
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Không thể gửi báo cáo. Vui lòng điền nội dung và thử lại");
-                }
+                ModelState.AddModelError(string.Empty, "Dữ liệu phòng không hợp lệ.");
+                return View("RoomMaintainance", model);
             }
 
-            return View("RoomMaintainance", model); // Trả về view nếu xảy ra lỗi
+            var maintenanceDto = new MaintainanceDTO
+            {
+                Description = model.MaintenanceDescription,
+                RequestDate = DateTime.Now,
+                Status = 1,
+                RoomId = model.Id
+            };
+
+            string apiUrl = $"{RoomApiUri}/SaveMaintenanceRequest";
+            var content = new StringContent(JsonConvert.SerializeObject(maintenanceDto), Encoding.UTF8, "application/json");
+            var response = await client.PostAsync(apiUrl, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                ViewBag.SuccessMessage = "Gửi báo cáo thành công! Nhấn OK để quay về trang chủ.";
+                ViewBag.RedirectUrl = Url.Action("Home", "Home"); // URL của trang chủ
+                return View("RoomMaintainance", model); // Giữ nguyên model trên form
+            }
+
+            ModelState.AddModelError(string.Empty, "Không thể gửi báo cáo. Vui lòng thử lại.");
+            return View("RoomMaintainance", model);
         }
+
 
         //[HttpPost]
         //public async Task<IActionResult> ImportRooms(IFormFile excelFile)
