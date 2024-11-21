@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -85,6 +86,30 @@ namespace RMS_API.Controllers
             return Ok(bui);
         }
 
+        [HttpGet("GetBuildingsByUserIdd/{userId}")]
+        [Authorize]
+        public async Task<IActionResult> GetBuildingsByUserIdd(int userId)
+        {
+            // Lấy các tòa nhà thuộc về userId từ database
+            var buildings = await _context.Buildings
+                .Where(b => b.UserId == userId) // Lọc theo UserId
+                .Select(b => new Building
+                {
+                    Id = b.Id,
+                    Name = b.Name,
+                })
+                .ToListAsync();
+
+            // Kiểm tra nếu không có tòa nhà nào
+            if (!buildings.Any())
+            {
+                return NotFound($"No buildings found for user with ID {userId}.");
+            }
+
+            // Trả về danh sách các tòa nhà dưới dạng JSON
+            return Ok(buildings);
+        }
+
         [HttpGet("GetAllImage/{roomId}")]
         public IActionResult GetImageByRoom(int roomId)
         {
@@ -120,7 +145,6 @@ namespace RMS_API.Controllers
                 {
                     return NotFound(new { message = "Không tìm thây dịch vụ của phòng !!!" });
                 }
-
                 return Ok(services);
             }
             catch (Exception ex)

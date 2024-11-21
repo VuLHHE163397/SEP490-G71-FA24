@@ -14,8 +14,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
 
-
-
 // Cấu hình CORS
 builder.Services.AddCors(options =>
 {
@@ -39,10 +37,10 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseStaticFiles();
+
 
 // Sử dụng CORS
 app.UseCors("AllowAllOrigins");
@@ -57,6 +55,6 @@ app.UseEndpoints(endpoints =>
 // Cấu hình route mặc định cho ứng dụng.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Home}/{id?}"); // Đặt controller mặc định là Home và action là Index
+    pattern: "{controller=Building}/{action=ListBuilding}/{id?}"); // Đặt controller mặc định là Home và action là Index
 
 app.Run();

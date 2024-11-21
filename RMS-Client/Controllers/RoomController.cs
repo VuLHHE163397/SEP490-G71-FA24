@@ -33,6 +33,13 @@ namespace RMS_Client.Controllers
 
         public async Task<IActionResult> ListRoom(List<int> statusIds, int? buildingId)
         {
+
+            //var userId = HttpContext.Session.GetString("UserId");
+            //if (string.IsNullOrEmpty(userId))
+            //{
+            //    return RedirectToAction("Login", "Auth"); // Điều hướng tới Login nếu chưa đăng nhập
+            //}
+
             string apiUrl = RoomApiUri + "/GetAllRoom";
             var rooms = new List<Room>();
 
@@ -56,8 +63,8 @@ namespace RMS_Client.Controllers
                 rooms = rooms.Where(r => statusIds.Contains(r.RoomStatusId)).ToList();
             }
 
-            // Lấy danh sách tòa nhà và trạng thái (như trước đây)
-            string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";
+            // Gọi API lấy danh sách tòa nhà theo UserId
+            string apiUrlBuilding = $"{RoomApiUri}/GetAllBuilding";
             var buildings = new List<Building>();
             var responseBuilding = await client.GetAsync(apiUrlBuilding);
             if (responseBuilding.IsSuccessStatusCode)

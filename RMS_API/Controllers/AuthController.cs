@@ -32,13 +32,13 @@ namespace RMS_API.Controllers
             if (await _context.Users.AnyAsync(u => u.Email == user.Email))
             {
                 return BadRequest("Email này đã được đăng ký!");
-            }      
-            
+            }
+
             var verificationCode = new Random().Next(100000, 999999).ToString();
 
             // Store the verification code in the dictionary
             _verificationCodes[user.Email] = verificationCode;
-            
+
             var subject = "Verify user của bạn";
             var body = $"Mã code của bạn là: {verificationCode}." +
                 $"\nXin không chia sẻ cho bất kỳ ai.";
@@ -90,7 +90,7 @@ namespace RMS_API.Controllers
             {
                 return BadRequest("Xin vui lòng nhập mã code có 6 chữ số.");
             }
-            
+
             if (_verificationCodes[registerModel.Email] != registerModel.VerificationCode)
             {
                 return BadRequest("Code lỗi hoặc đã hết hạn. Mã code phải có 6 số.");
@@ -135,6 +135,9 @@ namespace RMS_API.Controllers
                 return Unauthorized("Mật khẩu không đúng!");
 
             var token = GenerateJwtToken(user);
+
+            HttpContext.Session.SetString("UserId", user.Id.ToString());
+
             return Ok(new { token });
         }
 
