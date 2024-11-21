@@ -32,20 +32,18 @@ namespace RMS_API.Models
         public virtual DbSet<RoomStatus> RoomStatuses { get; set; } = null!;
         public virtual DbSet<Service> Services { get; set; } = null!;
         public virtual DbSet<ServicesBill> ServicesBills { get; set; } = null!;
-        public virtual DbSet<ServicesOfRoom> ServicesOfRooms { get; set; } = null!;
         public virtual DbSet<ServicesRecord> ServicesRecords { get; set; } = null!;
         public virtual DbSet<Tennant> Tennants { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<UserStatus> UserStatuses { get; set; } = null!;
         public virtual DbSet<Ward> Wards { get; set; } = null!;
-        public object FacilityStatus { get; internal set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var ConnectionString = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetConnectionString("DefaultConnection");
-                optionsBuilder.UseSqlServer(ConnectionString);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("server =(local); database =RMS_SEP490;uid=sa;pwd=123;Trusted_Connection=True;Encrypt=False");
             }
         }
 
@@ -303,9 +301,7 @@ namespace RMS_API.Models
 
                 entity.Property(e => e.BuildingId).HasColumnName("buildingId");
 
-                entity.Property(e => e.Description)
-                    .HasMaxLength(100)
-                    .HasColumnName("description");
+                entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.ExpiredDate)
                     .HasColumnType("date")
@@ -313,13 +309,17 @@ namespace RMS_API.Models
 
                 entity.Property(e => e.Floor).HasColumnName("floor");
 
+                entity.Property(e => e.FreeInFutureDate)
+                    .HasColumnType("date")
+                    .HasColumnName("freeInFutureDate");
+
                 entity.Property(e => e.Price)
                     .HasColumnType("money")
                     .HasColumnName("price");
 
                 entity.Property(e => e.RoomNumber)
                     .HasMaxLength(50)
-                    .HasColumnName("RoomNumber");
+                    .HasColumnName("roomNumber");
 
                 entity.Property(e => e.RoomStatusId).HasColumnName("roomStatusId");
 
@@ -339,9 +339,22 @@ namespace RMS_API.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Rooms_RoomStatus");
 
-                entity.Property(e => e.FreeInFutureDate)
-                    .HasColumnType("date")
-                    .HasColumnName("freeInFutureDate");
+                entity.HasMany(d => d.Services)
+                    .WithMany(p => p.Rooms)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "ServicesOfRoom",
+                        l => l.HasOne<Service>().WithMany().HasForeignKey("ServiceId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ServicesOfRoom_Services"),
+                        r => r.HasOne<Room>().WithMany().HasForeignKey("RoomId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ServicesOfRoom_Rooms"),
+                        j =>
+                        {
+                            j.HasKey("RoomId", "ServiceId");
+
+                            j.ToTable("ServicesOfRoom");
+
+                            j.IndexerProperty<int>("RoomId").HasColumnName("roomId");
+
+                            j.IndexerProperty<int>("ServiceId").HasColumnName("serviceId");
+                        });
             });
 
             modelBuilder.Entity<RoomHistory>(entity =>
@@ -386,6 +399,8 @@ namespace RMS_API.Models
             {
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.BuildingId).HasColumnName("buildingId");
+
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
                     .HasColumnName("name");
@@ -393,6 +408,12 @@ namespace RMS_API.Models
                 entity.Property(e => e.Price)
                     .HasColumnType("money")
                     .HasColumnName("price");
+
+                entity.HasOne(d => d.Building)
+                    .WithMany(p => p.Services)
+                    .HasForeignKey(d => d.BuildingId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Services_Buildings");
             });
 
             modelBuilder.Entity<ServicesBill>(entity =>
@@ -411,9 +432,16 @@ namespace RMS_API.Models
                     .HasColumnType("money")
                     .HasColumnName("price");
 
+                entity.Property(e => e.RoomId).HasColumnName("roomId");
+
                 entity.Property(e => e.ServiceId).HasColumnName("serviceId");
 
                 entity.Property(e => e.ServiceRecordId).HasColumnName("serviceRecordId");
+
+                entity.HasOne(d => d.Room)
+                    .WithMany(p => p.ServicesBills)
+                    .HasForeignKey(d => d.RoomId)
+                    .HasConstraintName("FK_ServicesBills_Rooms");
 
                 entity.HasOne(d => d.Service)
                     .WithMany(p => p.ServicesBills)
@@ -427,30 +455,6 @@ namespace RMS_API.Models
                     .HasConstraintName("FK_ServicesBills_ServicesRecord");
             });
 
-            modelBuilder.Entity<ServicesOfRoom>(entity =>
-            {
-                // Định nghĩa khóa chính kết hợp là RoomId và ServiceId
-                entity.HasKey(e => new { e.RoomId, e.ServiceId });
-
-                entity.ToTable("ServicesOfRoom");
-
-                entity.Property(e => e.RoomId).HasColumnName("roomId");
-
-                entity.Property(e => e.ServiceId).HasColumnName("serviceId");
-
-                entity.HasOne(d => d.Room)
-                    .WithMany()
-                    .HasForeignKey(d => d.RoomId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ServicesOfRoom_Rooms");
-
-                entity.HasOne(d => d.Service)
-                    .WithMany()
-                    .HasForeignKey(d => d.ServiceId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ServicesOfRoom_Services");
-            });
-
             modelBuilder.Entity<ServicesRecord>(entity =>
             {
                 entity.ToTable("ServicesRecord");
@@ -461,7 +465,16 @@ namespace RMS_API.Models
 
                 entity.Property(e => e.OldMeter).HasColumnName("oldMeter");
 
+                entity.Property(e => e.RoomId).HasColumnName("roomId");
+
                 entity.Property(e => e.ServiceId).HasColumnName("serviceId");
+
+                entity.Property(e => e.TotalMeter).HasColumnName("totalMeter");
+
+                entity.HasOne(d => d.Room)
+                    .WithMany(p => p.ServicesRecords)
+                    .HasForeignKey(d => d.RoomId)
+                    .HasConstraintName("FK_ServicesRecord_Rooms");
 
                 entity.HasOne(d => d.Service)
                     .WithMany(p => p.ServicesRecords)
@@ -502,6 +515,10 @@ namespace RMS_API.Models
                     .IsUnicode(false)
                     .HasColumnName("email");
 
+                entity.Property(e => e.FacebookUrl)
+                    .IsUnicode(false)
+                    .HasColumnName("facebookURL");
+
                 entity.Property(e => e.FirstName)
                     .HasMaxLength(50)
                     .HasColumnName("firstName");
@@ -528,13 +545,9 @@ namespace RMS_API.Models
 
                 entity.Property(e => e.UserStatusId).HasColumnName("userStatusId");
 
-                entity.Property(e => e.FacebookUrl)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.ZaloUrl)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("zaloURL");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Users)
