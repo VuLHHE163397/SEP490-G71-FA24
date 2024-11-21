@@ -168,7 +168,7 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
-                                <span><i class="ti ti-layout-dashboard"></i></span>
+                                <span><i class="ti ti-home"></i></span>
                                 <span class="hide-menu">Quản lý phòng</span>
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
@@ -179,7 +179,7 @@
                                     {
                                         <li class="sidebar-subitem">
                                             <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@building.Id" class="sidebar-sublink">
-                                                <i class="ti ti-file"></i>
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
                                                 @building.Name
                                             </a>
                                         </li>
@@ -194,7 +194,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Facility" asp-action="ListFacility" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-alien"></i>
+                                    <i class="fa-solid fa-gears"></i>
                                 </span>
                                 <span class="hide-menu">Cơ sở vật chất</span>
                             </a>
@@ -389,7 +389,7 @@
                     sidebarContainer.append(`
                                 <li class="sidebar-subitem">
                                     <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                        <i class="ti ti-file"></i> ${building.name}
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
                                     </a>
                                 </li>
                             `);

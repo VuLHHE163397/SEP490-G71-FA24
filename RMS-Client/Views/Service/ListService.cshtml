@@ -112,7 +112,7 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
-                                <span><i class="ti ti-layout-dashboard"></i></span>
+                                <span><i class="ti ti-home"></i></span>
                                 <span class="hide-menu">Quản lý phòng</span>
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
@@ -126,7 +126,7 @@
                                     {
                                         <li class="sidebar-subitem">
                                             <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                                <i class="ti ti-file"></i>
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
                                                 @buildingss.Name
                                             </a>
                                         </li>
@@ -324,23 +324,23 @@
     <script>
 
     // JavaScript function để lọc bảng theo từ khóa tìm kiếm
-    function filterServices() {
-    const input = document.getElementById('searchInput'); // Lấy input tìm kiếm
-    const filter = input.value.toLowerCase(); // Chuyển giá trị input sang chữ thường
-    const table = document.querySelector('table.table'); // Đảm bảo chọn đúng bảng
-    const rows = table.getElementsByTagName('tr'); // Lấy tất cả các hàng trong bảng
+//     function filterServices() {
+//     const input = document.getElementById('searchInput'); // Lấy input tìm kiếm
+//     const filter = input.value.toLowerCase(); // Chuyển giá trị input sang chữ thường
+//     const table = document.querySelector('table.table'); // Đảm bảo chọn đúng bảng
+//     const rows = table.getElementsByTagName('tr'); // Lấy tất cả các hàng trong bảng
 
-    for (let i = 1; i < rows.length; i++) { // Bắt đầu từ hàng thứ 2 (bỏ qua tiêu đề)
-        const cells = rows[i].getElementsByTagName('td');
-        const serviceName = cells[1]?.textContent.toLowerCase() || ""; // Lấy cột tên dịch vụ
+//     for (let i = 1; i < rows.length; i++) { // Bắt đầu từ hàng thứ 2 (bỏ qua tiêu đề)
+//         const cells = rows[i].getElementsByTagName('td');
+//         const serviceName = cells[1]?.textContent.toLowerCase() || ""; // Lấy cột tên dịch vụ
 
-        if (serviceName.includes(filter)) {
-            rows[i].style.display = ""; // Hiển thị hàng khớp
-        } else {
-            rows[i].style.display = "none"; // Ẩn hàng không khớp
-        }
-    }
-}
+//         if (serviceName.includes(filter)) {
+//             rows[i].style.display = ""; // Hiển thị hàng khớp
+//         } else {
+//             rows[i].style.display = "none"; // Ẩn hàng không khớp
+//         }
+//     }
+// }
 
         const token = localStorage.getItem("token");
         if (token == 1 || !token) {

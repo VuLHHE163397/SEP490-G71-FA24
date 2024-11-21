@@ -112,7 +112,7 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
-                                <span><i class="ti ti-layout-dashboard"></i></span>
+                                <span><i class="ti ti-home"></i></span>
                                 <span class="hide-menu">Quản lý phòng</span>
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
@@ -126,7 +126,7 @@
                                     {
                                         <li class="sidebar-subitem">
                                             <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                                <i class="ti ti-file"></i>
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
                                                 @buildingss.Name
                                             </a>
                                         </li>
@@ -356,6 +356,7 @@
         $(document).ready(function () {
             loadRoom();
             loadBuilding();
+            loadStatusRoom();
         })
 
         function loadBuilding() {
@@ -399,6 +400,27 @@
                 html += `<option value="${item.id}">${item.roomNumber}</option>`
             }
             $("#RoomId").html(html);
+        }
+
+        function loadStatusRoom() {
+            $.ajax({
+                url: 'https://localhost:7056/api/Room/GetAllStatus',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    renderStatus(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderStatusRoom(data) {
+            let html = ``;
+            for (var item of data) {
+                html += `<option value="${item.id}">${item.description}</option>`
+            }
+            $("#roomStatus").html(html);
         }
 
     </script>
