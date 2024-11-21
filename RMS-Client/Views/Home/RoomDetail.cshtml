@@ -17,6 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/lib/animate/animate.min.css" rel="stylesheet">
     <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="~/css/bootstrap1.min.css" rel="stylesheet">
@@ -28,6 +29,36 @@
             height: 100%; /* Đảm bảo chiều cao đầy đủ cho body */
             margin: 0; /* Bỏ margin của body */
         }
+
+        .image-gallery {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel img {
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .thumbnail-gallery {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .thumbnail-image {
+            cursor: pointer;
+            max-height: 75px;
+            object-fit: cover;
+            border: 2px solid transparent;
+        }
+
+            .thumbnail-image:hover,
+            .thumbnail-image.active {
+                border-color: #007bff; /* Màu xanh khi chọn */
+            }
 
         .container-xxl {
             display: flex;
@@ -144,8 +175,58 @@
                     <!-- Left Column -->
                     <div class="left-column">
                         <div class="room-details">
-                            <img class="img-fluid" src="~/images/room2.jpg" alt="Room Image">
-                            @* <img src="@Model.ImageUrl" alt="Room Image" class="img-fluid" /> *@
+                            <!-- Gallery: Ảnh lớn -->
+                            <div id="mainImageCarousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    @if (Model.Images != null && Model.Images.Count > 0)
+                                    {
+                                        @for (int i = 0; i < Model.Images.Count; i++)
+                                        {
+                                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                                <img src="@Model.Images[i].Link" class="d-block w-100" alt="Room Image">
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="carousel-item active">
+                                            <img src="~/images/default-room.jpg" class="d-block w-100" alt="Default Room Image">
+                                        </div>
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#mainImageCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#mainImageCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+
+                            <!-- Gallery: Danh sách ảnh nhỏ -->
+                            <div class="thumbnail-gallery mt-3">
+                                <div class="row">
+                                    @if (Model.Images != null && Model.Images.Count > 0)
+                                    {
+                                        @for (int i = 0; i < Model.Images.Count; i++)
+                                        {
+                                            <div class="col-2">
+                                                <img src="@Model.Images[i].Link" class="img-thumbnail thumbnail-image"
+                                                     onclick="changeCarouselSlide(@i)" alt="Thumbnail">
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="col-2">
+                                            <img src="~/images/default-room.jpg" class="img-thumbnail thumbnail-image" alt="Default Thumbnail">
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Thông tin chi tiết phòng -->
                             <p><strong>Chủ nhà:</strong> @Model.OwnerName</p>
                             <p><strong>Số điện thoại:</strong> @Model.OwnerPhone</p>
                             <p><strong>Địa chỉ phòng:</strong> @Model.FullAddress</p>
@@ -168,7 +249,7 @@
                         </div>
                     </div>
                     <div class="right-column">
-                        <h3 style="color: #FEA116; text-align:center;" class="text-uppercase">Các phòng cùng tòa nhà</h3>
+                        <h4 style="color: mediumblue; text-align:center;" class="text-uppercase">Một số phòng khác ở trong tòa nhà</h4>
                         <div class="row">
                             @if (suggestedRooms != null && suggestedRooms.Any())
                             {
@@ -178,8 +259,7 @@
                                         <a style="text-decoration: none; color: inherit;" asp-controller="Home" asp-action="RoomDetail" asp-route-id="@room.Id">
                                             <div class="card mb-4">
                                                 <!-- Hiển thị ảnh phòng, nếu có -->
-                                                <img class="img-fluid" src="~/images/room4.jpg" alt="Room Image">
-                                                @* <img class="img-fluid" src="@room.Images?.FirstOrDefault() ?? " ~ /images/room2.jpg"" alt="Room Image"> *@
+                                                <img class="img-fluid" src="@room.FirstImageLink" alt="Room Image">
                                                 <div class="card-body">
                                                     <p class="card-text"><strong>Tên phòng:</strong> @room.RoomNumber</p>
                                                     @{
@@ -229,6 +309,7 @@
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
         <!-- JavaScript Libraries -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="~/lib/wow/wow.min.js"></script>
         <script src="~/lib/easing/easing.min.js"></script>
@@ -296,7 +377,12 @@
             document.addEventListener('DOMContentLoaded', () => {
                 updateFavoriteCount(); // Display favorite count from cookie when page loads
             });
-
+            // Hàm thay đổi slide dựa trên ảnh nhỏ được nhấp
+            function changeCarouselSlide(index) {
+                const carousel = document.getElementById('mainImageCarousel');
+                const carouselInstance = bootstrap.Carousel.getInstance(carousel);
+                carouselInstance.to(index); // Chuyển tới slide được chỉ định
+            }
         </script>
 </body>
 </html>
