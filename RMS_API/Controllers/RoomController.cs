@@ -117,7 +117,7 @@ namespace RMS_API.Controllers
             return Ok(image);
         }
 
-        [HttpGet("GetAllService/{buildingId}")]
+        [HttpGet("GetServiceByBuilding/{buildingId}")]
         public IActionResult GetServiceByBuilding(int buildingId)
         {
             var service = _context.Services.Where(p => p.BuildingId == buildingId).ToList();
@@ -152,6 +152,167 @@ namespace RMS_API.Controllers
                 return StatusCode(500, new { message = "An error occurred while fetching the services.", details = ex.Message });
             }
         }
+
+        //[HttpPost("AddServiceToRoom/{roomId}")]
+        //public async Task<IActionResult> AddServiceToRoom(int roomId, [FromBody] AddServiceToRoomDTO addDTO)
+        //{
+        //    // Kiểm tra dữ liệu đầu vào
+        //    if (addDTO == null || addDTO.ServiceId <= 0)
+        //    {
+        //        return BadRequest("Invalid service data.");
+        //    }
+
+        //    // Tìm phòng theo roomId
+        //    var room = await _context.Rooms.Include(r => r.Services).FirstOrDefaultAsync(r => r.Id == roomId);
+        //    if (room == null)
+        //    {
+        //        return NotFound($"Room with ID {roomId} not found.");
+        //    }
+
+        //    // Tìm dịch vụ theo ServiceId
+        //    var service = await _context.Services.FirstOrDefaultAsync(s => s.Id == addDTO.ServiceId);
+        //    if (service == null)
+        //    {
+        //        return NotFound($"Service with ID {addDTO.ServiceId} not found.");
+        //    }
+
+        //    // Kiểm tra xem dịch vụ đã có trong phòng chưa
+        //    if (room.Services.Contains(service))
+        //    {
+        //        return Conflict($"Service {service.Name} is already added to this room.");
+        //    }
+
+        //    // Thêm dịch vụ vào phòng
+        //    room.Services.Add(service);
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok($"Service {service.Name} has been successfully added to the room.");
+
+        //}
+
+        //[HttpPost("RemoveServiceFromRoom/{roomId}")]
+        //public async Task<IActionResult> RemoveServiceFromRoom(int roomId, [FromBody] AddServiceToRoomDTO model)
+        //{
+        //    // Kiểm tra dữ liệu đầu vào
+        //    if (model == null || model.ServiceId <= 0)
+        //    {
+        //        return BadRequest("Invalid service data.");
+        //    }
+
+        //    // Tìm phòng theo roomId
+        //    var room = await _context.Rooms.Include(r => r.Services).FirstOrDefaultAsync(r => r.Id == roomId);
+        //    if (room == null)
+        //    {
+        //        return NotFound($"Room with ID {roomId} not found.");
+        //    }
+
+        //    // Tìm dịch vụ theo ServiceId
+        //    var service = await _context.Services.FirstOrDefaultAsync(s => s.Id == model.ServiceId);
+        //    if (service == null)
+        //    {
+        //        return NotFound($"Service with ID {model.ServiceId} not found.");
+        //    }
+
+        //    // Kiểm tra xem dịch vụ có trong phòng không
+        //    if (!room.Services.Contains(service))
+        //    {
+        //        return NotFound($"Service {service.Name} is not assigned to this room.");
+        //    }
+
+        //    // Loại bỏ dịch vụ khỏi phòng
+        //    room.Services.Remove(service);
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok($"Service {service.Name} has been successfully removed from the room.");
+        //}
+
+        [HttpPost("UpdateServicesForRoom/{roomId}")]
+        public async Task<IActionResult> UpdateServicesForRoom(int roomId, [FromBody] List<int> serviceIds)
+        {
+            try
+            {
+                // Kiểm tra danh sách serviceIds
+                if (serviceIds == null || !serviceIds.Any())
+                {
+                    return BadRequest(new { message = "Danh sách dịch vụ không hợp lệ." });
+                }
+
+                var room = await _context.Rooms.Include(r => r.Services).FirstOrDefaultAsync(r => r.Id == roomId);
+                if (room == null)
+                {
+                    return NotFound(new { message = "Phòng không tồn tại." });
+                }
+
+                // Log danh sách dịch vụ hiện tại của phòng
+                Console.WriteLine("Dịch vụ hiện tại: " + string.Join(", ", room.Services.Select(s => s.Id)));
+
+                // Xóa các dịch vụ không có trong danh sách đã gửi
+                var servicesToRemove = room.Services.Where(s => !serviceIds.Contains(s.Id)).ToList();
+
+                foreach (var service in servicesToRemove)
+                {
+                    room.Services.Remove(service);
+                }
+
+                // Thêm các dịch vụ mới vào phòng
+                foreach (var serviceId in serviceIds)
+                {
+                    var service = await _context.Services.FindAsync(serviceId);
+                    if (service != null && !room.Services.Contains(service))
+                    {
+                        room.Services.Add(service);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Dịch vụ đã được cập nhật thành công." });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, new { message = "Lỗi khi cập nhật dịch vụ.", details = ex.Message });
+            }
+        }
+
+
+
+
+        [HttpGet("GetServicesForRoom/{roomId}")]
+        public async Task<IActionResult> GetServicesForRoom(int roomId)
+        {
+            try
+            {
+                // Lấy danh sách tất cả dịch vụ của tòa nhà
+                var allServices = await _context.Services.ToListAsync();
+
+                // Lấy dịch vụ đã được gán cho phòng này
+                var roomServices = await _context.Rooms
+                    .Where(r => r.Id == roomId)
+                    .Include(r => r.Services)
+                    .FirstOrDefaultAsync();
+
+                if (roomServices == null)
+                {
+                    return NotFound(new { message = "Room not found." });
+                }
+
+                // Lấy danh sách các dịch vụ của phòng dưới dạng object với trạng thái checked
+                var services = allServices.Select(s => new
+                {
+                    s.Id,
+                    s.Name,
+                    s.Price,
+                    IsChecked = roomServices.Services.Any(rs => rs.Id == s.Id)
+                }).ToList();
+
+                return Ok(services);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred.", details = ex.Message });
+            }
+        }
+
 
         // Tạo một dictionary ánh xạ trạng thái phòng sang RoomStatusId
         private static readonly Dictionary<string, int> RoomStatusMapping = new Dictionary<string, int>

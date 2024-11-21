@@ -421,7 +421,7 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="/Profile/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
                                             <p class="mb-0 fs-3">My Profile</p>
                                         </a>
@@ -433,7 +433,7 @@
                                             <i class="ti ti-list-check fs-6"></i>
                                             <p class="mb-0 fs-3">My Task</p>
                                         </a>
-                                        <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                                        <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
                                     </div>
                                 </div>
                             </li>
@@ -496,44 +496,76 @@
 
                         <!-- Room Information -->
                         <div class="col-lg-6">
-                            <div class="room-details shadow rounded p-4 bg-white">
-                                <h3 class="mb-4 text-secondary">Thông Tin Phòng</h3>
+                            <div class="room-details shadow rounded p-4 bg-white" style="max-width: 1200px; margin: 0 auto;">
+                                <h3 class="mb-4 text-secondary" style="text-align:center">Thông Tin Phòng</h3>
 
-                                <p><strong>Giá:</strong> @string.Format("{0:N0} VNĐ", Model.Price)</p>
-                                <p><strong>Diện tích:</strong> @Model.Area.ToString("0") m²</p>
+                                <div class="row">
+                                    <!-- Hàng dọc đầu tiên -->
+                                    <div class="col-md-4">
+                                        <p><strong>Giá:</strong> @string.Format("{0:N0} VNĐ", Model.Price)</p>
+                                        <p><strong>Diện tích:</strong> @Model.Area.ToString("0") m²</p>
+                                        <p>
+                                            <strong>Trạng thái:</strong>
+                                            @{
+                                                string statusNameVi = Model.RoomStatusId switch
+                                                {
+                                                    1 => "Trống",
+                                                    2 => "Đã có người",
+                                                    3 => "Đang sửa chữa",
+                                                    4 => "Sắp trống",
+                                                    _ => "Không xác định"
+                                                };
+                                            }
+                                            <span class="badge bg-info text-dark">@statusNameVi</span>
+                                        </p>
+                                    </div>
 
-                                @if (ViewBag.Facilities is List<RMS_API.Models.Facility> facilities && facilities.Any())
-                                {
-                                    <p>
-                                        <strong>Cơ sở vật chất:</strong>
-                                        @for (int i = 0; i < facilities.Count; i++)
+                                    <!-- Hàng dọc thứ hai -->
+                                    <div class="col-md-4">
+                                        <p><strong>Cơ sở vật chất:</strong></p>
+                                        @if (ViewBag.Facilities is List<RMS_API.Models.Facility> facilities && facilities.Any())
                                         {
-                                            <span class="badge bg-primary">@facilities[i].Name</span>
+                                            <ul class="list-unstyled">
+                                                @foreach (var facility in facilities)
+                                                {
+                                                    <li><span class="badge bg-primary">@facility.Name</span></li>
+                                                }
+                                            </ul>
                                         }
-                                    </p>
-                                }
-                                else
-                                {
-                                    <p><strong>Cơ sở vật chất:</strong> Hiện tại chưa có thông tin.</p>
-                                }
-
-                                <p>
-                                    <strong>Trạng thái:</strong>
-                                    @{
-                                        string statusNameVi = Model.RoomStatusId switch
+                                        else
                                         {
-                                            1 => "Trống",
-                                            2 => "Đã có người",
-                                            3 => "Đang sửa chữa",
-                                            4 => "Sắp trống",
-                                            _ => "Không xác định"
-                                        };
-                                    }
-                                    <span class="badge bg-info text-dark">@statusNameVi</span>
-                                </p>
+                                            <p>Hiện tại chưa có thông tin.</p>
+                                        }
+                                    </div>
 
-                                <p><strong>Mô tả:</strong> @Model.Description</p>
+                                    <!-- Hàng dọc thứ ba -->
+                                    <div class="col-md-4">
+                                        <p><strong>Dịch Vụ:</strong></p>
+                                        <div id="services-checkboxes">
+                                            @foreach (var service in ViewBag.Services)
+                                            {
+                                                <div class="form-check">
+                                                    <input class="form-check-input"
+                                                           type="checkbox"
+                                                           id="service_@service.Id"
+                                                           data-service-id="@service.Id"
+                                                    @if (ViewBag.RoomServiceIds.Contains(service.Id))
+                                                    {
+                                                        <text>checked</text>
+                                                    } />
+                                                    <label class="form-check-label" for="service_@service.Id">@service.Name</label>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Hàng ngang phía dưới -->
+                                <div class="mt-4">
+                                    <p><strong>Mô tả:</strong> @Model.Description</p>
+                                </div>
                             </div>
+
 
                             <!-- QR Code Section -->
                             <div class="qr-code-section mt-4 text-center">
@@ -672,5 +704,37 @@
                 });
         });
     </script>
+
+    <script>
+        $(document).ready(function () {
+            var roomId = @Model.Id; // Lấy Id của phòng
+
+            // Lắng nghe sự kiện thay đổi trạng thái checkbox
+            $('#services-checkboxes').on('change', 'input[type="checkbox"]', function () {
+                var selectedServiceIds = [];
+                // Thu thập tất cả các service-id từ các checkbox được chọn
+                $('input[type="checkbox"]:checked').each(function () {
+                    selectedServiceIds.push($(this).data('service-id'));
+                });
+
+                // Gửi yêu cầu cập nhật danh sách dịch vụ
+                $.ajax({
+                    url: '/api/Room/UpdateServicesForRoom/' + roomId,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(selectedServiceIds),
+                    success: function () {
+                        console.log('Dịch vụ đã được cập nhật.');
+                    },
+                    error: function (xhr) {
+                        console.error(xhr.responseJSON); // Log thông báo lỗi từ server
+                        alert('Có lỗi xảy ra khi cập nhật dịch vụ.');
+                    }
+                });
+            });
+        });
+
+    </script>
+
 </body>
 </html>
