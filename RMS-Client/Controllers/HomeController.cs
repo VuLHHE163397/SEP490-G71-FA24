@@ -110,7 +110,7 @@ namespace RMS_Client.Controllers
         {
             return View("~/Views/Home/ListFavouriteRoom.cshtml");
         }
-      
+
         public IActionResult Login()
         {
             return View("~/Views/Login/Login.cshtml");
@@ -119,7 +119,7 @@ namespace RMS_Client.Controllers
         {
             return View("~/Views/Home/SearchRoom.cshtml");
         }
-       
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

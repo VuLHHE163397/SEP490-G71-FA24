@@ -52,6 +52,15 @@ builder.Services.AddCors(opts =>
     opts.AddPolicy("CORSPolicy", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed((host) => true));
 });
 
+builder.Services.AddDistributedMemoryCache(); // Sử dụng In-Memory Cache
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian session tồn tại
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true; // Bắt buộc cookie cho session
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -60,7 +69,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseCors("CORSPolicy");
 app.UseAuthentication();

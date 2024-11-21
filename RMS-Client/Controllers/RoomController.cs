@@ -33,6 +33,13 @@ namespace RMS_Client.Controllers
 
         public async Task<IActionResult> ListRoom(List<int> statusIds, int? buildingId)
         {
+
+            //var userId = HttpContext.Session.GetString("UserId");
+            //if (string.IsNullOrEmpty(userId))
+            //{
+            //    return RedirectToAction("Login", "Auth"); // Điều hướng tới Login nếu chưa đăng nhập
+            //}
+
             string apiUrl = RoomApiUri + "/GetAllRoom";
             var rooms = new List<Room>();
 
@@ -56,8 +63,8 @@ namespace RMS_Client.Controllers
                 rooms = rooms.Where(r => statusIds.Contains(r.RoomStatusId)).ToList();
             }
 
-            // Lấy danh sách tòa nhà và trạng thái (như trước đây)
-            string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";
+            // Gọi API lấy danh sách tòa nhà theo UserId
+            string apiUrlBuilding = $"{RoomApiUri}/GetAllBuilding";
             var buildings = new List<Building>();
             var responseBuilding = await client.GetAsync(apiUrlBuilding);
             if (responseBuilding.IsSuccessStatusCode)
@@ -132,10 +139,35 @@ namespace RMS_Client.Controllers
                 images = JsonConvert.DeserializeObject<List<Image>>(json);
             }
 
+            //Lấy tất cả dịch vụ của tòa nhà
+            string apiUrlServices = $"{RoomApiUri}/GetServiceByBuilding/{room.BuildingId}";
+            var services = new List<Service>();
+            var responseServices = await client.GetAsync(apiUrlServices);
+            if (responseServices.IsSuccessStatusCode)
+            {
+                var json = await responseServices.Content.ReadAsStringAsync();
+                services = JsonConvert.DeserializeObject<List<Service>>(json);
+            }
+
+            // Lấy các dịch vụ phòng đã sử dụng
+            string apiUrlRoomServices = $"{RoomApiUri}/GetServiceByRoom/{id}";
+            var roomServices = new List<Service>();
+            var responseRoomServices = await client.GetAsync(apiUrlRoomServices);
+            if (responseRoomServices.IsSuccessStatusCode)
+            {
+                var json = await responseRoomServices.Content.ReadAsStringAsync();
+                roomServices = JsonConvert.DeserializeObject<List<Service>>(json);
+            }
+            // Trong controller:
+            var roomServiceIds = roomServices.Select(s => s.Id).ToList();
+            ViewBag.RoomServiceIds = roomServiceIds;
+
             ViewBag.Images = images;
             ViewBag.Buildings = buildings;
             ViewBag.Facilities = facs;
             ViewBag.BuildingId = room?.BuildingId;
+            ViewBag.Services = services;
+            ViewBag.RoomServices = roomServices;
             return View(room);
         }
 
