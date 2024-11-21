@@ -244,6 +244,11 @@
                                 <select class="form-control  custom-select" id="rooms" onchange="search()">
                                 </select>
                             </div>
+                            <div class="form-group mr-3">
+                                <label>Tình trạng</label>
+                                <select class="form-control  custom-select" id="status" onchange="search()">
+                                </select>
+                            </div>
                             <div>
                                 <a href="/Facility/AddFacility" class="btn btn-success">
                                     + Thêm
@@ -369,6 +374,7 @@
             loadRoom();
             setKeyword();
             loadPaging();
+            loadStatus();
         })
         function onSelectPageSize() {
             var urlParams = new URLSearchParams(window.location.search);
@@ -468,6 +474,27 @@
                 html += `<option value="${item.id}" ${roomId == item.id ? 'selected' : ''}>${item.roomNumber}</option>`
             }
             $("#rooms").html(html);
+        }
+
+        function loadStatus() {
+            $.ajax({
+                url: 'https://localhost:7056/api/FacilityStatus/GetAllFacility',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    renderStatus(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderStatus(data) {
+            let html = ``;
+            for (var item of data) {
+                html += `<option value="${item.id}">${item.description}</option>`
+            }
+            $("#status").html(html);
         }
         function search() {
             var urlParams = new URLSearchParams(window.location.search);

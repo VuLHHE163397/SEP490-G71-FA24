@@ -190,6 +190,13 @@
                             <!-- Trạng thái -->
                             
                         </div>
+                        <div class="row mb-3">
+                            <!-- Nhà -->
+                            <div class="form-group col-md-5">
+                                <label for="BuildingId" class="form-label">Nhà</label>
+                                <select id="BuildingId" class="form-control custom-select">
+                                </select>
+                            </div>
 
                         <div class="row mb-3">
                             <!-- Ghi chú -->
@@ -232,6 +239,33 @@
         function logout() {
             localStorage.setItem("token", 1);
             console.log("Token set to 1 on logout.");
+        }
+
+        $(document).ready(function () {
+            loadBuilding();
+        })
+
+        function loadBuilding() {
+            $.ajax({
+                url: 'https://localhost:7056/api/Building/GetAllBuildings',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    renderBuilding(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderBuilding(data) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var buildingId = urlParams.get('buildingId');
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            for (var item of data) {
+                html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
+            }
+            $("#BuildingId").html(html);
         }
 
 

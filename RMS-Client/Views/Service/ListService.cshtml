@@ -258,11 +258,12 @@
                     @{
                         int stt = 1;
                     }
-                    <table class="table table-bordered" style="margin-top: 0.5rem">
+                    <table class="table table-bordered"  id="servicesTable" style="margin-top: 0.5rem">
                         <thead>
                             <tr>
                                 <th>STT</th>
                                 <th>Tên dịch vụ</th>
+                                <th>Nhà</th>
                                 <th>Đơn giá (VNĐ)</th>
                                 <th>Tùy chọn</th>
                             </tr>
@@ -276,6 +277,7 @@
                                     <tr>
                                         <td>@(stt++)</td>
                                         <td>@services.Name</td>
+                                        <td>@services.BuildingId</td>
                                         <td>@String.Format("{0:0,0} VNĐ", services.Price)</td>
                                         <td>
                                             <a href="/Service/EditService?id=@services.Id" class="btn btn-primary">
@@ -320,6 +322,26 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
+
+    // JavaScript function để lọc bảng theo từ khóa tìm kiếm
+    function filterServices() {
+    const input = document.getElementById('searchInput'); // Lấy input tìm kiếm
+    const filter = input.value.toLowerCase(); // Chuyển giá trị input sang chữ thường
+    const table = document.querySelector('table.table'); // Đảm bảo chọn đúng bảng
+    const rows = table.getElementsByTagName('tr'); // Lấy tất cả các hàng trong bảng
+
+    for (let i = 1; i < rows.length; i++) { // Bắt đầu từ hàng thứ 2 (bỏ qua tiêu đề)
+        const cells = rows[i].getElementsByTagName('td');
+        const serviceName = cells[1]?.textContent.toLowerCase() || ""; // Lấy cột tên dịch vụ
+
+        if (serviceName.includes(filter)) {
+            rows[i].style.display = ""; // Hiển thị hàng khớp
+        } else {
+            rows[i].style.display = "none"; // Ẩn hàng không khớp
+        }
+    }
+}
+
         const token = localStorage.getItem("token");
         if (token == 1 || !token) {
             window.location.href = "/Auth/Login";
@@ -363,6 +385,8 @@
             }
             $("#buildings").html(html);
         }
+
+
         function filterServices() {
             const input = document.getElementById('searchInput');
             const filter = input.value.toLowerCase();

@@ -43,6 +43,7 @@ namespace RMS_API.Controllers
                 {
                     Id = s.Id,
                     Name = s.Name,
+                    BuildingId = s.BuildingId,
                     Price = s.Price
                 })
                 .Where(e => string.IsNullOrWhiteSpace(filter.keyword) || e.Name.ToLower().Contains(filter.keyword.ToLower()))
