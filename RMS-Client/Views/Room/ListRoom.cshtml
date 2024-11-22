@@ -383,14 +383,31 @@
         $(document).ready(function () {
             loadBuilding();
         })
+        //Lấy UserId
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+            }
+        }
+
         function loadBuilding() {
+            const token = sessionStorage.getItem("token");
             //Lấy user id
-            const userId = getUserIdFromToken();
+            const userId = getUserIdFromToken(token);
             $.ajax({
                 url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',
                 dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                },
                 success: function (response) {
+                    renderBuilding(response);
                     displayBuildings(response); //Thêm cái này nữa
                 },
                 error: function (xhr, status, error) {
@@ -399,21 +416,16 @@
             });
         }
 
-        const token = localStorage.getItem("token");
-        if (token == 1 || !token) {
-            window.location.href = "/Auth/Login";
+        function renderBuilding(data) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var buildingId = urlParams.get('buildingId');
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            for (var item of data) {
+                html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
+            }
+            $("#buildings").html(html);
         }
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
 
-        if (payload.role !== "Landlord") {
-            window.location.href = "/Auth/Login";
-        }
-
-        function logout() {
-            localStorage.setItem("token", 1);
-            console.log("Token set to 1 on logout.");
-        }
 
         function toggleSubmenu(event) {
             event.preventDefault();
@@ -519,6 +531,7 @@
                 });
         });
 
+        //Hàm lấy list building theo UserId
         //-------------------------------------------------------
         function displayBuildings(buildings) {
             const sidebarContainer = $('.sidebar-submenu');
@@ -551,25 +564,17 @@
                                                 <li class="sidebar-subitem">Không có tòa nhà nào</li>
                                             `);
         }
-
-        // Parse User ID from Token
-        function getUserIdFromToken() {
-            const token = localStorage.getItem("token");
-            if (token) {
-                try {
-                    const tokenParts = token.split('.');
-                    const payload = JSON.parse(atob(tokenParts[1]));
-                    return payload.UserId || null;
-                } catch (e) {
-                    console.error('Error parsing token:', e);
-                    return null;
-                }
+        //Lấy UserId
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
             }
-            console.warn('Token not found in localStorage.');
-            return null;
         }
-        //-----------------------
-
     </script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
