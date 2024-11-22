@@ -39,6 +39,23 @@ namespace RMS_API.Controllers
             var ro = _context.Rooms.ToList();
             return Ok(ro);
         }
+        [HttpGet("GetAllRoom/{userId}")]
+        public IActionResult GetAllRoomByUserId(int userId)
+        {
+            var ro = _context.Rooms
+                .Select(e => new Room
+                {
+                    Id = e.Id,
+                    RoomNumber = e.RoomNumber,
+                    BuildingId = e.BuildingId,
+                    Description = e.Description,
+                    ExpiredDate = e.ExpiredDate,
+                    Building = _context.Buildings.FirstOrDefault(x => x.Id == e.BuildingId),
+                })
+                .Where(e => e.Building.UserId == userId)
+                .ToList();
+            return Ok(ro);
+        }
 
         [HttpGet("GetRoomById/{roomId}")]
         public IActionResult GetRoomById(int roomId)

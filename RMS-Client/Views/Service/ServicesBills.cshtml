@@ -112,7 +112,7 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
-                                <span><i class="ti ti-layout-dashboard"></i></span>
+                                <span><i class="ti ti-home"></i></span>
                                 <span class="hide-menu">Quản lý phòng</span>
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
@@ -126,7 +126,7 @@
                                     {
                                         <li class="sidebar-subitem">
                                             <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                                <i class="ti ti-file"></i>
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
                                                 @buildingss.Name
                                             </a>
                                         </li>
@@ -235,10 +235,10 @@
                             }
                         </style>
                         <div class="d-flex align-items-center btn-spacing">
-                            <button class="btn btn-info">In</button>
                             <button class="btn btn-warning">Xuất file Excel</button>
                             <button class="btn btn-secondary">In danh sách</button>
                             <button class="btn btn-success"> <i class="fa-solid fa-calculator"></i> Tính</button>
+                            <a href="/Service/ListService" class="btn btn-info"> <i class="fa-solid fa-rotate-left" style="color: #FFD43B;"></i> Quay về</a>
                         </div>
                     </div>
                     <hr />
@@ -261,18 +261,18 @@
                                 <input type="month" class="form-control" id="monthYear" value="2024-11">
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <label for="building" class="form-label">Nhà</label>
-                                <select class="form-select" id="building">
+                                <select class="form-select" id="BuildingId">
                                     <option>Tất cả</option>
                                     <option>Nhà 1</option>
                                     <option>Nhà 2</option>
                                 </select>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <label for="room" class="form-label">Phòng</label>
-                                <select class="form-select" id="room">
+                                <select class="form-select" id="RoomId">
                                     <option>Tất cả</option>
                                     <option>Phòng 101</option>
                                     <option>Phòng 201</option>
@@ -356,6 +356,53 @@
         function logout() {
             localStorage.setItem("token", 1);
             console.log("Token set to 1 on logout.");
+        }
+        $(document).ready(function () {
+            loadRoom();
+            loadBuilding();
+        })
+
+        function loadBuilding() {
+            $.ajax({
+                url: 'https://localhost:7056/api/Building/GetAllBuildings',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    renderBuilding(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderBuilding(data) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var buildingId = urlParams.get('buildingId');
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            for (var item of data) {
+                html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
+            }
+            $("#BuildingId").html(html);
+        }
+        function loadRoom() {
+            $.ajax({
+                url: 'https://localhost:7056/api/Room/GetAllRoom',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    renderRoom(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderRoom(data) {
+            let html = ``;
+            for (var item of data) {
+                html += `<option value="${item.id}">${item.roomNumber}</option>`
+            }
+            $("#RoomId").html(html);
         }
 
     </script>

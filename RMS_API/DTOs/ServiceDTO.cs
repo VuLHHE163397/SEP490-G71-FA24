@@ -13,7 +13,9 @@ namespace RMS_API.DTOs
         [Range(0, double.MaxValue, ErrorMessage = "Giá dịch vụ không được nhỏ hơn 0")]
         [RegularExpression(@"^\d+(\.\d{1,2})?$", ErrorMessage = "Giá dịch vụ phải là số hợp lệ")]
         public decimal Price { get; set; }
-
+        public int BuildingId { get; set; }
         
+
+
     }
 }

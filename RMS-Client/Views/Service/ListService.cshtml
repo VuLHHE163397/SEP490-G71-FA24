@@ -112,7 +112,7 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
-                                <span><i class="ti ti-layout-dashboard"></i></span>
+                                <span><i class="ti ti-home"></i></span>
                                 <span class="hide-menu">Quản lý phòng</span>
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
@@ -126,7 +126,7 @@
                                     {
                                         <li class="sidebar-subitem">
                                             <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                                <i class="ti ti-file"></i>
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
                                                 @buildingss.Name
                                             </a>
                                         </li>
@@ -163,11 +163,11 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        
-                        
-                        
+
+
+
                     </ul>
-                    
+
                 </nav>
 
             </div>
@@ -258,16 +258,17 @@
                     @{
                         int stt = 1;
                     }
-                    <table class="table table-bordered" style="margin-top: 0.5rem">
+                    <table class="table table-bordered" id="servicesTable" style="margin-top: 0.5rem">
                         <thead>
                             <tr>
                                 <th>STT</th>
                                 <th>Tên dịch vụ</th>
+                                <th>Nhà</th>
                                 <th>Đơn giá (VNĐ)</th>
                                 <th>Tùy chọn</th>
                             </tr>
                         </thead>
-                        
+
                         <tbody>
                             @if (Model != null && Model.Any())
                             {
@@ -276,6 +277,7 @@
                                     <tr>
                                         <td>@(stt++)</td>
                                         <td>@services.Name</td>
+                                        <td>@services.BuildingId</td>
                                         <td>@String.Format("{0:0,0} VNĐ", services.Price)</td>
                                         <td>
                                             <a href="/Service/EditService?id=@services.Id" class="btn btn-primary">
@@ -288,7 +290,7 @@
                                     </tr>
                                 }
                             }
-                            
+
                             else
                             {
                                 <tr>
@@ -306,9 +308,9 @@
                         </div>
                     </div>
                 </div>
-                </div>
             </div>
         </div>
+    </div>
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -320,6 +322,26 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
+
+        // JavaScript function để lọc bảng theo từ khóa tìm kiếm
+        //     function filterServices() {
+        //     const input = document.getElementById('searchInput'); // Lấy input tìm kiếm
+        //     const filter = input.value.toLowerCase(); // Chuyển giá trị input sang chữ thường
+        //     const table = document.querySelector('table.table'); // Đảm bảo chọn đúng bảng
+        //     const rows = table.getElementsByTagName('tr'); // Lấy tất cả các hàng trong bảng
+
+        //     for (let i = 1; i < rows.length; i++) { // Bắt đầu từ hàng thứ 2 (bỏ qua tiêu đề)
+        //         const cells = rows[i].getElementsByTagName('td');
+        //         const serviceName = cells[1]?.textContent.toLowerCase() || ""; // Lấy cột tên dịch vụ
+
+        //         if (serviceName.includes(filter)) {
+        //             rows[i].style.display = ""; // Hiển thị hàng khớp
+        //         } else {
+        //             rows[i].style.display = "none"; // Ẩn hàng không khớp
+        //         }
+        //     }
+        // }
+
         const token = localStorage.getItem("token");
         if (token == 1 || !token) {
             window.location.href = "/Auth/Login";
@@ -342,12 +364,15 @@
             loadBuilding();
         })
         function loadBuilding() {
+            //Lấy user id
+            const userId = getUserIdFromToken();
             $.ajax({
-                url: 'https://localhost:7056/api/Building/GetAllBuildings',
+                url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',
                 dataType: 'json',
                 success: function (response) {
                     renderBuilding(response);
+                    displayBuildings(response); //Thêm cái này nữa
                 },
                 error: function (xhr, status, error) {
                     console.error("Có lỗi xảy ra:", error);
@@ -363,6 +388,8 @@
             }
             $("#buildings").html(html);
         }
+
+
         function filterServices() {
             const input = document.getElementById('searchInput');
             const filter = input.value.toLowerCase();
@@ -392,8 +419,58 @@
                 alert("Hủy xóa dịch vụ");  // Thông báo khi hủy xóa
             }
         }
+        //-------------------------------------------------------
+        function displayBuildings(buildings) {
+            const sidebarContainer = $('.sidebar-submenu');
+
+            // Clear previous content
+            sidebarContainer.empty();
+
+            if (buildings && buildings.length > 0) {
+                // Update Sidebar
+                buildings.forEach(building => {
+                    sidebarContainer.append(`
+                                                <li class="sidebar-subitem">
+                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                    </a>
+                                                </li>
+                                            `);
+                });
+            } else {
+                displayNoBuildingsMessage();
+            }
+        }
+        function displayNoBuildingsMessage() {
+            const sidebarContainer = $('.sidebar-submenu');
+            const tableContainer = $('#buildingsContainer');
+
+            // Notify in Sidebar
+            sidebarContainer.empty();
+            sidebarContainer.append(`
+                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                    `);
+        }
+
+        // Parse User ID from Token
+        function getUserIdFromToken() {
+            const token = localStorage.getItem("token");
+            if (token) {
+                try {
+                    const tokenParts = token.split('.');
+                    const payload = JSON.parse(atob(tokenParts[1]));
+                    return payload.UserId || null;
+                } catch (e) {
+                    console.error('Error parsing token:', e);
+                    return null;
+                }
+            }
+            console.warn('Token not found in localStorage.');
+            return null;
+        }
+        //-----------------------
     </script>
-    
+
 </body>
 
 </html>
