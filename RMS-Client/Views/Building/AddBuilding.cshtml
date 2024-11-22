@@ -247,7 +247,7 @@
                                     {
                                         <li class="sidebar-subitem">
                                             <a asp-controller="Room" asp-action="ListRoom" asp-route-id="@building.Id" class="sidebar-sublink">
-                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
+                                                <i class="ti ti-file"></i>
                                                 @building.Name
                                             </a>
                                         </li>
@@ -292,9 +292,9 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        
+
                     </ul>
-                    
+
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -373,7 +373,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Distance">Khoảng cách</label>
-                            <input type="number" class="form-control" id="Distance" name="Distance"  required />
+                            <input type="number" class="form-control" id="Distance" name="Distance" required />
                             <span id="distanceError" class="error-message" style="color: red; display: none;">Khoảng cách phải là một số dương.</span>
                         </div>
 
@@ -447,7 +447,21 @@
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>
 
-                    
+                    const token = localStorage.getItem("token");
+                    if (token == 1 || !token) {
+                        window.location.href = "/Auth/Login";
+                    }
+                    const tokenParts = token.split('.');
+                    const payload = JSON.parse(atob(tokenParts[1]));
+
+                    if (payload.role !== "Landlord") {
+                        window.location.href = "/Auth/Login";
+                    }
+
+                    function logout() {
+                        localStorage.setItem("token", 1);
+                        console.log("Token set to 1 on logout.");
+                    }
 
                     $(document).ready(function () {
                         // Province to District Fetch
