@@ -112,7 +112,7 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
-                                <span><i class="ti ti-layout-dashboard"></i></span>
+                                <span><i class="ti ti-home"></i></span>
                                 <span class="hide-menu">Quản lý phòng</span>
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
@@ -126,7 +126,7 @@
                                     {
                                         <li class="sidebar-subitem">
                                             <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                                <i class="ti ti-file"></i>
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
                                                 @buildingss.Name
                                             </a>
                                         </li>
@@ -257,21 +257,21 @@
                                 <label for="monthYear" class="form-label">Tháng/năm</label>
                                 <input type="month" class="form-control" id="monthYear" value="2024-11">
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <label for="building" class="form-label">Nhà</label>
-                                <select id="building" class="form-select">
-                                    <option selected>Tất cả</option>
-                                    <!-- Các tùy chọn khác -->
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <label for="room" class="form-label">Phòng</label>
-                                <select id="room" class="form-select">
+                                <select id="BuildingId" class="form-select">
                                     <option selected>Tất cả</option>
                                     <!-- Các tùy chọn khác -->
                                 </select>
                             </div>
                             <div class="col-md-3">
+                                <label for="room" class="form-label">Phòng</label>
+                                <select id="RoomId" class="form-select">
+                                    <option selected>Tất cả</option>
+                                    <!-- Các tùy chọn khác -->
+                                </select>
+                            </div>
+                            <div class="col-md-2">
                                 <label for="roomStatus" class="form-label">Trạng thái phòng</label>
                                 <select id="roomStatus" class="form-select">
                                     <option selected>Tất cả</option>
@@ -336,7 +336,94 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
-    
+    <script>
+        const token = localStorage.getItem("token");
+        if (token == 1 || !token) {
+            window.location.href = "/Auth/Login";
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+
+        if (payload.role !== "Landlord") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            localStorage.setItem("token", 1);
+            console.log("Token set to 1 on logout.");
+        }
+
+        $(document).ready(function () {
+            loadRoom();
+            loadBuilding();
+            loadStatusRoom();
+        })
+
+        function loadBuilding() {
+            $.ajax({
+                url: 'https://localhost:7056/api/Building/GetAllBuildings',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    renderBuilding(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderBuilding(data) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var buildingId = urlParams.get('buildingId');
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            for (var item of data) {
+                html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
+            }
+            $("#BuildingId").html(html);
+        }
+        function loadRoom() {
+            $.ajax({
+                url: 'https://localhost:7056/api/Room/GetAllRoom',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    renderRoom(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderRoom(data) {
+            let html = ``;
+            for (var item of data) {
+                html += `<option value="${item.id}">${item.roomNumber}</option>`
+            }
+            $("#RoomId").html(html);
+        }
+
+        function loadStatusRoom() {
+            $.ajax({
+                url: 'https://localhost:7056/api/Room/GetAllStatus',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    renderStatus(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderStatusRoom(data) {
+            let html = ``;
+            for (var item of data) {
+                html += `<option value="${item.id}">${item.description}</option>`
+            }
+            $("#roomStatus").html(html);
+        }
+
+    </script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 

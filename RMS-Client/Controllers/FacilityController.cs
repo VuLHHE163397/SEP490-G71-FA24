@@ -25,9 +25,9 @@ namespace RMS_Client.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> ListFacility(string? keyword, int buildingId, int roomId, int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> ListFacility(string? keyword, int buildingId, int roomId, int userId, int pageIndex = 1, int pageSize = 10)
         {
-            string apiUrlFacility = FacilityApiUri + $"/GetAllFacility?pageIndex={pageIndex}&pageSize={pageSize}";
+            string apiUrlFacility = FacilityApiUri + $"/GetByRoom/{roomId}/{userId}";
             if(keyword != null)
             {
                 apiUrlFacility += $"&keyword={keyword}";

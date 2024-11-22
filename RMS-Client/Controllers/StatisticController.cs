@@ -12,7 +12,7 @@ namespace RMS_Client.Controllers
         }
         public IActionResult ViewStatistic()
         {
-            return View();
+            return View("~/Views/Statistic/ViewStatistic.cshtml");
         }
     }
 }

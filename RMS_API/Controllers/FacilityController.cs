@@ -133,6 +133,36 @@ namespace RMS_API.Controllers
             }
         }
 
-
+        [HttpGet("GetByRoom/{roomId}/{userId}")]
+        public async Task<IActionResult> GetByRoomId(int roomId, int userId)
+        {
+            try
+            {
+                var data = await _context.Facilities
+                    .Include(e => e.FacilityStatus)
+                    .Include(e => e.Room)
+                    .Where(e => e.UserId == userId)
+                    .Where(e => roomId <= 0 || e.RoomId == roomId)
+                    .Select(e => new FacilityDTO
+                    {
+                        Id = e.Id,
+                        RoomId = e.RoomId,
+                        UserId = userId,
+                        Name = e.Name,
+                        FacilityStatus = e.FacilityStatus.Description,
+                        RoomNumber = e.Room.RoomNumber,
+                        statusId = e.FacilityStatus.Id
+                    })
+                    .ToListAsync();
+                return Ok(new FacilityTableView
+                {
+                    Total = data.Count,
+                    Facilities = data
+                });
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

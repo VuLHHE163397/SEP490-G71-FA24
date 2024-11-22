@@ -304,15 +304,15 @@
                         <form id="selectAddressForm" style="display: flex; gap: 10px; align-items: center; margin: 0;">
                             <!-- Row for select elements -->
                             <div class="d-flex gap-2 align-items-center select-row" style="display: flex; gap: 10px;">
-                                <select id="province" name="provinceId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 150px;">
+                                <select id="province" name="provinceId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 100px;">
                                     <option value="">Tỉnh/Thành phố</option>
                                 </select>
 
-                                <select id="district" name="districtId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 150px;">
+                                <select id="district" name="districtId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 180px;">
                                     <option value="">Quận/Huyện/Thị xã</option>
                                 </select>
 
-                                <select id="ward" name="wardId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 150px;">
+                                <select id="ward" name="wardId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 220px;">
                                     <option value="">Xã/Phường/Thị trấn</option>
                                 </select>
                             </div>
@@ -340,9 +340,11 @@
                                 <input type="radio" name="roomStatus" value="Sắp trống" style="margin-right: 5px;"> Sắp trống
                             </label>
                         </div>
-                        <button id="searchButton" onclick="searchRooms()"><i class="fas fa-search"></i>Tìm kiếm</button>
                     </div>
                 </div>
+                <button id="searchButton" onclick="searchRooms()" style="display: block;background-color:#FEA116; margin: 0 auto; font-size: 1.2rem; padding: 0.3rem 0.8rem; text-align: center;border-radius: 6px">
+                    <i class="fas fa-search"></i> Tìm kiếm
+                </button>
             </div>
             <!-- Popup Modals for Filters -->
             <!-- Distance Filter Modal -->
@@ -800,39 +802,39 @@
                         const priceInMillions = (room.price / 1_000_000).toFixed(1);
 
                         roomElement.innerHTML = `
-                    <div class="room-item shadow rounded overflow-hidden position-relative" style="cursor: pointer;"
-                         onclick="navigateToDetail('/Home/RoomDetail/${room.id}')">
-                        <!-- Hình ảnh phòng -->
-                        <div class="position-relative">
-                            <img class="img-fluid" src="/images/room1.jpg" alt="Room Image">
-                            <!-- Nút trái tim -->
-                            <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
-                               onclick="event.stopPropagation(); toggleFavorite(this)"
-                               data-room-id="${room.id}" data-room-address="${room.address}">
-                                <i class="fa fa-heart"></i>
-                            </a>
-                        </div>
+                                    <div class="room-item shadow rounded overflow-hidden position-relative" style="cursor: pointer;"
+                                         onclick="navigateToDetail('/Home/RoomDetail/${room.id}')">
+                                        <!-- Hình ảnh phòng -->
+                                        <div class="position-relative">
+                                            <img class="img-fluid" src="${room.firstImageLink}" alt="Room Image">
+                                            <!-- Nút trái tim -->
+                                            <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
+                                               onclick="event.stopPropagation(); toggleFavorite(this)"
+                                               data-room-id="${room.id}" data-room-address="${room.address}">
+                                                <i class="fa fa-heart"></i>
+                                            </a>
+                                        </div>
 
-                        <!-- Thông tin phòng -->
-                        <div class="room-details p-3">
-                            <h6 class="mb-2">
-                                <i class="fa fa-map-marker-alt text-primary me-2"></i>${room.address}
-                            </h6>
-                            <div class="room-status">${room.roomStatusName}</div>
-                            <div class="mt-2">
-                                <small class="text-muted d-block">
-                                    <i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT ${room.distance.toFixed(0)} km
-                                </small>
-                                <small class="text-muted d-block">
-                                    <i class="fa fa-dollar-sign text-primary me-2"></i>${priceInMillions} triệu VND
-                                </small>
-                                <small class="text-muted d-block">
-                                    <i class="fa fa-expand text-primary me-2"></i>${room.area} m²
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                                        <!-- Thông tin phòng -->
+                                        <div class="room-details p-3">
+                                            <h6 class="mb-2">
+                                                <i class="fa fa-map-marker-alt text-primary me-2"></i>${room.address}
+                                            </h6>
+                                            <div class="room-status">${room.roomStatusName}</div>
+                                            <div class="mt-2">
+                                                <small class="text-muted d-block">
+                                                    <i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT ${room.distance.toFixed(0)} km
+                                                </small>
+                                                <small class="text-muted d-block">
+                                                    <i class="fa fa-dollar-sign text-primary me-2"></i>${priceInMillions} triệu VND
+                                                </small>
+                                                <small class="text-muted d-block">
+                                                    <i class="fa fa-expand text-primary me-2"></i>${room.area} m²
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
                         row.appendChild(roomElement);
                     });
 
@@ -852,7 +854,7 @@
                     return favorites ? JSON.parse(decodeURIComponent(favorites)) : [];
                 }
 
-                
+
 
                 // Function to set favorites in cookies with an expiration of 7 days
                 function setFavorites(favorites) {

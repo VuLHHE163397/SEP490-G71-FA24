@@ -226,7 +226,8 @@
                                  style="cursor: pointer;"
                                  onclick="navigateToDetail('@Url.Action("RoomDetail", "Home", new { id = room.Id })')">
                                 <div class="position-relative">
-                                    <img class="img-fluid" src="~/images/room1.jpg" alt="Room Image">
+                                    <img class="img-fluid" src="@room.FirstImageLink" alt="Room Image">
+
                                     <!-- Nút trái tim không kích hoạt chuyển trang -->
                                     <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
                                        onclick="event.stopPropagation(); toggleFavorite(this)"

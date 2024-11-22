@@ -38,6 +38,23 @@ namespace RMS_API.Controllers
             var ro = _context.Rooms.ToList();
             return Ok(ro);
         }
+        [HttpGet("GetAllRoom/{userId}")]
+        public IActionResult GetAllRoomByUserId(int userId)
+        {
+            var ro = _context.Rooms
+                .Select(e => new Room
+                {
+                    Id = e.Id,
+                    RoomNumber = e.RoomNumber,
+                    BuildingId = e.BuildingId,
+                    Description = e.Description,
+                    ExpiredDate = e.ExpiredDate,
+                    Building = _context.Buildings.FirstOrDefault(x => x.Id == e.BuildingId),
+                })
+                .Where(e => e.Building.UserId == userId)
+                .ToList();
+            return Ok(ro);
+        }
 
         [HttpGet("GetRoomById/{roomId}")]
         public IActionResult GetRoomById(int roomId)
@@ -391,8 +408,8 @@ namespace RMS_API.Controllers
             var roomHistories = _context.RoomHistories.Where(h => h.RoomId == roomId);
             _context.RoomHistories.RemoveRange(roomHistories);
 
-            var servicesOfRooms = _context.ServicesOfRooms.Where(s => s.RoomId == roomId);
-            _context.ServicesOfRooms.RemoveRange(servicesOfRooms);
+            //var servicesOfRooms = _context.ServicesOfRooms.Where(s => s.RoomId == roomId);
+            //_context.ServicesOfRooms.RemoveRange(servicesOfRooms);
 
             var tenants = _context.Tennants.Where(t => t.RoomId == roomId);
             _context.Tennants.RemoveRange(tenants);
@@ -431,8 +448,8 @@ namespace RMS_API.Controllers
                 _context.RoomHistories.RemoveRange(roomHistories);
 
                 // Xóa ServicesOfRooms liên quan đến room
-                var servicesOfRooms = _context.ServicesOfRooms.Where(s => s.RoomId == room.Id);
-                _context.ServicesOfRooms.RemoveRange(servicesOfRooms);
+                //var servicesOfRooms = _context.ServicesOfRooms.Where(s => s.RoomId == room.Id);
+                //_context.ServicesOfRooms.RemoveRange(servicesOfRooms);
 
                 // Xóa Tennants liên quan đến room
                 var tenants = _context.Tennants.Where(t => t.RoomId == room.Id);
@@ -455,21 +472,23 @@ namespace RMS_API.Controllers
         public IActionResult GetActiveRooms()
         {
             var rooms = _context.Rooms
-                .Where(r => r.RoomStatusId == 1 & r.Building.BuildingStatusId == 1) // Lọc các phòng có trạng thái đang hoạt động
-                .Select(r => new
+                .Where(r => r.RoomStatusId == 1 && r.Building.BuildingStatusId == 1)
+                .Select(r => new RoomDTO
                 {
                     Id = r.Id,
-                    Distance = r.Building.Distance,
+                    Building = r.Building.Name,
                     Address = $"{r.Building.Address.Information}, {r.Building.Address.Ward.Name}, {r.Building.Address.District.Name}, {r.Building.Address.Province.Name}",
                     Price = r.Price,
                     Area = r.Area,
                     RoomStatusName = r.RoomStatus.Name,
-                    //images = r.images.select(i => i.link).tolist()
+                    Distance = r.Building.Distance,
+                    FirstImageLink = r.Images.OrderBy(i => i.Id).Select(i => i.Link).FirstOrDefault() // Lấy link ảnh đầu tiên
                 })
                 .ToList();
 
             return Ok(rooms);
         }
+
 
         [HttpGet("detail/{id}")]
         public IActionResult GetRoomDetail(int id)
@@ -498,9 +517,9 @@ namespace RMS_API.Controllers
             var roomDetailDto = new RoomDetailDTO
             {
                 FullAddress = $"{room.Building?.Address?.Information ?? "Chưa có địa chỉ chi tiết"}, " +
-                              $"{room.Building?.Ward?.Name ?? "Chưa có phường"}, " +
-                              $"{room.Building?.District?.Name ?? "Chưa có quận"}, " +
-                              $"{room.Building?.Province?.Name ?? "Chưa có tỉnh"}",
+                               $"{room.Building?.Ward?.Name ?? "Chưa có phường"}, " +
+                               $"{room.Building?.District?.Name ?? "Chưa có quận"}, " +
+                               $"{room.Building?.Province?.Name ?? "Chưa có tỉnh"}",
                 Price = room.Price,
                 Area = room.Area,
                 Distance = room.Building?.Distance ?? 0,
@@ -511,11 +530,16 @@ namespace RMS_API.Controllers
                             $"{room.Building?.User?.FirstName ?? ""}".Trim(),
                 OwnerPhone = room.Building?.User?.Phone ?? "Số điện thoại không có sẵn",
                 LinkEmbedMap = room.Building?.LinkEmbedMap ?? "Không có liên kết bản đồ",
-                // ImageUrl = room.ImageUrl // Thêm trường ảnh nếu có
+                Images = room.Images.Select(img => new ImageDTO
+                {
+                    Link = img.Link,  // Lấy đường dẫn ảnh từ bảng Images
+                    RoomId = img.RoomId
+                }).ToList()
             };
 
-            return Ok(roomDetailDto);
+            return Ok(roomDetailDto); // Trả về dữ liệu chi tiết phòng cùng ảnh
         }
+
 
         [HttpGet("{roomId}/suggestedrooms")]
         public IActionResult GetSuggestedRooms(int roomId)
@@ -543,7 +567,7 @@ namespace RMS_API.Controllers
                     Price = r.Price,
                     Area = r.Area,
                     RoomStatusName = r.RoomStatus.Name,
-                    //Images = r.Images.Select(i => i.Url).ToList() // Giả sử có liên kết tới bảng Images
+                    FirstImageLink = r.Images.OrderBy(i => i.Id).Select(i => i.Link).FirstOrDefault()
                 })
                 .ToList();
 
@@ -581,7 +605,7 @@ namespace RMS_API.Controllers
                     Price = r.Price,
                     Area = r.Area,
                     RoomStatusName = r.RoomStatus.Name,
-                    //Images = r.Images.Select(i => i.Link).ToList()
+                    FirstImageLink = r.Images.OrderBy(i => i.Id).Select(i => i.Link).FirstOrDefault()
                 })
                 .ToListAsync();
 
