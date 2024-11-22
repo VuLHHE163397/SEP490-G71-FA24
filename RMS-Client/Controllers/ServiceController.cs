@@ -74,15 +74,6 @@ namespace RMS_Client.Controllers
                 // Làm tròn giá trị để loại bỏ phần thập phân
                 service.Price = Math.Round(service.Price, 0);
             }
-            string apiUrlBuilding = RoomApiUri + "/GetAllBuilding";
-            var buildings = new List<Building>();
-            var responseBuilding = await client.GetAsync(apiUrlBuilding);
-            if (responseBuilding.IsSuccessStatusCode)
-            {
-                var json = await responseBuilding.Content.ReadAsStringAsync();
-                buildings = JsonConvert.DeserializeObject<List<Building>>(json);
-            }
-            ViewBag.Buildings = buildings;
             return View(service);
         }
         public IActionResult ServicesBills()
