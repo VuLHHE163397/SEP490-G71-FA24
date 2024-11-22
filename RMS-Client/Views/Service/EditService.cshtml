@@ -49,25 +49,25 @@
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
-                                @{
-                                    var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
+                                @* @{
+                                var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
                                 }
                                 @if (buildingsss != null && buildingsss.Any())
                                 {
-                                    foreach (var buildingss in buildingsss)
-                                    {
-                                        <li class="sidebar-subitem">
-                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
-                                                @buildingss.Name
-                                            </a>
-                                        </li>
-                                    }
+                                foreach (var buildingss in buildingsss)
+                                {
+                                <li class="sidebar-subitem">
+                                <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
+                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
+                                @buildingss.Name
+                                </a>
+                                </li>
+                                }
                                 }
                                 else
                                 {
-                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                }
+                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                } *@
                             </ul>
                         </li>
                         <li class="sidebar-item">
@@ -250,8 +250,10 @@
         })
 
         function loadBuilding() {
+            //Lấy user id
+            const userId = getUserIdFromToken();
             $.ajax({
-                url: 'https://localhost:7056/api/Building/GetAllBuildings',
+                url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,
                 type: 'GET',
                 dataType: 'json',
                 success: function (response) {
@@ -293,6 +295,57 @@
                 }
             })
         }
+
+        //-------------------------------------------------------
+        function displayBuildings(buildings) {
+            const sidebarContainer = $('.sidebar-submenu');
+
+            // Clear previous content
+            sidebarContainer.empty();
+
+            if (buildings && buildings.length > 0) {
+                // Update Sidebar
+                buildings.forEach(building => {
+                    sidebarContainer.append(`
+                                                                <li class="sidebar-subitem">
+                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                    </a>
+                                                                </li>
+                                                            `);
+                });
+            } else {
+                displayNoBuildingsMessage();
+            }
+        }
+        function displayNoBuildingsMessage() {
+            const sidebarContainer = $('.sidebar-submenu');
+            const tableContainer = $('#buildingsContainer');
+
+            // Notify in Sidebar
+            sidebarContainer.empty();
+            sidebarContainer.append(`
+                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                    `);
+        }
+
+        // Parse User ID from Token
+        function getUserIdFromToken() {
+            const token = localStorage.getItem("token");
+            if (token) {
+                try {
+                    const tokenParts = token.split('.');
+                    const payload = JSON.parse(atob(tokenParts[1]));
+                    return payload.UserId || null;
+                } catch (e) {
+                    console.error('Error parsing token:', e);
+                    return null;
+                }
+            }
+            console.warn('Token not found in localStorage.');
+            return null;
+        }
+        //-----------------------
     </script>
 </body>
 
