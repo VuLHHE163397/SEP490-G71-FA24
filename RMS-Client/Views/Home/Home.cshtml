@@ -224,7 +224,7 @@
                             <!-- Toàn bộ khung bao gồm thông tin phòng sẽ chuyển đến detail -->
                             <div class="room-item shadow rounded overflow-hidden"
                                  style="cursor: pointer;"
-                                 onclick="navigateToDetail('@Url.Action("RoomDetail", "Home", new { id = room.Id })')">
+                                 onclick="window.open('@Url.Action("RoomDetail", "Home", new { id = room.Id })', '_blank')">
                                 <div class="position-relative">
                                     <img class="img-fluid" src="@room.FirstImageLink" alt="Room Image">
 
@@ -345,7 +345,9 @@
             document.addEventListener('DOMContentLoaded', () => {
                 updateFavoriteCount(); // Hiển thị số lượng yêu thích từ cookie khi trang tải
             });
-
+            function navigateToDetail(url) {
+                window.open(url, '_blank'); // Mở trang trong tab mới
+            }
         </script>
 </body>
 </html>

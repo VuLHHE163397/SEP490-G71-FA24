@@ -229,6 +229,8 @@
                             <!-- Thông tin chi tiết phòng -->
                             <p><strong>Chủ nhà:</strong> @Model.OwnerName</p>
                             <p><strong>Số điện thoại:</strong> @Model.OwnerPhone</p>
+                            <p><strong>Facebook:</strong> @Model.Facebook</p>
+                            <p><strong>Zalo:</strong> @Model.Zalo</p>
                             <p><strong>Địa chỉ phòng:</strong> @Model.FullAddress</p>
                             @{
                                 decimal priceInMillions = Model.Price / 1_000_000;
@@ -256,7 +258,7 @@
                                 foreach (var room in suggestedRooms)
                                 {
                                     <div class="col-md-12">
-                                        <a style="text-decoration: none; color: inherit;" asp-controller="Home" asp-action="RoomDetail" asp-route-id="@room.Id">
+                                        <a style="text-decoration: none; color: inherit;" onclick="window.open('@Url.Action("RoomDetail", "Home", new { id = room.Id })', '_blank')">
                                             <div class="card mb-4">
                                                 <!-- Hiển thị ảnh phòng, nếu có -->
                                                 <img class="img-fluid" src="@room.FirstImageLink" alt="Room Image">
@@ -382,6 +384,9 @@
                 const carousel = document.getElementById('mainImageCarousel');
                 const carouselInstance = bootstrap.Carousel.getInstance(carousel);
                 carouselInstance.to(index); // Chuyển tới slide được chỉ định
+            }
+            function navigateToDetail(url) {
+                window.open(url, '_blank'); // Mở trang trong tab mới
             }
         </script>
 </body>

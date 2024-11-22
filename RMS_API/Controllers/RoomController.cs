@@ -456,6 +456,7 @@ namespace RMS_API.Controllers
         {
             var rooms = _context.Rooms
                 .Where(r => r.RoomStatusId == 1 && r.Building.BuildingStatusId == 1)
+                //.OrderByDescending(r => r.Id)
                 .Select(r => new RoomDTO
                 {
                     Id = r.Id,
@@ -505,6 +506,8 @@ namespace RMS_API.Controllers
                                $"{room.Building?.Province?.Name ?? "Chưa có tỉnh"}",
                 Price = room.Price,
                 Area = room.Area,
+                Facebook = room.Building?.User?.FacebookUrl?? "Không có link FB",
+                Zalo = room.Building?.User?.ZaloUrl ?? "Không có link Zalo",
                 Distance = room.Building?.Distance ?? 0,
                 Description = room.Description,
                 RoomStatus = room.RoomStatus?.Name ?? "Trạng thái không xác định",
@@ -541,7 +544,7 @@ namespace RMS_API.Controllers
                 .Where(r => r.BuildingId == currentRoom.BuildingId &&
                             (r.RoomStatusId == 1) &&
                             r.Id != roomId) // Loại trừ phòng hiện tại
-                .OrderBy(r => r.Price) // Sắp xếp theo giá tiền, nếu cần
+                .OrderByDescending(r => r.Id)
                 .Take(5) // Lấy top 5 phòng
                 .Select(r => new SuggestedRoomDTO
                 {
@@ -579,6 +582,7 @@ namespace RMS_API.Controllers
                     (searchDto.MinArea == null || r.Area >= searchDto.MinArea) &&
                     (searchDto.MaxArea == null || r.Area <= searchDto.MaxArea)
                 )
+                .OrderByDescending(r => r.Id)
                 .Select(r => new
                 {
                     Id = r.Id,

@@ -12,7 +12,6 @@ namespace RMS_Client.Controllers
 
     public class BuildingController : Controller
     {
-
         private readonly HttpClient _client = null;
         private readonly string BuildingApiUri = "https://localhost:7056/api/Building";
         private readonly string GetBuildingById = "https://localhost:7056/api/Building/GetBuildingById";
@@ -120,17 +119,8 @@ namespace RMS_Client.Controllers
             }
             ViewBag.Status = status;
 */
-            return View(building);
-
-
-
-
-           
+            return View(building);           
         }
-
-
-        
-
 
     }
 }
