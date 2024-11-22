@@ -39,23 +39,23 @@
             }
 
         /*  .btn-warning {
-                            background-color: #ffc107;
-                            border-color: #ffc107;
-                            color: #fff;
-                        }
+                                                            background-color: #ffc107;
+                                                            border-color: #ffc107;
+                                                            color: #fff;
+                                                        }
 
-                            .btn-warning:hover {
-                                background-color: #e0a800;
-                                border-color: #e0a800;
-                                transform: scale(1.05);
-                            }
+                                                            .btn-warning:hover {
+                                                                background-color: #e0a800;
+                                                                border-color: #e0a800;
+                                                                transform: scale(1.05);
+                                                            }
 
-                            .btn-warning:active {
-                                background-color: #c69500;
-                                border-color: #c69500;
-                                transform: scale(1);
-                            }
-                 */
+                                                            .btn-warning:active {
+                                                                background-color: #c69500;
+                                                                border-color: #c69500;
+                                                                transform: scale(1);
+                                                            }
+                                                 */
         /* Icon styling inside buttons */
         .btn i {
             margin-right: 8px;
@@ -85,7 +85,7 @@
 
         /* Main content area padding */
         .body-wrapper {
-           /*  padding: 20px; */
+            /*  padding: 20px; */
             flex-grow: 1;
         }
 
@@ -134,6 +134,20 @@
     </style>
 </head>
 <body>
+
+    <script>
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            window.location.href = "/Auth/Login";
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/Login";
+        }       
+    </script>
+
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -215,9 +229,9 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        
 
-                        
+
+
 
                 </nav>
                 <!-- End Sidebar navigation -->
@@ -316,46 +330,39 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode-module@1.0.4/build/jwt-decode.min.js"></script>
     @* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> *@
+    
+
+
     <script>
-        const token = localStorage.getItem("token");
-        if (token == 1 || !token) {
-            window.location.href = "/Auth/Login";
-        }
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-
-        if (payload.role !== "Landlord") {
-            window.location.href = "/Auth/Login";
-        }
-
-        function logout() {
-            localStorage.setItem("token", 1);
-            console.log("Token set to 1 on logout.");
-        }
-
-
-
         $(document).ready(function () {
             console.log('Page Loaded: Fetching buildings...');
             getListBuilding();
         });
 
-        function getListBuilding() {
-            const userId = getUserIdFromToken();
-            if (!userId) {
-                alert('Invalid or missing user ID. Please log in again.');
-                return;
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
             }
+        }
 
-            const url = `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`;
-            const token = localStorage.getItem("token"); // Ensure token is stored in localStorage
+        function getListBuilding() {
+            const token = sessionStorage.getItem("token");
 
             if (!token) {
-                alert('Authentication token not found. Please log in again.');
+                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
                 return;
             }
+
+            var userId = getUserIdFromToken(token);
+
+            const url = `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`;
 
             $.ajax({
                 url: url,
@@ -375,6 +382,9 @@
             });
         }
 
+
+
+
         function displayBuildings(buildings) {
             const sidebarContainer = $('.sidebar-submenu');
             const tableContainer = $('#buildingsContainer');
@@ -387,34 +397,34 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                <li class="sidebar-subitem">
-                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                        <i class="ti ti-file"></i> ${building.name}
-                                    </a>
-                                </li>
-                            `);
+                                                                <li class="sidebar-subitem">
+                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                        <i class="ti ti-file"></i> ${building.name}
+                                                                    </a>
+                                                                </li>
+                                                            `);
                 });
 
                 // Update Table
                 buildings.forEach(building => {
                     tableContainer.append(`
-                                <tr>
-                                    <td>${building.id}</td>
-                                    <td>${building.name}</td>
-                                    <td>${building.totalFloors}</td>
-                                    <td>${building.numberOfRooms}</td>
-                                    <td>${building.addressDetails}</td>
-                                    <td>${building.buildingStatus}</td>
-                                    <td>
-                                        <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
-                                            <i class="ti ti-eye"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            `);
+                                                                <tr>
+                                                                    <td>${building.id}</td>
+                                                                    <td>${building.name}</td>
+                                                                    <td>${building.totalFloors}</td>
+                                                                    <td>${building.numberOfRooms}</td>
+                                                                    <td>${building.addressDetails}</td>
+                                                                    <td>${building.buildingStatus}</td>
+                                                                    <td>
+                                                                        <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
+                                                                            <i class="fas fa-edit"></i>
+                                                                        </a>
+                                                                        <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
+                                                                            <i class="ti ti-eye"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -428,16 +438,16 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                    `);
+                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                    `);
 
             // Notify in Table
             tableContainer.empty();
             tableContainer.append(`
-                        <tr>
-                            <td colspan="7" class="text-center">Không có dữ liệu</td>
-                        </tr>
-                    `);
+                                                        <tr>
+                                                            <td colspan="7" class="text-center">Không có dữ liệu</td>
+                                                        </tr>
+                                                    `);
         }
 
         // Redirect to Edit Page
@@ -461,21 +471,21 @@
         }
 
         // Parse User ID from Token
-        function getUserIdFromToken() {
-            const token = localStorage.getItem("token");
-            if (token) {
-                try {
-                    const tokenParts = token.split('.');
-                    const payload = JSON.parse(atob(tokenParts[1]));
-                    return payload.UserId || null;
-                } catch (e) {
-                    console.error('Error parsing token:', e);
-                    return null;
-                }
-            }
-            console.warn('Token not found in localStorage.');
-            return null;
-        }
+        // function getUserIdFromToken() {
+        //     const token = localStorage.getItem("token");
+        //     if (token) {
+        //         try {
+        //             const tokenParts = token.split('.');
+        //             const payload = JSON.parse(atob(tokenParts[1]));
+        //             return payload.UserId || null;
+        //         } catch (e) {
+        //             console.error('Error parsing token:', e);
+        //             return null;
+        //         }
+        //     }
+        //     console.warn('Token not found in localStorage.');
+        //     return null;
+        // }
 
     </script>
 
