@@ -146,22 +146,20 @@
                 contentType: "application/json",
                 data: JSON.stringify({ email: email, Password: password }),
                 success: function (response) {
-                    localStorage.setItem("token", response.token);
+                    // Lưu token vào sessionStorage thay vì localStorage
+                    sessionStorage.setItem("token", response.token);
+                    
                     showPopup("Đăng nhập thành công!");
 
-                    // const token = localStorage.getItem("token");
                     try {
-                        // Giải mã token jwt
+                        // Giải mã token JWT
                         const tokenParts = response.token.split('.');
-                        const payload = JSON.parse(atob(tokenParts[1]));
-                        localStorage.setItem("email", payload.unique_name);
-
-                        // xét role chuyển trang
+                        const payload = JSON.parse(atob(tokenParts[1]));                                             
+                        // Xét role để chuyển trang
                         setTimeout(function () {
-                            if (payload.role === "Admin") {
+                            if (payload.Roles === "Admin") {
                                 window.location.href = "/User/ListUser";
-                            }
-                            if (payload.role === "Landlord") {
+                            } else if (payload.Roles === "Landlord") {
                                 window.location.href = "/Building/ListBuilding";
                             }
                         }, 800);
@@ -170,12 +168,12 @@
                         alert("Đăng nhập thành công, nhưng có lỗi xảy ra khi xử lý thông tin người dùng.");
                     }
                 },
-
                 error: function (xhr, status, error) {
                     showErrorPopup("Tài khoản hoặc mật khẩu không tồn tại");
                     // showErrorPopup("Đăng nhập thất bại: " + xhr.responseText);
                 }
             });
+
         }
 
         function showPopup(message) {

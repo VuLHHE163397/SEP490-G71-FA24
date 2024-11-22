@@ -149,6 +149,9 @@
     </style>
 </head>
 <body>
+
+    
+
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -232,10 +235,10 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        
-                        
+
+
                     </ul>
-                    
+
                 </nav>
 
             </div>
@@ -352,23 +355,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
-    <script>
-
-        const token = localStorage.getItem("token");
-        if (token == 1 || !token) {
-            window.location.href = "/Auth/Login";
-        }
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-
-        if (payload.role !== "Landlord") {
-            window.location.href = "/Auth/Login";
-        }
-
-        function logout() {
-            localStorage.setItem("token", 1);
-            console.log("Token set to 1 on logout.");
-        }
+    <script>      
 
         // Thiết lập BuildingId mặc định
         document.getElementById("BuildingId").value = '@ViewBag.SelectedBuildingId';
