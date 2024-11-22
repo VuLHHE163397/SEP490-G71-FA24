@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RMS_API.DTOs;
@@ -105,6 +106,7 @@ namespace RMS_API.Controllers
         }
         //Xóa dịch vụ
         [HttpDelete]
+        [Authorize(Roles = "Landlord")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             try

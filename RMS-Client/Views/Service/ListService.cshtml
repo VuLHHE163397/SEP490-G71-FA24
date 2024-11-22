@@ -79,6 +79,25 @@
 
 <body>
 
+    <script>
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            window.location.href = "/Auth/Login";
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            sessionStorage.removeItem("token");
+            window.location.href = "/Auth/Login";
+        }
+    </script>
+
+
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
 
@@ -342,21 +361,18 @@
         //     }
         // }
 
-        const token = localStorage.getItem("token");
-        if (token == 1 || !token) {
-            window.location.href = "/Auth/Login";
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+            }
         }
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
 
-        if (payload.role !== "Landlord") {
-            window.location.href = "/Auth/Login";
-        }
 
-        function logout() {
-            localStorage.setItem("token", 1);
-            console.log("Token set to 1 on logout.");
-        }
 
         var totalRecord = @Html.Raw(ViewBag.TotalRecord);
         console.log("total record = " + totalRecord);
@@ -364,12 +380,16 @@
             loadBuilding();
         })
         function loadBuilding() {
+            const token = sessionStorage.getItem("token");
             //Lấy user id
             const userId = getUserIdFromToken();
             $.ajax({
                 url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',
                 dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                },
                 success: function (response) {
                     renderBuilding(response);
                     displayBuildings(response); //Thêm cái này nữa
@@ -379,6 +399,7 @@
                 }
             });
         }
+
         function renderBuilding(data) {
             var urlParams = new URLSearchParams(window.location.search);
             var buildingId = urlParams.get('buildingId');
@@ -403,10 +424,14 @@
             }
         }
         function DeleteService(id) {
+            const token = sessionStorage.getItem("token");
             if (confirm("Bạn có chắc chắn muốn xóa dịch vụ này không?")) {  // Hộp thoại xác nhận xóa
                 $.ajax({
                     url: `https://localhost:7056/api/Service?id=${id}`,  // Đảm bảo URL API đúng
                     type: "DELETE",  // Sử dụng phương thức DELETE
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                    },
                     success: function (response) {
                         alert("Xóa dịch vụ thành công");  // Thông báo khi xóa thành công
                         window.location.reload();  // Reload lại trang sau khi xóa
@@ -453,21 +478,21 @@
         }
 
         // Parse User ID from Token
-        function getUserIdFromToken() {
-            const token = localStorage.getItem("token");
-            if (token) {
-                try {
-                    const tokenParts = token.split('.');
-                    const payload = JSON.parse(atob(tokenParts[1]));
-                    return payload.UserId || null;
-                } catch (e) {
-                    console.error('Error parsing token:', e);
-                    return null;
-                }
-            }
-            console.warn('Token not found in localStorage.');
-            return null;
-        }
+        // function getUserIdFromToken() {
+        //     const token = localStorage.getItem("token");
+        //     if (token) {
+        //         try {
+        //             const tokenParts = token.split('.');
+        //             const payload = JSON.parse(atob(tokenParts[1]));
+        //             return payload.UserId || null;
+        //         } catch (e) {
+        //             console.error('Error parsing token:', e);
+        //             return null;
+        //         }
+        //     }
+        //     console.warn('Token not found in localStorage.');
+        //     return null;
+        // }
         //-----------------------
     </script>
 
