@@ -146,16 +146,24 @@ namespace RMS_API.Controllers
             var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024");
 
             var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Name, user.Email),
-        new Claim("UserId", user.Id.ToString()) 
-    };
+            {
+                new Claim(ClaimTypes.Name, user.Email),
+                new Claim("UserId", user.Id.ToString()) 
+            };
 
             if (user.Role != null && !string.IsNullOrEmpty(user.Role.Name))
             {
                 claims.Add(new Claim(ClaimTypes.Role, user.Role.Name));
             }
-
+            /*var keys = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024"));
+            var creds = new SigningCredentials(keys, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                issuer: "RMS_SEP",
+                audience: "RMS_SEP",
+                claims: claims,
+                expires: DateTime.Now.AddDays(5),
+                signingCredentials: creds
+            );*/
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),

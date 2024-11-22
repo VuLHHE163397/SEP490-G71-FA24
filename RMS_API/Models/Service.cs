@@ -16,6 +16,7 @@ namespace RMS_API.Models
         public string Name { get; set; } = null!;
         public decimal Price { get; set; }
         public int BuildingId { get; set; }
+        public int? UserId { get; set; }
 
         public virtual Building Building { get; set; } = null!;
         public virtual ICollection<ServicesBill> ServicesBills { get; set; }
