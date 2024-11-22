@@ -341,6 +341,11 @@
             getListBuilding();
         });
 
+        function logout() {
+            sessionStorage.removeItem("token");
+            window.location.href = "/Auth/Login";
+        }
+
         function getUserIdFromToken(token) {
             try {
                 const tokenParts = token.split('.');
