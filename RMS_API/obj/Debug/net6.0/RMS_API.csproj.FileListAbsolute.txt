@@ -135,9 +135,6 @@ D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win-arm\native\Micro
 D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
 D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
-D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
-D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
 D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
@@ -247,3 +244,15 @@ D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490-G71-FA24\RM
 D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490-G71-FA24\RMS_API\obj\Debug\net6.0\RMS_API.genruntimeconfig.cache
 D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490-G71-FA24\RMS_API\obj\Debug\net6.0\ref\RMS_API.dll
 D:\FULearning\FALL2024\DATN\Project\SEP490-G71-FA24\BugNguNhu\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\BCrypt.Net-Next.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\BCrypt.Net-Next.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\CloudinaryDotNet.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\EPPlus.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\EPPlus.Interfaces.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\EPPlus.System.Drawing.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\Microsoft.IO.RecyclableMemoryStream.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\zxing.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
