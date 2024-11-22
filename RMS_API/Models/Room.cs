@@ -28,6 +28,7 @@ namespace RMS_API.Models
         public int BuildingId { get; set; }
         public int RoomStatusId { get; set; }
         public DateTime? FreeInFutureDate { get; set; }
+        public int? UserId { get; set; }
 
         public virtual Building Building { get; set; } = null!;
         public virtual RoomStatus RoomStatus { get; set; } = null!;

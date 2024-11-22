@@ -24,7 +24,7 @@ namespace RMS_Client.Controllers
             _client.DefaultRequestHeaders.Accept.Add(contentType);
         }
         
-            public async Task<IActionResult> ListBuilding()
+        public async Task<IActionResult> ListBuilding()
         {
             string apiUrlBuilding = BuildingApiUri + "/GetAllBuildings";
             var buildings = new List<BuildingDTO>();

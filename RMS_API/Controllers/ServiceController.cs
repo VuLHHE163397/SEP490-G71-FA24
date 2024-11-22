@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RMS_API.DTOs;
@@ -23,12 +24,13 @@ namespace RMS_API.Controllers
             try
             {
                 var services = await _context.Services.FirstOrDefaultAsync(s => s.Id == id);
-                if(services == null)
+                if (services == null)
                 {
                     throw new Exception("Service not found");
                 }
                 return Ok(services);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -43,6 +45,7 @@ namespace RMS_API.Controllers
                 {
                     Id = s.Id,
                     Name = s.Name,
+                    BuildingId = s.BuildingId,
                     Price = s.Price
                 })
                 .Where(e => string.IsNullOrWhiteSpace(filter.keyword) || e.Name.ToLower().Contains(filter.keyword.ToLower()))
@@ -72,7 +75,8 @@ namespace RMS_API.Controllers
                 _context.Services.Add(service);
                 await _context.SaveChangesAsync();
                 return Ok(service);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -85,7 +89,7 @@ namespace RMS_API.Controllers
             try
             {
                 var serviceDb = await _context.Services.FirstOrDefaultAsync(e => e.Id == serviceDTO.Id);
-                if(serviceDb == null)
+                if (serviceDb == null)
                 {
                     throw new Exception("Service not found");
                 }
@@ -94,26 +98,29 @@ namespace RMS_API.Controllers
                 _context.Services.Update(serviceDb);
                 await _context.SaveChangesAsync();
                 return Ok(serviceDb);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
         //Xóa dịch vụ
         [HttpDelete]
+        [Authorize(Roles = "Landlord")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             try
             {
                 var serviceDb = await _context.Services.FirstOrDefaultAsync(e => e.Id == id);
-                if(serviceDb == null)
+                if (serviceDb == null)
                 {
                     throw new Exception("Service not found");
                 }
                 _context.Services.Remove(serviceDb);
                 await _context.SaveChangesAsync();
                 return Ok(true);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

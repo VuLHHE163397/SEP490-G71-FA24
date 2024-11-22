@@ -112,12 +112,12 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
-                                <span><i class="ti ti-layout-dashboard"></i></span>
+                                <span><span><i class="ti ti-home"></i></span></span>
                                 <span class="hide-menu">Quản lý phòng</span>
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
-                                @{
+                                @* @{
                                     var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
                                 }
                                 @if (buildingsss != null && buildingsss.Any())
@@ -126,7 +126,7 @@
                                     {
                                         <li class="sidebar-subitem">
                                             <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                                <i class="ti ti-file"></i>
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
                                                 @buildingss.Name
                                             </a>
                                         </li>
@@ -135,7 +135,7 @@
                                 else
                                 {
                                     <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                }
+                                } *@
                             </ul>
                         </li>
                         <li class="sidebar-item">
@@ -244,6 +244,11 @@
                                 <select class="form-control  custom-select" id="rooms" onchange="search()">
                                 </select>
                             </div>
+                            <div class="form-group mr-3">
+                                <label>Tình trạng</label>
+                                <select class="form-control  custom-select" id="status" onchange="search()">
+                                </select>
+                            </div>
                             <div>
                                 <a href="/Facility/AddFacility" class="btn btn-success">
                                     + Thêm
@@ -348,27 +353,15 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
     <script>
-        const token = localStorage.getItem("token");
-        if (token == 1 || !token) {
-            window.location.href = "/Auth/Login";
-        }
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-
-        if (payload.role !== "Landlord") {
-            window.location.href = "/Auth/Login";
-        }
-
-        function logout() {
-            localStorage.setItem("token", 1);
-            console.log("Token set to 1 on logout.");
-        }
+        
         var totalRecord = @Html.Raw(ViewBag.TotalRecord);
         $(document).ready(function () {
             loadBuilding();
-            loadRoom();
+            // loadRoom();
             setKeyword();
             loadPaging();
+            loadStatus();
+
         })
         function onSelectPageSize() {
             var urlParams = new URLSearchParams(window.location.search);
@@ -425,19 +418,39 @@
             var keyword = urlParams.get('keyword');
             $("#keyword").val(keyword)
         }
+        //Lấy UserId
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+            }
+        }
+
         function loadBuilding() {
+            const token = sessionStorage.getItem("token");
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
             $.ajax({
-                url: 'https://localhost:7056/api/Building/GetAllBuildings',
+                url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',
                 dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                },
                 success: function (response) {
                     renderBuilding(response);
+                    displayBuildings(response); //Thêm cái này nữa
                 },
                 error: function (xhr, status, error) {
                     console.error("Có lỗi xảy ra:", error);
                 }
             });
         }
+
         function renderBuilding(data) {
             var urlParams = new URLSearchParams(window.location.search);
             var buildingId = urlParams.get('buildingId');
@@ -446,14 +459,20 @@
                 html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
             }
             $("#buildings").html(html);
+            loadRoom();
         }
+
         function loadRoom() {
+            var buildingId = $("#buildings").val();
+            const userId = getUserIdFromToken();//iojuo
+            console.log(userId);
             $.ajax({
-                url: 'https://localhost:7056/api/Room/GetAllRoom',
+                url: buildingId && buildingId > 0 ? `https://localhost:7056/api/Room/GetRoomByBuilding/${buildingId}` : `https://localhost:7056/api/Room/GetAllRoom/${userId}`,
                 type: 'GET',
                 dataType: 'json',
                 success: function (response) {
                     renderRoom(response);
+                    console.log(response)
                 },
                 error: function (xhr, status, error) {
                     console.error("Có lỗi xảy ra:", error);
@@ -469,6 +488,27 @@
             }
             $("#rooms").html(html);
         }
+
+        function loadStatus() {
+            $.ajax({
+                url: 'https://localhost:7056/api/FacilityStatus/GetAllFacility',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    renderStatus(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderStatus(data) {
+            let html = ``;
+            for (var item of data) {
+                html += `<option value="${item.id}">${item.description}</option>`
+            }
+            $("#status").html(html);
+        }
         function search() {
             var urlParams = new URLSearchParams(window.location.search);
             var buildingId = $("#buildings").val();
@@ -477,7 +517,7 @@
             var pageIndex = urlParams.get('pageIndex') ?? 1;
             var pageSize = urlParams.get('pageIndex') ?? 10;
             //https://localhost:7056/api/Facility/GetAllFacility?pageSize=10&pageIndex=1&keyword=test&buildingId=1&roomId=1
-            var route = `/Facility/ListFacility?pageSize=${pageSize}$pageIndex=${pageIndex}&buildingId=${buildingId}&roomId=${roomId}&keyword=${keyword}`;
+            var route = `/Facility/ListFacility?pageSize=${pageSize}pageIndex=${pageIndex}&buildingId=${buildingId}&roomId=${roomId}&keyword=${keyword}`;
             window.location.href = route;
         }
 
@@ -496,6 +536,51 @@
                 });
             } else {
                 alert("Hủy xóa cơ sở vật chất");  // Thông báo khi hủy xóa
+            }
+        }
+
+        //Hàm lấy list building theo UserId
+        //-------------------------------------------------------
+        function displayBuildings(buildings) {
+            const sidebarContainer = $('.sidebar-submenu');
+
+            // Clear previous content
+            sidebarContainer.empty();
+
+            if (buildings && buildings.length > 0) {
+                // Update Sidebar
+                buildings.forEach(building => {
+                    sidebarContainer.append(`
+                                                        <li class="sidebar-subitem">
+                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                            </a>
+                                                        </li>
+                                                    `);
+                });
+            } else {
+                displayNoBuildingsMessage();
+            }
+        }
+        function displayNoBuildingsMessage() {
+            const sidebarContainer = $('.sidebar-submenu');
+            const tableContainer = $('#buildingsContainer');
+
+            // Notify in Sidebar
+            sidebarContainer.empty();
+            sidebarContainer.append(`
+                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                            `);
+        }
+        //Lấy UserId
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
             }
         }
     </script>
