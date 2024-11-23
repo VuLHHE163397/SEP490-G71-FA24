@@ -178,10 +178,18 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script>
+        const apiBaseUrl = "https://localhost:7056/api"; // Đặt URL gốc của API
+        const token = localStorage.getItem("token"); // Lấy token từ localStorage
         // Gọi API để lấy dữ liệu
         async function fetchRoomStats() {
             try {
-                const response = await fetch('/api/Statistic/room-stats');
+                const response = await fetch(`${apiBaseUrl}/Statistic/room-stats`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+                
                 const data = await response.json();
 
                 // Xử lý dữ liệu cho biểu đồ

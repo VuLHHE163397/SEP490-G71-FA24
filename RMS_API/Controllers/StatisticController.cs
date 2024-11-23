@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RMS_API.DTOs;
+using RMS_API.Helper;
 using RMS_API.Models;
 
 namespace RMS_API.Controllers
@@ -19,9 +20,22 @@ namespace RMS_API.Controllers
         [HttpGet("room-stats")]
         public async Task<ActionResult> GetRoomStats()
         {
+            string token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token)) return BadRequest("Invalid token");
+            if (token.StartsWith("Bearer "))
+            {
+                token = token.Substring("Bearer ".Length).Trim();
+            }
+            int? userId = UserHelper.GetUserIdFromToken(token);
+            //if (int.IsNullOrEmpty(userId)) return Unauthorized("Invalid User");
+            if (userId == null)
+            {
+                return BadRequest("User not exsit");
+            }
             var buildingsWithRoomStats = await _context.Buildings
                 .Include(b => b.Rooms)
                 .ThenInclude(r => r.RoomStatus)
+                .Where(b => b.UserId == userId)
                 .Select(building => new RoomStatsDTO
                 {
                     BuildingName = building.Name,

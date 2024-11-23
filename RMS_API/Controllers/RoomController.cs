@@ -708,7 +708,8 @@ namespace RMS_API.Controllers
                 Description = dto.Description,
                 Status = dto.Status,
                 RoomId = dto.RoomId,
-                RequestDate = dto.RequestDate
+                RequestDate = dto.RequestDate,
+                SolveDate = DateTime.Now
             };
 
             _context.MaintainanceRequests.Add(maintainance);
