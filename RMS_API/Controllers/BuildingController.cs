@@ -5,8 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RMS_API.DTOs;
 using RMS_API.Models;
-using System.Security.Claims;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace RMS_API.Controllers
 {
@@ -33,13 +31,9 @@ namespace RMS_API.Controllers
         }
 
         [HttpGet("GetBuildingsByUserId/{userId}")]
-        [Authorize(Roles = "Landlord")]       // Chỉ cho phép Landlord truy cập
+        [Authorize(Roles = "Landlord")]         // Chỉ cho phép Landlord truy cập
         public async Task<IActionResult> GetBuildingsByUserId(int userId)
         {
-            Console.WriteLine("Authorization process passed");
-
-
-
             // Lấy các tòa nhà thuộc về userId từ database
             var buildings = await _context.Buildings
                 .Include(b => b.Address)
@@ -65,8 +59,6 @@ namespace RMS_API.Controllers
                     BuildingStatus = b.BuildingStatus.Name
                 })
                 .ToListAsync();
-
-            Console.WriteLine($"Buildings count for user {userId}: {buildings.Count}");
 
             // Kiểm tra nếu không có tòa nhà nào
             if (!buildings.Any())
@@ -151,7 +143,7 @@ namespace RMS_API.Controllers
 
 
 
-        
+
         [HttpPost("AddBuilding")]
         public async Task<IActionResult> AddBuilding([FromBody] AddBuildingDTO buildingDto)
         {

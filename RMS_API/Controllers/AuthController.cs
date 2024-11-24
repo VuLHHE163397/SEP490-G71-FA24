@@ -138,7 +138,8 @@ namespace RMS_API.Controllers
 
             var token = GenerateJwtToken(user);
 
-            HttpContext.Session.SetString("UserId", user.Id.ToString());
+            HttpContext.Session.SetString("JWToken", token);
+
 
             return Ok(new { token });
         }

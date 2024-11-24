@@ -33,12 +33,14 @@ namespace RMS_API.Controllers
             _context = context;
         }
 
+        /*[Authorize(Roles = "Landlord")] */      // Chỉ cho phép Landlord truy cập
         [HttpGet("GetAllRoom")]
         public IActionResult GetAllRoom()
         {
             var ro = _context.Rooms.ToList();
             return Ok(ro);
         }
+
         [HttpGet("GetAllRoom/{userId}")]
         public IActionResult GetAllRoomByUserId(int userId)
         {
@@ -64,6 +66,8 @@ namespace RMS_API.Controllers
             return Ok(ro);
         }
 
+
+        /*[Authorize(Roles = "Landlord")]  */     // Chỉ cho phép Landlord truy cập
         [HttpGet("GetRoomByBuilding/{buildingId}")]
         public IActionResult GetRoomByBuilding(int buildingId)
         {
@@ -101,30 +105,6 @@ namespace RMS_API.Controllers
         {
             var bui = _context.Buildings.ToList();
             return Ok(bui);
-        }
-
-        [HttpGet("GetBuildingsByUserIdd/{userId}")]
-        [Authorize]
-        public async Task<IActionResult> GetBuildingsByUserIdd(int userId)
-        {
-            // Lấy các tòa nhà thuộc về userId từ database
-            var buildings = await _context.Buildings
-                .Where(b => b.UserId == userId) // Lọc theo UserId
-                .Select(b => new Building
-                {
-                    Id = b.Id,
-                    Name = b.Name,
-                })
-                .ToListAsync();
-
-            // Kiểm tra nếu không có tòa nhà nào
-            if (!buildings.Any())
-            {
-                return NotFound($"No buildings found for user with ID {userId}.");
-            }
-
-            // Trả về danh sách các tòa nhà dưới dạng JSON
-            return Ok(buildings);
         }
 
         [HttpGet("GetAllImage/{roomId}")]
@@ -268,7 +248,7 @@ namespace RMS_API.Controllers
         };
 
         [HttpPost("ImportRooms/{buildingId}")]
-        public async Task<IActionResult> ImportRooms([FromForm] IFormFile file, int buildingId)
+        public async Task<IActionResult> ImportRooms( IFormFile file, int buildingId)
         {
             if (file == null || file.Length == 0)
             {
