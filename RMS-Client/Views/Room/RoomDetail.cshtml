@@ -47,19 +47,10 @@
                 border-radius: 5px;
             }
 
-        /* Đảm bảo ảnh chính có kích thước cố định */
-        #displayed-image {
-            width: 100%;
-            height: 300px; /* Hoặc kích thước mong muốn */
-            object-fit: cover; /* Đảm bảo ảnh không bị biến dạng và lấp đầy khung */
-        }
-
         .thumbnail-container {
             display: flex; /* Sử dụng flexbox để hiển thị các hình theo chiều ngang */
             /* overflow-x: auto; */ /* Thêm thanh cuộn ngang nếu các ảnh vượt quá kích thước container */
             gap: 10px; /* Khoảng cách giữa các ảnh */
-            flex-wrap: wrap;
-            justify-content: center;
         }
 
             .thumbnail-container .thumbnail {
@@ -76,10 +67,8 @@
                 }
 
         .thumbnail-item {
-            width: 100px; /* Đảm bảo kích thước mỗi thumbnail là 100px */
-            height: 100px;
             position: relative;
-            /* flex-shrink: 0; */
+            flex-shrink: 0;
         }
 
         .delete-button {
@@ -280,7 +269,7 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
-                                <span><i class="ti ti-layout-dashboard"></i></span>
+                                <span><i class="ti ti-home"></i></span>
                                 <span class="hide-menu">Quản lý phòng</span>
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
@@ -294,7 +283,7 @@
                                     {
                                         <li class="sidebar-subitem">
                                             <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                                <i class="ti ti-file"></i>
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
                                                 @buildingss.Name
                                             </a>
                                         </li>
@@ -309,7 +298,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Facility" asp-action="ListFacility" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-alien"></i>
+                                    <i class="fa-solid fa-gears"></i>
                                 </span>
                                 <span class="hide-menu">Cơ sở vật chất</span>
                             </a>
@@ -324,67 +313,16 @@
                         </li>
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
+                            <a class="sidebar-link" asp-controller="Service" asp-action="ServiceRecord" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-report"></i>
+                                    <i class="fa-solid fa-bolt"></i>
                                 </span>
-                                <span class="hide-menu">Danh sách yêu cầu</span>
+                                <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        <li class="nav-small-cap">
-                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                            <span class="hide-menu">-------------------------</span>
-                        </li>
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./authentication-register.html" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-user-plus"></i>
-                                </span>
-                                <span class="hide-menu">Register</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-login"></i>
-                                </span>
-                                <span class="hide-menu">Đăng xuất</span>
-                            </a>
-                        </li>
-                        <li class="nav-small-cap">
-                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                            <span class="hide-menu">EXTRA</span>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./icon-tabler.html" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-mood-happy"></i>
-                                </span>
-                                <span class="hide-menu">Icons</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./sample-page.html" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-aperture"></i>
-                                </span>
-                                <span class="hide-menu">Sample Page</span>
-                            </a>
-                        </li>
+                        
                     </ul>
-                    <div class="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">
-                        <div class="d-flex">
-                            <div class="unlimited-access-title me-3">
-                                <h6 class="fw-semibold fs-4 mb-6 text-dark w-85">Upgrade to pro</h6>
-                                <a href="https://adminmart.com/product/modernize-bootstrap-5-admin-template/" target="_blank"
-                                   class="btn btn-primary fs-2 fw-semibold lh-sm">Buy Pro</a>
-                            </div>
-                            <div class="unlimited-access-img">
-                                <img src="~/images/backgrounds/rocket.png" alt="" class="img-fluid">
-                            </div>
-                        </div>
-                    </div>
+                    
                 </nav>
 
             </div>
@@ -421,7 +359,7 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="/Profile/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
                                             <p class="mb-0 fs-3">My Profile</p>
                                         </a>
@@ -433,7 +371,8 @@
                                             <i class="ti ti-list-check fs-6"></i>
                                             <p class="mb-0 fs-3">My Task</p>
                                         </a>
-                                        <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                                        <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
+
                                     </div>
                                 </div>
                             </li>
@@ -477,9 +416,9 @@
                                         {
                                             <div class="thumbnail-item position-relative">
                                                 <img src="@image.Link" alt="Room Image" class="thumbnail img-thumbnail" onmouseover="changeImage(this)" />
-                                                <button class="delete-button btn btn-sm btn-danger rounded-circle" style="font-size: 7px;"
+                                                <button class="delete-button btn btn-sm btn-danger rounded-circle position-absolute top-0 end-0"
                                                         data-id="@image.Id" onclick="deleteImage(@image.Id)">
-                                                    <i class="ti ti-x" style="font-size: 12px;"></i>
+                                                    <i class="fas fa-times"></i>
                                                 </button>
                                             </div>
                                         }
@@ -496,76 +435,44 @@
 
                         <!-- Room Information -->
                         <div class="col-lg-6">
-                            <div class="room-details shadow rounded p-4 bg-white" style="max-width: 1200px; margin: 0 auto;">
-                                <h3 class="mb-4 text-secondary" style="text-align:center">Thông Tin Phòng</h3>
+                            <div class="room-details shadow rounded p-4 bg-white">
+                                <h3 class="mb-4 text-secondary">Thông Tin Phòng</h3>
 
-                                <div class="row">
-                                    <!-- Hàng dọc đầu tiên -->
-                                    <div class="col-md-4">
-                                        <p><strong>Giá:</strong> @string.Format("{0:N0} VNĐ", Model.Price)</p>
-                                        <p><strong>Diện tích:</strong> @Model.Area.ToString("0") m²</p>
-                                        <p>
-                                            <strong>Trạng thái:</strong>
-                                            @{
-                                                string statusNameVi = Model.RoomStatusId switch
-                                                {
-                                                    1 => "Trống",
-                                                    2 => "Đã có người",
-                                                    3 => "Đang sửa chữa",
-                                                    4 => "Sắp trống",
-                                                    _ => "Không xác định"
-                                                };
-                                            }
-                                            <span class="badge bg-info text-dark">@statusNameVi</span>
-                                        </p>
-                                    </div>
+                                <p><strong>Giá:</strong> @string.Format("{0:N0} VNĐ", Model.Price)</p>
+                                <p><strong>Diện tích:</strong> @Model.Area.ToString("0") m²</p>
 
-                                    <!-- Hàng dọc thứ hai -->
-                                    <div class="col-md-4">
-                                        <p><strong>Cơ sở vật chất:</strong></p>
-                                        @if (ViewBag.Facilities is List<RMS_API.Models.Facility> facilities && facilities.Any())
+                                @if (ViewBag.Facilities is List<RMS_API.Models.Facility> facilities && facilities.Any())
+                                {
+                                    <p>
+                                        <strong>Cơ sở vật chất:</strong>
+                                        @for (int i = 0; i < facilities.Count; i++)
                                         {
-                                            <ul class="list-unstyled">
-                                                @foreach (var facility in facilities)
-                                                {
-                                                    <li><span class="badge bg-primary">@facility.Name</span></li>
-                                                }
-                                            </ul>
+                                            <span class="badge bg-primary">@facilities[i].Name</span>
                                         }
-                                        else
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p><strong>Cơ sở vật chất:</strong> Hiện tại chưa có thông tin.</p>
+                                }
+
+                                <p>
+                                    <strong>Trạng thái:</strong>
+                                    @{
+                                        string statusNameVi = Model.RoomStatusId switch
                                         {
-                                            <p>Hiện tại chưa có thông tin.</p>
-                                        }
-                                    </div>
+                                            1 => "Trống",
+                                            2 => "Đã có người",
+                                            3 => "Đang sửa chữa",
+                                            4 => "Sắp trống",
+                                            _ => "Không xác định"
+                                        };
+                                    }
+                                    <span class="badge bg-info text-dark">@statusNameVi</span>
+                                </p>
 
-                                    <!-- Hàng dọc thứ ba -->
-                                    <div class="col-md-4">
-                                        <p><strong>Dịch Vụ:</strong></p>
-                                        <div id="services-checkboxes">
-                                            @foreach (var service in ViewBag.Services)
-                                            {
-                                                <div class="form-check">
-                                                    <input class="form-check-input"
-                                                           type="checkbox"
-                                                           id="service_@service.Id"
-                                                           data-service-id="@service.Id"
-                                                    @if (ViewBag.RoomServiceIds.Contains(service.Id))
-                                                    {
-                                                        <text>checked</text>
-                                                    } />
-                                                    <label class="form-check-label" for="service_@service.Id">@service.Name</label>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Hàng ngang phía dưới -->
-                                <div class="mt-4">
-                                    <p><strong>Mô tả:</strong> @Model.Description</p>
-                                </div>
+                                <p><strong>Mô tả:</strong> @Model.Description</p>
                             </div>
-
 
                             <!-- QR Code Section -->
                             <div class="qr-code-section mt-4 text-center">
@@ -583,7 +490,12 @@
 
         </div>
     </div>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
+
+        
+
         $(document).ready(function () {
             // Khởi tạo slick cho container ảnh nhỏ
             $('.slick-carousel').slick({
@@ -704,37 +616,5 @@
                 });
         });
     </script>
-
-    <script>
-        $(document).ready(function () {
-            var roomId = @Model.Id; // Lấy Id của phòng
-
-            // Lắng nghe sự kiện thay đổi trạng thái checkbox
-            $('#services-checkboxes').on('change', 'input[type="checkbox"]', function () {
-                var selectedServiceIds = [];
-                // Thu thập tất cả các service-id từ các checkbox được chọn
-                $('input[type="checkbox"]:checked').each(function () {
-                    selectedServiceIds.push($(this).data('service-id'));
-                });
-
-                // Gửi yêu cầu cập nhật danh sách dịch vụ
-                $.ajax({
-                    url: '/api/Room/UpdateServicesForRoom/' + roomId,
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(selectedServiceIds),
-                    success: function () {
-                        console.log('Dịch vụ đã được cập nhật.');
-                    },
-                    error: function (xhr) {
-                        console.error(xhr.responseJSON); // Log thông báo lỗi từ server
-                        alert('Có lỗi xảy ra khi cập nhật dịch vụ.');
-                    }
-                });
-            });
-        });
-
-    </script>
-
 </body>
 </html>

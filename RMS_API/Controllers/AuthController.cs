@@ -19,10 +19,11 @@ namespace RMS_API.Controllers
     {
         private readonly RMS_SEP490Context _context;
         private static Dictionary<string, string> _verificationCodes = new Dictionary<string, string>();
-
-        public AuthController(RMS_SEP490Context context)
+        private IConfiguration _configuration;
+        public AuthController(RMS_SEP490Context context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         [HttpPost("sendVerificationCode")]
@@ -143,32 +144,49 @@ namespace RMS_API.Controllers
         }
 
         //Gen token for jwt
-        private string GenerateJwtToken(User user)
+        private string GenerateJwtToken(User userInfo)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024");
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            List<Claim> claims = new List<Claim>();
+            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Name, userInfo.Email));
+            claims.Add(new Claim("UserId", userInfo.Id.ToString()));
+            claims.Add(new Claim("Roles", userInfo.Role.Name));
 
-            var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Name, user.Email),
-        new Claim("UserId", user.Id.ToString()) 
-    };
+            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddDays(7),
+                signingCredentials: credentials);
 
-            if (user.Role != null && !string.IsNullOrEmpty(user.Role.Name))
-            {
-                claims.Add(new Claim(ClaimTypes.Role, user.Role.Name));
-            }
+            return new JwtSecurityTokenHandler().WriteToken(token);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(2),
-                SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            //var tokenHandler = new JwtSecurityTokenHandler();
+            //var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024");
+
+            //        var claims = new List<Claim>
+            //{
+            //    new Claim(ClaimTypes.Name, user.Email),
+            //    new Claim("UserId", user.Id.ToString()) 
+            //};
+
+            //        if (user.Role != null && !string.IsNullOrEmpty(user.Role.Name))
+            //        {
+            //            claims.Add(new Claim(ClaimTypes.Role, user.Role.Name));
+            //        }
+
+            //        var tokenDescriptor = new SecurityTokenDescriptor
+            //        {
+            //            Subject = new ClaimsIdentity(claims),
+            //            Expires = DateTime.UtcNow.AddHours(10),
+            //            SigningCredentials = new SigningCredentials(
+            //                new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            //        };
+
+            //        var token = tokenHandler.CreateToken(tokenDescriptor);
+            //        return tokenHandler.WriteToken(token);
         }
 
 

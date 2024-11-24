@@ -143,6 +143,59 @@
             border-radius: 50%;
         }
 
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .popup-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 1000px;
+            text-align: center;
+        }
+
+            .popup-content h2 {
+                margin-top: 0;
+            }
+
+            .popup-content button {
+                margin-top: 20px;
+                padding: 10px 20px;
+                background: #007bff;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+                .popup-content button:hover {
+                    background: #0056b3;
+                }
+
+        .form-group a {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+        }
+
+            .form-group a:hover {
+                color: #0056b3;
+            }
+
     </style>
 </head>
 <body>
@@ -239,9 +292,9 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        
+
                     </ul>
-                    
+
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -320,7 +373,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Distance">Khoảng cách</label>
-                            <input type="number" class="form-control" id="Distance" name="Distance"  required />
+                            <input type="number" class="form-control" id="Distance" name="Distance" required />
                             <span id="distanceError" class="error-message" style="color: red; display: none;">Khoảng cách phải là một số dương.</span>
                         </div>
 
@@ -362,19 +415,39 @@
                         <div class="form-group">
                             <label for="LinkEmbedMap">Link Map</label>
                             <input type="text" class="form-control" id="LinkEmbedMap" name="LinkEmbedMap" required />
+                            <a id="openPopup">Cách lấy link Google Map</a>
                         </div>
 
 
                         <button type="submit" class="btn btn-primary">Tạo Tòa Nhà</button>
                         <a asp-controller="Building" asp-action="ListBuilding" class="btn btn-secondary">Trở Về</a>
                     </form>
+                    <!-- Popup -->
+                    <div class="popup-overlay" id="popupOverlay">
+                        <div class="popup-content">
+                            <h2>Hướng dẫn lấy link Google Map</h2>
+                            <p>1. Mở Google Maps trên trình duyệt hoặc ứng dụng.</p>
+                            <p>2. Tìm địa điểm mà bạn muốn lấy liên kết.</p>
+                            <p>3. Nhấn nút "Chia sẻ" và chọn "Nhúng bản đồ".</p>
+                            <p>4. Sao chép đoạn mã hoặc liên kết nhúng và dán vào ô nhập phía trên.</p>
+                            <p>1. Mở Google Maps trên trình duyệt hoặc ứng dụng.</p>
+                            <p>2. Tìm địa điểm mà bạn muốn lấy liên kết.</p>
+                            <p>3. Nhấn nút "Chia sẻ" và chọn "Nhúng bản đồ".</p>
+                            <p>4. Sao chép đoạn mã hoặc liên kết nhúng và dán vào ô nhập phía trên.</p>
+                            <p>1. Mở Google Maps trên trình duyệt hoặc ứng dụng.</p>
+                            <p>2. Tìm địa điểm mà bạn muốn lấy liên kết.</p>
+                            <p>3. Nhấn nút "Chia sẻ" và chọn "Nhúng bản đồ".</p>
+                            <p>4. Sao chép đoạn mã hoặc liên kết nhúng và dán vào ô nhập phía trên.</p>
+                            <button id="closePopup">Đóng</button>
+                        </div>
+                    </div>
                 </div>
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>
 
-                    const token = localStorage.getItem("token");                    
+                    const token = localStorage.getItem("token");
                     if (token == 1 || !token) {
                         window.location.href = "/Auth/Login";
                     }
@@ -535,6 +608,28 @@
                             return null;
                         }
 
+                    });
+
+                    // Lấy các phần tử DOM
+                    const openPopup = document.getElementById('openPopup');
+                    const closePopup = document.getElementById('closePopup');
+                    const popupOverlay = document.getElementById('popupOverlay');
+
+                    // Hiển thị popup khi bấm vào link
+                    openPopup.addEventListener('click', () => {
+                        popupOverlay.style.display = 'block';
+                    });
+
+                    // Đóng popup khi bấm vào nút "Đóng"
+                    closePopup.addEventListener('click', () => {
+                        popupOverlay.style.display = 'none';
+                    });
+
+                    // Đóng popup khi bấm ra ngoài vùng nội dung
+                    popupOverlay.addEventListener('click', (event) => {
+                        if (event.target === popupOverlay) {
+                            popupOverlay.style.display = 'none';
+                        }
                     });
                 </script>
 

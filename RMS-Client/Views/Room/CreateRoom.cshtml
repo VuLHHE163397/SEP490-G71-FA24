@@ -182,7 +182,7 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
-                                <span><i class="ti ti-layout-dashboard"></i></span>
+                                <span><i class="ti ti-home"></i></span>
                                 <span class="hide-menu">Quản lý phòng</span>
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
@@ -196,7 +196,7 @@
                                     {
                                         <li class="sidebar-subitem">
                                             <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                                <i class="ti ti-file"></i>
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
                                                 @buildingss.Name
                                             </a>
                                         </li>
@@ -354,21 +354,7 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script>
 
-        const token = localStorage.getItem("token");
-        if (token == 1 || !token) {
-            window.location.href = "/Auth/Login";
-        }
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-
-        if (payload.role !== "Landlord") {
-            window.location.href = "/Auth/Login";
-        }
-
-        function logout() {
-            localStorage.setItem("token", 1);
-            console.log("Token set to 1 on logout.");
-        }
+        
 
         // Thiết lập BuildingId mặc định
         document.getElementById("BuildingId").value = '@ViewBag.SelectedBuildingId';

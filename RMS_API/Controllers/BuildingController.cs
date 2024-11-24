@@ -31,6 +31,7 @@ namespace RMS_API.Controllers
         }
 
         [HttpGet("GetBuildingsByUserId/{userId}")]
+        [Authorize(Roles = "Landlord")]         // Chỉ cho phép Landlord truy cập
         public async Task<IActionResult> GetBuildingsByUserId(int userId)
         {
             // Lấy các tòa nhà thuộc về userId từ database
@@ -471,8 +472,6 @@ namespace RMS_API.Controllers
             var status = await _context.BuildingStatuses.ToListAsync();
             return Ok(status);
         }
-
-
 
     }
 }
