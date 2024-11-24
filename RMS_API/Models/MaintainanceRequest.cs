@@ -8,6 +8,7 @@ namespace RMS_API.Models
         public int Id { get; set; }
         public string Description { get; set; } = null!;
         public DateTime RequestDate { get; set; }
+        public DateTime? SolveDate { get; set; }
         public int Status { get; set; }
         public int RoomId { get; set; }
 

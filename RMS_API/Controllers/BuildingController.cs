@@ -473,7 +473,5 @@ namespace RMS_API.Controllers
             return Ok(status);
         }
 
-
-
     }
 }

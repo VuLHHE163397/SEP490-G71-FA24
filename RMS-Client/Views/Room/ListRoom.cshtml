@@ -273,35 +273,30 @@
                                 </a>
                             </div>
                         </div>
-
                         <!-- Modal để tải lên file Excel -->
+                        <!-- Modal Nhập Phòng -->
                         <div class="modal fade" id="importRoomModal" tabindex="-1" role="dialog" aria-labelledby="importRoomModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="importRoomModalLabel">Nhập Phòng từ Excel</h5>
+                                        <h5 class="modal-title" id="importRoomModalLabel">Nhập Phòng</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <!-- Form tải lên file Excel -->
-                                        <form id="importRoomForm" enctype="multipart/form-data">
-                                            <div class="form-group">
-                                                <label for="excelFile">Chọn file Excel (.xlsx):</label>
-                                                <input type="file" class="form-control" id="excelFile" name="file" accept=".xlsx" required />
-                                            </div>
-                                        </form>
+                                        <div>
+                                            <input type="file" id="fileInput" />
+                                            <button id="importButton" class="btn btn-primary mt-2">Import Rooms</button>
+                                            <div id="importMessage" style="margin-top: 10px; color: green;"></div>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                                        <button type="button" class="btn btn-primary" id="importRoomsBtn">Nhập</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -485,42 +480,68 @@
             document.getElementById("statusFilterForm").submit();
         }
 
-        // function submitUpdateStatus() {
-        //     var selectElement = document.querySelector('.room-status-dropdown');
-        //     var roomId = selectElement.getAttribute('data-room-id');
-        //     var statusId = selectElement.value;
+        const buildingId = @Html.Raw(ViewBag.SelectedBuildingId ?? "null"); // Truyền giá trị từ ViewBag
 
-        //     // Sử dụng SweetAlert để hiển thị hộp thoại xác nhận
-        //     Swal.fire({
-        //         title: 'Bạn có chắc chắn muốn thay đổi trạng thái phòng không?',
-        //         showCancelButton: true,
-        //         confirmButtonText: 'Có',
-        //         cancelButtonText: 'Không',
-        //         icon: 'warning'
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             // Gửi PUT request tới API nếu người dùng chọn "Có"
-        //             fetch(`/api/Room/updateRoomStatus/${roomId}`, {
-        //                 method: 'PUT',
-        //                 headers: {
-        //                     'Content-Type': 'application/json'
-        //                 },
-        //                 body: JSON.stringify(statusId)
-        //             })
-        //                 .then(response => {
-        //                     if (response.ok) {
-        //                         Swal.fire('Cập nhật trạng thái phòng thành công!', '', 'success');
-        //                     } else {
-        //                         response.text().then(errorMessage => Swal.fire('Có lỗi xảy ra', errorMessage, 'error'));
-        //                     }
-        //                 })
-        //                 .catch(error => Swal.fire('Có lỗi xảy ra', error, 'error'));
-        //         } else {
-        //             // Nếu người dùng chọn "Không", không làm gì cả
-        //             console.log("Người dùng đã hủy việc thay đổi trạng thái.");
-        //         }
-        //     });
-        // }
+        document.getElementById("importButton").addEventListener("click", async function () {
+            const fileInput = document.getElementById("fileInput");
+            const importMessage = document.getElementById("importMessage");
+
+            // Xóa thông báo cũ
+            importMessage.textContent = "";
+
+            // Kiểm tra xem BuildingId có hợp lệ không
+            if (!buildingId || buildingId === "null") {
+                importMessage.textContent = "Hãy chọn 1 tòa nhà";
+                importMessage.style.color = "red";
+                return;
+            }
+
+            // Kiểm tra xem người dùng đã chọn file chưa
+            if (!fileInput.files || fileInput.files.length === 0) {
+                importMessage.textContent = "Vui lòng chọn file có đuôi .xlsx để nhập phòng";
+                importMessage.style.color = "red";
+                return;
+            }
+
+            const file = fileInput.files[0];
+
+            // Kiểm tra loại file
+            if (!file.name.endsWith(".xlsx")) {
+                importMessage.textContent = "Chỉ cho phép dùng file .xlsx .";
+                importMessage.style.color = "red";
+                return;
+            }
+
+            // Tạo FormData để gửi file
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const apiUrl = `https://localhost:7056/api/Room/ImportRooms/${buildingId}`;
+
+            try {
+                // Gửi request POST đến API
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    body: formData,
+                });
+
+                // Xử lý kết quả
+                if (response.ok) {
+                    const result = await response.json();
+                    importMessage.textContent = `${result.message} Số phòng đã nhập vào: ${result.roomsCount}`;
+                    importMessage.style.color = "green";
+                    window.location.reload();
+                } else {
+                    const error = await response.text();
+                    importMessage.textContent = `Xảy ra lỗi khi nhập phòng`;
+                    importMessage.style.color = "red";
+                }
+            } catch (err) {
+                console.error("Error importing rooms:", err);
+                importMessage.textContent = "Đã xảy ra lỗi khi nhập phòng.";
+                importMessage.style.color = "red";
+            }
+        });
 
         function submitUpdateStatus(selectElement) {
             // var selectElement = document.querySelector('.room-status-dropdown');
