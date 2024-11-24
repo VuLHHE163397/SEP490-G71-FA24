@@ -7,6 +7,8 @@
     <title>RMS</title>
     <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -147,16 +149,7 @@
             <div class="container-fluid">
                 <!-- Row 1: Thống kê -->
                 <div class="row">
-                    <div class="col-lg-8 d-flex align-items-stretch">
-                        <div class="card w-100">
-                            <div class="card-body">
-                                <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                                    <h5 class="card-title fw-semibold">Thống kê báo cáo</h5>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
+                    <h1 style="margin-left:450px;font-size:xx-large;font-weight:bold" class="card-title fw-semibold">Thống kê báo cáo</h1>
                 </div>
 
                 <!-- Row 2: Bảng "Chưa bảo trì" -->
@@ -276,21 +269,32 @@
 
                     data.forEach(item => {
                         index++; // Tăng biến đếm trước mỗi lần render một dòng
-                        const row = `<tr>
-                             <td>${index}</td> <!-- Số thứ tự -->
-                             <td>${item.maintenanceDescription}</td>
-                             <td>${new Date(item.requestDate).toLocaleDateString()}</td>
-                             <td>${new Date(item.solveDate).toLocaleDateString()}</td>
-                             <td>${item.roomNumber}</td>
-                             <td>${item.buildingName}</td>
-                             <td>${item.address}</td>
-                             <td>${item.status}</td>
-                             <td>
-                                 <button onclick="changeStatus(${item.id})" class="btn btn-primary">Change</button>
-                             </td>
+
+                        // Kiểm tra trạng thái để tùy chỉnh nút
+                        const buttonHtml =
+                            item.status === "Chưa xử lý"
+                                ? `<button onclick="changeStatus(${item.id})" class="btn btn-success">
+                           <i class="fa fa-check"></i> 
+                       </button>`
+                                : `<button onclick="changeStatus(${item.id})" class="btn btn-danger">
+                           <i class="fa fa-undo"></i> 
+                       </button>`;
+
+                                const row = `<tr>
+                         <td>${index}</td> <!-- Số thứ tự -->
+                         <td>${item.maintenanceDescription}</td>
+                         <td>${new Date(item.requestDate).toLocaleDateString()}</td>
+                         <td>${item.solveDate ? new Date(item.solveDate).toLocaleDateString() : ""}</td>
+                         <td>${item.roomNumber}</td>
+                         <td>${item.buildingName}</td>
+                         <td>${item.address}</td>
+                         <td>${item.status}</td>
+                         <td>${buttonHtml}</td>
                          </tr>`;
+
                         tableBody.innerHTML += row;
                     });
+
 
                 }
             } catch (error) {

@@ -356,7 +356,7 @@
             function toggleFavorite(element) {
                 const roomId = element.getAttribute("data-room-id");
                 const roomAddress = element.getAttribute("data-room-address");
-                const roomImage = "~/images/room1.jpg"; // Fixed image path
+                const roomImage = element.getAttribute("data-room-image");
 
                 let favorites = getFavorites();
 

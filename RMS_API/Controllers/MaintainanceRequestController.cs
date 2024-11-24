@@ -12,7 +12,7 @@ namespace RMS_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Landlord")]
+    //[Authorize(Roles = "Landlord")]
     public class MaintainanceRequestController : ControllerBase
     {
         private readonly RMS_SEP490Context _context;
@@ -48,6 +48,7 @@ namespace RMS_API.Controllers
                     Id = mr.Id,
                     MaintenanceDescription = mr.Description,
                     RequestDate = mr.RequestDate,
+                    SolveDate = mr.SolveDate,
                     Status = mr.Status == 1 ? "Chưa xử lý" : "Đã xử lý",
                     RoomNumber = mr.Room.RoomNumber,
                     BuildingName = mr.Room.Building.Name,
