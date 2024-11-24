@@ -7,6 +7,18 @@
       "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\room\\listroom.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\fulearning\\fall2024\\datn\\sep490-g71-fa24\\sep490-g71-fa24\\rms-client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\fulearning\\fall2024\\datn\\sep490-g71-fa24\\sep490-g71-fa24\\rms_api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\fulearning\\fall2024\\datn\\sep490-g71-fa24\\sep490-g71-fa24\\rms-client\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\fulearning\\fall2024\\datn\\sep490-g71-fa24\\sep490-g71-fa24\\rms_api\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -22,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 13,
           "Children": [
             {
               "$type": "Bookmark",
@@ -66,20 +78,59 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\Program.cs",
+              "RelativeDocumentMoniker": "RMS-Client\\Program.cs",
+              "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\Program.cs",
+              "RelativeToolTip": "RMS-Client\\Program.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAADoAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-24T04:46:34.956Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\appsettings.json",
+              "RelativeDocumentMoniker": "RMS_API\\appsettings.json",
+              "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\appsettings.json",
+              "RelativeToolTip": "RMS_API\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAADAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-11-24T04:46:15.664Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\appsettings.json",
+              "RelativeDocumentMoniker": "RMS-Client\\appsettings.json",
+              "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\appsettings.json",
+              "RelativeToolTip": "RMS-Client\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAfAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-11-24T04:45:59.573Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "ListRoom.cshtml",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\Views\\Room\\ListRoom.cshtml",
               "RelativeDocumentMoniker": "RMS-Client\\Views\\Room\\ListRoom.cshtml",
               "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\Views\\Room\\ListRoom.cshtml",
               "RelativeToolTip": "RMS-Client\\Views\\Room\\ListRoom.cshtml",
-              "ViewState": "AQIAAFEBAAAAAAAAAAA0wH0BAAAsAAAA",
+              "ViewState": "AQIAABgBAAAAAAAAAAA0wH0BAAAUAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-11-24T03:13:41.94Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "RoomController.cs",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\Controllers\\RoomController.cs",
               "RelativeDocumentMoniker": "RMS-Client\\Controllers\\RoomController.cs",
@@ -91,7 +142,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "RoomController.cs",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\Controllers\\RoomController.cs",
               "RelativeDocumentMoniker": "RMS_API\\Controllers\\RoomController.cs",
