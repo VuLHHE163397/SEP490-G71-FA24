@@ -11,6 +11,24 @@
 
 <body>
 
+    <script>
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            window.location.href = "/Auth/Login";
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            sessionStorage.removeItem("token");
+            window.location.href = "/Auth/Login";
+        }
+    </script>
+
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
 
@@ -176,7 +194,7 @@
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <label for="FacilityName">Tên <span class="text-danger">*</span></label>
-                                    <input type="text" id="FacilityName" name="FacilityName" class="form-control" required value="@Model.Name" />
+                                    <input type="text" id="FacilityName" name="FacilityName" class="form-control" required/>
                                 </div>
                             </div>
 
@@ -186,7 +204,7 @@
                             <!-- Nhà -->
                             <div class="form-group col-md-5">
                                 <label for="BuildingId" class="form-label">Nhà</label>
-                                <select id="BuildingId" class="form-control custom-select">
+                                <select id="BuildingId" class="form-control custom-select" onchange="loadRoom()">
                                 </select>
                             </div>
 
@@ -235,28 +253,33 @@
     <script src="~/js/dashboard.js"></script>
     <script>
         
+        var totalRecord = 0;
         $(document).ready(function () {
+            loadBuilding();
             loadRoom();
             loadStatus();
-            loadBuilding();
-        })
-        function UpdateFacility() {
+            const token = sessionStorage.getItem("token");
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
             var urlParams = new URLSearchParams(window.location.search);
             var id = urlParams.get('id');
-            var facility = {
-                id: id,
-                name: $("#FacilityName").val(),
-                roomId: $("#RoomId").val(),
-                statusId: $("#FacilityStatusId").val(),
-            }
+            getDetail(id);
+        })
+        function getDetail(id) {
+            const token = sessionStorage.getItem("token");
             $.ajax({
-                url: "https://localhost:7056/api/Facility",
-                type: "PUT",
+                url: `https://localhost:7056/api/Facility?id=${id}`,
+                type: "GET",
                 contentType: "application/json",
-                data: JSON.stringify(facility),
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 success: function (response) {
-                    alert('Cật nhật cơ sở vật chất thành công');
-                    window.location.href = "/Facility/ListFacility"
+                    console.log(response)
+                    $("#FacilityName").val(response.name);
+                    $("#BuildingId").val(response.buildingId);
+                    $("#RoomId").val(response.roomId);
+                    $("#FacilityStatusId").val(response.facilityStatusId)
                 },
                 error: function (xhr, status, error) {
                     console.log(error)
@@ -264,19 +287,80 @@
                 }
             })
         }
-        function loadBuilding() {
+        ///////////////////////////////////////////////////////
+        function UpdateFacility() {
+            // Lấy token từ session storage
+            const token = sessionStorage.getItem("token");
+
+            // Lấy userId từ token
+            const userId = getUserIdFromToken(token);
+
+            // Lấy ID facility từ URL
+            var urlParams = new URLSearchParams(window.location.search);
+            var id = urlParams.get('id');
+
+            // Tạo đối tượng facility cần cập nhật
+            var facility = {
+                id: id,
+                name: $("#FacilityName").val(),
+                roomId: $("#RoomId").val(),
+                statusId: $("#FacilityStatusId").val(),
+                userId: userId
+            };
+
+            // Gửi yêu cầu AJAX với phương thức PUT
             $.ajax({
-                url: 'https://localhost:7056/api/Building/GetAllBuildings',
+                url: `https://localhost:7056/api/Facility/${id}`, // Đảm bảo URL chứa ID
+                type: "PUT",
+                contentType: "application/json",
+                headers: {
+                    "Authorization": `Bearer ${token}` // Thêm header xác thực
+                },
+                data: JSON.stringify(facility),
+                success: function (response) {
+                    alert('Cập nhật cơ sở vật chất thành công');
+                    window.location.href = "/Facility/ListFacility";
+                },
+                error: function (xhr, status, error) {
+                    console.log(error)
+                    alert("Lỗi khi cật nhật cơ sở vật chất");
+                }
+            })
+        }
+        ///////////////////////////////////////////////////////
+        //Lấy UserId
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+            }
+        }
+
+        function loadBuilding() {
+            const token = sessionStorage.getItem("token");
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
+            $.ajax({
+                url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',
                 dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                },
                 success: function (response) {
                     renderBuilding(response);
+                    displayBuildings(response); //Thêm cái này nữa
                 },
                 error: function (xhr, status, error) {
                     console.error("Có lỗi xảy ra:", error);
                 }
             });
         }
+
         function renderBuilding(data) {
             var urlParams = new URLSearchParams(window.location.search);
             var buildingId = urlParams.get('buildingId');
@@ -285,12 +369,21 @@
                 html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
             }
             $("#BuildingId").html(html);
+            //loadRoom();
         }
+        /////////////////////////////////////
         function loadRoom() {
+            const token = sessionStorage.getItem("token");
+            var buildingId = $("#BuildingId").val();
+            console.log("buildingId = " + buildingId)
+            const userId = getUserIdFromToken(token);
             $.ajax({
-                url: 'https://localhost:7056/api/Room/GetAllRoom',
+                url: buildingId && buildingId > 0 ? `https://localhost:7056/api/Room/GetRoomByBuilding/${buildingId}` : `https://localhost:7056/api/Room/GetAllRoom/${userId}`,
                 type: 'GET',
                 dataType: 'json',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 success: function (response) {
                     renderRoom(response);
                 },
@@ -300,12 +393,13 @@
             });
         }
         function renderRoom(data) {
-            let html = ``;
+            let html = `<option value="-1">Tất cả</option>`;
             for (var item of data) {
-                html += `<option value="${item.id}">${item.roomNumber}</option>`
+                html += `<option value="${item.id}" >${item.roomNumber}</option>`
             }
             $("#RoomId").html(html);
         }
+        /////////////////////////////////////
         function loadStatus() {
             $.ajax({
                 url: 'https://localhost:7056/api/FacilityStatus/GetAllFacility',
@@ -325,6 +419,52 @@
                 html += `<option value="${item.id}">${item.description}</option>`
             }
             $("#FacilityStatusId").html(html);
+        }
+
+        ////////////////////////////////////////////////
+        //Hàm lấy list building theo UserId
+        //-------------------------------------------------------
+        function displayBuildings(buildings) {
+            const sidebarContainer = $('.sidebar-submenu');
+
+            // Clear previous content
+            sidebarContainer.empty();
+
+            if (buildings && buildings.length > 0) {
+                // Update Sidebar
+                buildings.forEach(building => {
+                    sidebarContainer.append(`
+                                                                        <li class="sidebar-subitem">
+                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                            </a>
+                                                                        </li>
+                                                                    `);
+                });
+            } else {
+                displayNoBuildingsMessage();
+            }
+        }
+        function displayNoBuildingsMessage() {
+            const sidebarContainer = $('.sidebar-submenu');
+            const tableContainer = $('#buildingsContainer');
+
+            // Notify in Sidebar
+            sidebarContainer.empty();
+            sidebarContainer.append(`
+                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                            `);
+        }
+        //Lấy UserId
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+            }
         }
     </script>
 

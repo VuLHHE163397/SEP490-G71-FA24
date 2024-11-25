@@ -7,5 +7,7 @@
         public string? keyword { get; set; }
         public int buildingId { get; set; } = 0;
         public int roomId { get; set; } = 0;
+        public int userId { get; set; }
+        public int statusId { get; set; }
     }
 }

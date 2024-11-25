@@ -19,6 +19,7 @@ namespace RMS_API.Controllers
         }
 
         [HttpGet]
+        
         public async Task<IActionResult> GetAsync(int id)
         {
             try
@@ -38,14 +39,16 @@ namespace RMS_API.Controllers
 
         //lấy danh sách dịch vụ
         [HttpGet("GetAllService")]
+        
         public async Task<ActionResult<IEnumerable<ServiceDTO>>> GetAllServices([FromQuery] ServiceFilter filter)
         {
             var services = await _context.Services
+                .Include(e => e.Building)
                 .Select(s => new ServiceDTO
                 {
                     Id = s.Id,
                     Name = s.Name,
-                    BuildingId = s.BuildingId,
+                    BuildingName = s.Building.Name,
                     Price = s.Price
                 })
                 .Where(e => string.IsNullOrWhiteSpace(filter.keyword) || e.Name.ToLower().Contains(filter.keyword.ToLower()))

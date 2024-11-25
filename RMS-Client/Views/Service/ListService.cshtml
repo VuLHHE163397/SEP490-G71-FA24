@@ -296,7 +296,7 @@
                                     <tr>
                                         <td>@(stt++)</td>
                                         <td>@services.Name</td>
-                                        <td>@services.BuildingId</td>
+                                        <td>@services.BuildingName</td>
                                         <td>@String.Format("{0:0,0} VNĐ", services.Price)</td>
                                         <td>
                                             <a href="/Service/EditService?id=@services.Id" class="btn btn-primary">
@@ -461,17 +461,7 @@
                                         <li class="sidebar-subitem">Không có tòa nhà nào</li>
                                     `);
         }
-        //Lấy UserId
-        function getUserIdFromToken(token) {
-            try {
-                const tokenParts = token.split('.');
-                const payload = JSON.parse(atob(tokenParts[1]));
-                return payload.UserId;
-            } catch (error) {
-                console.error("Không mã hóa đc token:", error);
-                return null;
-            }
-        }
+       
 
         
     </script>
