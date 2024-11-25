@@ -199,6 +199,25 @@
     </style>
 </head>
 <body>
+
+    <script>
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            window.location.href = "/Auth/Login";
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            sessionStorage.removeItem("token");
+            window.location.href = "/Auth/Login";
+        }
+    </script>
+
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -447,24 +466,32 @@
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>
 
-                    const token = localStorage.getItem("token");
-                    if (token == 1 || !token) {
-                        window.location.href = "/Auth/Login";
-                    }
-                    const tokenParts = token.split('.');
-                    const payload = JSON.parse(atob(tokenParts[1]));
 
-                    if (payload.role !== "Landlord") {
-                        window.location.href = "/Auth/Login";
-                    }
-
-                    function logout() {
-                        localStorage.setItem("token", 1);
-                        console.log("Token set to 1 on logout.");
-                    }
 
                     $(document).ready(function () {
                         // Province to District Fetch
+
+                        // function checkBuildingName() {
+                        //     var name = encodeURIComponent($('#Name').val());
+                        //     var userId = getUserIdFromToken(); // Assume this function retrieves the UserId
+                        //     var url = `https://localhost:7056/api/Building/CheckBuildingName/${userId}/${name}`;
+
+                        //     $.ajax({
+                        //         url: url,
+                        //         type: 'GET',
+                        //         success: function (isDuplicate) {
+                        //             if (isDuplicate) {
+                        //                 alert('Tên tòa nhà đã tồn tại cho người dùng này.');
+                        //             } else {
+                        //                 alert('Tên tòa nhà hợp lệ.');
+                        //             }
+                        //         },
+                        //         error: function () {
+                        //             alert('Có lỗi xảy ra khi kiểm tra tên tòa nhà.');
+                        //         }
+                        //     });
+                        // }
+
                         $('#ProvinceId').change(function () {
                             var provinceName = encodeURIComponent($(this).val());
                             var url = `https://localhost:7056/api/Building/GetDistrictsByProvince/${provinceName}`;
@@ -553,7 +580,12 @@
                             }
 
                             // Get UserId from Token
-                            var userId = getUserIdFromToken();
+                            const token = sessionStorage.getItem("token");
+                            if (!token) {
+                                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                                return;
+                            }
+                            var userId = getUserIdFromToken(token);
                             if (!userId) {
                                 $('#userIdError').show(); // Show error if UserId is missing
                                 return;
@@ -592,24 +624,34 @@
                         });
 
                         // Utility Function: Extract UserId from Token
-                        function getUserIdFromToken() {
-                            const token = localStorage.getItem("token");
+                        // function getUserIdFromToken() {
+                        //     const token = sessionSto.getItem("token");
 
-                            if (token) {
-                                try {
-                                    const tokenParts = token.split('.');
-                                    const payload = JSON.parse(atob(tokenParts[1]));
+                        //     if (token) {
+                        //         try {
+                        //             const tokenParts = token.split('.');
+                        //             const payload = JSON.parse(atob(tokenParts[1]));
 
-                                    return payload.UserId;
-                                } catch (e) {
-                                    console.error('Token parsing error:', e);
-                                }
-                            }
-                            return null;
-                        }
+                        //             return payload.UserId;
+                        //         } catch (e) {
+                        //             console.error('Token parsing error:', e);
+                        //         }
+                        //     }
+                        //     return null;
+                        // }
 
                     });
 
+                    function getUserIdFromToken(token) {
+                        try {
+                            const tokenParts = token.split('.');
+                            const payload = JSON.parse(atob(tokenParts[1]));
+                            return payload.UserId;
+                        } catch (error) {
+                            console.error("Không mã hóa đc token:", error);
+                            return null;
+                        }
+                    }
                     // Lấy các phần tử DOM
                     const openPopup = document.getElementById('openPopup');
                     const closePopup = document.getElementById('closePopup');

@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RMS_API.DTOs;
 using RMS_API.Models;
+using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace RMS_API.Controllers
 {
@@ -19,21 +21,27 @@ namespace RMS_API.Controllers
             _context = context;
         }
 
-        [HttpGet("CheckBuildingName/{name}")]
-        public IActionResult CheckBuildingName(string name)
+        [HttpGet("CheckBuildingName/{userId}/{name}")]
+        public IActionResult CheckBuildingName(int userId, string name)
         {
-            var building = _context.Buildings.FirstOrDefault(b => b.Name == name);
+            var building = _context.Buildings.FirstOrDefault(b => b.Name == name && b.UserId == userId);
             if (building != null)
             {
-                return Ok(true); // Name exists
+                return Ok(true); // Name exists for the given UserId
             }
-            return Ok(false); // Name doesn't exist
+            return Ok(false); // Name doesn't exist for the given UserId
         }
 
+
+
         [HttpGet("GetBuildingsByUserId/{userId}")]
-        [Authorize(Roles = "Landlord")]         // Chỉ cho phép Landlord truy cập
+        [Authorize(Roles = "Landlord")]       // Chỉ cho phép Landlord truy cập
         public async Task<IActionResult> GetBuildingsByUserId(int userId)
         {
+            Console.WriteLine("Authorization process passed");
+
+
+
             // Lấy các tòa nhà thuộc về userId từ database
             var buildings = await _context.Buildings
                 .Include(b => b.Address)
@@ -59,6 +67,8 @@ namespace RMS_API.Controllers
                     BuildingStatus = b.BuildingStatus.Name
                 })
                 .ToListAsync();
+
+            Console.WriteLine($"Buildings count for user {userId}: {buildings.Count}");
 
             // Kiểm tra nếu không có tòa nhà nào
             if (!buildings.Any())
@@ -137,11 +147,8 @@ namespace RMS_API.Controllers
                     Id = w.Id,
                     Name = w.Name
                 }).ToList();
-
             return Ok(wards);
         }
-
-
 
         
         [HttpPost("AddBuilding")]
