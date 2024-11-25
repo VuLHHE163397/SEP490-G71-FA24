@@ -31,12 +31,13 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 //app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();
 
+
+// Sử dụng CORS
 app.UseCors("AllowAllOrigins");
 app.UseRouting();
 

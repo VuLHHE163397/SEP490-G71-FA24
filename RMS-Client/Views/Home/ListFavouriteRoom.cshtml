@@ -160,8 +160,6 @@
             return favorites ? JSON.parse(decodeURIComponent(favorites)) : [];
         }
 
-        const imageUrl = "@Url.Content("~/images/room1.jpg")";
-
         function displayFavoriteRooms() {
             const favorites = getFavorites();
             const favoriteRoomsList = document.getElementById('favoriteRoomsList');
@@ -175,14 +173,14 @@
                 const row = document.createElement('tr');
 
                 row.innerHTML = `
-                                            <th scope="row">${index + 1}</th>
-                                            <td><img src="${imageUrl}" alt="Room Image" class="img-fluid" style="width: 100px; height: auto;"></td>
-                                            <td>${room.address}</td>
-                                            <td>
-                                                           <button class="fas fa-trash-alt fa-lg" title="Xoá" onclick="removeFavorite('${room.id}')" style="font-size: 1.5em;"></button>
-                                                           <a href="/Home/RoomDetail/${room.id}" class="fas fa-eye fa-lg" style="margin-left: 10px; font-size: 1.5em; color: blue;" title="Xem chi tiết"></a>
-                                            </td>
-                                        `;
+                                <th scope="row">${index + 1}</th>
+                                <td><img src="${room.image}" alt="Room Image" class="img-fluid" style="width: 100px; height: auto;"></td>
+                                <td>${room.address}</td>
+                                <td>
+                                    <button class="fas fa-trash-alt fa-lg" title="Xoá" onclick="removeFavorite('${room.id}')" style="font-size: 1.5em;"></button>
+                                    <a href="/Home/RoomDetail/${room.id}" class="fas fa-eye fa-lg" style="margin-left: 10px; font-size: 1.5em; color: blue;" title="Xem chi tiết"></a>
+                                </td>
+                            `;
 
                 favoriteRoomsList.appendChild(row);
             });

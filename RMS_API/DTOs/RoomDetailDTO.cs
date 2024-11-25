@@ -12,6 +12,8 @@
         public string RoomStatus { get; set; }
         public string OwnerName { get; set; }
         public string OwnerPhone { get; set; }
+        public string? Facebook { get; set; }
+        public string? Zalo { get; set; }
         public List<ImageDTO> Images { get; set; }
     }
 }

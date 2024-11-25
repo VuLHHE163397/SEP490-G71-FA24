@@ -193,6 +193,9 @@ namespace RMS_API.Controllers
                 return Unauthorized("Mật khẩu không đúng!");
 
             var token = GenerateJwtToken(user);
+
+            HttpContext.Session.SetString("UserId", user.Id.ToString());
+
             return Ok(new { token });
         }
 

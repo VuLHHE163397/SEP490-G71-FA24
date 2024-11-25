@@ -117,7 +117,7 @@
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
-                                @{
+                                @* @{
                                     var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
                                 }
                                 @if (buildingsss != null && buildingsss.Any())
@@ -135,7 +135,7 @@
                                 else
                                 {
                                     <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                }
+                                } *@
                             </ul>
                         </li>
                         <li class="sidebar-item">
@@ -352,11 +352,12 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
-    <script>        
+    <script>
+        
         var totalRecord = @Html.Raw(ViewBag.TotalRecord);
         $(document).ready(function () {
             loadBuilding();
-            //loadRoom();
+            // loadRoom();
             setKeyword();
             loadPaging();
             loadStatus();
@@ -417,24 +418,39 @@
             var keyword = urlParams.get('keyword');
             $("#keyword").val(keyword)
         }
+        //Lấy UserId
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+            }
+        }
+
         function loadBuilding() {
-            const userId = getUserIdFromToken();
-            //Lấy roomId
-            //var roomId = $("rooms").val();
-            //`https://localhost:7056/api/Facility/GetByRoom/&{roomId}/&{roomId}`
+            const token = sessionStorage.getItem("token");
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
             $.ajax({
-                url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,
+                url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',
                 dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                },
                 success: function (response) {
                     renderBuilding(response);
-                    displayBuildings(response);
+                    displayBuildings(response); //Thêm cái này nữa
                 },
                 error: function (xhr, status, error) {
                     console.error("Có lỗi xảy ra:", error);
                 }
             });
         }
+
         function renderBuilding(data) {
             var urlParams = new URLSearchParams(window.location.search);
             var buildingId = urlParams.get('buildingId');
@@ -445,6 +461,7 @@
             $("#buildings").html(html);
             loadRoom();
         }
+
         function loadRoom() {
             var buildingId = $("#buildings").val();
             const userId = getUserIdFromToken();//iojuo
@@ -522,6 +539,8 @@
             }
         }
 
+        //Hàm lấy list building theo UserId
+        //-------------------------------------------------------
         function displayBuildings(buildings) {
             const sidebarContainer = $('.sidebar-submenu');
 
@@ -553,24 +572,17 @@
                                                 <li class="sidebar-subitem">Không có tòa nhà nào</li>
                                             `);
         }
-
-        // Parse User ID from Token
-        function getUserIdFromToken() {
-            const token = localStorage.getItem("token");
-            if (token) {
-                try {
-                    const tokenParts = token.split('.');
-                    const payload = JSON.parse(atob(tokenParts[1]));
-                    return payload.UserId || null;
-                } catch (e) {
-                    console.error('Error parsing token:', e);
-                    return null;
-                }
+        //Lấy UserId
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
             }
-            console.warn('Token not found in localStorage.');
-            return null;
         }
-        //-------------------
     </script>
 </body>
 

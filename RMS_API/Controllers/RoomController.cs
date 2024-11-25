@@ -119,7 +119,7 @@ namespace RMS_API.Controllers
         };
 
         [HttpPost("ImportRooms/{buildingId}")]
-        public async Task<IActionResult> ImportRooms([FromForm]IFormFile file, int buildingId)
+        public async Task<IActionResult> ImportRooms(IFormFile file, int buildingId)
         {
             if (file == null || file.Length == 0)
             {
@@ -135,6 +135,7 @@ namespace RMS_API.Controllers
                 using (var stream = new MemoryStream())
                 {
                     await file.CopyToAsync(stream);
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // Thiết lập giấy phép
                     using (var package = new ExcelPackage(stream))
                     {
                         var worksheet = package.Workbook.Worksheets[0];  // Đọc sheet đầu tiên
@@ -151,13 +152,14 @@ namespace RMS_API.Controllers
 
                         // Kiểm tra xem các cột cần thiết có tồn tại không
                         if (!headers.ContainsKey("Số phòng") ||
-                            !headers.ContainsKey("Giá phòng") ||
-                            !headers.ContainsKey("Diện tích") ||
-                            !headers.ContainsKey("Mô tả phòng") ||
+                            !headers.ContainsKey("Diện tích (m²)") ||
                             !headers.ContainsKey("Tầng") ||
+                            !headers.ContainsKey("Giá phòng(VNĐ)") ||
+                            !headers.ContainsKey("Trạng thái") ||
+                            !headers.ContainsKey("Mô tả phòng") ||
                             !headers.ContainsKey("Ngày bắt đầu thuê phòng") ||
                             !headers.ContainsKey("Ngày hết hạn phòng thuê") ||
-                            !headers.ContainsKey("Trạng thái") ||
+
                             !headers.ContainsKey("Ngày phòng sẽ trống trong tương lai"))
                         {
                             return BadRequest("Missing required columns in the Excel file.");
@@ -168,11 +170,20 @@ namespace RMS_API.Controllers
                         {
                             // Lấy giá trị từ các cột bằng tên cột
                             var roomNumber = worksheet.Cells[row, headers["Số phòng"]].Text;
-                            var price = decimal.Parse(worksheet.Cells[row, headers["Giá phòng"]].Text);
-                            var area = double.Parse(worksheet.Cells[row, headers["Diện tích"]].Text);
-                            var description = worksheet.Cells[row, headers["Mô tả phòng"]].Text;
+                            var area = double.Parse(worksheet.Cells[row, headers["Diện tích (m²)"]].Text);
                             var floor = int.Parse(worksheet.Cells[row, headers["Tầng"]].Text);
+                            //var price = decimal.Parse(worksheet.Cells[row, headers["Giá phòng(VNĐ)"]].Text.Trim());
                             var status = worksheet.Cells[row, headers["Trạng thái"]].Text;
+                            var description = worksheet.Cells[row, headers["Mô tả phòng"]].Text;
+
+                            var rawPrice = worksheet.Cells[row, headers["Giá phòng(VNĐ)"]].Text.Trim();
+                            rawPrice = rawPrice.Replace("VNĐ", "").Replace(",", "").Replace(" ", "");
+
+                            if (!decimal.TryParse(rawPrice, out var price))
+                            {
+                                return BadRequest($"Invalid price format in row {row}: '{worksheet.Cells[row, headers["Giá phòng(VNĐ)"]].Text}'. Ensure it contains numeric values only.");
+                            }
+
                             // Kiểm tra và chuyển đổi giá trị của các ngày để cho phép null
                             DateTime? startedDate = null;
                             if (DateTime.TryParse(worksheet.Cells[row, headers["Ngày bắt đầu thuê phòng"]].Text, out var startDate))
@@ -192,9 +203,9 @@ namespace RMS_API.Controllers
                             }
 
                             // Kiểm tra trạng thái và ánh xạ sang RoomStatusId
-                            if (!RoomStatusMapping.ContainsKey(status))
+                            if (!status.Contains("Đang trống"))
                             {
-                                return BadRequest($"Invalid room status '{status}' in row {row}. Valid statuses are: 'Đang trống', 'Đang cho thuê', 'Đang bảo trì', 'Sắp trống'.");
+                                return BadRequest($"Invalid room status '{status}' in row {row}. Valid statuses are:Đang trống");
                             }
                             var roomStatusId = RoomStatusMapping[status];
 
@@ -473,6 +484,7 @@ namespace RMS_API.Controllers
         {
             var rooms = _context.Rooms
                 .Where(r => r.RoomStatusId == 1 && r.Building.BuildingStatusId == 1)
+                //.OrderByDescending(r => r.Id)
                 .Select(r => new RoomDTO
                 {
                     Id = r.Id,
@@ -522,6 +534,8 @@ namespace RMS_API.Controllers
                                $"{room.Building?.Province?.Name ?? "Chưa có tỉnh"}",
                 Price = room.Price,
                 Area = room.Area,
+                Facebook = room.Building?.User?.FacebookUrl?? "Không có link FB",
+                Zalo = room.Building?.User?.ZaloUrl ?? "Không có link Zalo",
                 Distance = room.Building?.Distance ?? 0,
                 Description = room.Description,
                 RoomStatus = room.RoomStatus?.Name ?? "Trạng thái không xác định",
@@ -558,7 +572,7 @@ namespace RMS_API.Controllers
                 .Where(r => r.BuildingId == currentRoom.BuildingId &&
                             (r.RoomStatusId == 1) &&
                             r.Id != roomId) // Loại trừ phòng hiện tại
-                .OrderBy(r => r.Price) // Sắp xếp theo giá tiền, nếu cần
+                .OrderByDescending(r => r.Id)
                 .Take(5) // Lấy top 5 phòng
                 .Select(r => new SuggestedRoomDTO
                 {
@@ -596,6 +610,7 @@ namespace RMS_API.Controllers
                     (searchDto.MinArea == null || r.Area >= searchDto.MinArea) &&
                     (searchDto.MaxArea == null || r.Area <= searchDto.MaxArea)
                 )
+                .OrderByDescending(r => r.Id)
                 .Select(r => new
                 {
                     Id = r.Id,
@@ -704,7 +719,8 @@ namespace RMS_API.Controllers
                 Description = dto.Description,
                 Status = dto.Status,
                 RoomId = dto.RoomId,
-                RequestDate = dto.RequestDate
+                RequestDate = dto.RequestDate,
+                SolveDate = DateTime.Now
             };
 
             _context.MaintainanceRequests.Add(maintainance);
