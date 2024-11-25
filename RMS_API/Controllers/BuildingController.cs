@@ -21,16 +21,18 @@ namespace RMS_API.Controllers
             _context = context;
         }
 
-        [HttpGet("CheckBuildingName/{name}")]
-        public IActionResult CheckBuildingName(string name)
+        [HttpGet("CheckBuildingName/{userId}/{name}")]
+        public IActionResult CheckBuildingName(int userId, string name)
         {
-            var building = _context.Buildings.FirstOrDefault(b => b.Name == name);
+            var building = _context.Buildings.FirstOrDefault(b => b.Name == name && b.UserId == userId);
             if (building != null)
             {
-                return Ok(true); // Name exists
+                return Ok(true); // Name exists for the given UserId
             }
-            return Ok(false); // Name doesn't exist
+            return Ok(false); // Name doesn't exist for the given UserId
         }
+
+
 
         [HttpGet("GetBuildingsByUserId/{userId}")]
         [Authorize(Roles = "Landlord")]       // Chỉ cho phép Landlord truy cập
@@ -145,11 +147,8 @@ namespace RMS_API.Controllers
                     Id = w.Id,
                     Name = w.Name
                 }).ToList();
-
             return Ok(wards);
         }
-
-
 
         
         [HttpPost("AddBuilding")]

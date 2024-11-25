@@ -27,6 +27,16 @@ namespace RMS_Client.Controllers
             return View("~/Views/Profile/ViewProfile.cshtml");
         }
 
+        public IActionResult EditProfile()
+        {
+            return View("~/Views/Profile/EditProfile.cshtml");
+        }
+
+        public IActionResult ChangePassword()
+        {
+            return View("~/Views/Profile/ChangePassword.cshtml");
+        }
+
         public async Task<IActionResult> ListUser()
         {
             var user = new List<UserDTO>();

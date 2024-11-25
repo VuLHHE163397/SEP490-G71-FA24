@@ -45,7 +45,7 @@
     <None Include="Views\Login\Login.cshtml" />
     <None Include="Views\Login\Register.cshtml" />
     <None Include="Views\Login\ResetPassword.cshtml" />
-    <None Include="Views\Profile\ChangedPassword.cshtml" />
+    <None Include="Views\Profile\ChangePassword.cshtml" />
     <None Include="Views\Profile\EditProfile.cshtml" />
     <None Include="Views\Profile\ViewProfile.cshtml" />
     <None Include="Views\Report\ListReport.cshtml" />

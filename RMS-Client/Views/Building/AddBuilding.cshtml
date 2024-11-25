@@ -145,8 +145,8 @@
 
     </style>
 </head>
-<body>   
-    
+<body>
+
 
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -241,9 +241,9 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        
+
                     </ul>
-                    
+
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -322,7 +322,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Distance">Khoảng cách</label>
-                            <input type="number" class="form-control" id="Distance" name="Distance"  required />
+                            <input type="number" class="form-control" id="Distance" name="Distance" required />
                             <span id="distanceError" class="error-message" style="color: red; display: none;">Khoảng cách phải là một số dương.</span>
                         </div>
 
@@ -376,10 +376,32 @@
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>
 
-                   
+
 
                     $(document).ready(function () {
                         // Province to District Fetch
+
+                        // function checkBuildingName() {
+                        //     var name = encodeURIComponent($('#Name').val());
+                        //     var userId = getUserIdFromToken(); // Assume this function retrieves the UserId
+                        //     var url = `https://localhost:7056/api/Building/CheckBuildingName/${userId}/${name}`;
+
+                        //     $.ajax({
+                        //         url: url,
+                        //         type: 'GET',
+                        //         success: function (isDuplicate) {
+                        //             if (isDuplicate) {
+                        //                 alert('Tên tòa nhà đã tồn tại cho người dùng này.');
+                        //             } else {
+                        //                 alert('Tên tòa nhà hợp lệ.');
+                        //             }
+                        //         },
+                        //         error: function () {
+                        //             alert('Có lỗi xảy ra khi kiểm tra tên tòa nhà.');
+                        //         }
+                        //     });
+                        // }
+
                         $('#ProvinceId').change(function () {
                             var provinceName = encodeURIComponent($(this).val());
                             var url = `https://localhost:7056/api/Building/GetDistrictsByProvince/${provinceName}`;
@@ -468,7 +490,12 @@
                             }
 
                             // Get UserId from Token
-                            var userId = getUserIdFromToken();
+                            const token = sessionStorage.getItem("token");
+                            if (!token) {
+                                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                                return;
+                            }
+                            var userId = getUserIdFromToken(token);
                             if (!userId) {
                                 $('#userIdError').show(); // Show error if UserId is missing
                                 return;
@@ -507,23 +534,34 @@
                         });
 
                         // Utility Function: Extract UserId from Token
-                        function getUserIdFromToken() {
-                            const token = localStorage.getItem("token");
+                        // function getUserIdFromToken() {
+                        //     const token = sessionSto.getItem("token");
 
-                            if (token) {
-                                try {
-                                    const tokenParts = token.split('.');
-                                    const payload = JSON.parse(atob(tokenParts[1]));
+                        //     if (token) {
+                        //         try {
+                        //             const tokenParts = token.split('.');
+                        //             const payload = JSON.parse(atob(tokenParts[1]));
 
-                                    return payload.UserId;
-                                } catch (e) {
-                                    console.error('Token parsing error:', e);
-                                }
-                            }
-                            return null;
-                        }
+                        //             return payload.UserId;
+                        //         } catch (e) {
+                        //             console.error('Token parsing error:', e);
+                        //         }
+                        //     }
+                        //     return null;
+                        // }
 
                     });
+
+                    function getUserIdFromToken(token) {
+                        try {
+                            const tokenParts = token.split('.');
+                            const payload = JSON.parse(atob(tokenParts[1]));
+                            return payload.UserId;
+                        } catch (error) {
+                            console.error("Không mã hóa đc token:", error);
+                            return null;
+                        }
+                    }
                 </script>
 
             </div>
