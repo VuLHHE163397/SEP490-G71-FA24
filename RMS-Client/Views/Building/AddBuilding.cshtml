@@ -373,7 +373,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Distance">Khoảng cách</label>
-                            <input type="number" class="form-control" id="Distance" name="Distance" required />
+                            <input type="number" class="form-control" id="Distance" name="Distance" step="0.01" required />
                             <span id="distanceError" class="error-message" style="color: red; display: none;">Khoảng cách phải là một số dương.</span>
                         </div>
 
@@ -543,7 +543,7 @@
 
                             // Validate Distance
                             if (isNaN(distance) || distance <= 0) {
-                                $('#distanceError').show(); // Show error below the input field
+                                $('#distanceError').show(); // Hiển thị lỗi
                                 formIsValid = false;
                             }
 
