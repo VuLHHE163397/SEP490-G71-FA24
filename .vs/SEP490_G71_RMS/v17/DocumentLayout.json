@@ -139,21 +139,19 @@
               "RelativeToolTip": "RMS-Client\\appsettings.json",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAABBAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-11-25T04:03:51.547Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-25T04:03:51.547Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "RMS_API",
+              "Title": "RMS_API.csproj",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
               "RelativeDocumentMoniker": "RMS_API\\RMS_API.csproj",
               "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
               "RelativeToolTip": "RMS_API\\RMS_API.csproj",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAVAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-11-25T03:59:23.479Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-25T03:59:23.479Z"
             },
             {
               "$type": "Document",
@@ -165,8 +163,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Profile\\ViewProfile.cshtml",
               "ViewState": "AQIAAKIAAAAAAAAAAAAAAKcAAAAEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-25T03:38:40.784Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-25T03:38:40.784Z"
             },
             {
               "$type": "Document",
@@ -190,8 +187,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Building\\AddBuilding.cshtml",
               "ViewState": "AQIAAMAAAAAAAAAAAAAAANoAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-25T02:30:23.314Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-25T02:30:23.314Z"
             },
             {
               "$type": "Document",
@@ -203,8 +199,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Building\\ListBuilding.cshtml",
               "ViewState": "AQIAAHwAAAAAAAAAAAAAAJkAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-25T02:29:48.034Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-25T02:29:48.034Z"
             },
             {
               "$type": "Document",
@@ -216,8 +211,7 @@
               "RelativeToolTip": "RMS-Client\\Controllers\\AuthController.cs",
               "ViewState": "AQIAAAYAAAAAAAAAAAAAAAwAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-24T22:19:03.845Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-24T22:19:03.845Z"
             },
             {
               "$type": "Document",
