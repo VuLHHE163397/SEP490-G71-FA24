@@ -357,8 +357,16 @@
                                             <div class="col-sm-8" id="email">Loading...</div>
                                         </div>
                                         <div class="row mb-3">
-                                            <label class="col-sm-4 font-weight-bold">Phone:</label>
+                                            <label class="col-sm-4 font-weight-bold">Số điện thoại:</label>
                                             <div class="col-sm-8" id="phone">Loading...</div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-4 font-weight-bold">Link Facebook:</label>
+                                            <div class="col-sm-8" id="facebookUrl">Loading...</div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-4 font-weight-bold">Link Zalo:</label>
+                                            <div class="col-sm-8" id="zaloUrl">Loading...</div>
                                         </div>
                                     </div>
                                     <div class="card-footer text-center">
@@ -416,6 +424,8 @@
                     $('#fullName').text(fullName || 'Không có dữ liệu');
                     $('#email').text(response.email || 'Không có dữ liệu');
                     $('#phone').text(response.phone || 'Không có dữ liệu');
+                    $('#facebookUrl').text(response.facebookUrl || 'Không có dữ liệu');
+                    $('#zaloUrl').text(response.zaloUrl || 'Không có dữ liệu');
                 },
                 error: function (xhr) {
                     console.error('Không lấy được thông tin người dùng:', xhr.responseText);
