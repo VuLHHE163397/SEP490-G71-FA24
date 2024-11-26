@@ -527,12 +527,12 @@
                     window.location.reload();
                 } else {
                     const error = await response.text();
-                    importMessage.textContent = `Xảy ra lỗi khi nhập phòng`;
+                    importMessage.textContent = `Xảy ra lỗi khi nhập phòng, vui lòng kiểm tra lại file excel`;
                     importMessage.style.color = "red";
                 }
             } catch (err) {
                 console.error("Error importing rooms:", err);
-                importMessage.textContent = "Đã xảy ra lỗi khi nhập phòng.";
+                importMessage.textContent = "Đã xảy ra lỗi khi nhập phòng, vui lòng kiểm tra lại file excel";
                 importMessage.style.color = "red";
             }
         });

@@ -276,12 +276,12 @@ namespace RMS_API.Controllers
                         }
 
                         if (!headers.ContainsKey("Số phòng") ||
-                            !headers.ContainsKey("Diện tích (m²)") ||
+                            !headers.ContainsKey("Diện tích") ||
                             !headers.ContainsKey("Tầng") ||
-                            !headers.ContainsKey("Giá phòng(VNĐ)") ||
+                            !headers.ContainsKey("Giá phòng") ||
                             !headers.ContainsKey("Trạng thái"))
                         {
-                            return BadRequest("Missing required columns in the Excel file.");
+                            return BadRequest("Tên cột trong file excel bị sai. Vui lòng kiểm tra lại.");
                         }
 
                         // Lấy danh sách tất cả các phòng trong database cho tòa nhà hiện tại
@@ -299,13 +299,19 @@ namespace RMS_API.Controllers
 
                             importedRoomNumbers.Add(roomNumber); // Thêm số phòng vào danh sách được import
 
-                            var area = double.Parse(worksheet.Cells[row, headers["Diện tích (m²)"]].Text);
-                            var floor = int.Parse(worksheet.Cells[row, headers["Tầng"]].Text);
-                            var rawPrice = worksheet.Cells[row, headers["Giá phòng(VNĐ)"]].Text.Trim()
-                                .Replace("VNĐ", "").Replace(",", "").Replace(" ", "");
-                            if (!decimal.TryParse(rawPrice, out var price))
+                            if (!double.TryParse(worksheet.Cells[row, headers["Diện tích"]].Text, out var area) || area <= 0)
                             {
-                                return BadRequest($"Invalid price format in row {row}: '{worksheet.Cells[row, headers["Giá phòng(VNĐ)"]].Text}'. Ensure it contains numeric values only.");
+                                return BadRequest($"Giá trị lỗi ở hàng {row}: '{worksheet.Cells[row, headers["Diện tích"]].Text}'. Vui lòng kiểm tra và nhập Diện tích là số dương.");
+                            }
+                            if (!int.TryParse(worksheet.Cells[row, headers["Tầng"]].Text, out var floor) || floor <= 0)
+                            {
+                                return BadRequest($"Giá trị lỗi ở hàng {row}: '{worksheet.Cells[row, headers["Tầng"]].Text}'. Vui lòng kiểm tra và nhập Tầng là số nguyên dương.");
+                            }
+                            var rawPrice = worksheet.Cells[row, headers["Giá phòng"]].Text.Trim()
+                                .Replace("VNĐ", "").Replace(",", "").Replace(" ", "");
+                            if (!decimal.TryParse(rawPrice, out var price) || price <= 0)
+                            {
+                                return BadRequest($"Giá trị lỗi ở hàng {row}: '{worksheet.Cells[row, headers["Giá phòng"]].Text}'. Vui lòng kiểm tra và nhập Giá Phòng là số nguyên dương.");
                             }
                             var status = worksheet.Cells[row, headers["Trạng thái"]].Text.Trim();
                             var description = headers.ContainsKey("Mô tả phòng")
@@ -315,7 +321,7 @@ namespace RMS_API.Controllers
                             var roomStatusId = RoomStatusMapping.ContainsKey(status) ? RoomStatusMapping[status] : (int?)null;
                             if (roomStatusId == null)
                             {
-                                return BadRequest($"Invalid room status '{status}' in row {row}. Ensure it matches a valid status.");
+                                return BadRequest($"Giá trị lỗi ở hàng {status}' in row {row}. Vui lòng kiểm tra và nhập trạng thái của phòng là : Đang Trống, Đang cho thuê, Đang bảo trì, Sắp trống.");
                             }
 
                             if (existingRoomNumbers.ContainsKey(roomNumber))
@@ -368,7 +374,7 @@ namespace RMS_API.Controllers
 
                 return Ok(new
                 {
-                    message = "Rooms imported successfully!",
+                    message = "Nhập phòng thành công!",
                     newRoomsCount = roomsToAdd.Count,
                     updatedRoomsCount = existingRoomsToUpdate.Count
                 });
@@ -378,8 +384,6 @@ namespace RMS_API.Controllers
                 return BadRequest("Only Excel files are allowed.");
             }
         }
-
-
 
         [HttpPost("upload-image/{roomId}")]
         public async Task<IActionResult> UploadImage(IFormFile file, int roomId)
