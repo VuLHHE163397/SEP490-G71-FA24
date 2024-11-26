@@ -274,9 +274,7 @@
                             <input type="text" class="form-control" id="searchInput" style="min-width: 200px" onkeyup="filterServices()" placeholder="Tìm kiếm..." />
                         </div>
                     </div>
-                    @{
-                        int stt = 1;
-                    }
+                   
                     <table class="table table-bordered" id="servicesTable" style="margin-top: 0.5rem">
                         <thead>
                             <tr>
@@ -288,34 +286,8 @@
                             </tr>
                         </thead>
 
-                        <tbody>
-                            @if (Model != null && Model.Any())
-                            {
-                                foreach (var services in Model)
-                                {
-                                    <tr>
-                                        <td>@(stt++)</td>
-                                        <td>@services.Name</td>
-                                        <td>@services.BuildingName</td>
-                                        <td>@String.Format("{0:0,0} VNĐ", services.Price)</td>
-                                        <td>
-                                            <a href="/Service/EditService?id=@services.Id" class="btn btn-primary">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <button class="btn btn-danger" onclick="DeleteService('@services.Id')">
-                                                <i class="fa-solid fa-trash-can"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                }
-                            }
-
-                            else
-                            {
-                                <tr>
-                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
-                                </tr>
-                            }
+                        <tbody id="services">
+                            
                         </tbody>
                     </table>
                     <!-- Phân trang -->
@@ -342,11 +314,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
 
-        var totalRecord = @Html.Raw(ViewBag.TotalRecord);
-        console.log("total record = " + totalRecord);
+        var totalRecord = 0;
         $(document).ready(function () {
-            loadBuilding();
+            loadBuilding();          
+            const token = sessionStorage.getItem("token");
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
+            getService(userId, -1);
         })
+        ////////////////////////////////////////////////////////////
 
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -360,6 +336,7 @@
             }
         }
 
+        ///////////////////////////////////////////////////
         function loadBuilding() {
             const token = sessionStorage.getItem("token");
             //Lấy user id
@@ -391,41 +368,18 @@
             $("#buildings").html(html);
         }
 
-        //Hàm search name service
-        function filterServices() {
-            const input = document.getElementById('searchInput');
-            const filter = input.value.toLowerCase();
-            const table = document.getElementById('servicesTable');
-            const rows = table.getElementsByTagName('tr');
-
-            for (let i = 1; i < rows.length; i++) { // Skip the header row
-                const cells = rows[i].getElementsByTagName('td');
-                const serviceName = cells[1]?.textContent.toLowerCase(); // Get service name
-                rows[i].style.display = serviceName && serviceName.includes(filter) ? '' : 'none';
-            }
-        }
-
-        //Hàm xóa service
-        function DeleteService(id) {
+        function search() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var buildingId = $("#buildings").val();
+            var roomId = $("#rooms").val();
+            var statusId = $("#status").val();
+            var keyword = $("#keyword").val();
+            var pageIndex = urlParams.get('pageIndex') ?? 1;
+            var pageSize = urlParams.get('pageIndex') ?? 10;
             const token = sessionStorage.getItem("token");
-            if (confirm("Bạn có chắc chắn muốn xóa dịch vụ này không?")) {  // Hộp thoại xác nhận xóa
-                $.ajax({
-                    url: `https://localhost:7056/api/Service?id=${id}`,  // Đảm bảo URL API đúng
-                    type: "DELETE",  // Sử dụng phương thức DELETE
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-                    },
-                    success: function (response) {
-                        alert("Xóa dịch vụ thành công");  // Thông báo khi xóa thành công
-                        window.location.reload();  // Reload lại trang sau khi xóa
-                    },
-                    error: function (xhr, status, error) {
-                        alert("Không thể xóa dịch vụ");  // Thông báo lỗi khi xóa không thành công
-                    }
-                });
-            } else {
-                alert("Hủy xóa dịch vụ");  // Thông báo khi hủy xóa
-            }
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
+            getService(userId, buildingId);
         }
 
         //Hàm lấy list building theo UserId
@@ -440,12 +394,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                <li class="sidebar-subitem">
-                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                    </a>
-                                                </li>
-                                            `);
+                                                                <li class="sidebar-subitem">
+                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                    </a>
+                                                                </li>
+                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -458,10 +412,128 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                    `);
+                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                    `);
         }
-       
+        //Lấy UserId
+        function getUserIdFromToken(token) {
+            try {
+                var jwtToken = sessionStorage.getItem('token');
+                token = jwtToken;
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+            }
+        }
+
+
+        function getService(userId,buildingId) {
+            let serviceUrl = 'https://localhost:7056/api/Service/GetAllService';
+            const token = sessionStorage.getItem("token");
+            let query = '';
+            if (userId) {
+                query += `userId=${userId}`
+            }
+            else {
+                alert("Vui lòng đăng nhập vào hệ thống");
+                window.location.href = '/Auth/Login';
+            }          
+            if (buildingId) {
+                query += `&buildingId=${buildingId}`
+            }
+            console.log(query)
+            $.ajax({
+                url: `${serviceUrl}?${query}`,
+                type: 'GET',
+                dataType: 'json',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                success: function (response) {
+                    console.log(response)
+                    renderService(response.services);
+                    totalRecord = response.totalRecord;
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+
+        function renderService(data) {
+            let html = '';
+            let stt = 1;
+            const token = sessionStorage.getItem("token");
+            for (var item of data) {
+                html += '<tr>'
+                html += `<td>${stt++}</td>`;
+                html += `<td>${item.name}</td>`;
+                html += `<td>${item.buildingName}</td>`;
+                html += `<td>${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}</td>`;
+
+                html += `<td>
+                                    <a href="/Service/EditService?id=${item.id}" class="btn btn-primary">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                                    <button class="btn btn-danger" onclick="DeleteService('${item.id}')">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>`;
+                html += '</tr>';
+            }
+            if (data.length) {
+                $("#services").html(html)
+            }
+            else {
+                html += '<tr>'
+                html += '<td colspan="7" class="text-center">Không có dữ liệu</td>'
+                html += '</tr>'
+                $("#services").html(html)
+            }
+        }
+
+        /////////////////////////////////////////////////////////////
+        //Hàm search name service
+        function filterServices() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('servicesTable');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) { // Skip the header row
+                const cells = rows[i].getElementsByTagName('td');
+                const serviceName = cells[1]?.textContent.toLowerCase(); // Get service name
+                rows[i].style.display = serviceName && serviceName.includes(filter) ? '' : 'none';
+            }
+        }
+
+        ///////////////////////////////////////////////////
+        function DeleteService(id) {
+            const token = sessionStorage.getItem("token");
+            if (confirm("Bạn có chắc chắn muốn xóa dịch vụ này không?")) {  // Hộp thoại xác nhận xóa
+                $.ajax({
+                    url: `https://localhost:7056/api/Service?id=${id}`,  // Đảm bảo URL API đúng
+                    type: "DELETE",  // Sử dụng phương thức DELETE
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    },
+                    success: function (response) {
+                        alert("Xóa dịch vụ thành công");  // Thông báo khi xóa thành công
+                        window.location.reload();  // Reload lại trang sau khi xóa
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Không thể xóa dịch vụ");  // Thông báo lỗi khi xóa không thành công
+                    }
+                });
+            } else {
+                alert("Hủy xóa dịch vụ");  // Thông báo khi hủy xóa
+            }
+        }
+
+        
 
         
     </script>

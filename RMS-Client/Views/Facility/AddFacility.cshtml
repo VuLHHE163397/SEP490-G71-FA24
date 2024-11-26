@@ -269,9 +269,7 @@
         var totalRecord = 0;
         $(document).ready(function () {
             loadBuilding();
-            // loadRoom();
-            
-           
+            // loadRoom();                  
             loadStatus();
             const token = sessionStorage.getItem("token");
             //Lấy user id
@@ -359,10 +357,14 @@
 
         ////////////////////////////////////////////////////
         function loadStatus() {
+            const token = sessionStorage.getItem("token");
             $.ajax({
                 url: 'https://localhost:7056/api/FacilityStatus/GetAllFacility',
                 type: 'GET',
                 dataType: 'json',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 success: function (response) {
                     renderStatus(response);
                 },
@@ -372,7 +374,9 @@
             });
         }
         function renderStatus(data) {
-            let html = ``;
+            var urlParams = new URLSearchParams(window.location.search);
+            var statusId = urlParams.get('statusId');
+            let html = `<option value="-1" ${statusId <= 0 ? 'selected' : ''}>Chọn</option>`;
             for (var item of data) {
                 html += `<option value="${item.id}">${item.description}</option>`
             }

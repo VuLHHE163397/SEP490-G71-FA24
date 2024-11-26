@@ -475,10 +475,14 @@
 
         ///////////////////////////////////////////////////////////
         function loadStatus() {
+            const token = sessionStorage.getItem("token");
             $.ajax({
                 url: 'https://localhost:7056/api/FacilityStatus/GetAllFacility',
                 type: 'GET',
                 dataType: 'json',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 success: function (response) {
                     renderStatus(response);
                 },
@@ -515,10 +519,14 @@
 
         ///////////////////////////////////////////////////
         function DeleteFacility(id) {
+            const token = sessionStorage.getItem("token");
             if (confirm("Bạn có chắc chắn muốn xóa cơ sở vật chất này không?")) {  // Hộp thoại xác nhận xóa
                 $.ajax({
                     url: `https://localhost:7056/api/Facility?id=${id}`,  // Đảm bảo URL API đúng
                     type: "DELETE",  // Sử dụng phương thức DELETE
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    },
                     success: function (response) {
                         alert("Xóa cơ sở vật chất thành công");  // Thông báo khi xóa thành công
                         window.location.reload();  // Reload lại trang sau khi xóa

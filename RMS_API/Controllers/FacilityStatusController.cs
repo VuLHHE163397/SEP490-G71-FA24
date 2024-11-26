@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RMS_API.Models;
 
 namespace RMS_Client.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class FacilityStatusController : ControllerBase
     {

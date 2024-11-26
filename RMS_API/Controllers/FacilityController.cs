@@ -23,7 +23,18 @@ namespace RMS_API.Controllers
         {
             try
             {
-                var facilities = await _context.Facilities.FirstOrDefaultAsync(f => f.Id == id);
+                var facilities = await _context.Facilities
+                    .Include(e => e.Room)
+                    .Select(e => new FacilityDTO
+                    {
+                        Id = e.Id,
+                        Name = e.Name,
+                        BuildingId = e.Room.BuildingId,
+                        RoomId = e.RoomId,
+                        statusId = e.FacilityStatusId,
+                        UserId = e.UserId
+                    })
+                    .FirstOrDefaultAsync(f => f.Id == id);
                 if (facilities == null)
                 {
                     throw new Exception("Facility not found");
@@ -170,7 +181,8 @@ namespace RMS_API.Controllers
                     Total = data.Count,
                     Facilities = data
                 });
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

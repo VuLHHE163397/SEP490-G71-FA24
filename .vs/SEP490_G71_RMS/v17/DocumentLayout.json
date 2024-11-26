@@ -1,14 +1,14 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Prj_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\",
+  "WorkspaceRootPath": "D:\\SEP490-G71-FA24_DungNT\\SEP490-G71-FA24\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms-client\\views\\facility\\listfacility.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\facility\\listfacility.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\sep490-g71-fa24_dungnt\\sep490-g71-fa24\\rms-client\\views\\service\\addservice.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\service\\addservice.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms-client\\views\\service\\servicerecord.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\service\\servicerecord.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\sep490-g71-fa24_dungnt\\sep490-g71-fa24\\rms-client\\views\\facility\\addfacility.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\facility\\addfacility.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,27 +23,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "ServiceRecord.cshtml",
-              "DocumentMoniker": "D:\\Prj_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\ServiceRecord.cshtml",
-              "RelativeDocumentMoniker": "RMS-Client\\Views\\Service\\ServiceRecord.cshtml",
-              "ToolTip": "D:\\Prj_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\ServiceRecord.cshtml",
-              "RelativeToolTip": "RMS-Client\\Views\\Service\\ServiceRecord.cshtml",
-              "ViewState": "AQIAAGcBAAAAAAAAAAAAAGsBAAAKAAAA",
+              "Title": "AddFacility.cshtml",
+              "DocumentMoniker": "D:\\SEP490-G71-FA24_DungNT\\SEP490-G71-FA24\\RMS-Client\\Views\\Facility\\AddFacility.cshtml",
+              "RelativeDocumentMoniker": "RMS-Client\\Views\\Facility\\AddFacility.cshtml",
+              "ToolTip": "D:\\SEP490-G71-FA24_DungNT\\SEP490-G71-FA24\\RMS-Client\\Views\\Facility\\AddFacility.cshtml",
+              "RelativeToolTip": "RMS-Client\\Views\\Facility\\AddFacility.cshtml",
+              "ViewState": "AQIAAKwBAAAAAAAAAAAAALMBAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-25T02:56:19.877Z",
+              "WhenOpened": "2024-11-26T18:44:14.744Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ListFacility.cshtml",
-              "DocumentMoniker": "D:\\Prj_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Facility\\ListFacility.cshtml",
-              "RelativeDocumentMoniker": "RMS-Client\\Views\\Facility\\ListFacility.cshtml",
-              "ToolTip": "D:\\Prj_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Facility\\ListFacility.cshtml",
-              "RelativeToolTip": "RMS-Client\\Views\\Facility\\ListFacility.cshtml",
-              "ViewState": "AQIAAGsBAAAAAAAAAAAAANABAAAJAAAA",
+              "Title": "AddService.cshtml",
+              "DocumentMoniker": "D:\\SEP490-G71-FA24_DungNT\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\AddService.cshtml",
+              "RelativeDocumentMoniker": "RMS-Client\\Views\\Service\\AddService.cshtml",
+              "ToolTip": "D:\\SEP490-G71-FA24_DungNT\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\AddService.cshtml",
+              "RelativeToolTip": "RMS-Client\\Views\\Service\\AddService.cshtml",
+              "ViewState": "AQIAAGABAAAAAAAAAAAAAGABAAAVAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-24T13:04:02.861Z",
+              "WhenOpened": "2024-11-26T18:44:13.534Z",
               "EditorCaption": ""
             }
           ]

@@ -15,6 +15,7 @@ namespace RMS_API.DTOs
         public decimal Price { get; set; }
         public int? BuildingId { get; set; }
         public string? BuildingName { get; set; } = null!;
+        public int? UserId { get; set; }
 
     }
 }
