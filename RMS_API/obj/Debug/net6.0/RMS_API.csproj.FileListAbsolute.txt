@@ -256,3 +256,10 @@ D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win\lib\net6.0\Micro
 D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
 D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\Microsoft.Extensions.Caching.Abstractions.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Abstractions.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\Microsoft.Extensions.Logging.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\Microsoft.Extensions.Options.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
+D:\GitHub\SEP490-G71-FA24\RMS_API\bin\Debug\net6.0\System.Collections.Immutable.dll

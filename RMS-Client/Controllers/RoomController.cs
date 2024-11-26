@@ -448,7 +448,7 @@ namespace RMS_Client.Controllers
                     worksheet.Cells[row, 1].Value = room.RoomNumber;
                     worksheet.Cells[row, 2].Value = room.Area;
                     worksheet.Cells[row, 3].Value = room.Floor;
-                    worksheet.Cells[row, 4].Value = room.Price.ToString("N0") + " VNĐ";
+                    worksheet.Cells[row, 4].Value = room.Price.ToString("N0");
                     worksheet.Cells[row, 5].Value = room.RoomStatusId switch
                     {
                         1 => "Đang trống",

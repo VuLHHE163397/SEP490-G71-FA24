@@ -113,3 +113,8 @@ D:\GitHub\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\refint\RMS_Client.dll
 D:\GitHub\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\RMS_Client.pdb
 D:\GitHub\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\RMS_Client.genruntimeconfig.cache
 D:\GitHub\SEP490-G71-FA24\RMS-Client\obj\Debug\net6.0\ref\RMS_Client.dll
+D:\GitHub\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\Microsoft.Extensions.Caching.Abstractions.dll
+D:\GitHub\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\Microsoft.Extensions.Logging.dll
+D:\GitHub\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\GitHub\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\Microsoft.Extensions.Options.dll
+D:\GitHub\SEP490-G71-FA24\RMS-Client\bin\Debug\net6.0\System.Collections.Immutable.dll

@@ -246,14 +246,14 @@
                                 </div>
                             </form>
                         </div>
-
+@* 
                         <div class="col-md-3">
                             <select class="form-select">
                                 <option selected>Trạng thái phí</option>
                                 <option>Đã đóng tiền</option>
                                 <option>Chưa đóng tiền</option>
                             </select>
-                        </div>
+                        </div> *@
 
                         <div class="col-md-3 offset-md-1 d-flex flex-column align-items-end">
                             <div class="btn-group-vertical">
@@ -312,7 +312,6 @@
                         <th>Trạng thái</th>
                         <form asp-action="DeleteAllRoomsByBuildingId" method="post">
                             <input type="hidden" name="buildingId" value="@ViewBag.SelectedBuildingId" />
-                            <button type="submit" class="btn btn-danger">Xóa tất cả phòng trong tòa nhà</button>
                         </form>
                     </tr>
                 </thead>
@@ -346,11 +345,6 @@
                                     <a asp-controller="Room" asp-action="RoomDetail" asp-route-id="@room.Id" class="btn btn-info">
                                         <i class="ti ti-eye"></i>
                                     </a>
-                                    <form method="post" action="@Url.Action("Delete", new { id = room.Id, buildingId = ViewBag.SelectedBuildingId, statusIds = ViewBag.SelectedStatusIds })" style="display:inline;">
-                                        <button type="submit" class="btn btn-danger">
-                                            <i class="ti ti-trash"></i>
-                                        </button>
-                                    </form>
                                     <a asp-controller="Room" asp-action="EditRoom" asp-route-id="@room.Id" class="btn btn-warning">
                                         <i class="ti ti-pencil"></i>
                                     </a>
@@ -542,6 +536,7 @@
                 importMessage.style.color = "red";
             }
         });
+
 
         function submitUpdateStatus(selectElement) {
             // var selectElement = document.querySelector('.room-status-dropdown');

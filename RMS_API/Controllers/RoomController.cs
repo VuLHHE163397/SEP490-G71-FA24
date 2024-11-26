@@ -199,8 +199,6 @@ namespace RMS_API.Controllers
         }
 
 
-
-
         [HttpGet("GetServicesForRoom/{roomId}")]
         public async Task<IActionResult> GetServicesForRoom(int roomId)
         {
