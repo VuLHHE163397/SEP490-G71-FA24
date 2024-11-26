@@ -75,6 +75,7 @@ namespace RMS_Client.Controllers
         }
 
 
+
         public async Task<IActionResult> EditBuilding(int? id)
         {
 
