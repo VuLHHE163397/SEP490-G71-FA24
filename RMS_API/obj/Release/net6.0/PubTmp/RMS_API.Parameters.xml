@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<parameters>
-  <parameter name="IIS Web Application Name" description="" value="RMS-API" tags="IisApp">
-    <parameterEntry kind="ProviderPath" scope="IisApp" match="^D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\obj\\Release\\net6\.0\\PubTmp\\Out\\$" />
-  </parameter>
-</parameters>
