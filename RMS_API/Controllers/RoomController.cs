@@ -246,7 +246,7 @@ namespace RMS_API.Controllers
         };
 
         [HttpPost("ImportRooms/{buildingId}")]
-        public async Task<IActionResult> ImportRooms( IFormFile file, int buildingId)
+        public async Task<IActionResult> ImportRooms(IFormFile file, int buildingId)
         {
             if (file == null || file.Length == 0)
             {
@@ -344,30 +344,6 @@ namespace RMS_API.Controllers
                                 };
                                 roomsToAdd.Add(newRoom);
                             }
-
-                            // Kiểm tra trạng thái và ánh xạ sang RoomStatusId
-                            if (!RoomStatusMapping.ContainsKey(status))
-                            {
-                                return BadRequest($"Invalid room status '{status}' in row {row}. Valid statuses are: 'Đang trống', 'Đang cho thuê', 'Đang bảo trì', 'Sắp trống'.");
-                            }
-                            var roomStatusId = RoomStatusMapping[status];
-
-                            // Tạo đối tượng Room từ dữ liệu dòng trong Excel
-                            var room = new Room
-                            {
-                                BuildingId = buildingId,
-                                RoomNumber = roomNumber,
-                                Price = price,
-                                Area = area,
-                                Description = description,
-                                Floor = floor,
-                                StartedDate = startedDate,
-                                ExpiredDate = expiredDate,
-                                RoomStatusId = roomStatusId,
-                                FreeInFutureDate = freeInFutureDate
-                            };
-
-                            rooms.Add(room);  // Thêm phòng vào danh sách
                         }
 
                         // Bỏ qua các phòng không có trong file import (không xóa, không sửa)
