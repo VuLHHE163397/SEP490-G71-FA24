@@ -33,7 +33,7 @@ namespace RMS_API.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "Landlord")]       // Chỉ cho phép Landlord truy cập
+        /*[Authorize(Roles = "Landlord")] */      // Chỉ cho phép Landlord truy cập
         [HttpGet("GetAllRoom")]
         public IActionResult GetAllRoom()
         {

@@ -239,6 +239,14 @@
                             </a>
                         </li>
 
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
+                            </a>
+                        </li>
 
                     </ul>
 
@@ -476,9 +484,13 @@
         }
 
         function loadBuilding() {
-            const token = sessionStorage.getItem("token");
-            //Lấy user id
-            const userId = getUserIdFromToken(token);
+            const token = getCookie('AuthToken');
+            if (!token) {
+                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
+                return;
+            }
+            var userId = getUserIdFromToken(token);
             $.ajax({
                 url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',

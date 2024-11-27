@@ -196,22 +196,7 @@
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
-                                @*  @if (Model != null && Model.Any())
-                                {
-                                foreach (var building in Model)
-                                {
-                                <li class="sidebar-subitem">
-                                <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@building.Id" class="sidebar-sublink">
-                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
-                                @building.Name
-                                </a>
-                                </li>
-                                }
-                                }
-                                else
-                                {
-                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                } *@
+
                             </ul>
                         </li>
                         <li class="sidebar-item">
@@ -239,7 +224,14 @@
                             </a>
                         </li>
 
-
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
+                            </a>
+                        </li>
 
 
                 </nav>
