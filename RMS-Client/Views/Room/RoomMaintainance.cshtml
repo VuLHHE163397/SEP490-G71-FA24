@@ -3,7 +3,7 @@
 
 @if (ViewBag.SuccessMessage != null)
 {
-    <script>    
+    <script>
         alert(@Html.Raw(JsonConvert.SerializeObject(ViewBag.SuccessMessage)));
         window.location.href = '@ViewBag.RedirectUrl';
     </script>
@@ -20,25 +20,6 @@
 </head>
 
 <body>
-
-    <script>
-        const token = sessionStorage.getItem("token");
-        if (!token) {
-            window.location.href = "/Auth/Login";
-        }
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-
-        if (payload.Roles !== "Landlord") {
-            window.location.href = "/Auth/Login";
-        }
-
-        function logout() {
-            sessionStorage.removeItem("token");
-            window.location.href = "/Auth/Login";
-        }
-    </script>
-
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -54,7 +35,7 @@
                         <p class="mb-1"><strong>Tòa nhà:</strong> @Model.BuildingName</p>
                         <p class="mb-1"><strong>Địa chỉ:</strong> @Model.Address</p>
                         <p><strong>Chủ nhà:</strong> @Model.Owner</p>
-                        
+
                     </div>
 
                     <form method="post" asp-action="SaveMaintenanceRequest">

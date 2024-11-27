@@ -146,7 +146,6 @@
     </style>
 </head>
 <body>
-
     <script>
         const token = sessionStorage.getItem("token");
         if (!token) {
@@ -156,11 +155,6 @@
         const payload = JSON.parse(atob(tokenParts[1]));
 
         if (payload.Roles !== "Landlord") {
-            window.location.href = "/Auth/Login";
-        }
-
-        function logout() {
-            sessionStorage.removeItem("token");
             window.location.href = "/Auth/Login";
         }
     </script>
@@ -240,11 +234,11 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                       
 
-                        
+
+
                     </ul>
-                    
+
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -310,7 +304,7 @@
 
                         <div class="form-group">
                             <label for="Name">Tên Tòa Nhà</label>
-                            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required readonly/>
+                            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required readonly />
                         </div>
                         <div class="form-group">
                             <label for="Distance">Khoảng cách(Km)</label>
@@ -354,20 +348,13 @@
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             <script>
-                const token = localStorage.getItem("token");
-                if (token == 1 || !token) {
-                    window.location.href = "/Auth/Login";
-                }
-                const tokenParts = token.split('.');
-                const payload = JSON.parse(atob(tokenParts[1]));
-
-                if (payload.role !== "Landlord") {
-                    window.location.href = "/Auth/Login";
-                }
 
                 function logout() {
-                    localStorage.setItem("token", 1);
-                    console.log("Token set to 1 on logout.");
+                    function logout() {
+                        sessionStorage.removeItem("token");
+                        window.location.href = "/Auth/Login";
+                    }
+
                 }
                 function editBuilding() {
                     // Ensure the building ID is correctly retrieved

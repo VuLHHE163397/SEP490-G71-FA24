@@ -167,11 +167,6 @@
         if (payload.Roles !== "Landlord") {
             window.location.href = "/Auth/Login";
         }
-
-        function logout() {
-            sessionStorage.removeItem("token");
-            window.location.href = "/Auth/Login";
-        }
     </script>
 
     <!--  Body Wrapper -->
@@ -249,13 +244,13 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        
-                        
-                        
-                        
-                        
+
+
+
+
+
                     </ul>
-                    
+
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -327,7 +322,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Distance">Khoảng cách(Km)</label>
-                            <input type="number" class="form-control" id="Distance" name="Distance" value="@Model.Distance" step="0.1" required  />
+                            <input type="number" class="form-control" id="Distance" name="Distance" value="@Model.Distance" step="0.1" required />
                         </div>
                         <div class="form-group">
                             <label for="TotalFloors">Số Tầng</label>
@@ -354,9 +349,9 @@
                             <label for="WardId">Xã/Phường</label>
                             <input class="form-control" id="WardId" name="WardName" value="@Model.WardName" required readonly />
                         </div>
-                        <div class="form-group" >
+                        <div class="form-group">
                             <label for="LinkEmbedMap">Link Map</label>
-                            <input class="form-control" id="LinkEmbedMap" name="LinkEmbedMap" value="@Model.LinkEmbedMap" required  />
+                            <input class="form-control" id="LinkEmbedMap" name="LinkEmbedMap" value="@Model.LinkEmbedMap" required />
                         </div>
                         <div class="form-group" style="position: relative;">
                             <label for="BuildingStatus">Trạng Thái</label>
@@ -384,24 +379,11 @@
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             <script>
-                const token = localStorage.getItem("token");
-                
-                if (token == 1 || !token) {
-                    window.location.href = "/Auth/Login";
-                }
-                const tokenParts = token.split('.');
-                const payload = JSON.parse(atob(tokenParts[1]));
-
-                if (payload.role !== "Landlord") {
-                    window.location.href = "/Auth/Login";
-                }
 
                 function logout() {
-                    localStorage.setItem("token", 1);
-                    console.log("Token set to 1 on logout ok.");
+                    sessionStorage.removeItem("token");
+                    window.location.href = "/Auth/Login";
                 }
-
-
 
                 function toggleDropdown() {
                     // Toggle the visibility of the custom dropdown
@@ -441,7 +423,7 @@
 
                     var buildingData = {
                         Name: $('#Name').val(),
-                        Distance:parseFloat($('#Distance').val()),
+                        Distance: parseFloat($('#Distance').val()),
                         TotalFloors: parseInt($('#TotalFloors').val()),
                         NumberOfRooms: parseInt($('#NumberOfRooms').val()),
                         AddressDetails: $('#AddressDetails').val(),
