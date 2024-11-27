@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RMS_API.DTOs;
@@ -22,6 +23,7 @@ namespace RMS_API.Controllers
         }
 
         [HttpGet("GetUserByEmail")]
+        [Authorize(Roles = "Landlord")]
         public async Task<IActionResult> GetUserByEmail([FromQuery] string email)
         {
             if (string.IsNullOrEmpty(email))
@@ -31,8 +33,9 @@ namespace RMS_API.Controllers
 
             var user = await _context.Users               
                .Where(u => u.Email == email)
-               .Select(b => new RegisterModel
-               {                   
+               .Select(b => new ProfileDTO
+               {
+                   Id = b.Id,
                    FirstName = b.FirstName,
                    LastName = b.LastName,
                    MidName = b.MidName,
@@ -48,7 +51,39 @@ namespace RMS_API.Controllers
             return Ok(user);
         }
 
+
+        [HttpGet("GetUserById")]
+        [Authorize(Roles = "Landlord")]
+
+        public async Task<IActionResult> GetUserById([FromQuery] int id)
+        {
+            if (id == null)
+            {
+                return BadRequest("Id Không được để trống.");
+            }
+
+            var user = await _context.Users
+               .Where(u => u.Id == id)
+               .Select(b => new ProfileDTO
+               {
+                   Id = b.Id,
+                   FirstName = b.FirstName,
+                   LastName = b.LastName,
+                   MidName = b.MidName,
+                   Email = b.Email,
+                   Phone = b.Phone
+               })
+               .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound("Không tìm thấy người dùng.");
+            }
+            return Ok(user);
+        }
+
         [HttpPut("ChangePassword")]
+        [Authorize(Roles = "Landlord")]
         public async Task<IActionResult> ChangePassword([FromQuery] string email, [FromQuery] string currentPassword, [FromQuery] string newPassword)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(currentPassword) || string.IsNullOrEmpty(newPassword))
@@ -74,8 +109,9 @@ namespace RMS_API.Controllers
             return Ok("Cập nhật mật khẩu thành công.");
         }
 
-        [HttpPut("UpdateProfile")]
-        public async Task<IActionResult> UpdateProfile([FromBody] RegisterModel userDTO)
+        [HttpPut("UpdateProfileByEmail")]
+        [Authorize(Roles = "Landlord")]
+        public async Task<IActionResult> UpdateProfileByEmail([FromBody] ProfileDTO userDTO)
         {
             if (userDTO == null || string.IsNullOrEmpty(userDTO.Email))
             {
@@ -99,29 +135,65 @@ namespace RMS_API.Controllers
             return Ok("Cập nhật profile thành công.");
         }
 
-        [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword([FromQuery] string resetToken, [FromQuery] string newPassword)
+        [HttpPut("UpdateProfile")]
+        [Authorize(Roles = "Landlord")]
+        public async Task<IActionResult> UpdateProfile([FromBody] ProfileDTO userDTO)
         {
-            if (string.IsNullOrEmpty(resetToken) || string.IsNullOrEmpty(newPassword))
+            if (userDTO == null)
             {
-                return BadRequest("Xin vui lòng nhập mật khẩu mới.");
+                return BadRequest("Không tìm thấy người dùng.");
             }
 
-            //var user = await _context.Users.FirstOrDefaultAsync(u => u.ResetToken == resetToken && u.ResetTokenExpiry > DateTime.UtcNow);
-            var user= new RegisterModel();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userDTO.Id);
+
             if (user == null)
             {
-                return BadRequest("Token không hợp lệ.");
+                return NotFound("Không tìm thấy người dùng.");
             }
 
-            // Update password and clear the reset token
-            user.Password = newPassword; // Hash the password if needed
-            //user.ResetToken = null;
-            //user.ResetTokenExpiry = null;
+            user.FirstName = userDTO.FirstName;
+            user.LastName = userDTO.LastName;
+            user.MidName = userDTO.MidName;
+            user.Phone = userDTO.Phone;
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Cập nhật profile thành công.");
+        }
+
+
+        [HttpPost("ChangePassword")]
+        [Authorize(Roles = "Landlord")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO model)
+        {
+            if (model == null || string.IsNullOrEmpty(model.OldPassword) || string.IsNullOrEmpty(model.NewPassword))
+            {
+                return BadRequest("Vui lòng nhập đầy đủ thông tin.");
+            }
+
+            // Find the user based on the token or authentication context
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == model.UserId); // Adjust as per your user identification method
+            if (user == null)
+            {
+                return NotFound("Không tìm thấy người dùng.");
+            }
+
+            // Verify the old password using BCrypt
+            if (!BCrypt.Net.BCrypt.Verify(model.OldPassword, user.Password))
+            {
+                return BadRequest("Mật khẩu cũ không đúng.");
+            }
+
+            // Hash the new password using BCrypt and update it
+            user.Password = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
+
+            // Save the changes to the database
             await _context.SaveChangesAsync();
 
             return Ok("Thay đổi mật khẩu thành công.");
         }
+
+
         [HttpGet("GetAllUserByRoleId")]
         public async Task<IActionResult> GetAllUserByRoleId(int roleId)
         {
@@ -152,6 +224,7 @@ namespace RMS_API.Controllers
 
 
         [HttpGet("GetAllLanlord")]
+        
         public async Task<IActionResult> GetAllLanlord()//Lanlord se co roleid =2
         {
             // Retrieve all users with RoleId = 2

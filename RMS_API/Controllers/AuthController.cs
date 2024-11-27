@@ -26,6 +26,62 @@ namespace RMS_API.Controllers
             _configuration = configuration;
         }
 
+
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest model)
+        {
+            if (string.IsNullOrEmpty(model.Email))
+            {
+                return BadRequest("Vui lòng nhập email.");
+            }
+
+            // Check if the email exists in the database
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            if (user == null)
+            {
+                return BadRequest("Email không tồn tại.");
+            }
+
+            // Generate a random password
+            string newPassword = GenerateRandomPassword();
+
+            // Hash the new password and save it in the database
+            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await _context.SaveChangesAsync();
+
+            // Send email with new password
+            var subject = "Mật khẩu mới của bạn";
+            var body = $"Chúng tôi đã nhận được yêu cầu đổi mật khẩu cho tài khoản của bạn. Mật khẩu mới của bạn là: {newPassword}" +
+                       $"\nVui lòng đăng nhập và thay đổi mật khẩu ngay sau khi đăng nhập.";
+
+            if (SendEmail(user.Email, subject, body))
+            {
+                return Ok("Mật khẩu mới đã được gửi qua email của bạn.");
+            }
+            return StatusCode(500, "Không thể gửi email.");
+        }
+
+        public class ForgotPasswordRequest
+        {
+            public string Email { get; set; } = null!;
+        }
+
+        // Helper method to generate a random password (letters and numbers)
+        private string GenerateRandomPassword(int length = 8)
+        {
+            const string validChars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789012345678901234567890123456789012345678901234567890123456789";
+            Random rand = new Random();
+            char[] password = new char[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                password[i] = validChars[rand.Next(validChars.Length)];
+            }
+
+            return new string(password);
+        }
+
+
         [HttpPost("sendVerificationCode")]
         public async Task<IActionResult> SendVerificationCode([FromBody] RegisterModel user)
         {

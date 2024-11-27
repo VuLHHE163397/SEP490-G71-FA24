@@ -136,12 +136,16 @@
 <body>
 
     <script>
-        const token = sessionStorage.getItem("token");
-        if (!token) {
-            window.location.href = "/Auth/Login";
-        }
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
+        // const token = sessionStorage.getItem("token");
+        // if (!token) {
+        //     window.location.href = "/Auth/Login";
+        // }
+        // const tokenParts = token.split('.');
+        // const payload = JSON.parse(atob(tokenParts[1]));
+        // console.log('pay', payload);
+        // if (payload.Roles !== "Landlord") {
+        //     window.location.href = "/Auth/Login";
+        // }
 
         if (payload.Roles !== "Landlord") {
             window.location.href = "/Auth/Login";
@@ -270,9 +274,9 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
+                                            <p class="mb-0 fs-3">Tài Khoản</p>
                                         </a>
                                         <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-mail fs-6"></i>
@@ -308,7 +312,7 @@
                     <table class="table table-striped">
                         <thead class="thead-dark">
                             <tr>
-                                <th>ID</th>
+                                <th>Số thứ tự</th>
                                 <th>Tên</th>
                                 <th>Số tầng</th>
                                 <th>Số phòng</th>
@@ -404,25 +408,25 @@
                 });
 
                 // Update Table
-                buildings.forEach(building => {
+                buildings.forEach((building, index) => {
                     tableContainer.append(`
-                                        <tr>
-                                            <td>${building.id}</td>
-                                            <td>${building.name}</td>
-                                            <td>${building.totalFloors}</td>
-                                            <td>${building.numberOfRooms}</td>
-                                            <td>${building.addressDetails}</td>
-                                            <td>${building.buildingStatus}</td>
-                                            <td>
-                                                <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
-                                                    <i class="ti ti-eye"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    `);
+                        <tr>
+                            <td>${index + 1}</td> <!-- Số thứ tự -->
+                            <td>${building.name}</td>
+                            <td>${building.totalFloors}</td>
+                            <td>${building.numberOfRooms}</td>
+                            <td>${building.addressDetails}</td>
+                            <td>${building.buildingStatus}</td>
+                            <td>
+                                <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
+                                    <i class="ti ti-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
