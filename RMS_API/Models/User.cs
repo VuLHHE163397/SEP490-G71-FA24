@@ -19,11 +19,7 @@ namespace RMS_API.Models
         public string Phone { get; set; } = null!;
         public int UserStatusId { get; set; }
         public int RoleId { get; set; }
-<<<<<<< Updated upstream
         public string? FacebookUrl { get; set; }
-=======
-        public string? FbUrl { get; set; }
->>>>>>> Stashed changes
         public string? ZaloUrl { get; set; }
 
         public virtual Role Role { get; set; } = null!;

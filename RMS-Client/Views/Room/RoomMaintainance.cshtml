@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 ﻿@using Newtonsoft.Json
 @model RoomQrViewModel
 
@@ -9,31 +8,6 @@
         window.location.href = '@ViewBag.RedirectUrl';
     </script>
 }
-=======
-﻿@model RoomQrViewModel
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
-    <script>
-        setTimeout(function () {
-            window.location.href = '@TempData["RedirectUrl"]';
-        }, 3000); // Chuyển hướng sau 3 giây
-    </script>
-}
-
-@if (!string.IsNullOrEmpty(ViewData.ModelState[string.Empty]?.Errors.FirstOrDefault()?.ErrorMessage))
-{
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @ViewData.ModelState[string.Empty].Errors.FirstOrDefault().ErrorMessage
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
->>>>>>> Stashed changes
 <!doctype html>
 <html lang="en">
 
@@ -46,7 +20,6 @@
 </head>
 
 <body>
-<<<<<<< Updated upstream
 
     <script>
         const token = sessionStorage.getItem("token");
@@ -66,8 +39,6 @@
         }
     </script>
 
-=======
->>>>>>> Stashed changes
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -81,14 +52,9 @@
                     <div class="mb-4">
                         <h4 class="text-secondary">Phòng: <span class="fw-bold">@Model.RoomNumber</span></h4>
                         <p class="mb-1"><strong>Tòa nhà:</strong> @Model.BuildingName</p>
-<<<<<<< Updated upstream
                         <p class="mb-1"><strong>Địa chỉ:</strong> @Model.Address</p>
                         <p><strong>Chủ nhà:</strong> @Model.Owner</p>
                         
-=======
-                        <p class="mb-1"><strong>Address:</strong> @Model.Address</p>
-                        <p><strong>Chủ nhà:</strong> @Model.Owner</p>
->>>>>>> Stashed changes
                     </div>
 
                     <form method="post" asp-action="SaveMaintenanceRequest">
@@ -97,11 +63,7 @@
                         <div class="mb-3">
                             <label for="maintenanceDescription" class="form-label">Mô tả</label>
                             <textarea id="maintenanceDescription" name="MaintenanceDescription" rows="4"
-<<<<<<< Updated upstream
                                       class="form-control" placeholder="Điền mô tả vào đây">@Model.MaintenanceDescription</textarea>
-=======
-                                      class="form-control" placeholder="Điền mô tả vào đây"></textarea>
->>>>>>> Stashed changes
                         </div>
 
                         <button type="submit" class="btn btn-primary">Gửi</button>
@@ -119,7 +81,6 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
-<<<<<<< Updated upstream
     <script>
         document.querySelector('form').addEventListener('submit', function (e) {
             const description = document.getElementById('maintenanceDescription').value.trim();
@@ -130,7 +91,5 @@
         });
     </script>
 
-=======
->>>>>>> Stashed changes
 </body>
 </html>
