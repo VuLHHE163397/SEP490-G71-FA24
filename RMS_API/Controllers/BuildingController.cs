@@ -19,15 +19,24 @@ namespace RMS_API.Controllers
             _context = context;
         }
 
-        [HttpGet("CheckBuildingName/{name}")]
-        public IActionResult CheckBuildingName(string name)
+        [HttpGet("CheckBuildingName/{userId}/{name}")]
+        public IActionResult CheckBuildingName(int userId, string name)
         {
-            var building = _context.Buildings.FirstOrDefault(b => b.Name == name);
-            if (building != null)
+            if (string.IsNullOrEmpty(name) || userId <= 0)
             {
-                return Ok(true); // Name exists
+                return BadRequest(new { message = "Invalid input data." });
             }
-            return Ok(false); // Name doesn't exist
+
+            // Kiểm tra tên tòa nhà đã tồn tại cho UserId hiện tại
+            var isDuplicateForCurrentUser = _context.Buildings.Any(b => b.UserId == userId && b.Name == name);
+
+            if (isDuplicateForCurrentUser)
+            {
+                return Conflict(new { message = "Building name already exists for the specified user." });
+            }
+
+            // Nếu tên tòa nhà trùng với một userId khác, cho phép tạo mới
+            return Ok(new { message = "Building name is available for the specified user or different users." });
         }
 
         [HttpGet("GetBuildingsByUserId/{userId}")]
@@ -124,7 +133,7 @@ namespace RMS_API.Controllers
                 return NotFound("No districts found for the given province.");
             }
 
-            return Json(districts); // Trả về dưới dạng JSON
+            return Ok(districts); // Trả về dưới dạng JSON
         }
 
         [HttpGet("GetWardsByDistrict/{districtName}")]
@@ -143,27 +152,29 @@ namespace RMS_API.Controllers
 
 
 
-
         [HttpPost("AddBuilding")]
         public async Task<IActionResult> AddBuilding([FromBody] AddBuildingDTO buildingDto)
         {
-            var existingBuilding = _context.Buildings
-        .FirstOrDefault(b => b.Name == buildingDto.Name);
+            // Kiểm tra tên tòa nhà đã tồn tại cho UserId hiện tại
+            var isDuplicateForCurrentUser = await _context.Buildings
+                .AnyAsync(b => b.UserId == buildingDto.UserId && b.Name == buildingDto.Name);
 
-            if (existingBuilding != null)
+            if (isDuplicateForCurrentUser)
             {
-                return BadRequest("Tên tòa nhà đã tồn tại.");
+                return Conflict(new { });
             }
+
+            // Kiểm tra ModelState
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            // Extract UserId from the token and parse it to int
-            var userId = buildingDto.UserId;
-            if (userId == null)
+            // Kiểm tra UserId có tồn tại không
+            var userExists = await _context.Users.AnyAsync(u => u.Id == buildingDto.UserId);
+            if (!userExists)
             {
-                return Unauthorized("UserId not found in token or invalid.");
+                return BadRequest($"User with ID {buildingDto.UserId} does not exist.");
             }
 
             // Tìm Province
@@ -201,8 +212,8 @@ namespace RMS_API.Controllers
             {
                 return BadRequest($"Building status '{buildingDto.BuildingStatus}' not found.");
             }
-            //add o duoi a
-            // Create Address
+
+            // Tạo mới Address
             var address = new Address
             {
                 Information = buildingDto.AddressDetails,
@@ -213,7 +224,7 @@ namespace RMS_API.Controllers
             _context.Addresses.Add(address);
             await _context.SaveChangesAsync();
 
-            // Create Building
+            // Tạo mới Building
             var building = new Building
             {
                 Name = buildingDto.Name,
@@ -227,14 +238,14 @@ namespace RMS_API.Controllers
                 WardId = ward.Id,
                 AddressId = address.Id,
                 BuildingStatusId = buildingStatus.Id,
-                UserId = userId, // Use the parsed UserId
+                UserId = buildingDto.UserId,
                 LinkEmbedMap = buildingDto.LinkEmbedMap
             };
 
             _context.Buildings.Add(building);
             await _context.SaveChangesAsync();
 
-            // Return created building details (you could return a DTO here)
+            // Trả về thông tin tòa nhà đã được tạo
             var responseDto = new
             {
                 building.Name,
@@ -248,6 +259,9 @@ namespace RMS_API.Controllers
 
             return Ok(responseDto);
         }
+
+
+
 
 
 

@@ -23,7 +23,7 @@ namespace RMS_Client.Controllers
             var contentType = new MediaTypeWithQualityHeaderValue("application/json");
             _client.DefaultRequestHeaders.Accept.Add(contentType);
         }
-        
+
         public async Task<IActionResult> ListBuilding()
         {
             string apiUrlBuilding = BuildingApiUri + "/GetAllBuildings";
@@ -74,9 +74,14 @@ namespace RMS_Client.Controllers
             return View(building);
         }
 
+       /* public async Task<IActionResult> AdddBuilding()
+        {
+            return Ok();
+        }*/
 
 
-        public async Task<IActionResult> EditBuilding(int? id)
+
+            public async Task<IActionResult> EditBuilding(int? id)
         {
 
 

@@ -107,139 +107,11 @@
                 opacity: 0.8;
             }
 
-        .btn-primary {
-            background-color: #0d6efd;
-            border-color: #0d6efd;
-            color: #fff;
-        }
-
-            .btn-primary:hover {
-                background-color: #0056b3;
-                border-color: #0056b3;
-                transform: scale(1.05);
-            }
-
-            .btn-primary:active {
-                background-color: #004085;
-                border-color: #004085;
-                transform: scale(1);
-            }
-
-        /*  .btn-warning {
-                                            background-color: #ffc107;
-                                            border-color: #ffc107;
-                                            color: #fff;
-                                        }
-
-                                            .btn-warning:hover {
-                                                background-color: #e0a800;
-                                                border-color: #e0a800;
-                                                transform: scale(1.05);
-                                            }
-
-                                            .btn-warning:active {
-                                                background-color: #c69500;
-                                                border-color: #c69500;
-                                                transform: scale(1);
-                                            }
-                                 */
-        /* Icon styling inside buttons */
-        .btn i {
-            margin-right: 8px;
-        }
-
-        /* Table Styling */
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        .table th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .table td {
-            font-size: 14px;
-        }
-
-        /* Container and page layout */
-        .page-wrapper {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        /* Main content area padding */
-        .body-wrapper {
-            /*  padding: 20px; */
-            flex-grow: 1;
-        }
-
-        /* Create button area styling */
-        .mb-3 {
-            text-align: right;
-            margin-bottom: 15px;
-        }
-
-        /* Heading style */
-        h1 {
-            font-size: 2rem;
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .nav-icon-hover {
-            cursor: pointer;
-        }
-
-        /* Profile image in dropdown */
-        .navbar-nav .dropdown-menu img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-
-        .sidebar-submenu {
-            padding-left: 15px;
-            display: none;
-        }
-
-        .sidebar-sublink {
-            color: #6c757d;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-        }
-
-            .sidebar-sublink:hover {
-                color: #0d6efd;
-            }
-
-
     </style>
 </head>
+
+
 <body>
-
-
-    <script>
-        const token = sessionStorage.getItem("token");
-        if (!token) {
-            window.location.href = "/Auth/Login";
-        }
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-
-        if (payload.Roles !== "Landlord") {
-            window.location.href = "/Auth/Login";
-        }
-
-        function logout() {
-            sessionStorage.removeItem("token");
-            window.location.href = "/Auth/Login";
-        }
-    </script>
-
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -268,15 +140,15 @@
                                 <span class="hide-menu">Quản lí người dùng</span>
                             </a>
                         </li>
-                        
-                        
-                        
-                        
 
-                       
-                       
-                       
-                        
+
+
+
+
+
+
+
+
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -286,7 +158,7 @@
         <!--  Main wrapper -->
         <div class="body-wrapper">
             <!--  Header Start -->
-            <header class="app-header" style="background-color:  #3385ff">
+            <header class="app-header">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
@@ -312,7 +184,7 @@
                                     <div class="message-body">
                                         <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">Tài khoản</p>
+                                            <p class="mb-0 fs-3">My Profile</p>
                                         </a>
                                         <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-mail fs-6"></i>
@@ -329,7 +201,6 @@
                             </li>
                         </ul>
                     </div>
-
                 </nav>
             </header>
             <!--  Header End -->
@@ -385,17 +256,9 @@
                             </table>
                         </div>
                     }
-                    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-                    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-                    <script src="~/js/sidebarmenu.js"></script>
-                    <script src="~/js/app.min.js"></script>
-                    <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
-                    <script src="~/lib/simplebar/dist/simplebar.js"></script>
-                    <script src="~/js/dashboard.js"></script>
-
 
                     <script>
-                       
+
 
                         // JavaScript function để lọc bảng theo từ khóa tìm kiếm
                         function filterTable() {
@@ -439,10 +302,10 @@
 
                                         // Cập nhật lại màu và trạng thái của các button
                                         statusButtonContainer.innerHTML = `
-                                                        <button onclick="changeStatus(${userId}, 1)" class="status-button ${newStatusId === 1 ? "active" : ""}">Active</button>
-                                                        <button onclick="changeStatus(${userId}, 2)" class="status-button ${newStatusId === 2 ? "deactive" : ""}">Deactive</button>
-                                                        <button onclick="changeStatus(${userId}, 3)" class="status-button ${newStatusId === 3 ? "banned" : ""}">Banned</button>
-                                                    `;
+                                                                                <button onclick="changeStatus(${userId}, 1)" class="status-button ${newStatusId === 1 ? "active" : ""}">Active</button>
+                                                                                <button onclick="changeStatus(${userId}, 2)" class="status-button ${newStatusId === 2 ? "deactive" : ""}">Deactive</button>
+                                                                                <button onclick="changeStatus(${userId}, 3)" class="status-button ${newStatusId === 3 ? "banned" : ""}">Banned</button>
+                                                                            `;
                                     } else {
                                         alert('Có lỗi xảy ra: ' + result.message);
                                     }

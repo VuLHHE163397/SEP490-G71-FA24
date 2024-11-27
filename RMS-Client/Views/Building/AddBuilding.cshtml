@@ -1,4 +1,4 @@
-﻿@model List<RMS_API.DTOs.BuildingDTO>
+﻿@model List<RMS_API.DTOs.AddBuildingDTO>
 
 @{
     ViewData["Title"] = "Tạo Tòa Nhà";
@@ -259,7 +259,7 @@
                                 <span class="hide-menu">Quản lý tòa nhà</span>
                                 <i class="ti ti-angle-down"></i>
                             </a>
-                            <ul class="sidebar-submenu" style="display: none; list-style-type: none; padding-left: 20px;">
+                            @* <ul class="sidebar-submenu" style="display: none; list-style-type: none; padding-left: 20px;">
                                 @if (Model != null && Model.Any())
                                 {
                                     foreach (var building in Model)
@@ -276,7 +276,7 @@
                                 {
                                     <li class="sidebar-subitem">Không có tòa nhà nào</li>
                                 }
-                            </ul>
+                            </ul> *@
                         </li>
 
                         <li class="sidebar-item">
@@ -392,7 +392,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Distance">Khoảng cách(km)</label>
-                            <input type="number" class="form-control" id="Distance" name="Distance" required />
+                            <input type="number" class="form-control" id="Distance" name="Distance" required step="0.1" />
                             <span id="distanceError" class="error-message" style="color: red; display: none;">Khoảng cách phải là một số dương.</span>
                         </div>
 
@@ -449,14 +449,7 @@
                             <p>2. Tìm địa điểm mà bạn muốn lấy liên kết.</p>
                             <p>3. Nhấn nút "Chia sẻ" và chọn "Nhúng bản đồ".</p>
                             <p>4. Sao chép đoạn mã hoặc liên kết nhúng và dán vào ô nhập phía trên.</p>
-                            <p>1. Mở Google Maps trên trình duyệt hoặc ứng dụng.</p>
-                            <p>2. Tìm địa điểm mà bạn muốn lấy liên kết.</p>
-                            <p>3. Nhấn nút "Chia sẻ" và chọn "Nhúng bản đồ".</p>
-                            <p>4. Sao chép đoạn mã hoặc liên kết nhúng và dán vào ô nhập phía trên.</p>
-                            <p>1. Mở Google Maps trên trình duyệt hoặc ứng dụng.</p>
-                            <p>2. Tìm địa điểm mà bạn muốn lấy liên kết.</p>
-                            <p>3. Nhấn nút "Chia sẻ" và chọn "Nhúng bản đồ".</p>
-                            <p>4. Sao chép đoạn mã hoặc liên kết nhúng và dán vào ô nhập phía trên.</p>
+                         
                             <button id="closePopup">Đóng</button>
                         </div>
                     </div>
@@ -465,33 +458,42 @@
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>
-
-
-
                     $(document).ready(function () {
+                        // Validate Building Name
+                        $('#Name').on('blur', function () {
+                            const buildingName = $(this).val().trim();
+                            const token = sessionStorage.getItem('token');
+
+                            // Extract UserId from the token
+                            const userId = getUserIdFromToken(token);
+                            if (!userId) {
+                                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                                return;
+                            }
+
+                            if (buildingName) {
+                                const url = `https://localhost:7056/api/Building/CheckBuildingName/${userId}/${encodeURIComponent(buildingName)}`;
+                                $.ajax({
+                                    url: url,
+                                    type: 'GET',
+                                    success: function (response) {
+                                        $('#buildingNameError').text(''); // Clear previous error
+                                    },
+                                    error: function (xhr) {
+                                        if (xhr.status === 409) {
+                                            // Conflict: Name already exists
+                                            $('#buildingNameError').text(xhr.responseJSON.message).css('color', 'red');
+                                        } else {
+                                            $('#buildingNameError').text('Có lỗi xảy ra khi kiểm tra tên tòa nhà.').css('color', 'red');
+                                        }
+                                    }
+                                });
+                            } else {
+                                $('#buildingNameError').text('Tên tòa nhà không được để trống.').css('color', 'red');
+                            }
+                        });
+
                         // Province to District Fetch
-
-                        // function checkBuildingName() {
-                        //     var name = encodeURIComponent($('#Name').val());
-                        //     var userId = getUserIdFromToken(); // Assume this function retrieves the UserId
-                        //     var url = `https://localhost:7056/api/Building/CheckBuildingName/${userId}/${name}`;
-
-                        //     $.ajax({
-                        //         url: url,
-                        //         type: 'GET',
-                        //         success: function (isDuplicate) {
-                        //             if (isDuplicate) {
-                        //                 alert('Tên tòa nhà đã tồn tại cho người dùng này.');
-                        //             } else {
-                        //                 alert('Tên tòa nhà hợp lệ.');
-                        //             }
-                        //         },
-                        //         error: function () {
-                        //             alert('Có lỗi xảy ra khi kiểm tra tên tòa nhà.');
-                        //         }
-                        //     });
-                        // }
-
                         $('#ProvinceId').change(function () {
                             var provinceName = encodeURIComponent($(this).val());
                             var url = `https://localhost:7056/api/Building/GetDistrictsByProvince/${provinceName}`;
@@ -590,7 +592,6 @@
                                 $('#userIdError').show(); // Show error if UserId is missing
                                 return;
                             }
-                            console.log(userId);
 
                             // Prepare Data
                             var buildingData = {
@@ -624,56 +625,41 @@
                         });
 
                         // Utility Function: Extract UserId from Token
-                        // function getUserIdFromToken() {
-                        //     const token = sessionSto.getItem("token");
-
-                        //     if (token) {
-                        //         try {
-                        //             const tokenParts = token.split('.');
-                        //             const payload = JSON.parse(atob(tokenParts[1]));
-
-                        //             return payload.UserId;
-                        //         } catch (e) {
-                        //             console.error('Token parsing error:', e);
-                        //         }
-                        //     }
-                        //     return null;
-                        // }
-
+                        function getUserIdFromToken(token) {
+                            try {
+                                const tokenParts = token.split('.');
+                                const payload = JSON.parse(atob(tokenParts[1]));
+                                return payload.UserId;
+                            } catch (error) {
+                                console.error("Không mã hóa đc token:", error);
+                                return null;
+                            }
+                        }
                     });
 
-                    function getUserIdFromToken(token) {
-                        try {
-                            const tokenParts = token.split('.');
-                            const payload = JSON.parse(atob(tokenParts[1]));
-                            return payload.UserId;
-                        } catch (error) {
-                            console.error("Không mã hóa đc token:", error);
-                            return null;
-                        }
-                    }
-                    // Lấy các phần tử DOM
+                    // Popup Handling
                     const openPopup = document.getElementById('openPopup');
                     const closePopup = document.getElementById('closePopup');
                     const popupOverlay = document.getElementById('popupOverlay');
 
-                    // Hiển thị popup khi bấm vào link
+                    // Show popup on click
                     openPopup.addEventListener('click', () => {
                         popupOverlay.style.display = 'block';
                     });
 
-                    // Đóng popup khi bấm vào nút "Đóng"
+                    // Close popup when clicking the close button
                     closePopup.addEventListener('click', () => {
                         popupOverlay.style.display = 'none';
                     });
 
-                    // Đóng popup khi bấm ra ngoài vùng nội dung
+                    // Close popup when clicking outside the popup content
                     popupOverlay.addEventListener('click', (event) => {
                         if (event.target === popupOverlay) {
                             popupOverlay.style.display = 'none';
                         }
                     });
                 </script>
+
 
             </div>
 
