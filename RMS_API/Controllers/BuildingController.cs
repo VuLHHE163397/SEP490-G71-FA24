@@ -5,8 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RMS_API.DTOs;
 using RMS_API.Models;
-using System.Security.Claims;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace RMS_API.Controllers
 {
@@ -21,27 +19,12 @@ namespace RMS_API.Controllers
             _context = context;
         }
 
-        [HttpGet("CheckBuildingName/{userId}/{name}")]
-        public IActionResult CheckBuildingName(int userId, string name)
-        {
-            var building = _context.Buildings.FirstOrDefault(b => b.Name == name && b.UserId == userId);
-            if (building != null)
-            {
-                return Ok(true); // Name exists for the given UserId
-            }
-            return Ok(false); // Name doesn't exist for the given UserId
-        }
-
-
+        
 
         [HttpGet("GetBuildingsByUserId/{userId}")]
-        [Authorize(Roles = "Landlord")]       // Chỉ cho phép Landlord truy cập
+        [Authorize(Roles = "Landlord")]         // Chỉ cho phép Landlord truy cập
         public async Task<IActionResult> GetBuildingsByUserId(int userId)
         {
-            Console.WriteLine("Authorization process passed");
-
-
-
             // Lấy các tòa nhà thuộc về userId từ database
             var buildings = await _context.Buildings
                 .Include(b => b.Address)
@@ -67,8 +50,6 @@ namespace RMS_API.Controllers
                     BuildingStatus = b.BuildingStatus.Name
                 })
                 .ToListAsync();
-
-            Console.WriteLine($"Buildings count for user {userId}: {buildings.Count}");
 
             // Kiểm tra nếu không có tòa nhà nào
             if (!buildings.Any())
@@ -134,7 +115,7 @@ namespace RMS_API.Controllers
                 return NotFound("No districts found for the given province.");
             }
 
-            return Json(districts); // Trả về dưới dạng JSON
+            return Ok(districts); // Trả về dưới dạng JSON
         }
 
         [HttpGet("GetWardsByDistrict/{districtName}")]
@@ -147,30 +128,54 @@ namespace RMS_API.Controllers
                     Id = w.Id,
                     Name = w.Name
                 }).ToList();
+
             return Ok(wards);
         }
 
-        
-        [HttpPost("AddBuilding")]
-        public async Task<IActionResult> AddBuilding([FromBody] AddBuildingDTO buildingDto)
-        {
-            var existingBuilding = _context.Buildings
-        .FirstOrDefault(b => b.Name == buildingDto.Name);
 
-            if (existingBuilding != null)
+       /* [HttpGet("CheckBuildingName/{userId}/{name}")]
+        public IActionResult CheckBuildingName(int userId, string name)
+        {
+            if (string.IsNullOrEmpty(name) || userId <= 0)
             {
-                return BadRequest("Tên tòa nhà đã tồn tại.");
+                return BadRequest(new { message = "Invalid input data." });
             }
+
+            // Kiểm tra tên tòa nhà đã tồn tại cho UserId hiện tại
+            var isDuplicateForCurrentUser = _context.Buildings.Any(b => b.UserId == userId && b.Name == name);
+
+            if (isDuplicateForCurrentUser)
+            {
+                return Conflict(new { message = "Building name already exists for the specified user." });
+            }
+
+            // Nếu tên tòa nhà trùng với một userId khác, cho phép tạo mới
+            return Ok(new { message = "Building name is available for the specified user or different users." });
+        }*/
+
+        [HttpPost("AddBuildingbyId")]
+        public async Task<IActionResult> AddBuildingbyId([FromBody] AddBuildingDTO buildingDto)
+        {
+            // Kiểm tra tên tòa nhà đã tồn tại cho UserId hiện tại
+            var isDuplicateForCurrentUser = await _context.Buildings
+                .AnyAsync(b => b.UserId == buildingDto.UserId && b.Name == buildingDto.Name);
+
+            if (isDuplicateForCurrentUser)
+            {
+                return Conflict("Tên tòa nhà trùng với tên hiện có. Vui lòng nhập lại." );
+            }
+
+            // Kiểm tra ModelState
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            // Extract UserId from the token and parse it to int
-            var userId = buildingDto.UserId;
-            if (userId == null)
+            // Kiểm tra UserId có tồn tại không
+            var userExists = await _context.Users.AnyAsync(u => u.Id == buildingDto.UserId);
+            if (!userExists)
             {
-                return Unauthorized("UserId not found in token or invalid.");
+                return BadRequest($"User with ID {buildingDto.UserId} does not exist.");
             }
 
             // Tìm Province
@@ -208,8 +213,8 @@ namespace RMS_API.Controllers
             {
                 return BadRequest($"Building status '{buildingDto.BuildingStatus}' not found.");
             }
-            //add o duoi a
-            // Create Address
+
+            // Tạo mới Address
             var address = new Address
             {
                 Information = buildingDto.AddressDetails,
@@ -220,7 +225,7 @@ namespace RMS_API.Controllers
             _context.Addresses.Add(address);
             await _context.SaveChangesAsync();
 
-            // Create Building
+            // Tạo mới Building
             var building = new Building
             {
                 Name = buildingDto.Name,
@@ -234,14 +239,14 @@ namespace RMS_API.Controllers
                 WardId = ward.Id,
                 AddressId = address.Id,
                 BuildingStatusId = buildingStatus.Id,
-                UserId = userId, // Use the parsed UserId
+                UserId = buildingDto.UserId,
                 LinkEmbedMap = buildingDto.LinkEmbedMap
             };
 
             _context.Buildings.Add(building);
             await _context.SaveChangesAsync();
 
-            // Return created building details (you could return a DTO here)
+            // Trả về thông tin tòa nhà đã được tạo
             var responseDto = new
             {
                 building.Name,
@@ -258,18 +263,10 @@ namespace RMS_API.Controllers
 
 
 
-        [HttpGet("AddBuilding")]
-        public IActionResult AddBuilding()
-        {
-            // Lấy danh sách các tỉnh
-            ViewBag.Provinces = _context.Provinces.ToList();
 
-            // Lấy danh sách trạng thái tòa nhà
-            ViewBag.BuildingStatuses = _context.BuildingStatuses.ToList();
 
-            return View(); // Trả về view cho việc thêm tòa nhà
-        }
 
+      
         [HttpDelete("DeleteBuilding/{id}")]
         public async Task<IActionResult> DeleteBuilding(int id)
         {
