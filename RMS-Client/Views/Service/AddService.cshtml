@@ -11,6 +11,24 @@
 
 <body>
 
+    <script>
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            window.location.href = "/Auth/Login";
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            sessionStorage.removeItem("token");
+            window.location.href = "/Auth/Login";
+        }
+    </script>
+
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
 
@@ -160,7 +178,7 @@
                         <h2>Thêm dịch vụ</h2>
                         <div>
                             <a href="/Service/ListService" class="btn btn-warning">Quay về</a>
-                            <button type="submit" class="btn btn-success" onclick="AddService()">Lưu</button>
+                            <button type"submit" class="btn btn-success" onclick="AddService()">Lưu</button>
                         </div>
                     </div>
                     <hr />
@@ -186,10 +204,9 @@
                                         <span class="input-group-text">VNĐ</span>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- Trạng thái -->
-                            
+                            </div>                                             
                         </div>
+
                         <div class="row mb-3">
                             <!-- Nhà -->
                             <div class="form-group col-md-5">
@@ -226,9 +243,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
         
+        var totalRecord = 0;
         $(document).ready(function () {
             loadBuilding();
+            // loadRoom();          
+            const token = sessionStorage.getItem("token");
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
         })
+        /////////////////////////////////////////
 
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -241,6 +264,8 @@
                 return null;
             }
         }
+
+        //////////////////////////////////////////////////
 
         function loadBuilding() {
             const token = sessionStorage.getItem("token");
@@ -266,12 +291,15 @@
         function renderBuilding(data) {
             var urlParams = new URLSearchParams(window.location.search);
             var buildingId = urlParams.get('buildingId');
-            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Chọn</option>`;
             for (var item of data) {
                 html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
             }
-            $("#buildings").html(html);
+            $("#BuildingId").html(html);
+            
         }
+
+        ///////////////////////////////////////////////////////
 
         //Hàm lấy list building theo UserId
         //-------------------------------------------------------
@@ -285,12 +313,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                        <li class="sidebar-subitem">
-                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                            </a>
-                                                        </li>
-                                                    `);
+                                                                        <li class="sidebar-subitem">
+                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                            </a>
+                                                                        </li>
+                                                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -303,8 +331,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                            `);
+                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                            `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -317,17 +345,24 @@
                 return null;
             }
         }
+        //////////////////////////////////////////////
 
 
         function AddService() {
+            const token = sessionStorage.getItem("token");
+            const userId = getUserIdFromToken(token);
             var service = {
                 name: $("#ServiceName").val(),
                 price: $("#Price").val(),
+                userId: userId
             }
             $.ajax({
                 url: "https://localhost:7056/api/Service",
                 type: "POST",
                 contentType: "application/json",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 data: JSON.stringify(service),
                 success: function (response) {
                     alert('Thêm dịch vụ thành công');
@@ -341,7 +376,7 @@
                     Object.keys(xhr.responseJSON.errors).forEach(key => {
                         message += key + ":\n";
                         xhr.responseJSON.errors[key].forEach(x => {
-                            
+
                         })
                     });
                     alert("Thêm dịch vụ không hợp lệ, vui lòng thử lại!");

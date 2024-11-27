@@ -276,50 +276,20 @@
                                 <input type="text" id="keyword" class="form-control" style="width: 200px;" onchange="search()" placeholder="Tìm kiếm...">
                             </div>
                         </div>
-                        @{
-                            int stt = 1;
-                        }
                         <!-- Bảng dữ liệu -->
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>STT</th>
                                     <th>Tên tài sản</th>
+                                    <th>Nhà</th>
                                     <th>Phòng</th>
                                     <th>Tình trạng</th>
                                     <th>Tùy chọn</th>
                                 </tr>
                             </thead>
-
-
-
-                            <tbody>
-                                @if (Model != null && Model.Any())
-                                {
-                                    foreach (var facilities in Model)
-                                    {
-                                        <tr>
-                                            <td>@(stt++)</td>
-                                            <td>@facilities.Name</td>
-                                            <td>@facilities.RoomNumber</td>
-                                            <td>@facilities.FacilityStatus</td>
-                                            <td>
-                                                <a href="/Facility/EditFacility?id=@facilities.Id" class="btn btn-primary">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <button class="btn btn-danger" onclick="DeleteFacility('@facilities.Id')">
-                                                    <i class="fa-solid fa-trash-can"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="7" class="text-center">Không có dữ liệu</td>
-                                    </tr>
-                                }
+                            <tbody id="facilities">
+                                
                             </tbody>
                         </table>
 
@@ -354,15 +324,19 @@
     <script src="~/js/dashboard.js"></script>
     <script>
         
-        var totalRecord = @Html.Raw(ViewBag.TotalRecord);
+        var totalRecord = 0;
         $(document).ready(function () {
             loadBuilding();
             // loadRoom();
             setKeyword();
             loadPaging();
             loadStatus();
-
+            const token = sessionStorage.getItem("token");
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
+            getFacility(userId, 1, 10, null, null, null);
         })
+        //////////////////////////////////////////////
         function onSelectPageSize() {
             var urlParams = new URLSearchParams(window.location.search);
             var pageSize = $("#pageSizeEvent").val();
@@ -370,9 +344,11 @@
             var roomId = $("#rooms").val();
             var keyword = $("#keyword").val();
             var pageIndex = urlParams.get('pageIndex') ?? 1;
-            //https://localhost:7056/api/Facility/GetAllFacility?pageSize=10&pageIndex=1&keyword=test&buildingId=1&roomId=1
-            var route = `/Facility/ListFacility?pageSize=${pageSize}&pageIndex=${pageIndex}&buildingId=${buildingId}&roomId=${roomId}&keyword=${keyword}`;
-            window.location.href = route;
+            const token = sessionStorage.getItem("token");
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
+            var statusId = $("#status").val();
+            getFacility(userId, pageIndex, pageSize, keyword, roomId, buildingId, statusId);
         }
         function loadPaging() {
             var urlParams = new URLSearchParams(window.location.search);
@@ -392,11 +368,11 @@
             var buildingId = $("#buildings").val();
             var roomId = $("#rooms").val();
             var keyword = $("#keyword").val();
-            if (pageIndex > 1) {
-                pageIndex = pageIndex - 1;
-                var route = `/Facility/ListFacility?pageIndex=${pageIndex}&pageSize=${pageSize}&buildingId=${buildingId}&roomId=${roomId}&keyword=${keyword}`;
-                window.location.href = route;
-            }
+            const token = sessionStorage.getItem("token");
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
+            var statusId = $("#status").val();
+            getFacility(userId, pageIndex, pageSize, keyword, roomId, buildingId, statusId);
         }
         function onNextPage() {
             var urlParams = new URLSearchParams(window.location.search);
@@ -407,17 +383,21 @@
             var keyword = $("#keyword").val();
             var startAt = parseInt((pageIndex - 1) * pageSize) + 1;
             var endAt = startAt + parseInt(pageSize) - 1;
-            if (endAt < totalRecord) {
-                var next = parseInt(pageIndex) + 1;
-                var route = `/Facility/ListFacility?pageIndex=${next}&pageSize=${pageSize}&buildingId=${buildingId}&roomId=${roomId}&keyword=${keyword}`;
-                window.location.href = route;
-            }
+            const token = sessionStorage.getItem("token");
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
+            var statusId = $("#status").val();
+            getFacility(userId, pageIndex, pageSize, keyword, roomId, buildingId, statusId);
         }
+
+        //////////////////////////////////////////
         function setKeyword() {
             var urlParams = new URLSearchParams(window.location.search);
             var keyword = urlParams.get('keyword');
             $("#keyword").val(keyword)
         }
+
+        ///////////////////////////////////
         //Lấy UserId
         function getUserIdFromToken(token) {
             try {
@@ -429,7 +409,7 @@
                 return null;
             }
         }
-
+        ///////////////////////////////////////////////////
         function loadBuilding() {
             const token = sessionStorage.getItem("token");
             //Lấy user id
@@ -462,17 +442,21 @@
             loadRoom();
         }
 
+        ///////////////////////////////////////////////////////
         function loadRoom() {
+            const token = sessionStorage.getItem("token");
             var buildingId = $("#buildings").val();
-            const userId = getUserIdFromToken();//iojuo
-            console.log(userId);
+            console.log("buildingId = " + buildingId)
+            const userId = getUserIdFromToken();
             $.ajax({
                 url: buildingId && buildingId > 0 ? `https://localhost:7056/api/Room/GetRoomByBuilding/${buildingId}` : `https://localhost:7056/api/Room/GetAllRoom/${userId}`,
                 type: 'GET',
                 dataType: 'json',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 success: function (response) {
                     renderRoom(response);
-                    console.log(response)
                 },
                 error: function (xhr, status, error) {
                     console.error("Có lỗi xảy ra:", error);
@@ -481,7 +465,7 @@
         }
         function renderRoom(data) {
             var urlParams = new URLSearchParams(window.location.search);
-            var roomId = urlParams.get('roomId');
+            var roomId = $("#rooms").val();
             let html = `<option value="-1" ${roomId <= 0 ? 'selected' : ''}>Tất cả</option>`;
             for (var item of data) {
                 html += `<option value="${item.id}" ${roomId == item.id ? 'selected' : ''}>${item.roomNumber}</option>`
@@ -489,11 +473,16 @@
             $("#rooms").html(html);
         }
 
+        ///////////////////////////////////////////////////////////
         function loadStatus() {
+            const token = sessionStorage.getItem("token");
             $.ajax({
                 url: 'https://localhost:7056/api/FacilityStatus/GetAllFacility',
                 type: 'GET',
                 dataType: 'json',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 success: function (response) {
                     renderStatus(response);
                 },
@@ -503,29 +492,41 @@
             });
         }
         function renderStatus(data) {
-            let html = ``;
+            var urlParams = new URLSearchParams(window.location.search);
+            var roomId = urlParams.get('statusId');
+            let html = `<option value="-1" ${roomId <= 0 ? 'selected' : ''}>Tất cả</option>`;
             for (var item of data) {
                 html += `<option value="${item.id}">${item.description}</option>`
             }
             $("#status").html(html);
         }
+
+        //////////////////////////////////////////////////
         function search() {
             var urlParams = new URLSearchParams(window.location.search);
             var buildingId = $("#buildings").val();
             var roomId = $("#rooms").val();
+            var statusId = $("#status").val();
             var keyword = $("#keyword").val();
             var pageIndex = urlParams.get('pageIndex') ?? 1;
             var pageSize = urlParams.get('pageIndex') ?? 10;
-            //https://localhost:7056/api/Facility/GetAllFacility?pageSize=10&pageIndex=1&keyword=test&buildingId=1&roomId=1
-            var route = `/Facility/ListFacility?pageSize=${pageSize}pageIndex=${pageIndex}&buildingId=${buildingId}&roomId=${roomId}&keyword=${keyword}`;
-            window.location.href = route;
+            const token = sessionStorage.getItem("token");
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
+            getFacility(userId, pageIndex, pageSize, keyword, roomId, buildingId, statusId);
+            loadRoom();
         }
 
+        ///////////////////////////////////////////////////
         function DeleteFacility(id) {
+            const token = sessionStorage.getItem("token");
             if (confirm("Bạn có chắc chắn muốn xóa cơ sở vật chất này không?")) {  // Hộp thoại xác nhận xóa
                 $.ajax({
                     url: `https://localhost:7056/api/Facility?id=${id}`,  // Đảm bảo URL API đúng
                     type: "DELETE",  // Sử dụng phương thức DELETE
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    },
                     success: function (response) {
                         alert("Xóa cơ sở vật chất thành công");  // Thông báo khi xóa thành công
                         window.location.reload();  // Reload lại trang sau khi xóa
@@ -575,12 +576,92 @@
         //Lấy UserId
         function getUserIdFromToken(token) {
             try {
+                var jwtToken = sessionStorage.getItem('token');
+                token = jwtToken;
                 const tokenParts = token.split('.');
                 const payload = JSON.parse(atob(tokenParts[1]));
                 return payload.UserId;
             } catch (error) {
                 console.error("Không mã hóa đc token:", error);
                 return null;
+            }
+        }
+        function getFacility(userId, pageIndex, pageSize, keyword, roomId, buildingId, statusId) {
+            let facilityUrl = 'https://localhost:7056/api/Facility/GetAllFacility';
+            const token = sessionStorage.getItem("token");
+            let query = '';
+            if (userId) {
+                query += `userId=${userId}`
+            }
+            else {
+                alert("Vui lòng đăng nhập vào hệ thống");
+                window.location.href = '/Auth/Login';
+            }
+            if (pageSize) {
+                query += `&pageSize=${pageSize}`
+            }
+            if (pageIndex) {
+                query += `&pageIndex=${pageIndex}`
+            }
+            if (keyword) {
+                query += `&keyword=${keyword}`
+            }
+            if (roomId) {
+                query += `&roomId=${roomId}`
+            }
+            if (buildingId) {
+                query += `&buildingId=${buildingId}`
+            }
+            if (buildingId) {
+                query += `&statusId=${statusId}`
+            }
+            console.log(query)
+            $.ajax({
+                url: `${facilityUrl}?${query}`,
+                type: 'GET',
+                dataType: 'json',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                success: function (response) {
+                    console.log(response)
+                    renderFacility(response.facilities);
+                    totalRecord = response.totalRecord;
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderFacility(data){
+            let html = '';
+            let stt = 1;
+            const token = sessionStorage.getItem("token");
+            for (var item of data) {
+                html += '<tr>'
+                html += `<td>${stt++}</td>`;
+                html += `<td>${item.name}</td>`;
+                html += `<td>${item.buildingName}</td>`;
+                html += `<td>${item.roomNumber}</td>`;
+                html += `<td>${item.facilityStatus}</td>`;
+                html += `<td>
+                            <a href="/Facility/EditFacility?id=${item.id}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                            <button class="btn btn-danger" onclick="DeleteFacility('${item.id}')">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </td>`;
+                html += '</tr>';
+            }
+            if (data.length) {
+                $("#facilities").html(html)
+            }
+            else {
+                html += '<tr>'
+                html += '<td colspan="7" class="text-center">Không có dữ liệu</td>'
+                html += '</tr>'
+                $("#facilities").html(html)
             }
         }
     </script>

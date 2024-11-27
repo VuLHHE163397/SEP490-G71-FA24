@@ -156,7 +156,12 @@
 
         if (payload.Roles !== "Landlord") {
             window.location.href = "/Auth/Login";
-        }       
+        }
+
+        function logout() {
+            sessionStorage.removeItem("token");
+            window.location.href = "/Auth/Login";
+        }
     </script>
 
     <!--  Body Wrapper -->

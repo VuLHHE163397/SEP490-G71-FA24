@@ -12,6 +12,24 @@
 
 <body>
 
+    <script>
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            window.location.href = "/Auth/Login";
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            sessionStorage.removeItem("token");
+            window.location.href = "/Auth/Login";
+        }
+    </script>
+
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
 
@@ -198,9 +216,9 @@
 
                                 <div class="row mb-3">
                                     <!-- Nhà -->
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-6">
                                         <label for="BuildingId" class="form-label">Nhà</label>
-                                        <select id="BuildingId" class="form-control custom-select">
+                                        <select id="BuildingId" class="form-control custom-select" onchange="loadRoom()">
                                         </select>
                                     </div>
 
@@ -247,12 +265,17 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
     <script>
-       
+
+        var totalRecord = 0;
         $(document).ready(function () {
-            loadRoom();
-            loadStatus();
             loadBuilding();
+            // loadRoom();                  
+            loadStatus();
+            const token = sessionStorage.getItem("token");
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
         })
+        /////////////////////////////////////////
 
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -265,6 +288,8 @@
                 return null;
             }
         }
+
+        //////////////////////////////////////////////////
 
         function loadBuilding() {
             const token = sessionStorage.getItem("token");
@@ -290,12 +315,75 @@
         function renderBuilding(data) {
             var urlParams = new URLSearchParams(window.location.search);
             var buildingId = urlParams.get('buildingId');
-            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Chọn</option>`;
             for (var item of data) {
                 html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
             }
-            $("#buildings").html(html);
+            $("#BuildingId").html(html);
+            loadRoom();
         }
+
+        ///////////////////////////////////////////////////////
+
+        function loadRoom() {
+            const token = sessionStorage.getItem("token");
+            var buildingId = $("#BuildingId").val();
+            console.log("buildingId = " + buildingId)
+            const userId = getUserIdFromToken(token);
+            $.ajax({
+                url: buildingId && buildingId > 0 ? `https://localhost:7056/api/Room/GetRoomByBuilding/${buildingId}` : `https://localhost:7056/api/Room/GetAllRoom/${userId}`,
+                type: 'GET',
+                dataType: 'json',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                success: function (response) {
+                    renderRoom(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderRoom(data) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var roomId = urlParams.get('roomId');
+            let html = `<option value="-1" ${roomId <= 0 ? 'selected' : ''}>Chọn</option>`;
+            for (var item of data) {
+                html += `<option value="${item.id}" ${roomId == item.id ? 'selected' : ''}>${item.roomNumber}</option>`
+            }
+            $("#RoomId").html(html);
+        }
+
+        ////////////////////////////////////////////////////
+        function loadStatus() {
+            const token = sessionStorage.getItem("token");
+            $.ajax({
+                url: 'https://localhost:7056/api/FacilityStatus/GetAllFacility',
+                type: 'GET',
+                dataType: 'json',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                success: function (response) {
+                    renderStatus(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+        function renderStatus(data) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var statusId = urlParams.get('statusId');
+            let html = `<option value="-1" ${statusId <= 0 ? 'selected' : ''}>Chọn</option>`;
+            for (var item of data) {
+                html += `<option value="${item.id}">${item.description}</option>`
+            }
+            $("#FacilityStatusId").html(html);
+        }
+
+        
 
         //Hàm lấy list building theo UserId
         //-------------------------------------------------------
@@ -343,15 +431,21 @@
         }
 
         function AddFacility() {
+            const token = sessionStorage.getItem("token");
+            const userId = getUserIdFromToken(token);
             var facility = {
                 name: $("#FacilityName").val(),
                 roomId: $("#RoomId").val(),
                 statusId: $("#FacilityStatusId").val(),
+                userId: userId
             }
             $.ajax({
                 url: "https://localhost:7056/api/Facility",
                 type: "POST",
                 contentType: "application/json",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 data: JSON.stringify(facility),
                 success: function (response) {
                     alert('Thêm cơ sở vật chất thành công');
@@ -373,46 +467,6 @@
             })
         }
         
-        function loadRoom() {
-            $.ajax({
-                url: 'https://localhost:7056/api/Room/GetAllRoom',
-                type: 'GET',
-                dataType: 'json',
-                success: function (response) {
-                    renderRoom(response);
-                },
-                error: function (xhr, status, error) {
-                    console.error("Có lỗi xảy ra:", error);
-                }
-            });
-        }
-        function renderRoom(data) {
-            let html = ``;
-            for (var item of data) {
-                html += `<option value="${item.id}">${item.roomNumber}</option>`
-            }
-            $("#RoomId").html(html);
-        }
-        function loadStatus() {
-            $.ajax({
-                url: 'https://localhost:7056/api/FacilityStatus/GetAllFacility',
-                type: 'GET',
-                dataType: 'json',
-                success: function (response) {
-                    renderStatus(response);
-                },
-                error: function (xhr, status, error) {
-                    console.error("Có lỗi xảy ra:", error);
-                }
-            });
-        }
-        function renderStatus(data) {
-            let html = ``;
-            for (var item of data) {
-                html += `<option value="${item.id}">${item.description}</option>`
-            }
-            $("#FacilityStatusId").html(html);
-        }
     </script>
 </body>
 
