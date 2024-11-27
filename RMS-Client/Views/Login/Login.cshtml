@@ -124,10 +124,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function login() {
-            // if (payload.role === "Admin") {
-            //     window.location.href = "/User/ListUser";
-            // }
+        function login() {           
             var email = $("#email").val();
             var password = $("#password").val();
 
@@ -146,9 +143,7 @@
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify({ email: email, Password: password }),
-                success: function (response) {
-                    // Lưu token vào sessionStorage thay vì localStorage
-                    sessionStorage.setItem("token", response.token);
+                success: function (response) {                      
                     showPopup("Đăng nhập thành công!");
 
                     try {

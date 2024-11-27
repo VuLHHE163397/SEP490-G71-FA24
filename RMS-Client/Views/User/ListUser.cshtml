@@ -110,6 +110,33 @@
     </style>
 </head>
 <body>
+
+    <script>
+        function getCookie(name) {
+            console.log("Tất cả cookie:", document.cookie);
+            const cookies = document.cookie.split('; ');
+            const cookie = cookies.find(row => row.startsWith(`${name}=`));
+            return cookie ? cookie.split('=')[1] : null;
+            // return cookie ? decodeURIComponent(cookie.split('=')[1]) : null;
+        }
+
+        const token = getCookie('AuthToken');
+        console.log("token after get:", token);
+        if (!token) {
+            console.error('Token không tìm thấy trong cookie.');
+            window.location.href = "/Auth/Login";
+        } else {
+            console.log('Token từ cookie:', token);
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        console.log("payload:", payload);
+        if (payload.Roles !== "Admin") {
+            window.location.href = "/Auth/Login";
+        }
+
+    </script>
+
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -138,15 +165,9 @@
                                 <span class="hide-menu">Quản lí người dùng</span>
                             </a>
                         </li>
-                        
-                        
-                        
-                        
 
-                       
-                       
-                       
-                        
+
+
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -256,7 +277,7 @@
                     }
 
                     <script>
-                       
+
 
                         // JavaScript function để lọc bảng theo từ khóa tìm kiếm
                         function filterTable() {
@@ -300,10 +321,10 @@
 
                                         // Cập nhật lại màu và trạng thái của các button
                                         statusButtonContainer.innerHTML = `
-                                                        <button onclick="changeStatus(${userId}, 1)" class="status-button ${newStatusId === 1 ? "active" : ""}">Active</button>
-                                                        <button onclick="changeStatus(${userId}, 2)" class="status-button ${newStatusId === 2 ? "deactive" : ""}">Deactive</button>
-                                                        <button onclick="changeStatus(${userId}, 3)" class="status-button ${newStatusId === 3 ? "banned" : ""}">Banned</button>
-                                                    `;
+                                                                                <button onclick="changeStatus(${userId}, 1)" class="status-button ${newStatusId === 1 ? "active" : ""}">Active</button>
+                                                                                <button onclick="changeStatus(${userId}, 2)" class="status-button ${newStatusId === 2 ? "deactive" : ""}">Deactive</button>
+                                                                                <button onclick="changeStatus(${userId}, 3)" class="status-button ${newStatusId === 3 ? "banned" : ""}">Banned</button>
+                                                                            `;
                                     } else {
                                         alert('Có lỗi xảy ra: ' + result.message);
                                     }
