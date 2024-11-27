@@ -19,25 +19,7 @@ namespace RMS_API.Controllers
             _context = context;
         }
 
-        [HttpGet("CheckBuildingName/{userId}/{name}")]
-        public IActionResult CheckBuildingName(int userId, string name)
-        {
-            if (string.IsNullOrEmpty(name) || userId <= 0)
-            {
-                return BadRequest(new { message = "Invalid input data." });
-            }
-
-            // Kiểm tra tên tòa nhà đã tồn tại cho UserId hiện tại
-            var isDuplicateForCurrentUser = _context.Buildings.Any(b => b.UserId == userId && b.Name == name);
-
-            if (isDuplicateForCurrentUser)
-            {
-                return Conflict(new { message = "Building name already exists for the specified user." });
-            }
-
-            // Nếu tên tòa nhà trùng với một userId khác, cho phép tạo mới
-            return Ok(new { message = "Building name is available for the specified user or different users." });
-        }
+        
 
         [HttpGet("GetBuildingsByUserId/{userId}")]
         [Authorize(Roles = "Landlord")]         // Chỉ cho phép Landlord truy cập
@@ -151,9 +133,28 @@ namespace RMS_API.Controllers
         }
 
 
+       /* [HttpGet("CheckBuildingName/{userId}/{name}")]
+        public IActionResult CheckBuildingName(int userId, string name)
+        {
+            if (string.IsNullOrEmpty(name) || userId <= 0)
+            {
+                return BadRequest(new { message = "Invalid input data." });
+            }
 
-        [HttpPost("AddBuilding")]
-        public async Task<IActionResult> AddBuilding([FromBody] AddBuildingDTO buildingDto)
+            // Kiểm tra tên tòa nhà đã tồn tại cho UserId hiện tại
+            var isDuplicateForCurrentUser = _context.Buildings.Any(b => b.UserId == userId && b.Name == name);
+
+            if (isDuplicateForCurrentUser)
+            {
+                return Conflict(new { message = "Building name already exists for the specified user." });
+            }
+
+            // Nếu tên tòa nhà trùng với một userId khác, cho phép tạo mới
+            return Ok(new { message = "Building name is available for the specified user or different users." });
+        }*/
+
+        [HttpPost("AddBuildingbyId")]
+        public async Task<IActionResult> AddBuildingbyId([FromBody] AddBuildingDTO buildingDto)
         {
             // Kiểm tra tên tòa nhà đã tồn tại cho UserId hiện tại
             var isDuplicateForCurrentUser = await _context.Buildings
@@ -161,7 +162,7 @@ namespace RMS_API.Controllers
 
             if (isDuplicateForCurrentUser)
             {
-                return Conflict(new { });
+                return Conflict("Tên tòa nhà trùng với tên hiện có. Vui lòng nhập lại." );
             }
 
             // Kiểm tra ModelState
@@ -265,18 +266,7 @@ namespace RMS_API.Controllers
 
 
 
-        [HttpGet("AddBuilding")]
-        public IActionResult AddBuilding()
-        {
-            // Lấy danh sách các tỉnh
-            ViewBag.Provinces = _context.Provinces.ToList();
-
-            // Lấy danh sách trạng thái tòa nhà
-            ViewBag.BuildingStatuses = _context.BuildingStatuses.ToList();
-
-            return View(); // Trả về view cho việc thêm tòa nhà
-        }
-
+      
         [HttpDelete("DeleteBuilding/{id}")]
         public async Task<IActionResult> DeleteBuilding(int id)
         {

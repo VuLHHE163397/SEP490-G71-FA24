@@ -224,6 +224,7 @@ namespace RMS_API.Controllers
 
 
         [HttpGet("GetAllLanlord")]
+        
         public async Task<IActionResult> GetAllLanlord()//Lanlord se co roleid =2
         {
             // Retrieve all users with RoleId = 2
