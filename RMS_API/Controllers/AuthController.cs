@@ -202,12 +202,12 @@ namespace RMS_API.Controllers
             Response.Cookies.Append("AuthToken", token, new CookieOptions
             {
                 //HttpOnly = true,
-                //Secure = true,
+                Secure = true,
                 Path = "/",
                 HttpOnly = false,
-                Secure = false,
-                SameSite = SameSiteMode.Lax,
-                //SameSite = None,
+                //Secure = false,
+                //SameSite = SameSiteMode.Lax,
+                SameSite=SameSiteMode.None,
                 //SameSite = SameSiteMode.Strict, // Ngăn CSRF                
                 Expires = DateTime.UtcNow.AddHours(1) 
             });

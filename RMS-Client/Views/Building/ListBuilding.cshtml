@@ -136,39 +136,26 @@
 <body>
 
     <script>
-
-        function getCookie(name) {
-            console.log("Tất cả cookie:", document.cookie);
+        function getCookie(name) {            
             const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
-            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
-
-            // const cookies = document.cookie.split('; ');
-            // const cookie = cookies.find(row => row.startsWith(`${name}=`));
-            // return cookie ? cookie.split('=')[1] : null;
-
-            // return cookie ? decodeURIComponent(cookie.split('=')[1]) : null;
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;            
         }
 
-        const token = getCookie('AuthToken');
-        console.log("token after get:", token);
+        const token = getCookie('AuthToken');        
         if (!token) {
-            console.error('Token không tìm thấy trong cookie.');
-            // window.location.href = "/Auth/Login";
-        } else {
-            console.log('Token từ cookie:', token);
-        }
+            console.error('Token không tìm thấy trong cookie.');            
+        } 
         const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-        console.log("payload:", payload);
+        const payload = JSON.parse(atob(tokenParts[1]));       
         if (payload.Roles !== "Landlord") {
             window.location.href = "/auth/login";
-
         }
 
-        function logout() {
-            sessionStorage.removeItem("token");
+        function logout() {            
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";            
             window.location.href = "/Auth/Login";
         }
+
     </script>
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"

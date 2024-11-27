@@ -113,25 +113,22 @@
 
     <script>
         function getCookie(name) {
-            console.log("Tất cả cookie:", document.cookie);
-            const cookies = document.cookie.split('; ');
-            const cookie = cookies.find(row => row.startsWith(`${name}=`));
-            return cookie ? cookie.split('=')[1] : null;
-            // return cookie ? decodeURIComponent(cookie.split('=')[1]) : null;
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
         }
 
         const token = getCookie('AuthToken');
-        console.log("token after get:", token);
         if (!token) {
             console.error('Token không tìm thấy trong cookie.');
-            window.location.href = "/Auth/Login";
-        } else {
-            console.log('Token từ cookie:', token);
         }
         const tokenParts = token.split('.');
         const payload = JSON.parse(atob(tokenParts[1]));
-        console.log("payload:", payload);
         if (payload.Roles !== "Admin") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
             window.location.href = "/Auth/Login";
         }
 
@@ -276,9 +273,14 @@
                         </div>
                     }
 
+                    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+                    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+                    <script src="~/js/sidebarmenu.js"></script>
+                    <script src="~/js/app.min.js"></script>
+                    <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
+                    <script src="~/lib/simplebar/dist/simplebar.js"></script>
+                    <script src="~/js/dashboard.js"></script>
                     <script>
-
-
                         // JavaScript function để lọc bảng theo từ khóa tìm kiếm
                         function filterTable() {
                             const input = document.getElementById("searchInput");
