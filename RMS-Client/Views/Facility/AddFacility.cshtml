@@ -11,6 +11,27 @@
 </head>
 
 <body>
+    <script>
+        function getCookie(name) {
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        }
+
+        const token = getCookie('AuthToken');
+        if (!token) {
+            console.error('Token không tìm thấy trong cookie.');
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/login";
+        }
+
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
+            window.location.href = "/Auth/Login";
+        }
+    </script>
 
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -96,8 +117,8 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        
-                        
+
+
 
                     </ul>
 
@@ -204,32 +225,32 @@
                                         </select>
                                     </div>
 
-                                <div class="row mb-3">
-                                    <!-- Số Phòng -->
-                                    <div class="form-group col-md-3">
-                                        <label for="RoomId" class="form-label">Phòng</label>
-                                        <select id="RoomId" class="form-control custom-select">
-                                        </select>
-                                    </div>
-
                                     <div class="row mb-3">
-                                        <!-- Tình trạng -->
+                                        <!-- Số Phòng -->
                                         <div class="form-group col-md-3">
-                                            <label for="FacilityStatusId" class="form-label">Tình trạng</label>
-                                            <select id="FacilityStatusId" class="form-control custom-select">
+                                            <label for="RoomId" class="form-label">Phòng</label>
+                                            <select id="RoomId" class="form-control custom-select">
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <!-- Ghi chú -->
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="Notes">Ghi chú</label>
-                                                <textarea id="Notes" name="Notes" class="form-control" rows="3"></textarea>
+
+                                        <div class="row mb-3">
+                                            <!-- Tình trạng -->
+                                            <div class="form-group col-md-3">
+                                                <label for="FacilityStatusId" class="form-label">Tình trạng</label>
+                                                <select id="FacilityStatusId" class="form-control custom-select">
+                                                </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <p class="text-danger">(*): Thông tin bắt buộc</p>
+                                        <div class="row mb-3">
+                                            <!-- Ghi chú -->
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="Notes">Ghi chú</label>
+                                                    <textarea id="Notes" name="Notes" class="form-control" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-danger">(*): Thông tin bắt buộc</p>
                     </form>
                 </div>
             </div>
@@ -247,7 +268,7 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
     <script>
-       
+
         $(document).ready(function () {
             loadRoom();
             loadStatus();
@@ -263,13 +284,19 @@
             } catch (error) {
                 console.error("Không mã hóa đc token:", error);
                 return null;
+
             }
         }
 
         function loadBuilding() {
-            const token = sessionStorage.getItem("token");
-            //Lấy user id
-            const userId = getUserIdFromToken(token);
+            const token = getCookie('AuthToken');
+            if (!token) {
+                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
+                return;
+            }
+            var userId = getUserIdFromToken(token);
+
             $.ajax({
                 url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',
@@ -309,12 +336,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                <li class="sidebar-subitem">
-                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                    </a>
-                                                                </li>
-                                                            `);
+                                                                        <li class="sidebar-subitem">
+                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                            </a>
+                                                                        </li>
+                                                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -327,8 +354,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                    `);
+                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                            `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -372,7 +399,7 @@
                 }
             })
         }
-        
+
         function loadRoom() {
             $.ajax({
                 url: 'https://localhost:7056/api/Room/GetAllRoom',

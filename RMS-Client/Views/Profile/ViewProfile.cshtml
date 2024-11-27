@@ -166,22 +166,28 @@
 <body>
 
     <script>
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-    window.location.href = "/Auth/Login";
-    }
-    const tokenParts = token.split('.');
-    const payload = JSON.parse(atob(tokenParts[1]));
+        function getCookie(name) {
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        }
 
-    if (payload.Roles !== "Landlord") {
-    window.location.href = "/Auth/Login";
-    }
+        const token = getCookie('AuthToken');
+        if (!token) {
+            console.error('Token không tìm thấy trong cookie.');
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/login";
+        }
 
-    function logout() {
-    sessionStorage.removeItem("token");
-    window.location.href = "/Auth/Login";
-    }
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
+            window.location.href = "/Auth/Login";
+        }
+
     </script>
+
 
 
     <!--  Body Wrapper -->
@@ -399,12 +405,12 @@
         });
 
         function getUser() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             if (!token) {
                 alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
                 return;
             }
-
             var userId = getUserIdFromToken(token);
             const url = `https://localhost:7056/api/User/GetUserById?id=${userId}`;
             $.ajax({
@@ -446,13 +452,12 @@
         }
 
         function getListBuilding() {
-            const token = sessionStorage.getItem("token");
-
+            const token = getCookie('AuthToken');
             if (!token) {
                 alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
                 return;
             }
-
             var userId = getUserIdFromToken(token);
 
             const url = `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`;

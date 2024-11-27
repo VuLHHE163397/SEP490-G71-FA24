@@ -148,7 +148,7 @@
         const tokenParts = token.split('.');
         const payload = JSON.parse(atob(tokenParts[1]));       
         if (payload.Roles !== "Landlord") {
-            window.location.href = "/auth/login";
+            window.location.href = "/Auth/login";
         }
 
         function logout() {            
@@ -361,15 +361,13 @@
         }
 
         function getListBuilding() {
-            const token = getCookie('AuthToken');
-            console.log("token in get list:", token);
+            const token = getCookie('AuthToken');            
             if (!token) {
                 alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
                 return;
-            }
-            console.log("userid 1111:", userId);
-            var userId = getUserIdFromToken(token);
-            console.log("userid 33333333:", userId);
+            }            
+            var userId = getUserIdFromToken(token);           
 
             const url = `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`;
 
