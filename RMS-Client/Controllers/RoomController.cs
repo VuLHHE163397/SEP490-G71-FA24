@@ -481,34 +481,7 @@ namespace RMS_Client.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ImportRooms(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-            {
-                TempData["ErrorMessage"] = "No file uploaded.";
-                return RedirectToAction("ImportRooms");
-            }
 
-            var formData = new MultipartFormDataContent();
-            var fileContent = new StreamContent(file.OpenReadStream());
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-            formData.Add(fileContent, "file", file.FileName);
-
-            // Gửi yêu cầu POST đến API để nhập Rooms
-            var response = await client.PostAsync($"{RoomApiUri}/ImportRooms", formData);
-
-            if (response.IsSuccessStatusCode)
-            {
-                TempData["SuccessMessage"] = "Rooms imported successfully.";
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "An error occurred while importing rooms.";
-            }
-
-            return RedirectToAction("ImportRooms");
-        }
         public async Task<IActionResult> RoomMaintainance([FromRoute] int id)
         {
             string apiUrl = $"{RoomApiUri}/RoomMaintainance/{id}";

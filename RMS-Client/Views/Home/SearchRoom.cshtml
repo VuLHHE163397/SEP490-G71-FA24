@@ -902,7 +902,7 @@
                 // Function to toggle favorite status
                 function toggleFavorite(element) {
                     const roomId = element.getAttribute("data-room-id");
-                    const roomImage = "~/images/room1.jpg"; // Đường dẫn ảnh cố định
+                    const roomImage = element.getAttribute("data-room-image");
                     const roomAddress = element.getAttribute("data-room-address");
 
                     let favorites = getFavorites();
