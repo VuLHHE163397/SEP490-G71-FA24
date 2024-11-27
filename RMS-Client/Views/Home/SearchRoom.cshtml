@@ -304,6 +304,7 @@
                         <form id="selectAddressForm" style="display: flex; gap: 10px; align-items: center; margin: 0;">
                             <!-- Row for select elements -->
                             <div class="d-flex gap-2 align-items-center select-row" style="display: flex; gap: 10px;">
+<<<<<<< Updated upstream
                                 <select id="province" name="provinceId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 100px;">
                                     <option value="">Tỉnh/Thành phố</option>
                                 </select>
@@ -313,6 +314,17 @@
                                 </select>
 
                                 <select id="ward" name="wardId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 220px;">
+=======
+                                <select id="province" name="provinceId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 150px;">
+                                    <option value="">Tỉnh/Thành phố</option>
+                                </select>
+
+                                <select id="district" name="districtId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 150px;">
+                                    <option value="">Quận/Huyện/Thị xã</option>
+                                </select>
+
+                                <select id="ward" name="wardId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 150px;">
+>>>>>>> Stashed changes
                                     <option value="">Xã/Phường/Thị trấn</option>
                                 </select>
                             </div>
@@ -340,11 +352,15 @@
                                 <input type="radio" name="roomStatus" value="Sắp trống" style="margin-right: 5px;"> Sắp trống
                             </label>
                         </div>
+                        <button id="searchButton" onclick="searchRooms()"><i class="fas fa-search"></i>Tìm kiếm</button>
                     </div>
                 </div>
+<<<<<<< Updated upstream
                 <button id="searchButton" onclick="searchRooms()" style="display: block;background-color:#FEA116; margin: 0 auto; font-size: 1.2rem; padding: 0.3rem 0.8rem; text-align: center;border-radius: 6px">
                     <i class="fas fa-search"></i> Tìm kiếm
                 </button>
+=======
+>>>>>>> Stashed changes
             </div>
             <!-- Popup Modals for Filters -->
             <!-- Distance Filter Modal -->
@@ -802,6 +818,7 @@
                         const priceInMillions = (room.price / 1_000_000).toFixed(1);
 
                         roomElement.innerHTML = `
+<<<<<<< Updated upstream
                                     <div class="room-item shadow rounded overflow-hidden position-relative" style="cursor: pointer;"
                                          onclick="navigateToDetail('/Home/RoomDetail/${room.id}')">
                                         <!-- Hình ảnh phòng -->
@@ -835,16 +852,50 @@
                                         </div>
                                     </div>
                                 `;
+=======
+                                                            <div class="room-item shadow rounded overflow-hidden">
+                                                                <div class="position-relative">
+                                                                    <img class="img-fluid" src="/images/room1.jpg" alt="Room Image">
+                                                                    <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
+                                                                        onclick="toggleFavorite(this)" data-room-id="${room.id}" data-room-address="${room.address}">
+                                                                        <i class="fa fa-heart"></i>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="room-details p-3">
+                                                                    <h6 class="mb-2">
+                                                                        <i class="fa fa-map-marker-alt text-primary me-2"></i>${room.address}
+                                                                    </h6>
+                                                                    <div class="room-status">${room.roomStatusName}</div>
+                                                                    <div class="mt-2">
+                                                                        <small class="text-muted d-block">
+                                                                            <i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT ${room.distance.toFixed(0)} km
+                                                                        </small>
+                                                                        <small class="text-muted d-block">
+                                                                            <i class="fa fa-dollar-sign text-primary me-2"></i>${priceInMillions} triệu VND
+                                                                        </small>
+                                                                        <small class="text-muted d-block">
+                                                                            <i class="fa fa-expand text-primary me-2"></i>${room.area} m²
+                                                                        </small>
+                                                                    </div>
+                                                                    <a style="color:red" href="/Home/RoomDetail/${room.id}">Xem chi tiết</a>
+                                                                </div>
+                                                            </div>
+                                                        `;
+>>>>>>> Stashed changes
                         row.appendChild(roomElement);
                     });
 
                     resultContainer.innerHTML = ""; // Clear previous results
                     resultContainer.appendChild(row); // Add row to results container
                 }
+<<<<<<< Updated upstream
                 // Điều hướng đến trang chi tiết
                 function navigateToDetail(url) {
                     window.location.href = url;
                 }
+=======
+
+>>>>>>> Stashed changes
                 // Function to get favorites from cookies
                 function getFavorites() {
                     const favorites = document.cookie

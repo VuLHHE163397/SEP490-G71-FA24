@@ -259,7 +259,12 @@
                                         <a style="text-decoration: none; color: inherit;" asp-controller="Home" asp-action="RoomDetail" asp-route-id="@room.Id">
                                             <div class="card mb-4">
                                                 <!-- Hiển thị ảnh phòng, nếu có -->
+<<<<<<< Updated upstream
                                                 <img class="img-fluid" src="@room.FirstImageLink" alt="Room Image">
+=======
+                                                <img class="img-fluid" src="~/images/room4.jpg" alt="Room Image">
+                                                @* <img class="img-fluid" src="@room.Images?.FirstOrDefault() ?? " ~ /images/room2.jpg"" alt="Room Image"> *@
+>>>>>>> Stashed changes
                                                 <div class="card-body">
                                                     <p class="card-text"><strong>Tên phòng:</strong> @room.RoomNumber</p>
                                                     @{

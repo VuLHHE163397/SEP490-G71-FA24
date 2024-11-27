@@ -472,8 +472,13 @@ namespace RMS_API.Controllers
         public IActionResult GetActiveRooms()
         {
             var rooms = _context.Rooms
+<<<<<<< Updated upstream
                 .Where(r => r.RoomStatusId == 1 && r.Building.BuildingStatusId == 1)
                 .Select(r => new RoomDTO
+=======
+                .Where(r => r.RoomStatusId == 1 & r.Building.BuildingStatusId == 1) // Lọc các phòng có trạng thái đang hoạt động
+                .Select(r => new
+>>>>>>> Stashed changes
                 {
                     Id = r.Id,
                     Building = r.Building.Name,
@@ -481,8 +486,12 @@ namespace RMS_API.Controllers
                     Price = r.Price,
                     Area = r.Area,
                     RoomStatusName = r.RoomStatus.Name,
+<<<<<<< Updated upstream
                     Distance = r.Building.Distance,
                     FirstImageLink = r.Images.OrderBy(i => i.Id).Select(i => i.Link).FirstOrDefault() // Lấy link ảnh đầu tiên
+=======
+                    //images = r.images.select(i => i.link).tolist()
+>>>>>>> Stashed changes
                 })
                 .ToList();
 
@@ -659,7 +668,10 @@ namespace RMS_API.Controllers
             // Trả về hình ảnh dưới dạng response
             return File(ms.ToArray(), "image/png");
         }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         [HttpGet("RoomMaintainance/{roomId}")]
         public IActionResult GetByQR(int roomId)
         {
@@ -696,21 +708,33 @@ namespace RMS_API.Controllers
         [HttpPost("SaveMaintenanceRequest")]
         public IActionResult SaveMaintainancebyQR([FromBody] MaintainanceDTO dto)
         {
+<<<<<<< Updated upstream
             if (dto == null || string.IsNullOrWhiteSpace(dto.Description))
                 return BadRequest(new { Success = false, Message = "Nội dung báo cáo không được để trống." });
+=======
+            if (dto == null)
+                return BadRequest("Invalid maintenance request data.");
+>>>>>>> Stashed changes
 
             var maintainance = new MaintainanceRequest
             {
                 Description = dto.Description,
                 Status = dto.Status,
                 RoomId = dto.RoomId,
+<<<<<<< Updated upstream
                 RequestDate = dto.RequestDate
+=======
+>>>>>>> Stashed changes
             };
 
             _context.MaintainanceRequests.Add(maintainance);
             _context.SaveChanges();
 
+<<<<<<< Updated upstream
             return Ok(new { Success = true, Message = "Gửi báo cáo thành công!" });
+=======
+            return Ok("Maintenance request saved successfully.");
+>>>>>>> Stashed changes
         }
     }
 }

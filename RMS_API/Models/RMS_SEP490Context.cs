@@ -551,9 +551,19 @@ namespace RMS_API.Models
 
                 entity.Property(e => e.UserStatusId).HasColumnName("userStatusId");
 
+<<<<<<< Updated upstream
                 entity.Property(e => e.ZaloUrl)
                     .IsUnicode(false)
                     .HasColumnName("zaloURL");
+=======
+                entity.Property(e => e.FbUrl)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ZaloUrl)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+>>>>>>> Stashed changes
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Users)
