@@ -143,7 +143,7 @@ namespace RMS_API.Controllers
 
 
 
-        
+
         [HttpPost("AddBuilding")]
         public async Task<IActionResult> AddBuilding([FromBody] AddBuildingDTO buildingDto)
         {
@@ -472,8 +472,6 @@ namespace RMS_API.Controllers
             var status = await _context.BuildingStatuses.ToListAsync();
             return Ok(status);
         }
-
-
 
     }
 }

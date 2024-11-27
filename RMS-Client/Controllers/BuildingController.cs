@@ -24,7 +24,7 @@ namespace RMS_Client.Controllers
             var contentType = new MediaTypeWithQualityHeaderValue("application/json");
             _client.DefaultRequestHeaders.Accept.Add(contentType);
         }
-        
+
         public async Task<IActionResult> ListBuilding()
         {
             string apiUrlBuilding = BuildingApiUri + "/GetAllBuildings";
@@ -85,7 +85,7 @@ namespace RMS_Client.Controllers
                 return BadRequest("Building ID is required");
             }
 
-            
+
             string apiUrlGetBuildingById = $"{GetBuildingById}/{id.Value}";
             var building = new BuildingDTO();
 
@@ -99,9 +99,9 @@ namespace RMS_Client.Controllers
                 }
                 else
                 {
-                    
+
                     ModelState.AddModelError(string.Empty, "Unable to retrieve building by id.");
-                    return View(building);  
+                    return View(building);
                 }
             }
             catch (Exception ex)
@@ -125,11 +125,11 @@ namespace RMS_Client.Controllers
 
 
 
-           
+
         }
 
 
-        
+
 
 
     }

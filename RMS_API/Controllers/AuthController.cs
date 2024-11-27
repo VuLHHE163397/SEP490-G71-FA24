@@ -137,6 +137,10 @@ namespace RMS_API.Controllers
                 return Unauthorized("Mật khẩu không đúng!");
 
             var token = GenerateJwtToken(user);
+
+            HttpContext.Session.SetString("JWToken", token);
+
+
             return Ok(new { token });
         }
 
@@ -150,7 +154,7 @@ namespace RMS_API.Controllers
             claims.Add(new Claim(JwtRegisteredClaimNames.Name, userInfo.Email));
             claims.Add(new Claim("UserId", userInfo.Id.ToString()));
             claims.Add(new Claim("Roles", userInfo.Role.Name));
-
+           
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 claims,

@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,12 +33,14 @@ namespace RMS_API.Controllers
             _context = context;
         }
 
+        /*[Authorize(Roles = "Landlord")] */      // Chỉ cho phép Landlord truy cập
         [HttpGet("GetAllRoom")]
         public IActionResult GetAllRoom()
         {
             var ro = _context.Rooms.ToList();
             return Ok(ro);
         }
+
         [HttpGet("GetAllRoom/{userId}")]
         public IActionResult GetAllRoomByUserId(int userId)
         {
@@ -63,6 +66,8 @@ namespace RMS_API.Controllers
             return Ok(ro);
         }
 
+
+        /*[Authorize(Roles = "Landlord")]  */     // Chỉ cho phép Landlord truy cập
         [HttpGet("GetRoomByBuilding/{buildingId}")]
         public IActionResult GetRoomByBuilding(int buildingId)
         {
@@ -109,6 +114,128 @@ namespace RMS_API.Controllers
             return Ok(image);
         }
 
+        [HttpGet("GetServiceByBuilding/{buildingId}")]
+        public IActionResult GetServiceByBuilding(int buildingId)
+        {
+            var service = _context.Services.Where(p => p.BuildingId == buildingId).ToList();
+            return Ok(service);
+        }
+
+        [HttpGet("GetServiceByRoom/{roomId}")]
+        public IActionResult GetServiceByRoom(int roomId)
+        {
+            try
+            {
+                // Lấy danh sách dịch vụ liên quan đến buildingId
+                var services = _context.Services
+
+                    .Where(s => s.Rooms.Any(r => r.Id == roomId))
+                    .Select(s => new
+                    {
+                        s.Id,
+                        s.Name,
+                        s.Price
+                    })
+                    .ToList();
+
+                if (services == null || !services.Any())
+                {
+                    return NotFound(new { message = "Không tìm thây dịch vụ của phòng !!!" });
+                }
+                return Ok(services);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while fetching the services.", details = ex.Message });
+            }
+        }
+
+        [HttpPost("UpdateServicesForRoom/{roomId}")]
+        public async Task<IActionResult> UpdateServicesForRoom(int roomId, [FromBody] List<int> serviceIds)
+        {
+            try
+            {
+                // Kiểm tra danh sách serviceIds
+                if (serviceIds == null || !serviceIds.Any())
+                {
+                    return BadRequest(new { message = "Danh sách dịch vụ không hợp lệ." });
+                }
+
+                var room = await _context.Rooms.Include(r => r.Services).FirstOrDefaultAsync(r => r.Id == roomId);
+                if (room == null)
+                {
+                    return NotFound(new { message = "Phòng không tồn tại." });
+                }
+
+                // Log danh sách dịch vụ hiện tại của phòng
+                Console.WriteLine("Dịch vụ hiện tại: " + string.Join(", ", room.Services.Select(s => s.Id)));
+
+                // Xóa các dịch vụ không có trong danh sách đã gửi
+                var servicesToRemove = room.Services.Where(s => !serviceIds.Contains(s.Id)).ToList();
+
+                foreach (var service in servicesToRemove)
+                {
+                    room.Services.Remove(service);
+                }
+
+                // Thêm các dịch vụ mới vào phòng
+                foreach (var serviceId in serviceIds)
+                {
+                    var service = await _context.Services.FindAsync(serviceId);
+                    if (service != null && !room.Services.Contains(service))
+                    {
+                        room.Services.Add(service);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Dịch vụ đã được cập nhật thành công." });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, new { message = "Lỗi khi cập nhật dịch vụ.", details = ex.Message });
+            }
+        }
+
+
+        [HttpGet("GetServicesForRoom/{roomId}")]
+        public async Task<IActionResult> GetServicesForRoom(int roomId)
+        {
+            try
+            {
+                // Lấy danh sách tất cả dịch vụ của tòa nhà
+                var allServices = await _context.Services.ToListAsync();
+
+                // Lấy dịch vụ đã được gán cho phòng này
+                var roomServices = await _context.Rooms
+                    .Where(r => r.Id == roomId)
+                    .Include(r => r.Services)
+                    .FirstOrDefaultAsync();
+
+                if (roomServices == null)
+                {
+                    return NotFound(new { message = "Room not found." });
+                }
+
+                // Lấy danh sách các dịch vụ của phòng dưới dạng object với trạng thái checked
+                var services = allServices.Select(s => new
+                {
+                    s.Id,
+                    s.Name,
+                    s.Price,
+                    IsChecked = roomServices.Services.Any(rs => rs.Id == s.Id)
+                }).ToList();
+
+                return Ok(services);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred.", details = ex.Message });
+            }
+        }
+
+
         // Tạo một dictionary ánh xạ trạng thái phòng sang RoomStatusId
         private static readonly Dictionary<string, int> RoomStatusMapping = new Dictionary<string, int>
         {
@@ -119,110 +246,138 @@ namespace RMS_API.Controllers
         };
 
         [HttpPost("ImportRooms/{buildingId}")]
-        public async Task<IActionResult> ImportRooms([FromForm]IFormFile file, int buildingId)
+        public async Task<IActionResult> ImportRooms(IFormFile file, int buildingId)
         {
             if (file == null || file.Length == 0)
             {
                 return BadRequest("No file uploaded.");
             }
 
-            // Kiểm tra nếu file là file Excel
             if (file.FileName.EndsWith(".xlsx"))
             {
-                var rooms = new List<Room>();
+                var roomsToAdd = new List<Room>();
+                var existingRoomsToUpdate = new List<Room>();
 
-                // Đọc dữ liệu từ file Excel
                 using (var stream = new MemoryStream())
                 {
                     await file.CopyToAsync(stream);
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
                     using (var package = new ExcelPackage(stream))
                     {
-                        var worksheet = package.Workbook.Worksheets[0];  // Đọc sheet đầu tiên
-
+                        var worksheet = package.Workbook.Worksheets[0];
                         var rowCount = worksheet.Dimension.Rows;
                         var colCount = worksheet.Dimension.Columns;
 
-                        // Lấy tên các cột từ hàng đầu tiên (tiêu đề cột)
                         var headers = new Dictionary<string, int>();
                         for (int col = 1; col <= colCount; col++)
                         {
                             headers[worksheet.Cells[1, col].Text.Trim()] = col;
                         }
 
-                        // Kiểm tra xem các cột cần thiết có tồn tại không
                         if (!headers.ContainsKey("Số phòng") ||
-                            !headers.ContainsKey("Giá phòng") ||
                             !headers.ContainsKey("Diện tích") ||
-                            !headers.ContainsKey("Mô tả phòng") ||
                             !headers.ContainsKey("Tầng") ||
-                            !headers.ContainsKey("Ngày bắt đầu thuê phòng") ||
-                            !headers.ContainsKey("Ngày hết hạn phòng thuê") ||
-                            !headers.ContainsKey("Trạng thái") ||
-                            !headers.ContainsKey("Ngày phòng sẽ trống trong tương lai"))
+                            !headers.ContainsKey("Giá phòng") ||
+                            !headers.ContainsKey("Trạng thái"))
                         {
-                            return BadRequest("Missing required columns in the Excel file.");
+                            return BadRequest("Tên cột trong file excel bị sai. Vui lòng kiểm tra lại.");
                         }
 
-                        // Lặp qua các dòng trong Excel (bỏ qua dòng đầu tiên vì đó là header)
+                        // Lấy danh sách tất cả các phòng trong database cho tòa nhà hiện tại
+                        var existingRoomNumbers = _context.Rooms
+                            .Where(r => r.BuildingId == buildingId)
+                            .ToDictionary(r => r.RoomNumber, r => r);
+
+                        // Danh sách các số phòng xuất hiện trong file import
+                        var importedRoomNumbers = new HashSet<string>();
+
                         for (int row = 2; row <= rowCount; row++)
                         {
-                            // Lấy giá trị từ các cột bằng tên cột
-                            var roomNumber = worksheet.Cells[row, headers["Số phòng"]].Text;
-                            var price = decimal.Parse(worksheet.Cells[row, headers["Giá phòng"]].Text);
-                            var area = double.Parse(worksheet.Cells[row, headers["Diện tích"]].Text);
-                            var description = worksheet.Cells[row, headers["Mô tả phòng"]].Text;
-                            var floor = int.Parse(worksheet.Cells[row, headers["Tầng"]].Text);
-                            var status = worksheet.Cells[row, headers["Trạng thái"]].Text;
-                            // Kiểm tra và chuyển đổi giá trị của các ngày để cho phép null
-                            DateTime? startedDate = null;
-                            if (DateTime.TryParse(worksheet.Cells[row, headers["Ngày bắt đầu thuê phòng"]].Text, out var startDate))
+                            var roomNumber = worksheet.Cells[row, headers["Số phòng"]].Text.Trim();
+                            if (string.IsNullOrEmpty(roomNumber)) continue;
+
+                            importedRoomNumbers.Add(roomNumber); // Thêm số phòng vào danh sách được import
+
+                            if (!double.TryParse(worksheet.Cells[row, headers["Diện tích"]].Text, out var area) || area <= 0)
                             {
-                                startedDate = startDate;
+                                return BadRequest($"Giá trị lỗi ở hàng {row}: '{worksheet.Cells[row, headers["Diện tích"]].Text}'. Vui lòng kiểm tra và nhập Diện tích là số dương.");
+                            }
+                            if (!int.TryParse(worksheet.Cells[row, headers["Tầng"]].Text, out var floor) || floor <= 0)
+                            {
+                                return BadRequest($"Giá trị lỗi ở hàng {row}: '{worksheet.Cells[row, headers["Tầng"]].Text}'. Vui lòng kiểm tra và nhập Tầng là số nguyên dương.");
+                            }
+                            var rawPrice = worksheet.Cells[row, headers["Giá phòng"]].Text.Trim()
+                                .Replace("VNĐ", "").Replace(",", "").Replace(" ", "");
+                            if (!decimal.TryParse(rawPrice, out var price) || price <= 0)
+                            {
+                                return BadRequest($"Giá trị lỗi ở hàng {row}: '{worksheet.Cells[row, headers["Giá phòng"]].Text}'. Vui lòng kiểm tra và nhập Giá Phòng là số nguyên dương.");
+                            }
+                            var status = worksheet.Cells[row, headers["Trạng thái"]].Text.Trim();
+                            var description = headers.ContainsKey("Mô tả phòng")
+                                ? worksheet.Cells[row, headers["Mô tả phòng"]].Text.Trim()
+                                : null;
+
+                            var roomStatusId = RoomStatusMapping.ContainsKey(status) ? RoomStatusMapping[status] : (int?)null;
+                            if (roomStatusId == null)
+                            {
+                                return BadRequest($"Giá trị lỗi ở hàng {status}' in row {row}. Vui lòng kiểm tra và nhập trạng thái của phòng là : Đang Trống, Đang cho thuê, Đang bảo trì, Sắp trống.");
                             }
 
-                            DateTime? expiredDate = null;
-                            if (DateTime.TryParse(worksheet.Cells[row, headers["Ngày hết hạn phòng thuê"]].Text, out var endDate))
+                            if (existingRoomNumbers.ContainsKey(roomNumber))
                             {
-                                expiredDate = endDate;
+                                // Cập nhật thông tin phòng đã tồn tại
+                                var existingRoom = existingRoomNumbers[roomNumber];
+                                existingRoom.Price = price;
+                                existingRoom.Area = area;
+                                existingRoom.Description = description;
+                                existingRoom.Floor = floor;
+                                existingRoom.RoomStatusId = roomStatusId.Value;
+                                existingRoomsToUpdate.Add(existingRoom);
                             }
-                            DateTime? freeInFutureDate = null;
-                            if (DateTime.TryParse(worksheet.Cells[row, headers["Ngày phòng sẽ trống trong tương lai"]].Text, out var freeDate))
+                            else
                             {
-                                freeInFutureDate = freeDate;
+                                // Thêm phòng mới nếu chưa tồn tại
+                                var newRoom = new Room
+                                {
+                                    BuildingId = buildingId,
+                                    RoomNumber = roomNumber,
+                                    Price = price,
+                                    Area = area,
+                                    Description = description,
+                                    Floor = floor,
+                                    RoomStatusId = roomStatusId.Value
+                                };
+                                roomsToAdd.Add(newRoom);
                             }
-
-                            // Kiểm tra trạng thái và ánh xạ sang RoomStatusId
-                            if (!RoomStatusMapping.ContainsKey(status))
-                            {
-                                return BadRequest($"Invalid room status '{status}' in row {row}. Valid statuses are: 'Đang trống', 'Đang cho thuê', 'Đang bảo trì', 'Sắp trống'.");
-                            }
-                            var roomStatusId = RoomStatusMapping[status];
-
-                            // Tạo đối tượng Room từ dữ liệu dòng trong Excel
-                            var room = new Room
-                            {
-                                BuildingId = buildingId,
-                                RoomNumber = roomNumber,
-                                Price = price,
-                                Area = area,
-                                Description = description,
-                                Floor = floor,
-                                StartedDate = startedDate,
-                                ExpiredDate = expiredDate,
-                                RoomStatusId = roomStatusId,
-                                FreeInFutureDate = freeInFutureDate
-                            };
-
-                            rooms.Add(room);  // Thêm phòng vào danh sách
                         }
+
+                        // Bỏ qua các phòng không có trong file import (không xóa, không sửa)
+                        var roomsToIgnore = existingRoomNumbers
+                            .Where(r => !importedRoomNumbers.Contains(r.Key))
+                            .Select(r => r.Value)
+                            .ToList();
                     }
                 }
 
-                // Thêm các phòng vào database
-                _context.Rooms.AddRange(rooms);
+                if (roomsToAdd.Any())
+                {
+                    _context.Rooms.AddRange(roomsToAdd);
+                }
+
+                if (existingRoomsToUpdate.Any())
+                {
+                    _context.Rooms.UpdateRange(existingRoomsToUpdate);
+                }
+
                 await _context.SaveChangesAsync();
 
-                return Ok(new { message = "Rooms imported successfully!", roomsCount = rooms.Count });
+                return Ok(new
+                {
+                    message = "Nhập phòng thành công!",
+                    newRoomsCount = roomsToAdd.Count,
+                    updatedRoomsCount = existingRoomsToUpdate.Count
+                });
             }
             else
             {
@@ -408,9 +563,6 @@ namespace RMS_API.Controllers
             var roomHistories = _context.RoomHistories.Where(h => h.RoomId == roomId);
             _context.RoomHistories.RemoveRange(roomHistories);
 
-            //var servicesOfRooms = _context.ServicesOfRooms.Where(s => s.RoomId == roomId);
-            //_context.ServicesOfRooms.RemoveRange(servicesOfRooms);
-
             var tenants = _context.Tennants.Where(t => t.RoomId == roomId);
             _context.Tennants.RemoveRange(tenants);
 
@@ -446,10 +598,6 @@ namespace RMS_API.Controllers
                 // Xóa RoomHistories liên quan đến room
                 var roomHistories = _context.RoomHistories.Where(h => h.RoomId == room.Id);
                 _context.RoomHistories.RemoveRange(roomHistories);
-
-                // Xóa ServicesOfRooms liên quan đến room
-                //var servicesOfRooms = _context.ServicesOfRooms.Where(s => s.RoomId == room.Id);
-                //_context.ServicesOfRooms.RemoveRange(servicesOfRooms);
 
                 // Xóa Tennants liên quan đến room
                 var tenants = _context.Tennants.Where(t => t.RoomId == room.Id);
@@ -488,7 +636,6 @@ namespace RMS_API.Controllers
 
             return Ok(rooms);
         }
-
 
         [HttpGet("detail/{id}")]
         public IActionResult GetRoomDetail(int id)

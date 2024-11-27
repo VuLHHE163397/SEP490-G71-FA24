@@ -15,8 +15,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
 
-
-
 // Cấu hình CORS
 builder.Services.AddCors(options =>
 {
@@ -40,10 +38,10 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseStaticFiles();
+
 
 // Sử dụng CORS
 app.UseCors("AllowAllOrigins");

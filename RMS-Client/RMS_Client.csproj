@@ -54,7 +54,6 @@
     <None Include="Views\Room\EditRoom.cshtml" />
     <None Include="Views\Room\ListRoom.cshtml" />
     <None Include="Views\Room\RoomDetail.cshtml" />
-    <None Include="Views\Room\RoomHistory.cshtml" />
     <None Include="Views\Service\AddService.cshtml" />
     <None Include="Views\Service\EditService.cshtml" />
     <None Include="Views\Service\ListService.cshtml" />

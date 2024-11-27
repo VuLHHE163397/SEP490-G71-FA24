@@ -1,5 +1,4 @@
-﻿﻿
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 
 <head>
@@ -149,13 +148,13 @@
                 success: function (response) {
                     // Lưu token vào sessionStorage thay vì localStorage
                     sessionStorage.setItem("token", response.token);
-
+                    
                     showPopup("Đăng nhập thành công!");
 
                     try {
                         // Giải mã token JWT
                         const tokenParts = response.token.split('.');
-                        const payload = JSON.parse(atob(tokenParts[1]));
+                        const payload = JSON.parse(atob(tokenParts[1]));                                             
                         // Xét role để chuyển trang
                         setTimeout(function () {
                             if (payload.Roles === "Admin") {
