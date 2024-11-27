@@ -166,22 +166,28 @@
 <body>
 
     <script>
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-    window.location.href = "/Auth/Login";
-    }
-    const tokenParts = token.split('.');
-    const payload = JSON.parse(atob(tokenParts[1]));
+        function getCookie(name) {
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        }
 
-    if (payload.Roles !== "Landlord") {
-    window.location.href = "/Auth/Login";
-    }
+        const token = getCookie('AuthToken');
+        if (!token) {
+            console.error('Token không tìm thấy trong cookie.');
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/login";
+        }
 
-    function logout() {
-    sessionStorage.removeItem("token");
-    window.location.href = "/Auth/Login";
-    }
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
+            window.location.href = "/Auth/Login";
+        }
+
     </script>
+
 
 
     <!--  Body Wrapper -->
@@ -357,8 +363,16 @@
                                             <div class="col-sm-8" id="email">Loading...</div>
                                         </div>
                                         <div class="row mb-3">
-                                            <label class="col-sm-4 font-weight-bold">Phone:</label>
+                                            <label class="col-sm-4 font-weight-bold">Số điện thoại:</label>
                                             <div class="col-sm-8" id="phone">Loading...</div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-4 font-weight-bold">Link Facebook:</label>
+                                            <div class="col-sm-8" id="facebookUrl">Loading...</div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-4 font-weight-bold">Link Zalo:</label>
+                                            <div class="col-sm-8" id="zaloUrl">Loading...</div>
                                         </div>
                                     </div>
                                     <div class="card-footer text-center">
@@ -391,12 +405,12 @@
         });
 
         function getUser() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             if (!token) {
                 alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
                 return;
             }
-
             var userId = getUserIdFromToken(token);
             const url = `https://localhost:7056/api/User/GetUserById?id=${userId}`;
             $.ajax({
@@ -416,6 +430,8 @@
                     $('#fullName').text(fullName || 'Không có dữ liệu');
                     $('#email').text(response.email || 'Không có dữ liệu');
                     $('#phone').text(response.phone || 'Không có dữ liệu');
+                    $('#facebookUrl').text(response.facebookUrl || 'Không có dữ liệu');
+                    $('#zaloUrl').text(response.zaloUrl || 'Không có dữ liệu');
                 },
                 error: function (xhr) {
                     console.error('Không lấy được thông tin người dùng:', xhr.responseText);
@@ -436,13 +452,12 @@
         }
 
         function getListBuilding() {
-            const token = sessionStorage.getItem("token");
-
+            const token = getCookie('AuthToken');
             if (!token) {
                 alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
                 return;
             }
-
             var userId = getUserIdFromToken(token);
 
             const url = `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`;

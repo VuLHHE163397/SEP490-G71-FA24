@@ -156,18 +156,7 @@
 </head>
 <body>
 
-    <script>
-        const token = sessionStorage.getItem("token");
-        if (!token) {
-            window.location.href = "/Auth/Login";
-        }
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-
-        if (payload.Roles !== "Landlord") {
-            window.location.href = "/Auth/Login";
-        }        
-    </script>
+    
 
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -380,10 +369,8 @@
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             <script>                
 
-                function logout() {
-                    sessionStorage.removeItem("token");
-                    window.location.href = "/Auth/Login";
-                }
+                
+
 
                 function toggleDropdown() {
                     // Toggle the visibility of the custom dropdown
