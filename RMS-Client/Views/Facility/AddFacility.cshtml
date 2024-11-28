@@ -31,25 +31,7 @@
             document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
             window.location.href = "/Auth/Login";
         }
-    </script>
-
-    <script>
-        const token = getCookie('AuthToken');
-        if (!token) {
-            window.location.href = "/Auth/Login";
-        }
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-
-        if (payload.Roles !== "Landlord") {
-            window.location.href = "/Auth/Login";
-        }
-
-        function logout() {
-            sessionStorage.removeItem("token");
-            window.location.href = "/Auth/Login";
-        }
-    </script>
+    </script>    
 
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
