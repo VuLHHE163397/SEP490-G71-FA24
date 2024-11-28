@@ -12,7 +12,7 @@
 <body>
 
     <script>
-        const token = sessionStorage.getItem("token");
+        const token = getCookie('AuthToken');
         if (!token) {
             window.location.href = "/Auth/Login";
         }
@@ -113,7 +113,14 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
+                            </a>
+                        </li>
                         
 
                     </ul>
@@ -258,7 +265,7 @@
         loadRoom();
         loadStatus();
         $(document).ready(function () {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
             var urlParams = new URLSearchParams(window.location.search);
@@ -266,7 +273,7 @@
             getDetail(id);
         })
         function getDetail(id) {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             $.ajax({
                 url: `https://localhost:7056/api/Facility?id=${id}`,
                 type: "GET",
@@ -292,7 +299,7 @@
             // Lấy token từ session storage
             var urlParams = new URLSearchParams(window.location.search);
             var id = urlParams.get('id');
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             var facility = {
                 id: id,
                 name: $("#FacilityName").val(),
@@ -332,7 +339,7 @@
         }
 
         function loadBuilding() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
             $.ajax({
@@ -364,7 +371,7 @@
         }
         /////////////////////////////////////
         function loadRoom() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             var buildingId = $("#BuildingId").val();
             console.log("buildingId = " + buildingId)
             const userId = getUserIdFromToken(token);
@@ -392,7 +399,7 @@
         }
         /////////////////////////////////////
         function loadStatus() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             $.ajax({
                 url: 'https://localhost:7056/api/FacilityStatus/GetAllFacility',
                 type: 'GET',

@@ -1,4 +1,4 @@
-﻿@model List<RMS_API.DTOs.BuildingDTO>
+﻿@model List<RMS_API.DTOs.AddBuildingDTO>
 
 @{
     ViewData["Title"] = "Tạo Tòa Nhà";
@@ -202,6 +202,9 @@
     </style>
 </head>
 <body>
+
+
+    <a href="d:\fulearning\fall2024\datn\project\sep490-g71-fa24\bugngunhu\sep490\sep490-g71-fa24\rms-client\views\building\addbuilding.cshtml">d:\fulearning\fall2024\datn\project\sep490-g71-fa24\bugngunhu\sep490\sep490-g71-fa24\rms-client\views\building\addbuilding.cshtml</a>
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -243,7 +246,7 @@
                                 <span class="hide-menu">Quản lý tòa nhà</span>
                                 <i class="ti ti-angle-down"></i>
                             </a>
-                            <ul class="sidebar-submenu" style="display: none; list-style-type: none; padding-left: 20px;">
+                            @* <ul class="sidebar-submenu" style="display: none; list-style-type: none; padding-left: 20px;">
                                 @if (Model != null && Model.Any())
                                 {
                                     foreach (var building in Model)
@@ -260,7 +263,7 @@
                                 {
                                     <li class="sidebar-subitem">Không có tòa nhà nào</li>
                                 }
-                            </ul>
+                            </ul> *@
                         </li>
 
                         <li class="sidebar-item">
@@ -295,7 +298,14 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
+                            </a>
+                        </li>
                     </ul>
 
                 </nav>
@@ -375,8 +385,8 @@
                             <span id="numberOfRoomsError" class="error-message" style="color: red; display: none;">Số phòng phải là số dương và không vượt quá 500.</span>
                         </div>
                         <div class="form-group">
-                            <label for="Distance">Khoảng cách</label>
-                            <input type="number" class="form-control" id="Distance" name="Distance" required />
+                            <label for="Distance">Khoảng cách(km)</label>
+                            <input type="number" class="form-control" id="Distance" name="Distance" required step="0.1" />
                             <span id="distanceError" class="error-message" style="color: red; display: none;">Khoảng cách phải là một số dương.</span>
                         </div>
 
@@ -434,8 +444,7 @@
                             <p>2. Tìm địa điểm mà bạn muốn lấy liên kết.</p>
                             <img src="~/images/2.jpg" alt="Hình ảnh hướng dẫn 2" style="width: 100%; margin: 10px 0;">
                             <p>3. Nhấn nút "Chia sẻ" và chọn "Nhúng bản đồ".</p>
-                            <img src="~/images/3.jpg" alt="Hình ảnh hướng dẫn 3" style="width: 100%; margin: 10px 0;">
-                            <p>4. Sao chép đoạn mã hoặc liên kết nhúng và dán vào ô nhập link embed map phía trên.</p>
+                            <p>4. Sao chép đoạn mã hoặc liên kết nhúng và dán vào ô nhập phía trên.</p>
                             <button id="closePopup">Đóng</button>
                         </div>
                     </div>
@@ -445,24 +454,41 @@
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script>
-
-                    const token = localStorage.getItem("token");
-                    if (token == 1 || !token) {
-                        window.location.href = "/Auth/Login";
-                    }
-                    const tokenParts = token.split('.');
-                    const payload = JSON.parse(atob(tokenParts[1]));
-
-                    if (payload.role !== "Landlord") {
-                        window.location.href = "/Auth/Login";
-                    }
-
-                    function logout() {
-                        localStorage.setItem("token", 1);
-                        console.log("Token set to 1 on logout.");
-                    }
-
                     $(document).ready(function () {
+                        // Validate Building Name
+                        $('#Name').on('blur', function () {
+                            const buildingName = $(this).val().trim();
+                            const token = sessionStorage.getItem('token');
+
+                            // Extract UserId from the token
+                            const userId = getUserIdFromToken(token);
+                            if (!userId) {
+                                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                                return;
+                            }
+
+                            if (buildingName) {
+                                const url = `https://localhost:7056/api/Building/CheckBuildingName/${userId}/${encodeURIComponent(buildingName)}`;
+                                $.ajax({
+                                    url: url,
+                                    type: 'GET',
+                                    success: function (response) {
+                                        $('#buildingNameError').text(''); // Clear previous error
+                                    },
+                                    error: function (xhr) {
+                                        if (xhr.status === 409) {
+                                            // Conflict: Name already exists
+                                            $('#buildingNameError').text(xhr.responseJSON.message).css('color', 'red');
+                                        } else {
+                                            $('#buildingNameError').text('Có lỗi xảy ra khi kiểm tra tên tòa nhà.').css('color', 'red');
+                                        }
+                                    }
+                                });
+                            } else {
+                                $('#buildingNameError').text('Tên tòa nhà không được để trống.').css('color', 'red');
+                            }
+                        });
+
                         // Province to District Fetch
                         $('#ProvinceId').change(function () {
                             var provinceName = encodeURIComponent($(this).val());
@@ -552,12 +578,16 @@
                             }
 
                             // Get UserId from Token
-                            var userId = getUserIdFromToken();
+                            const token = getCookie('AuthToken');
+                            if (!token) {
+                                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                                return;
+                            }
+                            var userId = getUserIdFromToken(token);
                             if (!userId) {
                                 $('#userIdError').show(); // Show error if UserId is missing
                                 return;
                             }
-                            console.log(userId);
 
                             // Prepare Data
                             var buildingData = {
@@ -576,7 +606,7 @@
 
                             // Send Data to API
                             $.ajax({
-                                url: 'https://localhost:7056/api/Building/AddBuilding',
+                                url: 'https://localhost:7056/api/Building/AddBuildingbyId',
                                 type: 'POST',
                                 contentType: 'application/json',
                                 data: JSON.stringify(buildingData),
@@ -591,46 +621,41 @@
                         });
 
                         // Utility Function: Extract UserId from Token
-                        function getUserIdFromToken() {
-                            const token = localStorage.getItem("token");
-
-                            if (token) {
-                                try {
-                                    const tokenParts = token.split('.');
-                                    const payload = JSON.parse(atob(tokenParts[1]));
-
-                                    return payload.UserId;
-                                } catch (e) {
-                                    console.error('Token parsing error:', e);
-                                }
+                        function getUserIdFromToken(token) {
+                            try {
+                                const tokenParts = token.split('.');
+                                const payload = JSON.parse(atob(tokenParts[1]));
+                                return payload.UserId;
+                            } catch (error) {
+                                console.error("Không mã hóa đc token:", error);
+                                return null;
                             }
-                            return null;
                         }
-
                     });
 
-                    // Lấy các phần tử DOM
+                    // Popup Handling
                     const openPopup = document.getElementById('openPopup');
                     const closePopup = document.getElementById('closePopup');
                     const popupOverlay = document.getElementById('popupOverlay');
 
-                    // Hiển thị popup khi bấm vào link
+                    // Show popup on click
                     openPopup.addEventListener('click', () => {
                         popupOverlay.style.display = 'block';
                     });
 
-                    // Đóng popup khi bấm vào nút "Đóng"
+                    // Close popup when clicking the close button
                     closePopup.addEventListener('click', () => {
                         popupOverlay.style.display = 'none';
                     });
 
-                    // Đóng popup khi bấm ra ngoài vùng nội dung
+                    // Close popup when clicking outside the popup content
                     popupOverlay.addEventListener('click', (event) => {
                         if (event.target === popupOverlay) {
                             popupOverlay.style.display = 'none';
                         }
                     });
                 </script>
+
 
             </div>
 

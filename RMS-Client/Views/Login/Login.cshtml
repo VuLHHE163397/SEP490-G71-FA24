@@ -123,10 +123,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function login() {
-            // if (payload.role === "Admin") {
-            //     window.location.href = "/User/ListUser";
-            // }
+        function login() {           
             var email = $("#email").val();
             var password = $("#password").val();
 
@@ -141,16 +138,13 @@
             }
 
             $.ajax({
-                url: "https://localhost:7056/api/Auth/login",
+                url: "https://localhost:7056/api/Auth/Login",
                 type: "POST",
                 contentType: "application/json",
+                xhrFields: { withCredentials: true },   // Cho phép gửi và nhận cookies
                 data: JSON.stringify({ email: email, Password: password }),
-                success: function (response) {
-                    // Lưu token vào sessionStorage thay vì localStorage
-                    sessionStorage.setItem("token", response.token);
-                    
+                success: function (response) {                      
                     showPopup("Đăng nhập thành công!");
-
                     try {
                         // Giải mã token JWT
                         const tokenParts = response.token.split('.');

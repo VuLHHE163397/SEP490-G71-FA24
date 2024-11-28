@@ -53,7 +53,12 @@ builder.Services.AddDbContext<RMS_SEP490Context>(options =>
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -68,6 +73,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             RoleClaimType = "Roles",
 
         };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                // Đọc token từ cookie
+                if (context.Request.Cookies.ContainsKey("AuthToken"))
+                {
+                    context.Token = context.Request.Cookies["AuthToken"];
+                    Console.WriteLine("Đã nhận JWT từ cookie: " + context.Token); // Debug
+                    context.Response.Headers.Add("Debug-Auth", "Token received");
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddAuthorization();
@@ -79,11 +99,13 @@ builder.Services.AddCors(opts =>
         builder.AllowAnyHeader()
                .AllowAnyMethod()
                .AllowCredentials()
-               .SetIsOriginAllowed(_ => true); // Cấu hình cho phép tất cả các nguồn
+               .SetIsOriginAllowed(origin => true); // Cấu hình cho phép tất cả các nguồn
+                //.WithOrigins("https://localhost:5001");    ///thêm vào để kiểm tra fe url3
     });
 });
 
 builder.Services.AddDistributedMemoryCache(); // Sử dụng In-Memory Cache
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian session tồn tại

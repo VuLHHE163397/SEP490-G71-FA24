@@ -38,6 +38,7 @@ namespace RMS_API.Controllers
             }
         }
 
+        [Authorize(Roles = "Landlord")]
         //lấy danh sách dịch vụ
         [HttpGet("GetAllService")]
 

@@ -79,6 +79,29 @@
 
 <body>
 
+    <script>
+        function getCookie(name) {
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        }
+
+        const token = getCookie('AuthToken');
+        if (!token) {
+            console.error('Token không tìm thấy trong cookie.');
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/login";
+        }
+
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
+            window.location.href = "/Auth/Login";
+        }
+
+    </script>
+
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
 
@@ -163,8 +186,15 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        
-                        
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
+                            </a>
+                        </li>
 
                     </ul>
 
@@ -335,12 +365,14 @@
             var roomId = $("#rooms").val();
             var statusId = $("#status").val();
             var keyword = $("#keyword").val();
+            
+            const token = getCookie('AuthToken');
             //Lấy user id
-            var token = sessionStorage.getItem("token");
+            
             const userId = getUserIdFromToken(token);
             getFacility(userId, 1, 10, keyword, roomId, buildingId, statusId);
-            // token = sessionStorage.getItem("token");
-            //getFacility(userId, 1, 10, null, null, null);
+            
+            
         })
         //////////////////////////////////////////////
         function onSelectPageSize() {
@@ -350,7 +382,7 @@
             var roomId = $("#rooms").val();
             var keyword = $("#keyword").val();
             var pageIndex = urlParams.get('pageIndex') ?? 1;
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
             var statusId = $("#status").val();
@@ -374,7 +406,7 @@
             var buildingId = $("#buildings").val();
             var roomId = $("#rooms").val();
             var keyword = $("#keyword").val();
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
             var statusId = $("#status").val();
@@ -389,7 +421,7 @@
             var keyword = $("#keyword").val();
             var startAt = parseInt((pageIndex - 1) * pageSize) + 1;
             var endAt = startAt + parseInt(pageSize) - 1;
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
             var statusId = $("#status").val();
@@ -403,8 +435,6 @@
             $("#keyword").val(keyword)
         }
 
-        ///////////////////////////////////
-        //Lấy UserId
         function getUserIdFromToken(token) {
             try {
                 const tokenParts = token.split('.');
@@ -413,13 +443,18 @@
             } catch (error) {
                 console.error("Không mã hóa đc token:", error);
                 return null;
+
             }
         }
         ///////////////////////////////////////////////////
         function loadBuilding() {
-            const token = sessionStorage.getItem("token");
-            //Lấy user id
-            const userId = getUserIdFromToken(token);
+            const token = getCookie('AuthToken');
+            if (!token) {
+                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
+                return;
+            }
+            var userId = getUserIdFromToken(token);
             $.ajax({
                 url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',
@@ -450,7 +485,7 @@
 
         ///////////////////////////////////////////////////////
         function loadRoom() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             var buildingId = $("#buildings").val();
             console.log("buildingId = " + buildingId)
             const userId = getUserIdFromToken();
@@ -481,7 +516,7 @@
 
         ///////////////////////////////////////////////////////////
         function loadStatus() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             $.ajax({
                 url: 'https://localhost:7056/api/FacilityStatus/GetAllFacility',
                 type: 'GET',
@@ -516,7 +551,7 @@
             var keyword = $("#keyword").val();
             var pageIndex = urlParams.get('pageIndex') ?? 1;
             var pageSize = urlParams.get('pageIndex') ?? 10;
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
             getFacility(userId, pageIndex, pageSize, keyword, roomId, buildingId, statusId);
@@ -525,7 +560,7 @@
 
         ///////////////////////////////////////////////////
         function DeleteFacility(id) {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             if (confirm("Bạn có chắc chắn muốn xóa cơ sở vật chất này không?")) {  // Hộp thoại xác nhận xóa
                 $.ajax({
                     url: `https://localhost:7056/api/Facility?id=${id}`,  // Đảm bảo URL API đúng
@@ -582,7 +617,7 @@
         //Lấy UserId
         function getUserIdFromToken(token) {
             try {
-                var jwtToken = sessionStorage.getItem('token');
+                var jwtToken = getCookie('AuthToken');
                 token = jwtToken;
                 const tokenParts = token.split('.');
                 const payload = JSON.parse(atob(tokenParts[1]));
@@ -594,7 +629,7 @@
         }
         function getFacility(userId, pageIndex, pageSize, keyword, roomId, buildingId, statusId) {
             let facilityUrl = 'https://localhost:7056/api/Facility/GetAllFacility';
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             let query = '';
             if (userId) {
                 query += `userId=${userId}`
@@ -642,7 +677,7 @@
         function renderFacility(data){
             let html = '';
             let stt = 1;
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             for (var item of data) {
                 html += '<tr>'
                 html += `<td>${stt++}</td>`;

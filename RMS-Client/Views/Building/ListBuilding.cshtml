@@ -39,23 +39,23 @@
             }
 
         /*  .btn-warning {
-                                            background-color: #ffc107;
-                                            border-color: #ffc107;
-                                            color: #fff;
-                                        }
+                                                                                    background-color: #ffc107;
+                                                                                    border-color: #ffc107;
+                                                                                    color: #fff;
+                                                                                }
 
-                                            .btn-warning:hover {
-                                                background-color: #e0a800;
-                                                border-color: #e0a800;
-                                                transform: scale(1.05);
-                                            }
+                                                                                    .btn-warning:hover {
+                                                                                        background-color: #e0a800;
+                                                                                        border-color: #e0a800;
+                                                                                        transform: scale(1.05);
+                                                                                    }
 
-                                            .btn-warning:active {
-                                                background-color: #c69500;
-                                                border-color: #c69500;
-                                                transform: scale(1);
-                                            }
-                                 */
+                                                                                    .btn-warning:active {
+                                                                                        background-color: #c69500;
+                                                                                        border-color: #c69500;
+                                                                                        transform: scale(1);
+                                                                                    }
+                                                                         */
         /* Icon styling inside buttons */
         .btn i {
             margin-right: 8px;
@@ -136,21 +136,26 @@
 <body>
 
     <script>
-        const token = sessionStorage.getItem("token");
+        function getCookie(name) {            
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;            
+        }
+
+        const token = getCookie('AuthToken');        
         if (!token) {
-            window.location.href = "/Auth/Login";
-        }
+            console.error('Token không tìm thấy trong cookie.');            
+        } 
         const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-
+        const payload = JSON.parse(atob(tokenParts[1]));       
         if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/login";
+        }
+
+        function logout() {            
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";            
             window.location.href = "/Auth/Login";
         }
 
-        function logout() {
-            sessionStorage.removeItem("token");
-            window.location.href = "/Auth/Login";
-        }
     </script>
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -191,22 +196,7 @@
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
-                                @*  @if (Model != null && Model.Any())
-                                {
-                                foreach (var building in Model)
-                                {
-                                <li class="sidebar-subitem">
-                                <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@building.Id" class="sidebar-sublink">
-                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
-                                @building.Name
-                                </a>
-                                </li>
-                                }
-                                }
-                                else
-                                {
-                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                } *@
+
                             </ul>
                         </li>
                         <li class="sidebar-item">
@@ -234,7 +224,14 @@
                             </a>
                         </li>
 
-
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
+                            </a>
+                        </li>
 
 
                 </nav>
@@ -270,9 +267,9 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
+                                            <p class="mb-0 fs-3">Tài Khoản</p>
                                         </a>
                                         <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-mail fs-6"></i>
@@ -308,7 +305,7 @@
                     <table class="table table-striped">
                         <thead class="thead-dark">
                             <tr>
-                                <th>ID</th>
+                                <th>Số thứ tự</th>
                                 <th>Tên</th>
                                 <th>Số tầng</th>
                                 <th>Số phòng</th>
@@ -340,6 +337,7 @@
         $(document).ready(function () {
             console.log('Page Loaded: Fetching buildings...');
             getListBuilding();
+            console.log("doc ne");
         });
 
         function getUserIdFromToken(token) {
@@ -350,32 +348,38 @@
             } catch (error) {
                 console.error("Không mã hóa đc token:", error);
                 return null;
+
             }
         }
 
         function getListBuilding() {
-            const token = sessionStorage.getItem("token");
-
+            const token = getCookie('AuthToken');            
             if (!token) {
                 alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
                 return;
-            }
-
-            var userId = getUserIdFromToken(token);
+            }            
+            var userId = getUserIdFromToken(token);           
 
             const url = `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`;
 
             $.ajax({
                 url: url,
                 type: 'GET',
+                credentials: 'include',
                 contentType: 'application/json',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                // beforeSend: function (xhr) {
+                //     xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                // },
+                xhrFields: {
+                    withCredentials: true // Cho phép gửi cookie
                 },
+
                 success: function (response) {
                     console.log('Buildings fetched successfully:', response);
                     displayBuildings(response);
                 },
+
                 error: function (xhr) {
                     console.error('Error fetching buildings:', xhr.responseText);
                     displayNoBuildingsMessage();
@@ -395,34 +399,34 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                <li class="sidebar-subitem">
-                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                    </a>
-                                                </li>
-                                            `);
+                                        <li class="sidebar-subitem">
+                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                            </a>
+                                        </li>
+                                    `);
                 });
 
                 // Update Table
-                buildings.forEach(building => {
+                buildings.forEach((building, index) => {
                     tableContainer.append(`
-                                                <tr>
-                                                    <td>${building.id}</td>
-                                                    <td>${building.name}</td>
-                                                    <td>${building.totalFloors}</td>
-                                                    <td>${building.numberOfRooms}</td>
-                                                    <td>${building.addressDetails}</td>
-                                                    <td>${building.buildingStatus}</td>
-                                                    <td>
-                                                        <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                        <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
-                                                            <i class="ti ti-eye"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            `);
+                        <tr>
+                            <td>${index + 1}</td> <!-- Số thứ tự -->
+                            <td>${building.name}</td>
+                            <td>${building.totalFloors}</td>
+                            <td>${building.numberOfRooms}</td>
+                            <td>${building.addressDetails}</td>
+                            <td>${building.buildingStatus}</td>
+                            <td>
+                                <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
+                                    <i class="ti ti-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -436,16 +440,16 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                    `);
+                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                            `);
 
             // Notify in Table
             tableContainer.empty();
             tableContainer.append(`
-                                        <tr>
-                                            <td colspan="7" class="text-center">Không có dữ liệu</td>
-                                        </tr>
-                                    `);
+                                                                                <tr>
+                                                                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
+                                                                                </tr>
+                                                                            `);
         }
 
         // Redirect to Edit Page
