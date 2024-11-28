@@ -237,18 +237,18 @@ namespace RMS_Client.Controllers
             return View(roomDTO);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> CheckRoomNameExists(int roomName, int buildingId)
-        {
-            string apiUrl = $"{RoomApiUri}/CheckRoomNameExists?roomName={roomName}&buildingId={buildingId}";
-            var response = await client.GetAsync(apiUrl);
-            if (response.IsSuccessStatusCode)
-            {
-                var exists = await response.Content.ReadAsStringAsync();
-                return Json(bool.Parse(exists)); // Trả về true nếu phòng đã tồn tại, false nếu chưa
-            }
-            return Json(false);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> CheckRoomNameExists(int roomName, int buildingId)
+        //{
+        //    string apiUrl = $"{RoomApiUri}/CheckRoomNameExists?roomName={roomName}&buildingId={buildingId}";
+        //    var response = await client.GetAsync(apiUrl);
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var exists = await response.Content.ReadAsStringAsync();
+        //        return Json(bool.Parse(exists)); // Trả về true nếu phòng đã tồn tại, false nếu chưa
+        //    }
+        //    return Json(false);
+        //}
 
         [HttpGet]
         public async Task<IActionResult> EditRoom(int id)

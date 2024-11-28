@@ -243,9 +243,17 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
                                 <span>
-                                    <i class="fa fa-paper-plane"></i>
+                                    <i class="fa-regular fa-envelope"></i>
                                 </span>
-                                <span class="hide-menu">Danh sách yêu cầu</span>
+                                <span class="hide-menu"> Danh sách báo cáo</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-bar-chart"></i>
+                                </span>
+                                <span class="hide-menu"> Thống kê phòng</span>
                             </a>
                         </li>
                     </ul>
@@ -523,7 +531,7 @@
         }
 
         document.getElementById('RoomNumber').addEventListener('blur', async function () {
-            const roomName = this.value;
+            const roomName = document.getElementById("RoomNumber").value;
             const buildingId = document.getElementById('BuildingId').value;
             const oldRoomName = '@Model.RoomNumber';  // Lấy tên phòng cũ từ model
 
@@ -535,7 +543,7 @@
                 return;  // Không làm gì nếu tên phòng không thay đổi
             }
 
-            const response = await fetch(`/Room/CheckRoomNameExists?roomName=${roomName}&buildingId=${buildingId}`);
+            const response = await fetch(`/api/Room/CheckRoomNameExists?roomName=${roomName}&buildingId=${buildingId}`);
             const roomExists = await response.json();
 
             const roomNumberError = document.getElementById('roomNumberError');
