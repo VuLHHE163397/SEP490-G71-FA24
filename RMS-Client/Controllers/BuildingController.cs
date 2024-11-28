@@ -45,10 +45,10 @@ namespace RMS_Client.Controllers
         public IActionResult AddBuilding()
         {
             // Lấy danh sách các tỉnh
-            ViewBag.Provinces = _context.Provinces.ToList();
+           /* ViewBag.Provinces = _context.Provinces.ToList();
 
             // Lấy danh sách trạng thái tòa nhà
-            ViewBag.BuildingStatuses = _context.BuildingStatuses.ToList();
+           ViewBag.BuildingStatuses = _context.BuildingStatuses.ToList();*/
 
             return View(); // Trả về view cho việc thêm tòa nhà
         }

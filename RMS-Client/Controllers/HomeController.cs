@@ -23,24 +23,35 @@ namespace RMS_Client.Controllers
         {
             try
             {
-                // Gọi API GetActiveRooms và nhận danh sách RoomDTO
-                var rooms = await _httpClient.GetFromJsonAsync<List<RoomDTO>>("api/Room/GetActiveRooms");
+                // Gọi API đếm tổng số phòng
+                var roomsResponse = await _httpClient.GetAsync("api/statistic/count-rooms");
+                var roomsResult = JsonConvert.DeserializeObject<dynamic>(await roomsResponse.Content.ReadAsStringAsync());
+                ViewBag.TotalRooms = roomsResult?.totalRooms ?? 0;
 
-                // Kiểm tra xem dữ liệu có null không
+                // Gọi API đếm tổng số người dùng roleId = 2
+                var usersResponse = await _httpClient.GetAsync("api/statistic/count-users-with-role2");
+                var usersResult = JsonConvert.DeserializeObject<dynamic>(await usersResponse.Content.ReadAsStringAsync());
+                ViewBag.TotalUsersWithRole2 = usersResult?.totalUsers ?? 0;
+
+                // Gọi API đếm tổng số tòa nhà
+                var buildingsResponse = await _httpClient.GetAsync("api/statistic/count-buildings");
+                var buildingsResult = JsonConvert.DeserializeObject<dynamic>(await buildingsResponse.Content.ReadAsStringAsync());
+                ViewBag.TotalBuildings = buildingsResult?.totalBuildings ?? 0;
+
+                // Truyền danh sách phòng vào View nếu cần
+                var rooms = await _httpClient.GetFromJsonAsync<List<RoomDTO>>("api/Room/GetActiveRooms");
                 if (rooms == null)
                 {
                     _logger.LogWarning("No rooms were retrieved from the API.");
-                    return View("Home", new List<RoomDTO>()); // Trả về view rỗng nếu không có dữ liệu
+                    return View("Home", new List<RoomDTO>());
                 }
 
-                // Truyền dữ liệu tới View
-                return View("Home", rooms);
+                return View("Home", rooms); // Truyền rooms nếu cần sử dụng trong View
             }
             catch (Exception ex)
             {
-                // Ghi log lỗi nếu có ngoại lệ
-                _logger.LogError(ex, "Error occurred while fetching rooms.");
-                return View("Error"); // Bạn có thể tạo trang Error.cshtml để hiển thị lỗi
+                _logger.LogError(ex, "Error occurred while fetching data.");
+                return View("Error");
             }
         }
 
@@ -105,7 +116,6 @@ namespace RMS_Client.Controllers
             }
         }
 
-
         public IActionResult ListFavouriteRoom()
         {
             return View("~/Views/Home/ListFavouriteRoom.cshtml");
@@ -119,7 +129,6 @@ namespace RMS_Client.Controllers
         {
             return View("~/Views/Home/SearchRoom.cshtml");
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

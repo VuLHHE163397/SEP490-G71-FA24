@@ -11,7 +11,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RMS</title>
-    <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
+    <link href="~/images/logos/house.png" rel="icon">
     <link rel="stylesheet" href="~/css/styles.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -223,6 +223,23 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa-regular fa-envelope"></i>
+                                </span>
+                                <span class="hide-menu"> Danh sách báo cáo</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-bar-chart"></i>
+                                </span>
+                                <span class="hide-menu"> Thống kê phòng</span>
+                            </a>
+                        </li>
+                    </ul>
 
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
@@ -391,12 +408,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                        <li class="sidebar-subitem">
-                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                            </a>
-                                        </li>
-                                    `);
+                        <li class="sidebar-subitem">
+                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                            </a>
+                        </li>
+                    `);
                 });
 
                 // Update Table
