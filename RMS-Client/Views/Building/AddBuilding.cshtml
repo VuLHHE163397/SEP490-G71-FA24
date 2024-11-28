@@ -398,12 +398,8 @@
 
                         <div class="form-group">
                             <label for="ProvinceId">Tỉnh</label>
-                            <select class="form-control" id="ProvinceId" name="ProvinceName" required>
-                                <option value="">Chọn Tỉnh/Thành phố</option>
-                                @foreach (var province in ViewBag.Provinces)
-                                {
-                                    <option value="@province.Name">@province.Name</option>
-                                }
+                            <select id="ProvinceId" name="ProvinceId" class="form-control">
+                                <option value="">Chọn Tỉnh</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -418,13 +414,13 @@
                                 <option value="">Chọn Xã</option>
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label for="BuildingStatus">Trạng Thái</label>
                             <select class="form-control" id="BuildingStatus" name="BuildingStatus" required>
-                                @foreach (var status in ViewBag.BuildingStatuses)
-                                {
-                                    <option value="@status.Name">@status.Name</option>
-                                }
+                                <option value="Hoạt Động">Hoạt Động</option>
+                                <option value="Inactive">Không Hoạt Động</option>
+                                <option value="UnderConstruction">Sua chua</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -457,8 +453,30 @@
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
                 <script>
+
+                    function getProvinces() {
+                        const url = 'https://localhost:7056/api/Building/GetProvinces';
+
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            success: function (data) {
+                                // Clear and populate the Province dropdown
+                                $('#ProvinceId').empty();
+                                $('#ProvinceId').append('<option value="">Chọn Tỉnh</option>'); // Default option
+                                $.each(data, function (index, province) {
+                                    $('#ProvinceId').append('<option value="' + province.name + '">' + province.name + '</option>');
+                                });
+                            },
+                            error: function () {
+                                alert('Có lỗi xảy ra khi lấy danh sách tỉnh.');
+                            }
+                        });
+                    }
                     $(document).ready(function () {
+                        getProvinces();
                         // Validate Building Name
                         $('#Name').on('blur', function () {
                             const buildingName = $(this).val().trim();
@@ -493,6 +511,8 @@
                             }
                         });
 
+                       
+
                         // Province to District Fetch
                         $('#ProvinceId').change(function () {
                             var provinceName = encodeURIComponent($(this).val());
@@ -518,6 +538,7 @@
                                 $('#WardId').empty().append('<option value="">Chọn Xã</option>');
                             }
                         });
+
 
                         // District to Ward Fetch
                         $('#DistrictId').change(function () {

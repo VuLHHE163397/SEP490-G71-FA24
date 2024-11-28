@@ -94,6 +94,27 @@ namespace RMS_API.Controllers
             return Ok(buildings);
         }
 
+        [HttpGet("GetProvinces")]
+        public IActionResult GetProvinces()
+        {
+            var provinces = _context.Provinces
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    p.CreatedDate,
+                    p.LastModifiedDate
+                })
+                .ToList();
+
+            if (!provinces.Any())
+            {
+                return NotFound("No provinces found.");
+            }
+
+            return Ok(provinces);
+        }
+
         [HttpGet("GetDistrictsByProvince/{provinceName}")]
         public IActionResult GetDistrictsByProvince(string provinceName)
         {
