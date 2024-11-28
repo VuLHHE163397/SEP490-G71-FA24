@@ -79,28 +79,34 @@
 </head>
 
 <body>
-
     <script>
-        const token = sessionStorage.getItem("token");
+        function getCookie(name) {
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        }
+
+        const token = getCookie('AuthToken');
         if (!token) {
-            window.location.href = "/Auth/Login";
+            console.error('Token không tìm thấy trong cookie.');
         }
         const tokenParts = token.split('.');
         const payload = JSON.parse(atob(tokenParts[1]));
-
         if (payload.Roles !== "Landlord") {
-            window.location.href = "/Auth/Login";
+            window.location.href = "/Auth/login";
         }
 
         function logout() {
-            sessionStorage.removeItem("token");
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
             window.location.href = "/Auth/Login";
         }
-    </script>
+
+    </script>    
 
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
+
         <aside class="left-sidebar">
+
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a asp-controller="Building" asp-action="ListBuilding" class="text-nowrap logo-img">
@@ -160,11 +166,23 @@
                                 </span>
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
-                        </li>                        
-                    </ul>                    
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
+                            </a>
+                        </li>
+                    </ul>
+
                 </nav>
+
             </div>
+
         </aside>
+
         <div class="body-wrapper">
             <header class="app-header" style="background-color:  whitesmoke">
                 <nav class="navbar navbar-expand-lg navbar-light">
@@ -239,13 +257,13 @@
                                 </div>
                             </form>
                         </div>
-@* 
+                        @*
                         <div class="col-md-3">
-                            <select class="form-select">
-                                <option selected>Trạng thái phí</option>
-                                <option>Đã đóng tiền</option>
-                                <option>Chưa đóng tiền</option>
-                            </select>
+                        <select class="form-select">
+                        <option selected>Trạng thái phí</option>
+                        <option>Đã đóng tiền</option>
+                        <option>Chưa đóng tiền</option>
+                        </select>
                         </div> *@
 
                         <div class="col-md-3 offset-md-1 d-flex flex-column align-items-end">
@@ -361,6 +379,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
+
         $(document).ready(function () {
             loadBuilding();
         })
@@ -380,9 +399,13 @@
         }
 
         function loadBuilding() {
-            const token = sessionStorage.getItem("token");
-            //Lấy user id
-            const userId = getUserIdFromToken(token);
+            const token = getCookie('AuthToken');
+            if (!token) {
+                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
+                return;
+            }
+            var userId = getUserIdFromToken(token);
             $.ajax({
                 url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',
@@ -420,12 +443,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                        <li class="sidebar-subitem">
-                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                            </a>
-                                                                        </li>
-                                                                    `);
+                                                                                <li class="sidebar-subitem">
+                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                    </a>
+                                                                                </li>
+                                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -438,8 +461,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                            `);
+                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                    `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -519,12 +542,12 @@
                     window.location.reload();
                 } else {
                     const error = await response.text();
-                    importMessage.textContent = `Xảy ra lỗi khi nhập phòng`;
+                    importMessage.textContent = `Xảy ra lỗi khi nhập phòng, vui lòng kiểm tra lại file excel`;
                     importMessage.style.color = "red";
                 }
             } catch (err) {
                 console.error("Error importing rooms:", err);
-                importMessage.textContent = "Đã xảy ra lỗi khi nhập phòng.";
+                importMessage.textContent = "Đã xảy ra lỗi khi nhập phòng, vui lòng kiểm tra lại file excel";
                 importMessage.style.color = "red";
             }
         });

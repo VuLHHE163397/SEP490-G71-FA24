@@ -174,6 +174,12 @@ namespace RMS_API.Controllers
             return Ok("Đăng ký thành công.");
         }
 
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("AuthToken");
+            return Ok(new { message = "Logged out successfully" });
+        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
@@ -185,7 +191,6 @@ namespace RMS_API.Controllers
         .Include(u => u.Role)
         .SingleOrDefaultAsync(u => u.Email == model.Email);
 
-
             if (user == null)
                 return Unauthorized("Tài khoản không tồn tại. Xin hãy đăng nhập lại!");
             if (!BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
@@ -194,10 +199,24 @@ namespace RMS_API.Controllers
 
             var token = GenerateJwtToken(user);
 
-            HttpContext.Session.SetString("JWToken", token);
+            Response.Cookies.Append("AuthToken", token, new CookieOptions
+            {
+                //HttpOnly = true,
+                Secure = true,
+                Path = "/",
+                HttpOnly = false,
+                //Secure = false,
+                //SameSite = SameSiteMode.Lax,
+                SameSite=SameSiteMode.None,
+                //SameSite = SameSiteMode.Strict, // Ngăn CSRF                
+                Expires = DateTime.UtcNow.AddHours(1) 
+            });
 
+            Console.WriteLine("Đã gán AuthToken với HttpOnly = false");
 
-            return Ok(new { token });
+            HttpContext.Session.SetString("UserId", user.Id.ToString());
+
+            return Ok(new { token });           
         }
 
         //Gen token for jwt
@@ -210,6 +229,7 @@ namespace RMS_API.Controllers
             claims.Add(new Claim(JwtRegisteredClaimNames.Name, userInfo.Email));
             claims.Add(new Claim("UserId", userInfo.Id.ToString()));
             claims.Add(new Claim("Roles", userInfo.Role.Name));
+           
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 claims,
@@ -217,7 +237,7 @@ namespace RMS_API.Controllers
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-
+        
 
             //var tokenHandler = new JwtSecurityTokenHandler();
             //var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024");

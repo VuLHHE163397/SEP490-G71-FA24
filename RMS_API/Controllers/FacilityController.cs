@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RMS_API.DTOs;
@@ -7,6 +8,7 @@ using RMS_API.Models;
 namespace RMS_API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Landlord")]
     [ApiController]
     public class FacilityController : ControllerBase
     {
@@ -21,7 +23,18 @@ namespace RMS_API.Controllers
         {
             try
             {
-                var facilities = await _context.Facilities.FirstOrDefaultAsync(f => f.Id == id);
+                var facilities = await _context.Facilities
+                    .Include(e => e.Room)
+                    .Select(e => new FacilityDTO
+                    {
+                        Id = e.Id,
+                        Name = e.Name,
+                        BuildingId = e.Room.BuildingId,
+                        RoomId = e.RoomId,
+                        statusId = e.FacilityStatusId,
+                        UserId = e.UserId
+                    })
+                    .FirstOrDefaultAsync(f => f.Id == id);
                 if (facilities == null)
                 {
                     throw new Exception("Facility not found");
@@ -37,17 +50,25 @@ namespace RMS_API.Controllers
         public async Task<ActionResult<IEnumerable<FacilityDTO>>> GetAllFacilities([FromQuery] FacilityFilter filter)
         {
             var facilities = await _context.Facilities
+                .Where(e => e.UserId == filter.userId)
                  .Include(f => f.FacilityStatus)
+                 .Include(f => f.Room)
                 .Select(f => new FacilityDTO
                 {
                     Id = f.Id,
                     Name = f.Name,
+                    BuildingId = f.Room.BuildingId,
+                    BuildingName = f.Room.Building.Name,
+                    statusId = f.FacilityStatusId,
                     RoomNumber = f.Room.RoomNumber,
                     FacilityStatus = f.FacilityStatus.Description,
+                    RoomId = f.RoomId,
                 })
                 .ToListAsync();
             int total = facilities.Count;
             facilities = facilities.Where(e => filter.roomId <= 0 || e.RoomId == filter.roomId)
+                .Where(e => filter.buildingId <= 0 || e.BuildingId == filter.buildingId)
+                .Where(e => filter.statusId <= 0 || e.statusId == filter.statusId)
                 .Skip((filter.pageIndex - 1) * filter.pageSize)
                 .Take(filter.pageSize)
                 .ToList();
@@ -78,6 +99,7 @@ namespace RMS_API.Controllers
                     Name = facilityDTO.Name,
                     RoomId = facilityDTO.RoomId,
                     FacilityStatusId = (int)facilityDTO.statusId!,
+                    UserId = facilityDTO.UserId,
                 };
                 _context.Facilities.Add(facility);
                 await _context.SaveChangesAsync();
@@ -88,7 +110,7 @@ namespace RMS_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        //update dịch vụ
+        //update cơ sở vật chất
         [HttpPut]
         public async Task<IActionResult> UpdateAsync(FacilityDTO facilityDTO)
         {
@@ -159,7 +181,8 @@ namespace RMS_API.Controllers
                     Total = data.Count,
                     Facilities = data
                 });
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

@@ -297,6 +297,9 @@
                                     <i class="fa fa-bar-chart"></i>
                                 </span>
                                 <span class="hide-menu"> Thống kê phòng</span>
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
                             </a>
                         </li>
                     </ul>
@@ -470,7 +473,7 @@
                         // Validate Building Name
                         $('#Name').on('blur', function () {
                             const buildingName = $(this).val().trim();
-                            const token = sessionStorage.getItem('token');
+                            const token = getCookie('AuthToken');
 
                             // Extract UserId from the token
                             const userId = getUserIdFromToken(token);
@@ -593,7 +596,7 @@
                             }
 
                             // Get UserId from Token
-                            const token = sessionStorage.getItem("token");
+                            const token = getCookie('AuthToken');
                             if (!token) {
                                 alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
                                 return;

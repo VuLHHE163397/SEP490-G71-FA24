@@ -475,13 +475,6 @@ namespace RMS_Client.Controllers
             }
         }
 
-        // Action để hiển thị form nhập liệu
-        public IActionResult ImportRooms()
-        {
-            return View();
-        }
-
-
         public async Task<IActionResult> RoomMaintainance([FromRoute] int id)
         {
             string apiUrl = $"{RoomApiUri}/RoomMaintainance/{id}";

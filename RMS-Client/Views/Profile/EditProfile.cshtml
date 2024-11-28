@@ -166,21 +166,26 @@
 <body>
 
     <script>
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-    window.location.href = "/Auth/Login";
-    }
-    const tokenParts = token.split('.');
-    const payload = JSON.parse(atob(tokenParts[1]));
+        function getCookie(name) {
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        }
 
-    if (payload.Roles !== "Landlord") {
-    window.location.href = "/Auth/Login";
-    }
+        const token = getCookie('AuthToken');
+        if (!token) {
+            console.error('Token không tìm thấy trong cookie.');
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/login";
+        }
 
-    function logout() {
-    sessionStorage.removeItem("token");
-    window.location.href = "/Auth/Login";
-    }
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
+            window.location.href = "/Auth/Login";
+        }
+
     </script>
 
 
@@ -335,7 +340,7 @@
                             <div class="col-md-6">
                                 <div class="card shadow-lg">
                                     <div class="card-header text-center bg-primary text-white">
-                                        <h3>My Profile</h3>
+                                        <h3>Thông tin cá nhân</h3>
                                     </div>
                                     <div class="card-body">
                                         <form id="updateProfileForm">
@@ -358,9 +363,21 @@
                                                 </div>
                                             </div>                                            
                                             <div class="row mb-3">
-                                                <label for="phone" class="col-sm-4 font-weight-bold">Phone:</label>
+                                                <label for="phone" class="col-sm-4 font-weight-bold">Số điện thoại:</label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" id="phone" placeholder="Nhập số điện thoại">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label for="facebookUrl" class="col-sm-4 font-weight-bold">Link Facebook:</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" id="facebookUrl" placeholder="Nhập đường dẫn facebook">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label for="zaloUrl" class="col-sm-4 font-weight-bold">Link Zalo:</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" id="zaloUrl" placeholder="Nhập đường dẫn zalo">
                                                 </div>
                                             </div>
                                         </form>
@@ -396,9 +413,10 @@
         });
 
         function UpdateProfile() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             if (!token) {
                 alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
                 return;
             }
 
@@ -406,6 +424,8 @@
             const midName = $("#midName").val().trim();
             const lastName = $("#lastName").val().trim();
             const phone = $("#phone").val().trim();
+            const facebookUrl = $("#facebookUrl").val().trim();
+            const zaloUrl = $("#zaloUrl").val().trim();
 
             if (!lastName) {
                 showErrorPopup("Vui lòng nhập Họ!");
@@ -431,15 +451,16 @@
                 showErrorPopup("Số điện thoại không hợp lệ! Cần bắt đầu bằng 0 và có 10 chữ số");
                 return;
             }
-
+            
             const data = {
                 id: getUserIdFromToken(token),
                 firstName: $('#firstName').val(),
                 midName: $('#midName').val(),
                 lastName: $('#lastName').val(),
                 email: '', // Email không đổi
-                phone: $('#phone').val()
-                
+                phone: $('#phone').val(),
+                facebookUrl: $('#facebookUrl').val(),
+                zaloUrl: $('#zaloUrl').val()
             };
 
             const url = `https://localhost:7056/api/User/UpdateProfile`;
@@ -464,9 +485,10 @@
         }
 
         function getUser() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             if (!token) {
                 alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
                 return;
             }
 
@@ -486,6 +508,8 @@
                     $('#midName').val(response.midName || '');
                     $('#lastName').val(response.lastName || '');
                     $('#phone').val(response.phone || '');
+                    $('#facebookUrl').val(response.facebookUrl || '');
+                    $('#zaloUrl').val(response.zaloUrl || '');
                 },
                 error: function (xhr) {
                     console.error('Không lấy được thông tin người dùng:', xhr.responseText);
@@ -511,7 +535,7 @@
         }
 
         function getListBuilding() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
 
             if (!token) {
                 alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');

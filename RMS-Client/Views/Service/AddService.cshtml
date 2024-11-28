@@ -10,6 +10,28 @@
 </head>
 
 <body>
+    <script>
+        function getCookie(name) {
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        }
+
+        const token = getCookie('AuthToken');
+        if (!token) {
+            console.error('Token không tìm thấy trong cookie.');
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/login";
+        }
+
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
+            window.location.href = "/Auth/Login";
+        }
+
+    </script>    
 
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -94,8 +116,15 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        
-                        
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
+                            </a>
+                        </li>
 
                     </ul>
 
@@ -160,7 +189,7 @@
                         <h2>Thêm dịch vụ</h2>
                         <div>
                             <a href="/Service/ListService" class="btn btn-warning">Quay về</a>
-                            <button type="submit" class="btn btn-success" onclick="AddService()">Lưu</button>
+                            <button type"submit" class="btn btn-success" onclick="AddService()">Lưu</button>
                         </div>
                     </div>
                     <hr />
@@ -186,10 +215,9 @@
                                         <span class="input-group-text">VNĐ</span>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- Trạng thái -->
-                            
+                            </div>                                             
                         </div>
+
                         <div class="row mb-3">
                             <!-- Nhà -->
                             <div class="form-group col-md-5">
@@ -226,9 +254,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
         
+        var totalRecord = 0;
         $(document).ready(function () {
             loadBuilding();
+            // loadRoom();          
+            const token = getCookie('AuthToken');
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
         })
+        /////////////////////////////////////////
 
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -242,10 +276,16 @@
             }
         }
 
+        //////////////////////////////////////////////////
+
         function loadBuilding() {
-            const token = sessionStorage.getItem("token");
-            //Lấy user id
-            const userId = getUserIdFromToken(token);
+            const token = getCookie('AuthToken');
+            if (!token) {
+                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
+                return;
+            }
+            var userId = getUserIdFromToken(token);
             $.ajax({
                 url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',
@@ -266,12 +306,15 @@
         function renderBuilding(data) {
             var urlParams = new URLSearchParams(window.location.search);
             var buildingId = urlParams.get('buildingId');
-            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Chọn</option>`;
             for (var item of data) {
                 html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
             }
-            $("#buildings").html(html);
+            $("#BuildingId").html(html);
+            
         }
+
+        ///////////////////////////////////////////////////////
 
         //Hàm lấy list building theo UserId
         //-------------------------------------------------------
@@ -285,12 +328,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                        <li class="sidebar-subitem">
-                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                            </a>
-                                                        </li>
-                                                    `);
+                                                                        <li class="sidebar-subitem">
+                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                            </a>
+                                                                        </li>
+                                                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -303,8 +346,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                            `);
+                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                            `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -317,33 +360,33 @@
                 return null;
             }
         }
+        //////////////////////////////////////////////
 
 
         function AddService() {
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
             var service = {
                 name: $("#ServiceName").val(),
                 price: $("#Price").val(),
+                userId: userId,
+                buildingId: $("#BuildingId").val(),
             }
+            console.log(service)
             $.ajax({
                 url: "https://localhost:7056/api/Service",
                 type: "POST",
                 contentType: "application/json",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 data: JSON.stringify(service),
                 success: function (response) {
                     alert('Thêm dịch vụ thành công');
                     window.location.href = "/Service/ListService"
                 },
                 error: function (xhr, status, error) {
-                    console.log(error)
                     console.log(xhr)
-                    console.log(status)
-                    var message = "";
-                    Object.keys(xhr.responseJSON.errors).forEach(key => {
-                        message += key + ":\n";
-                        xhr.responseJSON.errors[key].forEach(x => {
-                            
-                        })
-                    });
                     alert("Thêm dịch vụ không hợp lệ, vui lòng thử lại!");
                 }
             })

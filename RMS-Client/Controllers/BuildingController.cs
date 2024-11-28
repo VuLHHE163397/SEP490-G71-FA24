@@ -53,8 +53,7 @@ namespace RMS_Client.Controllers
             return View(); // Trả về view cho việc thêm tòa nhà
         }
 
-        [HttpPost]
-        
+        [HttpPost]     
         public async Task<IActionResult> AddBuilding(BuildingDTO buildingDTO)
         {
             // Validate the model

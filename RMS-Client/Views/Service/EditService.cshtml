@@ -10,6 +10,47 @@
 </head>
 
 <body>
+    <script>
+        function getCookie(name) {
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        }
+
+        const token = getCookie('AuthToken');
+        if (!token) {
+            console.error('Token không tìm thấy trong cookie.');
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/login";
+        }
+
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
+            window.location.href = "/Auth/Login";
+        }
+
+    </script>
+
+
+    <script>
+        const token = getCookie('AuthToken');
+        if (!token) {
+            window.location.href = "/Auth/Login";
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            sessionStorage.removeItem("token");
+            window.location.href = "/Auth/Login";
+        }
+    </script>
 
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -94,7 +135,14 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
+                            </a>
+                        </li>
                         
 
                     </ul>
@@ -166,7 +214,7 @@
                         <h2>Sửa dịch vụ</h2>
                         <div>
                             <a href="/Service/ListService" class="btn btn-warning">Quay về</a>
-                            <button type="submit" class="btn btn-success" onclick="UpdateService(@Model.Id)">Lưu</button>
+                            <button type="submit" class="btn btn-success" onclick="UpdateService()">Lưu</button>
                         </div>
                     </div>
                     <hr />
@@ -176,7 +224,7 @@
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <label for="ServiceName">Tên <span class="text-danger">*</span></label>
-                                    <input type="text" id="ServiceName" name="ServiceName" class="form-control" required value="@Model.Name" />
+                                    <input type="text" id="ServiceName" name="ServiceName" class="form-control" required />
                                 </div>
                             </div>
                             
@@ -188,7 +236,7 @@
                                 <div class="form-group">
                                     <label for="Price">Đơn giá <span class="text-danger">*</span> (VNĐ)</label>
                                     <div class="input-group">
-                                        <input type="number" id="Price" name="Price" class="form-control" required value="@Model.Price" />
+                                        <input type="number" id="Price" name="Price" class="form-control" required />
                                         <span class="input-group-text">VNĐ</span>
                                     </div>
                                 </div>
@@ -199,7 +247,7 @@
                             <!-- Nhà -->
                             <div class="form-group col-md-5">
                                 <label for="BuildingId" class="form-label">Nhà</label>
-                                <select id="BuildingId" class="form-control custom-select">
+                                <select id="BuildingId" class="form-control custom-select" disabled>
                                 </select>
                             </div>
 
@@ -229,11 +277,68 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
     <script>
-       
-        $(document).ready(function () {
-            loadBuilding();
-        })
 
+        var totalRecord = 0;
+        loadBuilding();
+        $(document).ready(function () {
+            const token = getCookie('AuthToken');
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
+            var urlParams = new URLSearchParams(window.location.search);
+            var id = urlParams.get('id');
+            getDetail(id);
+        })
+        function getDetail(id) {
+            const token = getCookie('AuthToken');
+            $.ajax({
+                url: `https://localhost:7056/api/Service?id=${id}`,
+                type: "GET",
+                contentType: "application/json",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                success: function (response) {
+                    console.log(response)
+                    $("#ServiceName").val(response.name);
+                    $("#Price").val(response.price);
+                    $("#BuildingId").val(response.buildingId);
+
+                },
+                error: function (xhr, status, error) {
+                    console.log(error)
+                }
+            })
+        }
+        function UpdateService() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var id = urlParams.get('id');
+            const token = getCookie('AuthToken');
+            var service = {
+                id: id,
+                name: $("#ServiceName").val(),
+                price: $("#Price").val(),
+                buildingId: $("#BuildingId").val(),
+            }
+            $.ajax({
+                url: "https://localhost:7056/api/Service",
+                type: "PUT",
+                contentType: "application/json",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                data: JSON.stringify(service),
+                success: function (response) {
+                    alert('Cật nhật vụ thành công');
+                    window.location.href = "/Service/ListService"
+                },
+                error: function (xhr, status, error) {
+                    console.log(error)
+                    alert("Lỗi khi cật nhật dịch vụ");
+                }
+            })
+        }
+        ///////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////
         //Lấy UserId
         function getUserIdFromToken(token) {
             try {
@@ -247,9 +352,13 @@
         }
 
         function loadBuilding() {
-            const token = sessionStorage.getItem("token");
-            //Lấy user id
-            const userId = getUserIdFromToken(token);
+            const token = getCookie('AuthToken');
+            if (!token) {
+                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
+                return;
+            }
+            var userId = getUserIdFromToken(token);
             $.ajax({
                 url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',
@@ -274,9 +383,12 @@
             for (var item of data) {
                 html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
             }
-            $("#buildings").html(html);
+            $("#BuildingId").html(html);
+            
         }
+        /////////////////////////////////////
 
+        ////////////////////////////////////////////////
         //Hàm lấy list building theo UserId
         //-------------------------------------------------------
         function displayBuildings(buildings) {
@@ -289,12 +401,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                <li class="sidebar-subitem">
-                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                    </a>
-                                                                </li>
-                                                            `);
+                                                                                <li class="sidebar-subitem">
+                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                    </a>
+                                                                                </li>
+                                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -307,8 +419,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                    `);
+                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                    `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -323,27 +435,7 @@
         }
 
 
-        function UpdateService(id) {
-            var service = {
-                id: id,
-                name: $("#ServiceName").val(),
-                price: $("#Price").val(),
-            }
-            $.ajax({
-                url: "https://localhost:7056/api/Service",
-                type: "PUT",
-                contentType: "application/json",
-                data: JSON.stringify(service),
-                success: function (response) {
-                    alert('Cật nhật vụ thành công');
-                    window.location.href = "/Service/ListService"
-                },
-                error: function (xhr, status, error) {
-                    console.log(error)
-                    alert("Lỗi khi cật nhật dịch vụ");
-                }
-            })
-        }
+        
     </script>
 </body>
 

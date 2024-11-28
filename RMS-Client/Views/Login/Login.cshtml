@@ -100,7 +100,7 @@
                                     </div>
                                     <div class="d-flex align-items-center justify-content-between mb-4">
                                         <a class="text-primary fw-bold" href="/Home/Home">Về trang chủ</a>
-                                        <a class="text-primary fw-bold" onclick="ForgotPassword()">Quên mật khẩu</a>
+                                        <a class="text-primary fw-bold" href="./index.html">Quên mật khẩu</a>
                                     </div>
                                     <button type="button" onclick="login()" class="btn btn-primary w-100">Đăng nhập</button>
                                     <div class="d-flex align-items-center justify-content-center">
@@ -123,10 +123,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function login() {
-            // if (payload.role === "Admin") {
-            //     window.location.href = "/User/ListUser";
-            // }
+        function login() {           
             var email = $("#email").val();
             var password = $("#password").val();
 
@@ -141,19 +138,17 @@
             }
 
             $.ajax({
-                url: "https://localhost:7056/api/Auth/login",
+                url: "https://localhost:7056/api/Auth/Login",
                 type: "POST",
                 contentType: "application/json",
+                xhrFields: { withCredentials: true },   // Cho phép gửi và nhận cookies
                 data: JSON.stringify({ email: email, Password: password }),
-                success: function (response) {
-                    // Lưu token vào sessionStorage thay vì localStorage
-                    sessionStorage.setItem("token", response.token);
+                success: function (response) {                      
                     showPopup("Đăng nhập thành công!");
-
                     try {
                         // Giải mã token JWT
                         const tokenParts = response.token.split('.');
-                        const payload = JSON.parse(atob(tokenParts[1]));
+                        const payload = JSON.parse(atob(tokenParts[1]));                                             
                         // Xét role để chuyển trang
                         setTimeout(function () {
                             if (payload.Roles === "Admin") {
@@ -173,35 +168,6 @@
                 }
             });
 
-        }
-
-        function ForgotPassword() {
-            const email = prompt("Vui lòng nhập email của bạn:");
-
-            if (!email) {
-                alert("Email không hợp lệ.");
-                return;
-            }
-
-            // Prepare the data to send to the server
-            const data = {
-                email: email
-            };
-
-            const url = "https://localhost:7056/api/Auth/ForgotPassword"; // Update with your actual API endpoint
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function (response) {
-                    alert(response); // Show success message
-                },
-                error: function (xhr, status, error) {
-                    alert(xhr.responseText); // Show error message
-                }
-            });
         }
 
         function showPopup(message) {

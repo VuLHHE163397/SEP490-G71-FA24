@@ -40,7 +40,9 @@ namespace RMS_API.Controllers
                    LastName = b.LastName,
                    MidName = b.MidName,
                    Email = b.Email,
-                   Phone = b.Phone                  
+                   Phone = b.Phone,
+                   FacebookUrl = b.FacebookUrl,
+                   ZaloUrl = b.ZaloUrl
                })
                .FirstOrDefaultAsync();
 
@@ -71,7 +73,9 @@ namespace RMS_API.Controllers
                    LastName = b.LastName,
                    MidName = b.MidName,
                    Email = b.Email,
-                   Phone = b.Phone
+                   Phone = b.Phone,
+                   FacebookUrl = b.FacebookUrl,
+                   ZaloUrl = b.ZaloUrl
                })
                .FirstOrDefaultAsync();
 
@@ -129,6 +133,8 @@ namespace RMS_API.Controllers
             user.LastName = userDTO.LastName;
             user.MidName = userDTO.MidName;
             user.Phone = userDTO.Phone;
+            user.FacebookUrl = userDTO.FacebookUrl;
+            user.ZaloUrl = userDTO.ZaloUrl;
 
             await _context.SaveChangesAsync();
 
@@ -155,6 +161,8 @@ namespace RMS_API.Controllers
             user.LastName = userDTO.LastName;
             user.MidName = userDTO.MidName;
             user.Phone = userDTO.Phone;
+            user.FacebookUrl = userDTO.FacebookUrl;
+            user.ZaloUrl = userDTO.ZaloUrl;
 
             await _context.SaveChangesAsync();
 
