@@ -458,7 +458,7 @@
                         // Validate Building Name
                         $('#Name').on('blur', function () {
                             const buildingName = $(this).val().trim();
-                            const token = sessionStorage.getItem('token');
+                            const token = getCookie('AuthToken');
 
                             // Extract UserId from the token
                             const userId = getUserIdFromToken(token);

@@ -109,24 +109,6 @@
 
     </style>
 </head>
-@* <script>
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-        window.location.href = "/Auth/Login";
-    }
-    const tokenParts = token.split('.');
-    const payload = JSON.parse(atob(tokenParts[1]));
-    console.log('pay', payload);
-    if (payload.Roles !== "Admin") {
-        window.location.href = "/Auth/Login";
-    }
-
-    function logout() {
-        sessionStorage.removeItem("token");
-        window.location.href = "/Auth/Login";
-    }
-</script>
- *@
 <body>
 
     <script>

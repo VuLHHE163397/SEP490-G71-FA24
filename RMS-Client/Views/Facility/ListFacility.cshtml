@@ -609,7 +609,7 @@
         //Lấy UserId
         function getUserIdFromToken(token) {
             try {
-                var jwtToken = sessionStorage.getItem('token');
+                var jwtToken = getCookie('AuthToken');
                 token = jwtToken;
                 const tokenParts = token.split('.');
                 const payload = JSON.parse(atob(tokenParts[1]));
