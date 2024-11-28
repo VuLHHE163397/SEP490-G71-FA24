@@ -34,7 +34,7 @@
     </script>
 
     <script>
-        const token = sessionStorage.getItem("token");
+        const token = getCookie('AuthToken');
         if (!token) {
             window.location.href = "/Auth/Login";
         }
@@ -276,7 +276,7 @@
         $(document).ready(function () {
             loadBuilding();
             // loadRoom();          
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
         })
@@ -382,7 +382,7 @@
 
 
         function AddService() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             const userId = getUserIdFromToken(token);
             var service = {
                 name: $("#ServiceName").val(),

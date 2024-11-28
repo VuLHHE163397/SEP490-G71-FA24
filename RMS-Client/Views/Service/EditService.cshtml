@@ -35,7 +35,7 @@
 
 
     <script>
-        const token = sessionStorage.getItem("token");
+        const token = getCookie('AuthToken');
         if (!token) {
             window.location.href = "/Auth/Login";
         }
@@ -281,7 +281,7 @@
         var totalRecord = 0;
         loadBuilding();
         $(document).ready(function () {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
             var urlParams = new URLSearchParams(window.location.search);
@@ -289,7 +289,7 @@
             getDetail(id);
         })
         function getDetail(id) {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             $.ajax({
                 url: `https://localhost:7056/api/Service?id=${id}`,
                 type: "GET",
@@ -312,7 +312,7 @@
         function UpdateService() {
             var urlParams = new URLSearchParams(window.location.search);
             var id = urlParams.get('id');
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             var service = {
                 id: id,
                 name: $("#ServiceName").val(),

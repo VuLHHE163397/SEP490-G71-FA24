@@ -578,7 +578,7 @@
                             }
 
                             // Get UserId from Token
-                            const token = sessionStorage.getItem("token");
+                            const token = getCookie('AuthToken');
                             if (!token) {
                                 alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
                                 return;

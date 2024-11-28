@@ -329,7 +329,7 @@
         var totalRecord = 0;
         $(document).ready(function () {
             loadBuilding();          
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
             getService(userId, -1);
@@ -394,7 +394,7 @@
             var keyword = $("#keyword").val();
             var pageIndex = urlParams.get('pageIndex') ?? 1;
             var pageSize = urlParams.get('pageIndex') ?? 10;
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
             getService(userId, buildingId);
@@ -436,7 +436,7 @@
         //Lấy UserId
         function getUserIdFromToken(token) {
             try {
-                var jwtToken = sessionStorage.getItem('token');
+                var jwtToken = getCookie('AuthToken');
                 token = jwtToken;
                 const tokenParts = token.split('.');
                 const payload = JSON.parse(atob(tokenParts[1]));
@@ -450,7 +450,7 @@
 
         function getService(userId,buildingId) {
             let serviceUrl = 'https://localhost:7056/api/Service/GetAllService';
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             let query = '';
             if (userId) {
                 query += `userId=${userId}`
@@ -484,7 +484,7 @@
         function renderService(data) {
             let html = '';
             let stt = 1;
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             for (var item of data) {
                 html += '<tr>'
                 html += `<td>${stt++}</td>`;
@@ -551,9 +551,6 @@
             }
         }
 
-        
-
-        
     </script>
 
 </body>

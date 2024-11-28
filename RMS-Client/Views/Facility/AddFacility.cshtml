@@ -34,7 +34,7 @@
     </script>
 
     <script>
-        const token = sessionStorage.getItem("token");
+        const token = getCookie('AuthToken');
         if (!token) {
             window.location.href = "/Auth/Login";
         }
@@ -299,7 +299,7 @@
             loadBuilding();
             // loadRoom();                  
             loadStatus();
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
         })
@@ -360,7 +360,7 @@
         ///////////////////////////////////////////////////////
 
         function loadRoom() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             var buildingId = $("#BuildingId").val();
             console.log("buildingId = " + buildingId)
             const userId = getUserIdFromToken(token);
@@ -391,7 +391,7 @@
 
         ////////////////////////////////////////////////////
         function loadStatus() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             $.ajax({
                 url: 'https://localhost:7056/api/FacilityStatus/GetAllFacility',
                 type: 'GET',
@@ -465,7 +465,7 @@
         }
 
         function AddFacility() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             const userId = getUserIdFromToken(token);
             var facility = {
                 name: $("#FacilityName").val(),

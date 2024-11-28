@@ -100,25 +100,7 @@
             window.location.href = "/Auth/Login";
         }
 
-    </script>
-
-    <script>
-        const token = sessionStorage.getItem("token");
-        if (!token) {
-            window.location.href = "/Auth/Login";
-        }
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-
-        if (payload.Roles !== "Landlord") {
-            window.location.href = "/Auth/Login";
-        }
-
-        function logout() {
-            sessionStorage.removeItem("token");
-            window.location.href = "/Auth/Login";
-        }
-    </script>
+    </script>    
 
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -185,7 +167,14 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
+                            </a>
+                        </li>
                     </ul>
 
                 </nav>

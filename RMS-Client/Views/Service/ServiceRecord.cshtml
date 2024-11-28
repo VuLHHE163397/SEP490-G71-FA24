@@ -386,7 +386,7 @@
         }
 
         function loadBuilding() {
-            const token = sessionStorage.getItem("token");
+            const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
             $.ajax({
