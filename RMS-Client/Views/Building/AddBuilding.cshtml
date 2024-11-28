@@ -362,6 +362,7 @@
                         <div class="form-group ">
                             <label for="Name">Tên Tòa Nhà</label>
                             <input type="text" class="form-control" id="Name" name="Name" required />
+                            <span id="buildingNameError" class="error-message" style="color: red; display: none;">Tên tòa nhà bị trùng.Vui lòng nhập lại!</span>
                         </div>
                         <div class="form-group ">
                             <label for="TotalFloors">Số Tầng</label>
@@ -403,8 +404,8 @@
                             <label for="BuildingStatus">Trạng Thái</label>
                             <select class="form-control" id="BuildingStatus" name="BuildingStatus" required>
                                 <option value="Hoạt Động">Hoạt Động</option>
-                                <option value="Inactive">Không Hoạt Động</option>
-                                <option value="UnderConstruction">Sua chua</option>
+                                <option value="Hủy hoạt động">Hủy hoạt động</option>
+                                <option value="Sửa chữa">Sửa chữa</option>
                             </select>
                         </div>
                         <div class="form-group">
