@@ -146,7 +146,28 @@
     </style>
 </head>
 <body>
-    
+    <script>
+        function getCookie(name) {
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        }
+
+        const token = getCookie('AuthToken');
+        if (!token) {
+            console.error('Token không tìm thấy trong cookie.');
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/login";
+        }
+
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
+            window.location.href = "/Auth/Login";
+        }
+
+    </script>
 
 
 
@@ -383,7 +404,7 @@
                 }
 
                 function getListBuilding() {
-                    const token = sessionStorage.getItem("token");
+                    const token = getCookie('AuthToken');
 
                     if (!token) {
                         alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
