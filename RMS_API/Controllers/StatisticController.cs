@@ -46,5 +46,50 @@ namespace RMS_API.Controllers
 
             return Ok(buildingsWithRoomStats);
         }
+
+        // 1. API đếm tổng số phòng
+        [HttpGet("count-rooms")]
+        public IActionResult CountRooms()
+        {
+            try
+            {
+                int totalRooms = _context.Rooms.Count(); // Assuming 'Rooms' is the DbSet for rooms
+                return Ok(new { totalRooms });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while counting rooms.", error = ex.Message });
+            }
+        }
+
+        // API đếm tổng số người dùng có roleId = 2
+        [HttpGet("count-users-with-role2")]
+        public IActionResult CountUsersWithRole2()
+        {
+            try
+            {
+                int totalUsersWithRole2 = _context.Users.Count(u => u.RoleId == 2);
+                return Ok(new { totalUsers = totalUsersWithRole2 });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while counting users with roleId = 2.", error = ex.Message });
+            }
+        }
+
+        // 3. API đếm tổng số tòa nhà
+        [HttpGet("count-buildings")]
+        public IActionResult CountBuildings()
+        {
+            try
+            {
+                int totalBuildings = _context.Buildings.Count(); // Assuming 'Buildings' is the DbSet for buildings
+                return Ok(new { totalBuildings });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while counting buildings.", error = ex.Message });
+            }
+        }
     }
 }

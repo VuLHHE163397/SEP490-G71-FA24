@@ -147,10 +147,14 @@
         //     window.location.href = "/Auth/Login";
         // }
 
-        // function logout() {
-        //     sessionStorage.removeItem("token");
-        //     window.location.href = "/Auth/Login";
-        // }
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            sessionStorage.removeItem("token");
+            window.location.href = "/Auth/Login";
+        }
     </script>
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -191,21 +195,21 @@
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
-                               @*  @if (Model != null && Model.Any())
+                                @*  @if (Model != null && Model.Any())
                                 {
-                                    foreach (var building in Model)
-                                    {
-                                        <li class="sidebar-subitem">
-                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@building.Id" class="sidebar-sublink">
-                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
-                                                @building.Name
-                                            </a>
-                                        </li>
-                                    }
+                                foreach (var building in Model)
+                                {
+                                <li class="sidebar-subitem">
+                                <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@building.Id" class="sidebar-sublink">
+                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
+                                @building.Name
+                                </a>
+                                </li>
+                                }
                                 }
                                 else
                                 {
-                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
                                 } *@
                             </ul>
                         </li>
@@ -233,10 +237,23 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-
-
-
-
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa-regular fa-envelope"></i>
+                                </span>
+                                <span class="hide-menu"> Danh sách báo cáo</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-bar-chart"></i>
+                                </span>
+                                <span class="hide-menu"> Thống kê phòng</span>
+                            </a>
+                        </li>
+                    </ul>
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>

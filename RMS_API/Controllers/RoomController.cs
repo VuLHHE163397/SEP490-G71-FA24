@@ -126,120 +126,133 @@ namespace RMS_API.Controllers
                 return BadRequest("No file uploaded.");
             }
 
-            // Kiểm tra nếu file là file Excel
             if (file.FileName.EndsWith(".xlsx"))
             {
-                var rooms = new List<Room>();
+                var roomsToAdd = new List<Room>();
+                var existingRoomsToUpdate = new List<Room>();
 
-                // Đọc dữ liệu từ file Excel
                 using (var stream = new MemoryStream())
                 {
                     await file.CopyToAsync(stream);
-                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // Thiết lập giấy phép
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
                     using (var package = new ExcelPackage(stream))
                     {
-                        var worksheet = package.Workbook.Worksheets[0];  // Đọc sheet đầu tiên
-
+                        var worksheet = package.Workbook.Worksheets[0];
                         var rowCount = worksheet.Dimension.Rows;
                         var colCount = worksheet.Dimension.Columns;
 
-                        // Lấy tên các cột từ hàng đầu tiên (tiêu đề cột)
                         var headers = new Dictionary<string, int>();
                         for (int col = 1; col <= colCount; col++)
                         {
                             headers[worksheet.Cells[1, col].Text.Trim()] = col;
                         }
 
-                        // Kiểm tra xem các cột cần thiết có tồn tại không
                         if (!headers.ContainsKey("Số phòng") ||
-                            !headers.ContainsKey("Diện tích (m²)") ||
+                            !headers.ContainsKey("Diện tích") ||
                             !headers.ContainsKey("Tầng") ||
-                            !headers.ContainsKey("Giá phòng(VNĐ)") ||
-                            !headers.ContainsKey("Trạng thái") ||
-                            !headers.ContainsKey("Mô tả phòng") ||
-                            !headers.ContainsKey("Ngày bắt đầu thuê phòng") ||
-                            !headers.ContainsKey("Ngày hết hạn phòng thuê") ||
-
-                            !headers.ContainsKey("Ngày phòng sẽ trống trong tương lai"))
+                            !headers.ContainsKey("Giá phòng") ||
+                            !headers.ContainsKey("Trạng thái"))
                         {
                             return BadRequest("Missing required columns in the Excel file.");
                         }
 
-                        // Lặp qua các dòng trong Excel (bỏ qua dòng đầu tiên vì đó là header)
+                        // Lấy danh sách tất cả các phòng trong database cho tòa nhà hiện tại
+                        var existingRoomNumbers = _context.Rooms
+                            .Where(r => r.BuildingId == buildingId)
+                            .ToDictionary(r => r.RoomNumber, r => r);
+
+                        // Danh sách các số phòng xuất hiện trong file import
+                        var importedRoomNumbers = new HashSet<string>();
+
                         for (int row = 2; row <= rowCount; row++)
                         {
-                            // Lấy giá trị từ các cột bằng tên cột
-                            var roomNumber = worksheet.Cells[row, headers["Số phòng"]].Text;
-                            var area = double.Parse(worksheet.Cells[row, headers["Diện tích (m²)"]].Text);
+                            var roomNumber = worksheet.Cells[row, headers["Số phòng"]].Text.Trim();
+                            if (string.IsNullOrEmpty(roomNumber)) continue;
+
+                            importedRoomNumbers.Add(roomNumber); // Thêm số phòng vào danh sách được import
+
+                            var area = double.Parse(worksheet.Cells[row, headers["Diện tích"]].Text);
                             var floor = int.Parse(worksheet.Cells[row, headers["Tầng"]].Text);
-                            //var price = decimal.Parse(worksheet.Cells[row, headers["Giá phòng(VNĐ)"]].Text.Trim());
-                            var status = worksheet.Cells[row, headers["Trạng thái"]].Text;
-                            var description = worksheet.Cells[row, headers["Mô tả phòng"]].Text;
-
-                            var rawPrice = worksheet.Cells[row, headers["Giá phòng(VNĐ)"]].Text.Trim();
-                            rawPrice = rawPrice.Replace("VNĐ", "").Replace(",", "").Replace(" ", "");
-
+                            var rawPrice = worksheet.Cells[row, headers["Giá phòng"]].Text.Trim()
+                                .Replace("VNĐ", "").Replace(",", "").Replace(" ", "");
                             if (!decimal.TryParse(rawPrice, out var price))
                             {
-                                return BadRequest($"Invalid price format in row {row}: '{worksheet.Cells[row, headers["Giá phòng(VNĐ)"]].Text}'. Ensure it contains numeric values only.");
+                                return BadRequest($"Invalid price format in row {row}: '{worksheet.Cells[row, headers["Giá phòng"]].Text}'. Ensure it contains numeric values only.");
+                            }
+                            var status = worksheet.Cells[row, headers["Trạng thái"]].Text.Trim();
+                            var description = headers.ContainsKey("Mô tả phòng")
+                                ? worksheet.Cells[row, headers["Mô tả phòng"]].Text.Trim()
+                                : null;
+
+                            var roomStatusId = RoomStatusMapping.ContainsKey(status) ? RoomStatusMapping[status] : (int?)null;
+                            if (roomStatusId == null)
+                            {
+                                return BadRequest($"Invalid room status '{status}' in row {row}. Ensure it matches a valid status.");
                             }
 
-                            // Kiểm tra và chuyển đổi giá trị của các ngày để cho phép null
-                            DateTime? startedDate = null;
-                            if (DateTime.TryParse(worksheet.Cells[row, headers["Ngày bắt đầu thuê phòng"]].Text, out var startDate))
+                            if (existingRoomNumbers.ContainsKey(roomNumber))
                             {
-                                startedDate = startDate;
+                                // Cập nhật thông tin phòng đã tồn tại
+                                var existingRoom = existingRoomNumbers[roomNumber];
+                                existingRoom.Price = price;
+                                existingRoom.Area = area;
+                                existingRoom.Description = description;
+                                existingRoom.Floor = floor;
+                                existingRoom.RoomStatusId = roomStatusId.Value;
+                                existingRoomsToUpdate.Add(existingRoom);
                             }
-
-                            DateTime? expiredDate = null;
-                            if (DateTime.TryParse(worksheet.Cells[row, headers["Ngày hết hạn phòng thuê"]].Text, out var endDate))
+                            else
                             {
-                                expiredDate = endDate;
+                                // Thêm phòng mới nếu chưa tồn tại
+                                var newRoom = new Room
+                                {
+                                    BuildingId = buildingId,
+                                    RoomNumber = roomNumber,
+                                    Price = price,
+                                    Area = area,
+                                    Description = description,
+                                    Floor = floor,
+                                    RoomStatusId = roomStatusId.Value
+                                };
+                                roomsToAdd.Add(newRoom);
                             }
-                            DateTime? freeInFutureDate = null;
-                            if (DateTime.TryParse(worksheet.Cells[row, headers["Ngày phòng sẽ trống trong tương lai"]].Text, out var freeDate))
-                            {
-                                freeInFutureDate = freeDate;
-                            }
-
-                            // Kiểm tra trạng thái và ánh xạ sang RoomStatusId
-                            if (!status.Contains("Đang trống"))
-                            {
-                                return BadRequest($"Invalid room status '{status}' in row {row}. Valid statuses are:Đang trống");
-                            }
-                            var roomStatusId = RoomStatusMapping[status];
-
-                            // Tạo đối tượng Room từ dữ liệu dòng trong Excel
-                            var room = new Room
-                            {
-                                BuildingId = buildingId,
-                                RoomNumber = roomNumber,
-                                Price = price,
-                                Area = area,
-                                Description = description,
-                                Floor = floor,
-                                StartedDate = startedDate,
-                                ExpiredDate = expiredDate,
-                                RoomStatusId = roomStatusId,
-                                FreeInFutureDate = freeInFutureDate
-                            };
-
-                            rooms.Add(room);  // Thêm phòng vào danh sách
                         }
+
+                        // Bỏ qua các phòng không có trong file import (không xóa, không sửa)
+                        var roomsToIgnore = existingRoomNumbers
+                            .Where(r => !importedRoomNumbers.Contains(r.Key))
+                            .Select(r => r.Value)
+                            .ToList();
                     }
                 }
 
-                // Thêm các phòng vào database
-                _context.Rooms.AddRange(rooms);
+                if (roomsToAdd.Any())
+                {
+                    _context.Rooms.AddRange(roomsToAdd);
+                }
+
+                if (existingRoomsToUpdate.Any())
+                {
+                    _context.Rooms.UpdateRange(existingRoomsToUpdate);
+                }
+
                 await _context.SaveChangesAsync();
 
-                return Ok(new { message = "Rooms imported successfully!", roomsCount = rooms.Count });
+                return Ok(new
+                {
+                    message = "Rooms imported successfully!",
+                    newRoomsCount = roomsToAdd.Count,
+                    updatedRoomsCount = existingRoomsToUpdate.Count
+                });
             }
             else
             {
                 return BadRequest("Only Excel files are allowed.");
             }
         }
+
+
 
         [HttpPost("upload-image/{roomId}")]
         public async Task<IActionResult> UploadImage(IFormFile file, int roomId)
@@ -534,7 +547,7 @@ namespace RMS_API.Controllers
                                $"{room.Building?.Province?.Name ?? "Chưa có tỉnh"}",
                 Price = room.Price,
                 Area = room.Area,
-                Facebook = room.Building?.User?.FacebookUrl?? "Không có link FB",
+                Facebook = room.Building?.User?.FacebookUrl ?? "Không có link FB",
                 Zalo = room.Building?.User?.ZaloUrl ?? "Không có link Zalo",
                 Distance = room.Building?.Distance ?? 0,
                 Description = room.Description,
@@ -635,7 +648,8 @@ namespace RMS_API.Controllers
         [HttpGet("qr/{roomId}")]
         public IActionResult GetRoomQrCode(int roomId)
         {
-            string baseUrl = $"https://localhost:5001";
+            //string baseUrl = $"https://localhost:5001";
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
             string qrContent = $"{baseUrl}/Room/RoomMaintainance/{roomId}";
 
             // Tạo mã QR

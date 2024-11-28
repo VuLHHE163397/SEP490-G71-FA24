@@ -140,6 +140,7 @@
                         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                             <div class="navbar-nav mr-auto py-0">
                                 <a asp-controller="Home" asp-action="Home" class="nav-item nav-link active">Trang chủ</a>
+                                <a asp-controller="Home" asp-action="Search" class="nav-item nav-link active">Tìm phòng</a>
                                 <!-- Conditional rendering for roles -->
                                 @if (User.IsInRole("Admin"))
                                 {
@@ -306,88 +307,88 @@
                 </div>
             </div>
         </div>
+    </div>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/wow/wow.min.js"></script>
+    <script src="~/lib/easing/easing.min.js"></script>
+    <script src="~/lib/waypoints/waypoints.min.js"></script>
+    <script src="~/lib/counterup/counterup.min.js"></script>
+    <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/lib/tempusdominus/js/moment.min.js"></script>
+    <script src="~/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="~/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-        <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="~/lib/wow/wow.min.js"></script>
-        <script src="~/lib/easing/easing.min.js"></script>
-        <script src="~/lib/waypoints/waypoints.min.js"></script>
-        <script src="~/lib/counterup/counterup.min.js"></script>
-        <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
-        <script src="~/lib/tempusdominus/js/moment.min.js"></script>
-        <script src="~/lib/tempusdominus/js/moment-timezone.min.js"></script>
-        <script src="~/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- Template Javascript -->
+    <script src="~/js/main.js"></script>
+    <script>
+        // Function to get favorites from cookies
+        function getFavorites() {
+            const favorites = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('favorites='))
+                ?.split('=')[1];
+            return favorites ? JSON.parse(decodeURIComponent(favorites)) : [];
+        }
 
-        <!-- Template Javascript -->
-        <script src="~/js/main.js"></script>
-        <script>
-            // Function to get favorites from cookies
-            function getFavorites() {
-                const favorites = document.cookie
-                    .split('; ')
-                    .find(row => row.startsWith('favorites='))
-                    ?.split('=')[1];
-                return favorites ? JSON.parse(decodeURIComponent(favorites)) : [];
+        // Function to set favorites in cookies with an expiration of 7 days
+        function setFavorites(favorites) {
+            const now = new Date();
+            now.setTime(now.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days
+            const expires = "expires=" + now.toUTCString();
+            document.cookie = 'favorites=' + encodeURIComponent(JSON.stringify(favorites)) + '; ' + expires + '; path=/';
+        }
+
+        // Function to update the favorite count in the header
+        function updateFavoriteCount() {
+            const favorites = getFavorites();
+            const favoriteCount = favorites.length;
+            const favoriteCountElement = document.getElementById('favoriteCount');
+            if (favoriteCountElement) {
+                favoriteCountElement.innerText = favoriteCount; // Update favorite count
+            }
+        }
+
+        // Function to toggle favorite status
+        function toggleFavorite(element) {
+            const roomId = element.getAttribute("data-room-id");
+            const roomAddress = element.getAttribute("data-room-address");
+            const roomImage = element.getAttribute("data-room-image");
+
+            let favorites = getFavorites();
+
+            // Check if the room is already in favorites
+            const existingFavoriteIndex = favorites.findIndex(room => room.id === roomId);
+
+            if (existingFavoriteIndex === -1) {
+                // Add to favorites if not already present
+                favorites.push({ id: roomId, image: roomImage, address: roomAddress });
+            } else {
+                // Remove from favorites if already present
+                favorites.splice(existingFavoriteIndex, 1);
             }
 
-            // Function to set favorites in cookies with an expiration of 7 days
-            function setFavorites(favorites) {
-                const now = new Date();
-                now.setTime(now.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days
-                const expires = "expires=" + now.toUTCString();
-                document.cookie = 'favorites=' + encodeURIComponent(JSON.stringify(favorites)) + '; ' + expires + '; path=/';
-            }
+            setFavorites(favorites);
+            updateFavoriteCount();
+        }
 
-            // Function to update the favorite count in the header
-            function updateFavoriteCount() {
-                const favorites = getFavorites();
-                const favoriteCount = favorites.length;
-                const favoriteCountElement = document.getElementById('favoriteCount');
-                if (favoriteCountElement) {
-                    favoriteCountElement.innerText = favoriteCount; // Update favorite count
-                }
-            }
-
-            // Function to toggle favorite status
-            function toggleFavorite(element) {
-                const roomId = element.getAttribute("data-room-id");
-                const roomAddress = element.getAttribute("data-room-address");
-                const roomImage = element.getAttribute("data-room-image");
-
-                let favorites = getFavorites();
-
-                // Check if the room is already in favorites
-                const existingFavoriteIndex = favorites.findIndex(room => room.id === roomId);
-
-                if (existingFavoriteIndex === -1) {
-                    // Add to favorites if not already present
-                    favorites.push({ id: roomId, image: roomImage, address: roomAddress });
-                } else {
-                    // Remove from favorites if already present
-                    favorites.splice(existingFavoriteIndex, 1);
-                }
-
-                setFavorites(favorites);
-                updateFavoriteCount();
-            }
-
-            // Initialize favorite count on page load
-            document.addEventListener('DOMContentLoaded', () => {
-                updateFavoriteCount(); // Display favorite count from cookie when page loads
-            });
-            // Hàm thay đổi slide dựa trên ảnh nhỏ được nhấp
-            function changeCarouselSlide(index) {
-                const carousel = document.getElementById('mainImageCarousel');
-                const carouselInstance = bootstrap.Carousel.getInstance(carousel);
-                carouselInstance.to(index); // Chuyển tới slide được chỉ định
-            }
-            function navigateToDetail(url) {
-                window.open(url, '_blank'); // Mở trang trong tab mới
-            }
-        </script>
+        // Initialize favorite count on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateFavoriteCount(); // Display favorite count from cookie when page loads
+        });
+        // Hàm thay đổi slide dựa trên ảnh nhỏ được nhấp
+        function changeCarouselSlide(index) {
+            const carousel = document.getElementById('mainImageCarousel');
+            const carouselInstance = bootstrap.Carousel.getInstance(carousel);
+            carouselInstance.to(index); // Chuyển tới slide được chỉ định
+        }
+        function navigateToDetail(url) {
+            window.open(url, '_blank'); // Mở trang trong tab mới
+        }
+    </script>
 </body>
 </html>

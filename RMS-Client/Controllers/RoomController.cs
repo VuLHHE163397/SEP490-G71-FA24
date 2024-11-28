@@ -34,11 +34,6 @@ namespace RMS_Client.Controllers
         public async Task<IActionResult> ListRoom(List<int> statusIds, int? buildingId)
         {
 
-            //var userId = HttpContext.Session.GetString("UserId");
-            //if (string.IsNullOrEmpty(userId))
-            //{
-            //    return RedirectToAction("Login", "Auth"); // Điều hướng tới Login nếu chưa đăng nhập
-            //}
 
             string apiUrl = RoomApiUri + "/GetAllRoom";
             var rooms = new List<Room>();
@@ -391,6 +386,7 @@ namespace RMS_Client.Controllers
             return RedirectToAction("ListRoom", new { buildingId = buildingId });
         }
 
+
         public async Task<IActionResult> ExportToExcel(int buildingId)
         {
             var rooms = new List<Room>();
@@ -429,9 +425,9 @@ namespace RMS_Client.Controllers
                 var worksheet = package.Workbook.Worksheets.Add("Rooms");
 
                 worksheet.Cells[1, 1].Value = "Số phòng";
-                worksheet.Cells[1, 2].Value = "Diện tích (m²)";
+                worksheet.Cells[1, 2].Value = "Diện tích";
                 worksheet.Cells[1, 3].Value = "Tầng";
-                worksheet.Cells[1, 4].Value = "Giá phòng(VNĐ)";
+                worksheet.Cells[1, 4].Value = "Giá phòng";
                 worksheet.Cells[1, 5].Value = "Trạng thái";
                 worksheet.Cells[1, 6].Value = "Mô tả phòng";
                 worksheet.Cells[1, 7].Value = "Ngày bắt đầu thuê phòng";
@@ -452,7 +448,7 @@ namespace RMS_Client.Controllers
                     worksheet.Cells[row, 1].Value = room.RoomNumber;
                     worksheet.Cells[row, 2].Value = room.Area;
                     worksheet.Cells[row, 3].Value = room.Floor;
-                    worksheet.Cells[row, 4].Value = room.Price.ToString("N0") + " VNĐ";
+                    worksheet.Cells[row, 4].Value = room.Price.ToString("N0");
                     worksheet.Cells[row, 5].Value = room.RoomStatusId switch
                     {
                         1 => "Đang trống",
@@ -484,6 +480,7 @@ namespace RMS_Client.Controllers
         {
             return View();
         }
+
 
         public async Task<IActionResult> RoomMaintainance([FromRoute] int id)
         {
@@ -522,14 +519,13 @@ namespace RMS_Client.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                ViewBag.SuccessMessage = "Gửi thành công! Nhấn OK để quay về trang chủ.";
+                ViewBag.SuccessMessage = "Gửi báo cáo thành công! Nhấn OK để quay về trang chủ.";
                 ViewBag.RedirectUrl = Url.Action("Home", "Home"); // URL của trang chủ
                 return View("RoomMaintainance", model); // Giữ nguyên model trên form
             }
 
-            ModelState.AddModelError(string.Empty, "Vui lòng điền nội dung và thử lại.");
+            ModelState.AddModelError(string.Empty, "Không thể gửi báo cáo. Vui lòng thử lại.");
             return View("RoomMaintainance", model);
         }
-
     }
 }

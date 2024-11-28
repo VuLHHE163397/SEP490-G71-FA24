@@ -154,6 +154,23 @@
     </style>
 </head>
 <body>
+    <script>
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            window.location.href = "/Auth/Login";
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            sessionStorage.removeItem("token");
+            window.location.href = "/Auth/Login";
+        }
+    </script>
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -192,25 +209,6 @@
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
-                                @{
-                                    var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
-                                }
-                                @if (buildingsss != null && buildingsss.Any())
-                                {
-                                    foreach (var buildingss in buildingsss)
-                                    {
-                                        <li class="sidebar-subitem">
-                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
-                                                @buildingss.Name
-                                            </a>
-                                        </li>
-                                    }
-                                }
-                                else
-                                {
-                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                }
                             </ul>
                         </li>
                         <li class="sidebar-item">
@@ -396,6 +394,8 @@
     </div>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
 
     <script>
@@ -554,7 +554,112 @@
                 event.preventDefault();
             }
         });
+
+        $(document).ready(function () {
+            loadBuilding();
+        })
+
+        //---------------------------------------------------------------
+        //Lấy List Building ở Left Side
+        //Lấy UserId
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+            }
+        }
+
+        function loadBuilding() {
+            const token = sessionStorage.getItem("token");
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
+            $.ajax({
+                url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                },
+                success: function (response) {
+                    renderBuilding(response);
+                    displayBuildings(response); //Thêm cái này nữa
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
+
+        function renderBuilding(data) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var buildingId = urlParams.get('buildingId');
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            for (var item of data) {
+                html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
+            }
+            $("#buildings").html(html);
+        }
+
+        function displayBuildings(buildings) {
+            const sidebarContainer = $('.sidebar-submenu');
+
+            // Clear previous content
+            sidebarContainer.empty();
+
+            if (buildings && buildings.length > 0) {
+                // Update Sidebar
+                buildings.forEach(building => {
+                    sidebarContainer.append(`
+                                                                                <li class="sidebar-subitem">
+                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                    </a>
+                                                                                </li>
+                                                                            `);
+                });
+            } else {
+                displayNoBuildingsMessage();
+            }
+        }
+        function displayNoBuildingsMessage() {
+            const sidebarContainer = $('.sidebar-submenu');
+            const tableContainer = $('#buildingsContainer');
+
+            // Notify in Sidebar
+            sidebarContainer.empty();
+            sidebarContainer.append(`
+                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                    `);
+        }
+        //Lấy UserId
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+            }
+        }
+
     </script>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Thêm Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Thêm jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Thêm Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

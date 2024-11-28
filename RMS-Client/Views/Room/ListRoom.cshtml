@@ -80,6 +80,24 @@
 
 <body>
 
+    <script>
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            window.location.href = "/Auth/Login";
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            sessionStorage.removeItem("token");
+            window.location.href = "/Auth/Login";
+        }
+    </script>
+
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
         <aside class="left-sidebar">
@@ -116,26 +134,6 @@
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
-                                @* @{
-                                    var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
-                                }
-                                @if (buildingsss != null && buildingsss.Any())
-                                {
-                                    foreach (var buildingss in buildingsss)
-                                    {
-                                        <li class="sidebar-subitem">
-                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
-                                                @buildingss.Name
-                                            </a>
-
-                                        </li>
-                                    }
-                                }
-                                else
-                                {
-                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                } *@
                             </ul>
                         </li>
                         <li class="sidebar-item">
@@ -241,14 +239,14 @@
                                 </div>
                             </form>
                         </div>
-
+@* 
                         <div class="col-md-3">
                             <select class="form-select">
                                 <option selected>Trạng thái phí</option>
                                 <option>Đã đóng tiền</option>
                                 <option>Chưa đóng tiền</option>
                             </select>
-                        </div>
+                        </div> *@
 
                         <div class="col-md-3 offset-md-1 d-flex flex-column align-items-end">
                             <div class="btn-group-vertical">
@@ -307,7 +305,6 @@
                         <th>Trạng thái</th>
                         <form asp-action="DeleteAllRoomsByBuildingId" method="post">
                             <input type="hidden" name="buildingId" value="@ViewBag.SelectedBuildingId" />
-                            <button type="submit" class="btn btn-danger">Xóa tất cả phòng trong tòa nhà</button>
                         </form>
                     </tr>
                 </thead>
@@ -341,11 +338,6 @@
                                     <a asp-controller="Room" asp-action="RoomDetail" asp-route-id="@room.Id" class="btn btn-info">
                                         <i class="ti ti-eye"></i>
                                     </a>
-                                    <form method="post" action="@Url.Action("Delete", new { id = room.Id, buildingId = ViewBag.SelectedBuildingId, statusIds = ViewBag.SelectedStatusIds })" style="display:inline;">
-                                        <button type="submit" class="btn btn-danger">
-                                            <i class="ti ti-trash"></i>
-                                        </button>
-                                    </form>
                                     <a asp-controller="Room" asp-action="EditRoom" asp-route-id="@room.Id" class="btn btn-warning">
                                         <i class="ti ti-pencil"></i>
                                     </a>
@@ -372,6 +364,9 @@
         $(document).ready(function () {
             loadBuilding();
         })
+
+        //---------------------------------------------------------------
+        //Lấy List Building ở Left Side
         //Lấy UserId
         function getUserIdFromToken(token) {
             try {
@@ -414,6 +409,51 @@
             }
             $("#buildings").html(html);
         }
+
+        function displayBuildings(buildings) {
+            const sidebarContainer = $('.sidebar-submenu');
+
+            // Clear previous content
+            sidebarContainer.empty();
+
+            if (buildings && buildings.length > 0) {
+                // Update Sidebar
+                buildings.forEach(building => {
+                    sidebarContainer.append(`
+                                                                        <li class="sidebar-subitem">
+                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                            </a>
+                                                                        </li>
+                                                                    `);
+                });
+            } else {
+                displayNoBuildingsMessage();
+            }
+        }
+        function displayNoBuildingsMessage() {
+            const sidebarContainer = $('.sidebar-submenu');
+            const tableContainer = $('#buildingsContainer');
+
+            // Notify in Sidebar
+            sidebarContainer.empty();
+            sidebarContainer.append(`
+                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                            `);
+        }
+        //Lấy UserId
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+            }
+        }
+
+        //---------------------------------------------------------------
 
 
         function toggleSubmenu(event) {
@@ -489,6 +529,7 @@
             }
         });
 
+
         function submitUpdateStatus(selectElement) {
             // var selectElement = document.querySelector('.room-status-dropdown');
             var roomId = selectElement.getAttribute('data-room-id');
@@ -513,50 +554,39 @@
         }
 
 
-        //Hàm lấy list building theo UserId
-        //-------------------------------------------------------
-        function displayBuildings(buildings) {
-            const sidebarContainer = $('.sidebar-submenu');
+        // Gửi file lên server
+        document.getElementById("importRoomsBtn").addEventListener("click", function () {
+            var formData = new FormData();
+            var fileInput = document.getElementById("excelFile");
 
-            // Clear previous content
-            sidebarContainer.empty();
+            if (fileInput.files.length === 0) {
+                alert("Vui lòng chọn một file Excel.");
+                return;
+            }
 
-            if (buildings && buildings.length > 0) {
-                // Update Sidebar
-                buildings.forEach(building => {
-                    sidebarContainer.append(`
-                                            <li class="sidebar-subitem">
-                                                <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                            <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                </a>
-                                            </li>
-                                        `);
+            formData.append("file", fileInput.files[0]);
+            formData.append("buildingId", @buildingId); // Truyền buildingId vào formData
+
+            // Gửi yêu cầu POST lên API để nhập phòng
+            fetch('/api/Room/ImportRooms/' + @buildingId, {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message); // Thông báo thành công
+                        $('#importRoomModal').modal('hide'); // Đóng modal
+                    } else {
+                        alert("Có lỗi xảy ra khi nhập phòng.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Có lỗi xảy ra.");
                 });
-            } else {
-                displayNoBuildingsMessage();
-            }
-        }
-        function displayNoBuildingsMessage() {
-            const sidebarContainer = $('.sidebar-submenu');
-            const tableContainer = $('#buildingsContainer');
+        });
 
-            // Notify in Sidebar
-            sidebarContainer.empty();
-            sidebarContainer.append(`
-                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                            `);
-        }
-        //Lấy UserId
-        function getUserIdFromToken(token) {
-            try {
-                const tokenParts = token.split('.');
-                const payload = JSON.parse(atob(tokenParts[1]));
-                return payload.UserId;
-            } catch (error) {
-                console.error("Không mã hóa đc token:", error);
-                return null;
-            }
-        }
     </script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -568,7 +598,7 @@
 
     <!-- Thêm Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
