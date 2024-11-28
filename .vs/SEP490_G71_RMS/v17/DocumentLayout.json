@@ -1,12 +1,71 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms-client\\views\\service\\listservice.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\service\\listservice.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms-client\\views\\facility\\listfacility.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\facility\\listfacility.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms_api\\controllers\\facilitycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\controllers\\facilitycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ListService.cshtml",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\ListService.cshtml",
+              "RelativeDocumentMoniker": "RMS-Client\\Views\\Service\\ListService.cshtml",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\ListService.cshtml",
+              "RelativeToolTip": "RMS-Client\\Views\\Service\\ListService.cshtml",
+              "ViewState": "AQIAANsBAAAAAAAAAAAAAOwBAABVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-28T02:37:43.44Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FacilityController.cs",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\Controllers\\FacilityController.cs",
+              "RelativeDocumentMoniker": "RMS_API\\Controllers\\FacilityController.cs",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\Controllers\\FacilityController.cs",
+              "RelativeToolTip": "RMS_API\\Controllers\\FacilityController.cs",
+              "ViewState": "AQIAAKMAAAAAAAAAAAAwwAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-28T02:29:29.717Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ListFacility.cshtml",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Facility\\ListFacility.cshtml",
+              "RelativeDocumentMoniker": "RMS-Client\\Views\\Facility\\ListFacility.cshtml",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Facility\\ListFacility.cshtml",
+              "RelativeToolTip": "RMS-Client\\Views\\Facility\\ListFacility.cshtml",
+              "ViewState": "AQIAAIkCAAAAAAAAAAAAAJsCAABgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-28T02:28:27.062Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

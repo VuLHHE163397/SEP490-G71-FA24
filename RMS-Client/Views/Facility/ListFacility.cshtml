@@ -325,16 +325,22 @@
     <script>
         
         var totalRecord = 0;
+        loadBuilding();
+        // loadRoom();
+        setKeyword();
+        loadPaging();
+        loadStatus();
         $(document).ready(function () {
-            loadBuilding();
-            // loadRoom();
-            setKeyword();
-            loadPaging();
-            loadStatus();
-            const token = sessionStorage.getItem("token");
+            var buildingId = $("#buildings").val();
+            var roomId = $("#rooms").val();
+            var statusId = $("#status").val();
+            var keyword = $("#keyword").val();
             //Lấy user id
+            var token = sessionStorage.getItem("token");
             const userId = getUserIdFromToken(token);
-            getFacility(userId, 1, 10, null, null, null);
+            getFacility(userId, 1, 10, keyword, roomId, buildingId, statusId);
+            // token = sessionStorage.getItem("token");
+            //getFacility(userId, 1, 10, null, null, null);
         })
         //////////////////////////////////////////////
         function onSelectPageSize() {
@@ -434,7 +440,7 @@
         function renderBuilding(data) {
             var urlParams = new URLSearchParams(window.location.search);
             var buildingId = urlParams.get('buildingId');
-            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            let html = '';
             for (var item of data) {
                 html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
             }
@@ -659,7 +665,7 @@
             }
             else {
                 html += '<tr>'
-                html += '<td colspan="7" class="text-center">Không có dữ liệu</td>'
+                html += '<td colspan="7" class="text-center">Không có dữ liệu tòa nhà hoặc phòng</td>'
                 html += '</tr>'
                 $("#facilities").html(html)
             }

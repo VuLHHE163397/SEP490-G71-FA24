@@ -354,8 +354,10 @@
             var service = {
                 name: $("#ServiceName").val(),
                 price: $("#Price").val(),
-                userId: userId
+                userId: userId,
+                buildingId: $("#BuildingId").val(),
             }
+            console.log(service)
             $.ajax({
                 url: "https://localhost:7056/api/Service",
                 type: "POST",
@@ -369,16 +371,7 @@
                     window.location.href = "/Service/ListService"
                 },
                 error: function (xhr, status, error) {
-                    console.log(error)
                     console.log(xhr)
-                    console.log(status)
-                    var message = "";
-                    Object.keys(xhr.responseJSON.errors).forEach(key => {
-                        message += key + ":\n";
-                        xhr.responseJSON.errors[key].forEach(x => {
-
-                        })
-                    });
                     alert("Thêm dịch vụ không hợp lệ, vui lòng thử lại!");
                 }
             })

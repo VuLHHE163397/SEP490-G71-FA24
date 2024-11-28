@@ -75,11 +75,16 @@ namespace RMS_API.Controllers
         {
             try
             {
+                if(serviceDTO.BuildingId == null)
+                {
+                    throw new Exception("Building not found");
+                }
                 var service = new Service
                 {
                     Name = serviceDTO.Name,
                     Price = serviceDTO.Price,
                     UserId = serviceDTO.UserId,
+                    BuildingId = (int)serviceDTO.BuildingId,
                 };
                 _context.Services.Add(service);
                 await _context.SaveChangesAsync();

@@ -135,7 +135,7 @@
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
-                                @{
+                                @* @{
                                     var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
                                 }
                                 @if (buildingsss != null && buildingsss.Any())
@@ -153,7 +153,7 @@
                                 else
                                 {
                                     <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                }
+                                } *@
                             </ul>
                         </li>
                         <li class="sidebar-item">
@@ -181,8 +181,8 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                       
-                        
+
+
 
                     </ul>
 
@@ -289,14 +289,8 @@
                                     <!-- Các tùy chọn khác -->
                                 </select>
                             </div>
-                            <div class="col-md-2">
-                                <label for="roomStatus" class="form-label">Trạng thái phòng</label>
-                                <select id="roomStatus" class="form-select">
-                                    <option selected>Tất cả</option>
-                                    <!-- Các tùy chọn khác -->
-                                </select>
-                            </div>
                             
+
                         </div>
                         <!-- Bảng dữ liệu -->
                         <table class="table table-bordered align-middle">
@@ -305,6 +299,7 @@
                                     <th>Nhà</th>
                                     <th>Phòng</th>
                                     <th>Khách thuê</th>
+                                    <th>Ngày chốt</th>
                                     <th>CS Điện Cũ</th>
                                     <th>CS Điện Mới</th>
                                     <th>Sử dụng</th>
@@ -313,39 +308,32 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Tầng 1</td>
-                                    <td>2</td>
+                                    <td>Thiên Long Building</td>
+                                    <td>217</td>
                                     <td>Nguyen Vy</td>
+                                    <td><input type="month" class="form-control" id="monthYear" value="2024-11"></td>
                                     <td><input type="number" class="form-control" value="53"></td>
                                     <td><input type="number" class="form-control" value="656"></td>
                                     <td class="text-end">603.0</td>
                                     <td><button class="btn btn-info btn-sm"><i class="fa-solid fa-calculator"></i></button></td>
                                 </tr>
-                                <tr>
-                                    <td>Tầng 1</td>
-                                    <td>3</td>
-                                    <td></td>
-                                    <td><input type="number" class="form-control" value="0"></td>
-                                    <td><input type="number" class="form-control" value="0"></td>
-                                    <td class="text-end">0.0</td>
-                                    <td><button class="btn btn-info btn-sm"><i class="fa-solid fa-calculator"></i></button></td>
-                                </tr>
-                                <!-- Các dòng khác -->
+                                
+                                
                             </tbody>
                         </table>
 
-                    <!-- Phân trang -->
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>Đang xem 0 đến 0 trong tổng số 0 mục</div>
-                        <div>
-                            <button class="btn btn-light" disabled>Trước</button>
-                            <button class="btn btn-light" disabled>Tiếp</button>
+                        <!-- Phân trang -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>Đang xem 0 đến 0 trong tổng số 0 mục</div>
+                            <div>
+                                <button class="btn btn-light" disabled>Trước</button>
+                                <button class="btn btn-light" disabled>Tiếp</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -355,7 +343,7 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
     <script>
-        
+
 
         $(document).ready(function () {
             loadRoom();
@@ -406,41 +394,6 @@
             $("#buildings").html(html);
         }
 
-        //Hàm lấy list building theo UserId
-        //-------------------------------------------------------
-        function displayBuildings(buildings) {
-            const sidebarContainer = $('.sidebar-submenu');
-
-            // Clear previous content
-            sidebarContainer.empty();
-
-            if (buildings && buildings.length > 0) {
-                // Update Sidebar
-                buildings.forEach(building => {
-                    sidebarContainer.append(`
-                                                        <li class="sidebar-subitem">
-                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                            </a>
-                                                        </li>
-                                                    `);
-                });
-            } else {
-                displayNoBuildingsMessage();
-            }
-        }
-        function displayNoBuildingsMessage() {
-            const sidebarContainer = $('.sidebar-submenu');
-            const tableContainer = $('#buildingsContainer');
-
-            // Notify in Sidebar
-            sidebarContainer.empty();
-            sidebarContainer.append(`
-                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                            `);
-        }
-
-
         function loadRoom() {
             $.ajax({
                 url: 'https://localhost:7056/api/Room/GetAllRoom',
@@ -460,6 +413,39 @@
                 html += `<option value="${item.id}">${item.roomNumber}</option>`
             }
             $("#RoomId").html(html);
+        }
+        //Hàm lấy list building theo UserId
+        //-------------------------------------------------------
+        function displayBuildings(buildings) {
+            const sidebarContainer = $('.sidebar-submenu');
+
+            // Clear previous content
+            sidebarContainer.empty();
+
+            if (buildings && buildings.length > 0) {
+                // Update Sidebar
+                buildings.forEach(building => {
+                    sidebarContainer.append(`
+                                                                                <li class="sidebar-subitem">
+                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                    </a>
+                                                                                </li>
+                                                                            `);
+                });
+            } else {
+                displayNoBuildingsMessage();
+            }
+        }
+        function displayNoBuildingsMessage() {
+            const sidebarContainer = $('.sidebar-submenu');
+            const tableContainer = $('#buildingsContainer');
+
+            // Notify in Sidebar
+            sidebarContainer.empty();
+            sidebarContainer.append(`
+                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                    `);
         }
 
         function loadStatusRoom() {
