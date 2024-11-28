@@ -228,20 +228,11 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
+                                            <p class="mb-0 fs-3">Tài Khoản</p>
                                         </a>
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
-
                                     </div>
                                 </div>
                             </li>
@@ -264,6 +255,7 @@
                         </style>
                         <div class="d-flex align-items-center">
                             <button class="btn btn-success">Lưu</button>
+                            <button class="btn btn-primary ms-2">Báo cáo</button>
                             <button class="btn btn-warning ms-2">Xuất file Excel</button>
                         </div>
                     </div>
@@ -307,8 +299,7 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>Nhà</th>
-                                    <th>Phòng</th>
-                                    <th>Khách thuê</th>
+                                    <th>Phòng</th>     
                                     <th>Ngày chốt</th>
                                     <th>CS Điện Cũ</th>
                                     <th>CS Điện Mới</th>
@@ -319,9 +310,10 @@
                             <tbody>
                                 <tr>
                                     <td>Thiên Long Building</td>
-                                    <td>217</td>
-                                    <td>Nguyen Vy</td>
-                                    <td><input type="month" class="form-control" id="monthYear" value="2024-11"></td>
+                                    <td>217</td>                                   
+                                    <td>
+                                        <input type="date" class="form-control" id="monthYear" value="2024-11-28" min="2024-01-01" max="2024-12-31">
+                                    </td>
                                     <td><input type="number" class="form-control" value="53"></td>
                                     <td><input type="number" class="form-control" value="656"></td>
                                     <td class="text-end">603.0</td>
