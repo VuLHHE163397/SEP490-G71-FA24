@@ -255,7 +255,8 @@
                         </style>
                         <div class="d-flex align-items-center">
                             <button class="btn btn-success">Lưu</button>
-                            <button class="btn btn-primary ms-2">Báo cáo</button>
+                            <a href="/Service/ServiceReport" class="btn btn-primary ms-2">
+                                Báo cáo</a>
                             <button class="btn btn-warning ms-2">Xuất file Excel</button>
                         </div>
                     </div>
@@ -274,8 +275,8 @@
                         <!-- Bộ lọc -->
                         <div class="row g-3 align-items-center mb-3">
                             <div class="col-md-3">
-                                <label for="monthYear" class="form-label">Tháng/năm</label>
-                                <input type="month" class="form-control" id="monthYear" value="2024-11">
+                                <label for="datePicker" class="form-label">Ngày/tháng/năm</label>
+                                <input type="date" class="form-control" id="datePicker" value="2024-11-28">
                             </div>
                             <div class="col-md-3">
                                 <label for="building" class="form-label">Nhà</label>
@@ -296,13 +297,13 @@
                         </div>
                         <!-- Bảng dữ liệu -->
                         <table class="table table-bordered align-middle">
-                            <thead class="table-light">
+                            <thead class="table-dark">
                                 <tr>
                                     <th>Nhà</th>
                                     <th>Phòng</th>     
-                                    <th>Ngày chốt</th>
-                                    <th>CS Điện Cũ</th>
-                                    <th>CS Điện Mới</th>
+                                    <th>Ngày bắt đầu chốt</th>
+                                    <th>CS điện cũ</th>
+                                    <th>CS điện mới</th>
                                     <th>Sử dụng</th>
                                     <th>Tính</th>
                                 </tr>
@@ -312,7 +313,7 @@
                                     <td>Thiên Long Building</td>
                                     <td>217</td>                                   
                                     <td>
-                                        <input type="date" class="form-control" id="monthYear" value="2024-11-28" min="2024-01-01" max="2024-12-31">
+                                       28/11/2024
                                     </td>
                                     <td><input type="number" class="form-control" value="53"></td>
                                     <td><input type="number" class="form-control" value="656"></td>
@@ -347,11 +348,15 @@
     <script>
 
 
+        var totalRecord = 0;
         $(document).ready(function () {
-            loadRoom();
             loadBuilding();
-            loadStatusRoom();
+            loadRoom();
+            const token = getCookie('AuthToken');
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
         })
+        /////////////////////////////////////////
 
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -365,10 +370,16 @@
             }
         }
 
+        //////////////////////////////////////////////////
+
         function loadBuilding() {
             const token = getCookie('AuthToken');
-            //Lấy user id
-            const userId = getUserIdFromToken(token);
+            if (!token) {
+                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
+                return;
+            }
+            var userId = getUserIdFromToken(token);
             $.ajax({
                 url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',
@@ -389,18 +400,29 @@
         function renderBuilding(data) {
             var urlParams = new URLSearchParams(window.location.search);
             var buildingId = urlParams.get('buildingId');
-            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Chọn</option>`;
             for (var item of data) {
                 html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
             }
-            $("#buildings").html(html);
+            $("#BuildingId").html(html);
+
         }
 
+
+        ///////////////////////////////////////////////////////
+
         function loadRoom() {
+            const token = getCookie('AuthToken');
+            var buildingId = $("#BuildingId").val();
+            console.log("buildingId = " + buildingId)
+            const userId = getUserIdFromToken(token);
             $.ajax({
-                url: 'https://localhost:7056/api/Room/GetAllRoom',
+                url: buildingId && buildingId > 0 ? `https://localhost:7056/api/Room/GetRoomByBuilding/${buildingId}` : `https://localhost:7056/api/Room/GetAllRoom/${userId}`,
                 type: 'GET',
                 dataType: 'json',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 success: function (response) {
                     renderRoom(response);
                 },
@@ -410,9 +432,11 @@
             });
         }
         function renderRoom(data) {
-            let html = ``;
+            var urlParams = new URLSearchParams(window.location.search);
+            var roomId = urlParams.get('roomId');
+            let html = `<option value="-1" ${roomId <= 0 ? 'selected' : ''}>Chọn</option>`;
             for (var item of data) {
-                html += `<option value="${item.id}">${item.roomNumber}</option>`
+                html += `<option value="${item.id}" ${roomId == item.id ? 'selected' : ''}>${item.roomNumber}</option>`
             }
             $("#RoomId").html(html);
         }
@@ -450,27 +474,7 @@
                                                                     `);
         }
 
-        function loadStatusRoom() {
-            $.ajax({
-                url: 'https://localhost:7056/api/Room/GetAllStatus',
-                type: 'GET',
-                dataType: 'json',
-                success: function (response) {
-                    renderStatus(response);
-                },
-                error: function (xhr, status, error) {
-                    console.error("Có lỗi xảy ra:", error);
-                }
-            });
-        }
-        function renderStatusRoom(data) {
-            let html = ``;
-            for (var item of data) {
-                html += `<option value="${item.id}">${item.description}</option>`
-            }
-            $("#roomStatus").html(html);
-        }
-
+        
     </script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
