@@ -8,6 +8,7 @@ using RMS_API.Models;
 namespace RMS_API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Landlord")]
     [ApiController]
     public class ServiceController : ControllerBase
     {
@@ -19,6 +20,7 @@ namespace RMS_API.Controllers
         }
 
         [HttpGet]
+
         public async Task<IActionResult> GetAsync(int id)
         {
             try
@@ -36,21 +38,28 @@ namespace RMS_API.Controllers
             }
         }
 
+        [Authorize(Roles = "Landlord")]
         //lấy danh sách dịch vụ
         [HttpGet("GetAllService")]
+
         public async Task<ActionResult<IEnumerable<ServiceDTO>>> GetAllServices([FromQuery] ServiceFilter filter)
         {
             var services = await _context.Services
+                .Where(e => e.UserId == filter.userId)
+                .Include(e => e.Building)
                 .Select(s => new ServiceDTO
                 {
                     Id = s.Id,
                     Name = s.Name,
-                    BuildingId = s.BuildingId,
+                    BuildingName = s.Building.Name,
+                    BuildingId = s.Building.Id,
                     Price = s.Price
                 })
-                .Where(e => string.IsNullOrWhiteSpace(filter.keyword) || e.Name.ToLower().Contains(filter.keyword.ToLower()))
                 .ToListAsync();
-            var total = services.Count();
+            int total = services.Count;
+            services = services.Where(e => filter.buildingId <= 0 || e.BuildingId == filter.buildingId)
+                .ToList();
+
             services = services.Skip((filter.pageIndex - 1) * filter.pageSize)
                 .Take(filter.pageSize)
                 .ToList();
@@ -67,10 +76,16 @@ namespace RMS_API.Controllers
         {
             try
             {
+                if(serviceDTO.BuildingId == null)
+                {
+                    throw new Exception("Building not found");
+                }
                 var service = new Service
                 {
                     Name = serviceDTO.Name,
-                    Price = serviceDTO.Price
+                    Price = serviceDTO.Price,
+                    UserId = serviceDTO.UserId,
+                    BuildingId = (int)serviceDTO.BuildingId,
                 };
                 _context.Services.Add(service);
                 await _context.SaveChangesAsync();
@@ -131,7 +146,7 @@ namespace RMS_API.Controllers
         //{
 
         //}
-}
+    }
 }
 
 

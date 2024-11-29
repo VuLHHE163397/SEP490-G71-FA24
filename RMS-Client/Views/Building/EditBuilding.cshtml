@@ -11,7 +11,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RMS</title>
-    <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
+    <link href="~/images/logos/house.png" rel="icon">
     <link rel="stylesheet" href="~/css/styles.min.css" />
 
     <!-- Custom CSS Styles -->
@@ -155,19 +155,29 @@
     </style>
 </head>
 <body>
-
     <script>
-        const token = sessionStorage.getItem("token");
+        function getCookie(name) {
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        }
+
+        const token = getCookie('AuthToken');
         if (!token) {
-            window.location.href = "/Auth/Login";
+            console.error('Token không tìm thấy trong cookie.');
         }
         const tokenParts = token.split('.');
         const payload = JSON.parse(atob(tokenParts[1]));
-
         if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/login";
+        }
+
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
             window.location.href = "/Auth/Login";
-        }        
+        }
+
     </script>
+    
 
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -191,10 +201,8 @@
                             <span class="hide-menu">Trang chủ</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
+                            <a class="sidebar-link" aria-expanded="false" onclick="toggleSubmenu(event)" asp-controller="Building" asp-action="ListBuilding">
+                                <span><i class="ti ti-layout-dashboard"></i></span>
                                 <span class="hide-menu">Trang chủ</span>
                             </a>
                         </li>
@@ -202,23 +210,30 @@
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">Quản lý</span>
                         </li>
-
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
-                                <span><i class="ti ti-building"></i></span>
-                                <span class="hide-menu">Quản lý tòa nhà</span>
-                                <i class="ti ti-angle-down"></i>
-                            </a>
-
-                        </li>
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Room" asp-action="ListRoom" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-home"></i>
-                                </span>
+                                <span><i class="ti ti-home"></i></span>
                                 <span class="hide-menu">Quản lý phòng</span>
+                                <span><i class="ti ti-chevron-down"></i></span>
                             </a>
+                            <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
+                                @*  @if (Model != null && Model.Any())
+                                {
+                                foreach (var building in Model)
+                                {
+                                <li class="sidebar-subitem">
+                                <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@building.Id" class="sidebar-sublink">
+                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
+                                @building.Name
+                                </a>
+                                </li>
+                                }
+                                }
+                                else
+                                {
+                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                } *@
+                            </ul>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Facility" asp-action="ListFacility" aria-expanded="false">
@@ -244,13 +259,35 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                        
-                        
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa-regular fa-envelope"></i>
+                                </span>
+                                <span class="hide-menu"> Danh sách báo cáo</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-bar-chart"></i>
+                                </span>
+                                <span class="hide-menu"> Thống kê phòng</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
+                            </a>
+                        </li>
                         
                         
                         
                     </ul>
-                    
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -380,10 +417,8 @@
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             <script>                
 
-                function logout() {
-                    sessionStorage.removeItem("token");
-                    window.location.href = "/Auth/Login";
-                }
+                
+
 
                 function toggleDropdown() {
                     // Toggle the visibility of the custom dropdown

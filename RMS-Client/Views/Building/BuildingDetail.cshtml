@@ -11,7 +11,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RMS</title>
-    <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
+    <link href="~/images/logos/house.png" rel="icon">
     <link rel="stylesheet" href="~/css/styles.min.css" />
 
     <!-- Custom CSS Styles -->
@@ -147,17 +147,45 @@
 </head>
 <body>
     <script>
-        const token = sessionStorage.getItem("token");
+        function getCookie(name) {
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        }
+
+        const token = getCookie('AuthToken');
         if (!token) {
-            window.location.href = "/Auth/Login";
+            console.error('Token không tìm thấy trong cookie.');
         }
         const tokenParts = token.split('.');
         const payload = JSON.parse(atob(tokenParts[1]));
-
         if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/login";
+        }
+
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
             window.location.href = "/Auth/Login";
-        }       
+        }
+
     </script>
+
+        const token = getCookie('AuthToken');
+        if (!token) {
+            console.error('Token không tìm thấy trong cookie.');
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/login";
+        }
+
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
+            window.location.href = "/Auth/Login";
+        }
+
+    </script>
+
 
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -181,10 +209,8 @@
                             <span class="hide-menu">Trang chủ</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
+                            <a class="sidebar-link" aria-expanded="false" onclick="toggleSubmenu(event)" asp-controller="Building" asp-action="ListBuilding">
+                                <span><i class="ti ti-layout-dashboard"></i></span>
                                 <span class="hide-menu">Trang chủ</span>
                             </a>
                         </li>
@@ -192,23 +218,30 @@
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">Quản lý</span>
                         </li>
-
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
-                                <span><i class="ti ti-building"></i></span>
-                                <span class="hide-menu">Quản lý tòa nhà</span>
-                                <i class="ti ti-angle-down"></i>
-                            </a>
-
-                        </li>
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Room" asp-action="ListRoom" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-home"></i>
-                                </span>
+                                <span><i class="ti ti-home"></i></span>
                                 <span class="hide-menu">Quản lý phòng</span>
+                                <span><i class="ti ti-chevron-down"></i></span>
                             </a>
+                            <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
+                                @*  @if (Model != null && Model.Any())
+                                {
+                                foreach (var building in Model)
+                                {
+                                <li class="sidebar-subitem">
+                                <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@building.Id" class="sidebar-sublink">
+                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
+                                @building.Name
+                                </a>
+                                </li>
+                                }
+                                }
+                                else
+                                {
+                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                } *@
+                            </ul>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Facility" asp-action="ListFacility" aria-expanded="false">
@@ -234,11 +267,33 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-                       
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa-regular fa-envelope"></i>
+                                </span>
+                                <span class="hide-menu"> Danh sách báo cáo</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-bar-chart"></i>
+                                </span>
+                                <span class="hide-menu"> Thống kê phòng</span>
+                            </a>
+                        </li>
 
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
+                            </a>
+                        </li>
                         
                     </ul>
-                    
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -347,57 +402,118 @@
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-            <script>              
+            <script>
+                $(document).ready(function () {
+                    console.log('Page Loaded: Fetching buildings...');
+                    getListBuilding();
+                });
 
-                function logout() {
-                    function logout() {
-                        sessionStorage.removeItem("token");
-                        window.location.href = "/Auth/Login";
+                function getUserIdFromToken(token) {
+                    try {
+                        const tokenParts = token.split('.');
+                        const payload = JSON.parse(atob(tokenParts[1]));
+                        return payload.UserId;
+                    } catch (error) {
+                        console.error("Không mã hóa đc token:", error);
+                        return null;
                     }
-
                 }
-                function editBuilding() {
-                    // Ensure the building ID is correctly retrieved
-                    var id = $('#BuildingId').val();
 
-                    // Confirm if the ID is valid
-                    if (!id) {
-                        alert('Building ID is missing.');
+                function getListBuilding() {
+                    const token = getCookie('AuthToken');
+
+                    if (!token) {
+                        alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
                         return;
                     }
 
-                    var url = `https://localhost:7056/api/Building/EditBuilding/${id}`;
+                    var userId = getUserIdFromToken(token);
 
-                    var buildingData = {
-                        Name: $('#Name').val(),
-                        Distance: parseFloat($('#Distance').val()),
-                        TotalFloors: parseInt($('#TotalFloors').val()),
-                        NumberOfRooms: parseInt($('#NumberOfRooms').val()),
-                        AddressDetails: $('#AddressDetails').val(),
-                        ProvinceName: $('#ProvinceId').val(),
-                        DistrictName: $('#DistrictId').val(),
-                        WardName: $('#WardId').val(),
-                        BuildingStatus: $('#BuildingStatus').val(),
-                        LinkEmbedMap: $('#LinkEmbedMap').val()
-
-                    };
+                    const url = `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`;
 
                     $.ajax({
                         url: url,
-                        type: 'PUT',
+                        type: 'GET',
                         contentType: 'application/json',
-                        data: JSON.stringify(buildingData),
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                        },
                         success: function (response) {
-                            alert('Cập nhật thành công!');
-
-                            location.reload();
-                            window.location.href = '/Building/ListBuilding'
+                            console.log('Buildings fetched successfully:', response);
+                            displayBuildings(response);
                         },
                         error: function (xhr) {
-                            alert('Error: ' + xhr.responseText);
+                            console.error('Error fetching buildings:', xhr.responseText);
+                            displayNoBuildingsMessage();
                         }
                     });
                 }
+
+                function displayBuildings(buildings) {
+                    const sidebarContainer = $('.sidebar-submenu');
+                    const tableContainer = $('#buildingsContainer');
+
+                    // Clear previous content
+                    sidebarContainer.empty();
+                    tableContainer.empty();
+
+                    if (buildings && buildings.length > 0) {
+                        // Update Sidebar
+                        buildings.forEach(building => {
+                            sidebarContainer.append(`
+                                        <li class="sidebar-subitem">
+                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                            </a>
+                                        </li>
+                                    `);
+                        });
+
+                        // Update Table
+                        buildings.forEach((building, index) => {
+                            tableContainer.append(`
+                                        <tr>
+                                            <td>${index + 1}</td> <!-- Số thứ tự -->
+                                            <td>${building.name}</td>
+                                            <td>${building.totalFloors}</td>
+                                            <td>${building.numberOfRooms}</td>
+                                            <td>${building.addressDetails}</td>
+                                            <td>${building.buildingStatus}</td>
+                                            <td>
+                                                <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
+                                                    <i class="ti ti-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    `);
+                        });
+                    } else {
+                        displayNoBuildingsMessage();
+                    }
+                }
+
+                function displayNoBuildingsMessage() {
+                    const sidebarContainer = $('.sidebar-submenu');
+                    const tableContainer = $('#buildingsContainer');
+
+                    // Notify in Sidebar
+                    sidebarContainer.empty();
+                    sidebarContainer.append(`
+                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                            `);
+
+                    // Notify in Table
+                    tableContainer.empty();
+                    tableContainer.append(`
+                                                <tr>
+                                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
+                                                </tr>
+                                            `);
+                }
+
             </script>
 
         </div>

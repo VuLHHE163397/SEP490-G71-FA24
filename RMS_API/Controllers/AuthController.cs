@@ -26,6 +26,62 @@ namespace RMS_API.Controllers
             _configuration = configuration;
         }
 
+
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest model)
+        {
+            if (string.IsNullOrEmpty(model.Email))
+            {
+                return BadRequest("Vui lòng nhập email.");
+            }
+
+            // Check if the email exists in the database
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            if (user == null)
+            {
+                return BadRequest("Email không tồn tại.");
+            }
+
+            // Generate a random password
+            string newPassword = GenerateRandomPassword();
+
+            // Hash the new password and save it in the database
+            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await _context.SaveChangesAsync();
+
+            // Send email with new password
+            var subject = "Mật khẩu mới của bạn";
+            var body = $"Chúng tôi đã nhận được yêu cầu đổi mật khẩu cho tài khoản của bạn. Mật khẩu mới của bạn là: {newPassword}" +
+                       $"\nVui lòng đăng nhập và thay đổi mật khẩu ngay sau khi đăng nhập.";
+
+            if (SendEmail(user.Email, subject, body))
+            {
+                return Ok("Mật khẩu mới đã được gửi qua email của bạn.");
+            }
+            return StatusCode(500, "Không thể gửi email.");
+        }
+
+        public class ForgotPasswordRequest
+        {
+            public string Email { get; set; } = null!;
+        }
+
+        // Helper method to generate a random password (letters and numbers)
+        private string GenerateRandomPassword(int length = 8)
+        {
+            const string validChars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789012345678901234567890123456789012345678901234567890123456789";
+            Random rand = new Random();
+            char[] password = new char[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                password[i] = validChars[rand.Next(validChars.Length)];
+            }
+
+            return new string(password);
+        }
+
+
         [HttpPost("sendVerificationCode")]
         public async Task<IActionResult> SendVerificationCode([FromBody] RegisterModel user)
         {
@@ -118,6 +174,12 @@ namespace RMS_API.Controllers
             return Ok("Đăng ký thành công.");
         }
 
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("AuthToken");
+            return Ok(new { message = "Logged out successfully" });
+        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
@@ -129,7 +191,6 @@ namespace RMS_API.Controllers
         .Include(u => u.Role)
         .SingleOrDefaultAsync(u => u.Email == model.Email);
 
-
             if (user == null)
                 return Unauthorized("Tài khoản không tồn tại. Xin hãy đăng nhập lại!");
             if (!BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
@@ -138,10 +199,24 @@ namespace RMS_API.Controllers
 
             var token = GenerateJwtToken(user);
 
-            HttpContext.Session.SetString("JWToken", token);
+            Response.Cookies.Append("AuthToken", token, new CookieOptions
+            {
+                //HttpOnly = true,
+                Secure = true,
+                Path = "/",
+                HttpOnly = false,
+                //Secure = false,
+                //SameSite = SameSiteMode.Lax,
+                SameSite=SameSiteMode.None,
+                //SameSite = SameSiteMode.Strict, // Ngăn CSRF                
+                Expires = DateTime.UtcNow.AddHours(1) 
+            });
 
+            Console.WriteLine("Đã gán AuthToken với HttpOnly = false");
 
-            return Ok(new { token });
+            HttpContext.Session.SetString("UserId", user.Id.ToString());
+
+            return Ok(new { token });           
         }
 
         //Gen token for jwt
@@ -162,7 +237,7 @@ namespace RMS_API.Controllers
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-
+        
 
             //var tokenHandler = new JwtSecurityTokenHandler();
             //var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024");

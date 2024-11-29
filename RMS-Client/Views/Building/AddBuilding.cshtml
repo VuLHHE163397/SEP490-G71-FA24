@@ -1,4 +1,4 @@
-﻿@model List<RMS_API.DTOs.BuildingDTO>
+﻿@model List<RMS_API.DTOs.AddBuildingDTO>
 
 @{
     ViewData["Title"] = "Tạo Tòa Nhà";
@@ -202,6 +202,29 @@
     </style>
 </head>
 <body>
+    <script>
+        function getCookie(name) {
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        }
+
+        const token = getCookie('AuthToken');
+        if (!token) {
+            console.error('Token không tìm thấy trong cookie.');
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        if (payload.Roles !== "Landlord") {
+            window.location.href = "/Auth/login";
+        }
+
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
+            window.location.href = "/Auth/Login";
+        }
+
+    </script>
+
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -210,7 +233,7 @@
             <!-- Sidebar scroll-->
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a asp-controller="Building" asp-action="ListBuilding" class="text-nowrap logo-img">
+                    <a asp-controller="Statistic" asp-action="ViewStatistic" class="text-nowrap logo-img">
                         <img src="~/images/logo.jpg" width="180" alt="" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
@@ -225,10 +248,8 @@
                             <span class="hide-menu">Trang chủ</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
+                            <a class="sidebar-link" aria-expanded="false" onclick="toggleSubmenu(event)" asp-controller="Building" asp-action="ListBuilding">
+                                <span><i class="ti ti-layout-dashboard"></i></span>
                                 <span class="hide-menu">Trang chủ</span>
                             </a>
                         </li>
@@ -236,40 +257,30 @@
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">Quản lý</span>
                         </li>
-
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="#" aria-expanded="false" onclick="toggleSubmenu(event)">
-                                <span><i class="ti ti-building"></i></span>
-                                <span class="hide-menu">Quản lý tòa nhà</span>
-                                <i class="ti ti-angle-down"></i>
+                                <span><i class="ti ti-home"></i></span>
+                                <span class="hide-menu">Quản lý phòng</span>
+                                <span><i class="ti ti-chevron-down"></i></span>
                             </a>
-                            <ul class="sidebar-submenu" style="display: none; list-style-type: none; padding-left: 20px;">
-                                @if (Model != null && Model.Any())
+                            <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
+                                @*  @if (Model != null && Model.Any())
                                 {
-                                    foreach (var building in Model)
-                                    {
-                                        <li class="sidebar-subitem">
-                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-id="@building.Id" class="sidebar-sublink">
-                                                <i class="ti ti-file"></i>
-                                                @building.Name
-                                            </a>
-                                        </li>
-                                    }
+                                foreach (var building in Model)
+                                {
+                                <li class="sidebar-subitem">
+                                <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@building.Id" class="sidebar-sublink">
+                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
+                                @building.Name
+                                </a>
+                                </li>
+                                }
                                 }
                                 else
                                 {
-                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                }
+                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                } *@
                             </ul>
-                        </li>
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Room" asp-action="ListRoom" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-home"></i>
-                                </span>
-                                <span class="hide-menu">Quản lý phòng</span>
-                            </a>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Facility" asp-action="ListFacility" aria-expanded="false">
@@ -295,9 +306,26 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa-regular fa-envelope"></i>
+                                </span>
+                                <span class="hide-menu"> Danh sách báo cáo</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-bar-chart"></i>
+                                </span>
+                                <span class="hide-menu"> Thống kê phòng</span>
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="hide-menu">Danh sách yêu cầu</span>
+                            </a>
+                        </li>
                     </ul>
-
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -362,6 +390,7 @@
                         <div class="form-group ">
                             <label for="Name">Tên Tòa Nhà</label>
                             <input type="text" class="form-control" id="Name" name="Name" required />
+                            <span id="buildingNameError" class="error-message" style="color: red; display: none;">Tên tòa nhà bị trùng.Vui lòng nhập lại!</span>
                         </div>
                         <div class="form-group ">
                             <label for="TotalFloors">Số Tầng</label>
@@ -375,19 +404,15 @@
                             <span id="numberOfRoomsError" class="error-message" style="color: red; display: none;">Số phòng phải là số dương và không vượt quá 500.</span>
                         </div>
                         <div class="form-group">
-                            <label for="Distance">Khoảng cách</label>
-                            <input type="number" class="form-control" id="Distance" name="Distance" required />
+                            <label for="Distance">Khoảng cách(km)</label>
+                            <input type="number" class="form-control" id="Distance" name="Distance" required step="0.1" />
                             <span id="distanceError" class="error-message" style="color: red; display: none;">Khoảng cách phải là một số dương.</span>
                         </div>
 
                         <div class="form-group">
                             <label for="ProvinceId">Tỉnh</label>
-                            <select class="form-control" id="ProvinceId" name="ProvinceName" required>
-                                <option value="">Chọn Tỉnh/Thành phố</option>
-                                @foreach (var province in ViewBag.Provinces)
-                                {
-                                    <option value="@province.Name">@province.Name</option>
-                                }
+                            <select id="ProvinceId" name="ProvinceId" class="form-control">
+                                <option value="">Chọn Tỉnh</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -402,13 +427,13 @@
                                 <option value="">Chọn Xã</option>
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label for="BuildingStatus">Trạng Thái</label>
                             <select class="form-control" id="BuildingStatus" name="BuildingStatus" required>
-                                @foreach (var status in ViewBag.BuildingStatuses)
-                                {
-                                    <option value="@status.Name">@status.Name</option>
-                                }
+                                <option value="Hoạt Động">Hoạt Động</option>
+                                <option value="Hủy hoạt động">Hủy hoạt động</option>
+                                <option value="Sửa chữa">Sửa chữa</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -444,25 +469,66 @@
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
                 <script>
 
-                    const token = localStorage.getItem("token");
-                    if (token == 1 || !token) {
-                        window.location.href = "/Auth/Login";
-                    }
-                    const tokenParts = token.split('.');
-                    const payload = JSON.parse(atob(tokenParts[1]));
+                    function getProvinces() {
+                        const url = 'https://localhost:7056/api/Building/GetProvinces';
 
-                    if (payload.role !== "Landlord") {
-                        window.location.href = "/Auth/Login";
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            success: function (data) {
+                                // Clear and populate the Province dropdown
+                                $('#ProvinceId').empty();
+                                $('#ProvinceId').append('<option value="">Chọn Tỉnh</option>'); // Default option
+                                $.each(data, function (index, province) {
+                                    $('#ProvinceId').append('<option value="' + province.name + '">' + province.name + '</option>');
+                                });
+                            },
+                            error: function () {
+                                alert('Có lỗi xảy ra khi lấy danh sách tỉnh.');
+                            }
+                        });
                     }
-
-                    function logout() {
-                        localStorage.setItem("token", 1);
-                        console.log("Token set to 1 on logout.");
-                    }
-
                     $(document).ready(function () {
+                        getProvinces();
+                        // Validate Building Name
+                        $('#Name').on('blur', function () {
+                            const buildingName = $(this).val().trim();
+                            const token = getCookie('AuthToken');
+
+                            // Extract UserId from the token
+                            const userId = getUserIdFromToken(token);
+                            if (!userId) {
+                                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                                return;
+                            }
+
+                            if (buildingName) {
+                                const url = `https://localhost:7056/api/Building/CheckBuildingName/${userId}/${encodeURIComponent(buildingName)}`;
+                                $.ajax({
+                                    url: url,
+                                    type: 'GET',
+                                    success: function (response) {
+                                        $('#buildingNameError').text(''); // Clear previous error
+                                    },
+                                    error: function (xhr) {
+                                        if (xhr.status === 409) {
+                                            // Conflict: Name already exists
+                                            $('#buildingNameError').text(xhr.responseJSON.message).css('color', 'red');
+                                        } else {
+                                            $('#buildingNameError').text('Có lỗi xảy ra khi kiểm tra tên tòa nhà.').css('color', 'red');
+                                        }
+                                    }
+                                });
+                            } else {
+                                $('#buildingNameError').text('Tên tòa nhà không được để trống.').css('color', 'red');
+                            }
+                        });
+
+                       
+
                         // Province to District Fetch
                         $('#ProvinceId').change(function () {
                             var provinceName = encodeURIComponent($(this).val());
@@ -488,6 +554,7 @@
                                 $('#WardId').empty().append('<option value="">Chọn Xã</option>');
                             }
                         });
+
 
                         // District to Ward Fetch
                         $('#DistrictId').change(function () {
@@ -552,12 +619,16 @@
                             }
 
                             // Get UserId from Token
-                            var userId = getUserIdFromToken();
+                            const token = getCookie('AuthToken');
+                            if (!token) {
+                                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                                return;
+                            }
+                            var userId = getUserIdFromToken(token);
                             if (!userId) {
                                 $('#userIdError').show(); // Show error if UserId is missing
                                 return;
                             }
-                            console.log(userId);
 
                             // Prepare Data
                             var buildingData = {
@@ -576,7 +647,7 @@
 
                             // Send Data to API
                             $.ajax({
-                                url: 'https://localhost:7056/api/Building/AddBuilding',
+                                url: 'https://localhost:7056/api/Building/AddBuildingbyId',
                                 type: 'POST',
                                 contentType: 'application/json',
                                 data: JSON.stringify(buildingData),
@@ -591,46 +662,41 @@
                         });
 
                         // Utility Function: Extract UserId from Token
-                        function getUserIdFromToken() {
-                            const token = localStorage.getItem("token");
-
-                            if (token) {
-                                try {
-                                    const tokenParts = token.split('.');
-                                    const payload = JSON.parse(atob(tokenParts[1]));
-
-                                    return payload.UserId;
-                                } catch (e) {
-                                    console.error('Token parsing error:', e);
-                                }
+                        function getUserIdFromToken(token) {
+                            try {
+                                const tokenParts = token.split('.');
+                                const payload = JSON.parse(atob(tokenParts[1]));
+                                return payload.UserId;
+                            } catch (error) {
+                                console.error("Không mã hóa đc token:", error);
+                                return null;
                             }
-                            return null;
                         }
-
                     });
 
-                    // Lấy các phần tử DOM
+                    // Popup Handling
                     const openPopup = document.getElementById('openPopup');
                     const closePopup = document.getElementById('closePopup');
                     const popupOverlay = document.getElementById('popupOverlay');
 
-                    // Hiển thị popup khi bấm vào link
+                    // Show popup on click
                     openPopup.addEventListener('click', () => {
                         popupOverlay.style.display = 'block';
                     });
 
-                    // Đóng popup khi bấm vào nút "Đóng"
+                    // Close popup when clicking the close button
                     closePopup.addEventListener('click', () => {
                         popupOverlay.style.display = 'none';
                     });
 
-                    // Đóng popup khi bấm ra ngoài vùng nội dung
+                    // Close popup when clicking outside the popup content
                     popupOverlay.addEventListener('click', (event) => {
                         if (event.target === popupOverlay) {
                             popupOverlay.style.display = 'none';
                         }
                     });
                 </script>
+
 
             </div>
 

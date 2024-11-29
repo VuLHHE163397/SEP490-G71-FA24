@@ -109,7 +109,49 @@
 
     </style>
 </head>
+@* <script>
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+        window.location.href = "/Auth/Login";
+    }
+    const tokenParts = token.split('.');
+    const payload = JSON.parse(atob(tokenParts[1]));
+    console.log('pay', payload);
+    if (payload.Roles !== "Admin") {
+        window.location.href = "/Auth/Login";
+    }
+
+    function logout() {
+        sessionStorage.removeItem("token");
+        window.location.href = "/Auth/Login";
+    }
+</script>
+ *@
 <body>
+
+    <script>
+        function getCookie(name) {
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        }
+
+        const token = getCookie('AuthToken');
+        if (!token) {
+            console.error('Token không tìm thấy trong cookie.');
+        }
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        if (payload.Roles !== "Admin") {
+            window.location.href = "/Auth/Login";
+        }
+
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
+            window.location.href = "/Auth/Login";
+        }
+
+    </script>
+
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -138,15 +180,15 @@
                                 <span class="hide-menu">Quản lí người dùng</span>
                             </a>
                         </li>
-                        
-                        
-                        
-                        
 
-                       
-                       
-                       
-                        
+
+
+
+
+
+
+
+
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -255,22 +297,15 @@
                         </div>
                     }
 
+                    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+                    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+                    <script src="~/js/sidebarmenu.js"></script>
+                    <script src="~/js/app.min.js"></script>
+                    <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
+                    <script src="~/lib/simplebar/dist/simplebar.js"></script>
+                    <script src="~/js/dashboard.js"></script>
                     <script>
-                        const token = localStorage.getItem("token");
-                        if (token == 1 || !token) {
-                            window.location.href = "/Auth/Login";
-                        }
-                        const tokenParts = token.split('.');
-                        const payload = JSON.parse(atob(tokenParts[1]));
 
-                        if (payload.role !== "Admin") {
-                            window.location.href = "/Auth/Login";
-                        }
-
-                        function logout() {
-                            localStorage.setItem("token", 1);
-                            console.log("Token set to 1 on logout.");
-                        }
 
                         // JavaScript function để lọc bảng theo từ khóa tìm kiếm
                         function filterTable() {
@@ -314,10 +349,10 @@
 
                                         // Cập nhật lại màu và trạng thái của các button
                                         statusButtonContainer.innerHTML = `
-                                                        <button onclick="changeStatus(${userId}, 1)" class="status-button ${newStatusId === 1 ? "active" : ""}">Active</button>
-                                                        <button onclick="changeStatus(${userId}, 2)" class="status-button ${newStatusId === 2 ? "deactive" : ""}">Deactive</button>
-                                                        <button onclick="changeStatus(${userId}, 3)" class="status-button ${newStatusId === 3 ? "banned" : ""}">Banned</button>
-                                                    `;
+                                                                                <button onclick="changeStatus(${userId}, 1)" class="status-button ${newStatusId === 1 ? "active" : ""}">Active</button>
+                                                                                <button onclick="changeStatus(${userId}, 2)" class="status-button ${newStatusId === 2 ? "deactive" : ""}">Deactive</button>
+                                                                                <button onclick="changeStatus(${userId}, 3)" class="status-button ${newStatusId === 3 ? "banned" : ""}">Banned</button>
+                                                                            `;
                                     } else {
                                         alert('Có lỗi xảy ra: ' + result.message);
                                     }
