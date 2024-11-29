@@ -94,8 +94,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Statistic\\ViewStatistic.cshtml",
               "ViewState": "AQIAABIAAAAAAAAAAAAAAHYAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T12:44:22.143Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T12:44:22.143Z"
             },
             {
               "$type": "Document",
@@ -120,8 +119,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Report\\ReportDetail.cshtml",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T12:41:52.456Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T12:41:52.456Z"
             },
             {
               "$type": "Document",
@@ -133,8 +131,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Report\\ListReport.cshtml",
               "ViewState": "AQIAAPAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T12:41:35.264Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T12:41:35.264Z"
             },
             {
               "$type": "Document",
@@ -146,8 +143,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Facility\\ListFacility.cshtml",
               "ViewState": "AQIAALEAAAAAAAAAAAAAANUAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T12:40:24.312Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T12:40:24.312Z"
             },
             {
               "$type": "Document",
@@ -159,8 +155,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Facility\\EditFacility.cshtml",
               "ViewState": "AQIAAG0AAAAAAAAAAAAAAJEAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T12:40:12.225Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T12:40:12.225Z"
             },
             {
               "$type": "Document",
@@ -172,8 +167,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Facility\\AddFacility.cshtml",
               "ViewState": "AQIAAGwAAAAAAAAAAAAAAJAAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T12:39:56.865Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T12:39:56.865Z"
             },
             {
               "$type": "Document",
@@ -185,8 +179,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Service\\EditService.cshtml",
               "ViewState": "AQIAAG4AAAAAAAAAAAAAAJIAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T12:38:49.129Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T12:38:49.129Z"
             },
             {
               "$type": "Document",
@@ -198,8 +191,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Service\\AddService.cshtml",
               "ViewState": "AQIAAGwAAAAAAAAAAAAAAJAAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T12:38:31.513Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T12:38:31.513Z"
             },
             {
               "$type": "Document",
@@ -211,8 +203,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Building\\EditBuilding.cshtml",
               "ViewState": "AQIAAAIBAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T12:38:24.554Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T12:38:24.554Z"
             },
             {
               "$type": "Document",
@@ -224,8 +215,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Service\\ListService.cshtml",
               "ViewState": "AQIAALIAAAAAAAAAAAAAANYAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T07:30:36.647Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T07:30:36.647Z"
             },
             {
               "$type": "Document",
@@ -237,8 +227,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Service\\ServiceRecord.cshtml",
               "ViewState": "AQIAAK8AAAAAAAAAAAAAANMAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T07:29:39.176Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T07:29:39.176Z"
             },
             {
               "$type": "Document",
@@ -250,8 +239,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Service\\ServicesBills.cshtml",
               "ViewState": "AQIAAK8AAAAAAAAAAAAAANMAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T08:49:52.96Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T08:49:52.96Z"
             },
             {
               "$type": "Document",
@@ -263,8 +251,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Building\\ListBuilding.cshtml",
               "ViewState": "AQIAAN8AAAAAAAAAAAAAAPoAAAAdAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T12:38:07.13Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T12:38:07.13Z"
             },
             {
               "$type": "Document",
@@ -276,8 +263,7 @@
               "RelativeToolTip": "RMS-Client\\appsettings.json",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAABeAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-11-28T12:33:34.786Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T12:33:34.786Z"
             },
             {
               "$type": "Document",
@@ -289,8 +275,7 @@
               "RelativeToolTip": "RMS_API\\appsettings.json",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAABeAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-11-28T12:33:06.809Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T12:33:06.809Z"
             },
             {
               "$type": "Document",
@@ -302,8 +287,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Service\\ServiceReport.cshtml",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAACwAAAAUAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T07:36:33.804Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T07:36:33.804Z"
             },
             {
               "$type": "Document",
