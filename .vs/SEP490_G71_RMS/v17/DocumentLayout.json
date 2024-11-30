@@ -86,32 +86,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 3,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "_ViewStart.cshtml",
-              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\_ViewStart.cshtml",
-              "RelativeDocumentMoniker": "RMS-Client\\Views\\_ViewStart.cshtml",
-              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\_ViewStart.cshtml",
-              "RelativeToolTip": "RMS-Client\\Views\\_ViewStart.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-29T11:26:38.003Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "_ViewImports.cshtml",
-              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\_ViewImports.cshtml",
-              "RelativeDocumentMoniker": "RMS-Client\\Views\\_ViewImports.cshtml",
-              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\_ViewImports.cshtml",
-              "RelativeToolTip": "RMS-Client\\Views\\_ViewImports.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-29T11:26:36.499Z"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 2,
@@ -150,6 +126,43 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FacilityDTO.cs",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\DTOs\\FacilityDTO.cs",
+              "RelativeDocumentMoniker": "RMS_API\\DTOs\\FacilityDTO.cs",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\DTOs\\FacilityDTO.cs",
+              "RelativeToolTip": "RMS_API\\DTOs\\FacilityDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAHAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-29T11:16:15.821Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "_ViewImports.cshtml",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\_ViewImports.cshtml",
+              "RelativeDocumentMoniker": "RMS-Client\\Views\\_ViewImports.cshtml",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\_ViewImports.cshtml",
+              "RelativeToolTip": "RMS-Client\\Views\\_ViewImports.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-29T11:26:36.499Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "_ViewStart.cshtml",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\_ViewStart.cshtml",
+              "RelativeDocumentMoniker": "RMS-Client\\Views\\_ViewStart.cshtml",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\_ViewStart.cshtml",
+              "RelativeToolTip": "RMS-Client\\Views\\_ViewStart.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-29T11:26:38.003Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
               "Title": "ListService.cshtml",
               "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\ListService.cshtml",
@@ -158,21 +171,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\Service\\ListService.cshtml",
               "ViewState": "AQIAAGwBAAAAAAAAAAAAALMAAAAdAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-29T11:25:55.508Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "FacilityDTO.cs",
-              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\DTOs\\FacilityDTO.cs",
-              "RelativeDocumentMoniker": "RMS_API\\DTOs\\FacilityDTO.cs",
-              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\DTOs\\FacilityDTO.cs",
-              "RelativeToolTip": "RMS_API\\DTOs\\FacilityDTO.cs",
-              "ViewState": "AQIAAAEAAAAAAAAAAAAswAwAAAAHAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-29T11:16:15.821Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-29T11:25:55.508Z"
             },
             {
               "$type": "Document",
