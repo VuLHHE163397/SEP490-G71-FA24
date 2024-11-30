@@ -109,15 +109,7 @@
                         </li>
                     </ul>
 
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
-                            <span>
-                                <i class="fa fa-paper-plane"></i>
-                            </span>
-                            <span class="hide-menu">Danh sách yêu cầu</span>
-                        </a>
-                    </li>
-                    </ul>
+                   
                 </nav>
             </div>
         </aside>
@@ -234,7 +226,7 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script>
         const apiBaseUrl = "https://localhost:7056/api"; // Đặt URL gốc của API
-        const token = localStorage.getItem("token"); // Lấy token từ localStorage
+        const token = getCookie('AuthToken'); // Lấy token từ localStorage
         // Gọi API để lấy dữ liệu
         async function fetchRoomStats() {
             try {
