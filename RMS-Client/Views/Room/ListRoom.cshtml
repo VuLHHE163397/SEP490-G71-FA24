@@ -325,6 +325,7 @@
             <table class="table table-striped mt-4">
                 <thead>
                     <tr>
+                        <th>STT</th>
                         <th>Tên Phòng</th>
                         <th>Diện tích</th>
                         <th>Giá phòng</th>
@@ -337,10 +338,11 @@
                 <tbody>
                     @if (Model != null && Model.Any())
                     {
-                        foreach (var room in Model)
+                        for (var i = 0; i < Model.Count(); i++) // Dùng for thay vì foreach
                         {
+                            var room = Model.ElementAt(i);
                             <tr>
-                                <td>@room.RoomNumber</td>
+                                <td>@(i + 1)</td> <!-- Hiển thị số thứ tự -->
                                 <td>@($"{room.Area} m²")</td>
                                 <td>@string.Format("{0:N0} VNĐ", room.Price)</td>
                                 <td>
