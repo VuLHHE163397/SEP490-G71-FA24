@@ -314,7 +314,14 @@
                                 <span class="hide-menu"> Danh sách báo cáo</span>
                             </a>
                         </li>
-                        
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-bar-chart"></i>
+                                </span>
+                                <span class="hide-menu"> Thống kê phòng</span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->
@@ -443,14 +450,14 @@
                     <!-- Popup -->
                     <div class="popup-overlay" id="popupOverlay">
                         <div class="popup-content">
-                            <h2>Hướng dẫn lấy link Embed Google Map</h2>
+                            <h2>Hướng dẫn lấy link ghim Google Map</h2>
                             <p>1. Mở Google Maps trên trình duyệt hoặc ứng dụng</p>
                             <img src="~/images/1.jpg" alt="Hình ảnh hướng dẫn 1" style="width: 100%; margin: 10px 0;">
                             <p>2. Tìm địa điểm mà bạn muốn lấy liên kết.</p>
                             <img src="~/images/2.jpg" alt="Hình ảnh hướng dẫn 2" style="width: 100%; margin: 10px 0;">
                             <p>3. Nhấn nút "Chia sẻ" và chọn "Nhúng bản đồ".</p>
                             <img src="~/images/3.jpg" alt="Hình ảnh hướng dẫn 3" style="width: 100%; margin: 10px 0;">
-                            <p>4. Sao chép đoạn mã hoặc liên kết nhúng và dán vào ô nhập link embed map phía trên.</p>
+                            <p>4. Sao chép đoạn mã hoặc liên kết nhúng và dán vào ô nhập link ghim google map phía trên.</p>
                             <button id="closePopup">Đóng</button>
                         </div>
                     </div>

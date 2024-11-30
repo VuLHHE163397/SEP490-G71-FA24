@@ -166,27 +166,7 @@
             document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
             window.location.href = "/Auth/Login";
         }
-
     </script>
-
-        const token = getCookie('AuthToken');
-        if (!token) {
-            console.error('Token không tìm thấy trong cookie.');
-        }
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-        if (payload.Roles !== "Landlord") {
-            window.location.href = "/Auth/login";
-        }
-
-        function logout() {
-            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
-            window.location.href = "/Auth/Login";
-        }
-
-    </script>
-
-
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -283,9 +263,6 @@
                                 <span class="hide-menu"> Thống kê phòng</span>
                             </a>
                         </li>
-
-                        
-                        
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->
@@ -352,7 +329,7 @@
 
                         <div class="form-group">
                             <label for="Name">Tên Tòa Nhà</label>
-                            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required readonly/>
+                            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required readonly />
                         </div>
                         <div class="form-group">
                             <label for="Distance">Khoảng cách(Km)</label>
@@ -454,34 +431,34 @@
                         // Update Sidebar
                         buildings.forEach(building => {
                             sidebarContainer.append(`
-                                        <li class="sidebar-subitem">
-                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                            </a>
-                                        </li>
-                                    `);
+                                                        <li class="sidebar-subitem">
+                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                            </a>
+                                                        </li>
+                                                    `);
                         });
 
                         // Update Table
                         buildings.forEach((building, index) => {
                             tableContainer.append(`
-                                        <tr>
-                                            <td>${index + 1}</td> <!-- Số thứ tự -->
-                                            <td>${building.name}</td>
-                                            <td>${building.totalFloors}</td>
-                                            <td>${building.numberOfRooms}</td>
-                                            <td>${building.addressDetails}</td>
-                                            <td>${building.buildingStatus}</td>
-                                            <td>
-                                                <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
-                                                    <i class="ti ti-eye"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    `);
+                                                        <tr>
+                                                            <td>${index + 1}</td> <!-- Số thứ tự -->
+                                                            <td>${building.name}</td>
+                                                            <td>${building.totalFloors}</td>
+                                                            <td>${building.numberOfRooms}</td>
+                                                            <td>${building.addressDetails}</td>
+                                                            <td>${building.buildingStatus}</td>
+                                                            <td>
+                                                                <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </a>
+                                                                <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
+                                                                    <i class="ti ti-eye"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    `);
                         });
                     } else {
                         displayNoBuildingsMessage();
@@ -495,16 +472,16 @@
                     // Notify in Sidebar
                     sidebarContainer.empty();
                     sidebarContainer.append(`
-                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                            `);
+                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                            `);
 
                     // Notify in Table
                     tableContainer.empty();
                     tableContainer.append(`
-                                                <tr>
-                                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
-                                                </tr>
-                                            `);
+                                                                <tr>
+                                                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
+                                                                </tr>
+                                                            `);
                 }
 
             </script>

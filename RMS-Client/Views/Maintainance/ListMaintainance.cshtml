@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RMS</title>
-    <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="~/images/logos/logo.jpg" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
@@ -260,13 +260,87 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script>
         const apiBaseUrl = "https://localhost:7056/api"; // Đặt URL gốc của API
-        const token = localStorage.getItem("token"); // Lấy token từ localStorage
+        $(document).ready(function () {
+            loadBuilding();
+        })
+       
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+            }
+        }
 
-        if (!token) {
-            console.error("Authorization token is missing!");
-            alert("Bạn cần đăng nhập trước khi thực hiện chức năng này!");
-        } 
+        function loadBuilding() {
+            const token = getCookie('AuthToken');
+            if (!token) {
+                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
+                return;
+            }
+            var userId = getUserIdFromToken(token);
+            $.ajax({
+                url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                },
+                success: function (response) {
+                    renderBuilding(response);
+                    displayBuildings(response); //Thêm cái này nữa
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+        }
 
+        function renderBuilding(data) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var buildingId = urlParams.get('buildingId');
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            for (var item of data) {
+                html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
+            }
+            $("#buildings").html(html);
+        }
+
+        function displayBuildings(buildings) {
+            const sidebarContainer = $('.sidebar-submenu');
+
+            // Clear previous content
+            sidebarContainer.empty();
+
+            if (buildings && buildings.length > 0) {
+                // Update Sidebar
+                buildings.forEach(building => {
+                    sidebarContainer.append(`
+                <li class="sidebar-subitem">
+                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                    </a>
+                </li>
+            `);
+                });
+            } else {
+                displayNoBuildingsMessage();
+            }
+        }
+        function displayNoBuildingsMessage() {
+            const sidebarContainer = $('.sidebar-submenu');
+            const tableContainer = $('#buildingsContainer');
+
+            // Notify in Sidebar
+            sidebarContainer.empty();
+            sidebarContainer.append(`
+                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+            `);
+        }
         async function fetchData(status, tableId) {
             const tableBody = document.getElementById(tableId);
             tableBody.innerHTML = `<tr><td colspan="8" class="text-center">Đang tải dữ liệu...</td></tr>`; // Hiển thị trạng thái chờ
@@ -341,8 +415,7 @@
                 tableBody.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Không thể tải dữ liệu. Vui lòng thử lại sau!</td></tr>`;
             }
         }
-
-
+       
         // Hàm thay đổi trạng thái maintenance request
         async function changeStatus(id) {
             try {
@@ -357,7 +430,7 @@
                     throw new Error(`Lỗi khi thay đổi trạng thái: ${response.status}`);
                 }
 
-                alert("Status changed successfully!");
+                alert("Chuyển trạng thái thành công!");
                 fetchData(1, "status1-table"); // Làm mới danh sách trạng thái 1
                 fetchData(0, "status0-table"); // Làm mới danh sách trạng thái 0
             } catch (error) {
