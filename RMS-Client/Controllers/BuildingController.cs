@@ -83,8 +83,7 @@ namespace RMS_Client.Controllers
                 {
                     // If unsuccessful, add a model error and return the view
                     ModelState.AddModelError(string.Empty, "Unable to add building.");
-                    ViewBag.Provinces = _context.Provinces.ToList();
-                    ViewBag.BuildingStatuses = _context.BuildingStatuses.ToList();
+                    
                     return View(buildingDTO);
                 }
             }
@@ -92,8 +91,6 @@ namespace RMS_Client.Controllers
             {
                 // Handle any errors during the API call or processing
                 ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
-                ViewBag.Provinces = _context.Provinces.ToList();
-                ViewBag.BuildingStatuses = _context.BuildingStatuses.ToList();
                 return View(buildingDTO);
             }
         }

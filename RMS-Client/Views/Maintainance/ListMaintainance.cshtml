@@ -260,12 +260,19 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script>
         const apiBaseUrl = "https://localhost:7056/api"; // Đặt URL gốc của API
-        const token = localStorage.getItem("token"); // Lấy token từ localStorage
+
+        function getCookie(name) {
+            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        }
+
+        const token = getCookie("AuthToken"); // Lấy token từ cookie
 
         if (!token) {
             console.error("Authorization token is missing!");
             alert("Bạn cần đăng nhập trước khi thực hiện chức năng này!");
-        } 
+            window.location.href = "/Auth/login"; // Redirect to login if token is missing
+        }
 
         async function fetchData(status, tableId) {
             const tableBody = document.getElementById(tableId);
@@ -279,71 +286,57 @@
                     }
                 });
 
-                // Kiểm tra phản hồi từ server
                 if (!response.ok) {
-                    // Kiểm tra nếu lỗi là 404
                     if (response.status === 404) {
                         console.warn(`API trả về 404 cho status = ${status}.`);
                         tableBody.innerHTML = `<tr><td colspan="8" class="text-center">Không có yêu cầu bảo trì nào.</td></tr>`;
                         return;
                     }
-                    // Nếu lỗi không phải 404, ném lỗi để xử lý trong catch
                     throw new Error(`Lỗi khi gọi API: ${response.status}`);
                 }
-
 
                 const data = await response.json();
                 console.log(`Data for status ${status}:`, data);
 
-                // Xóa trạng thái chờ trước khi hiển thị dữ liệu
                 tableBody.innerHTML = "";
 
                 if (data.length === 0) {
-                    // Nếu không có dữ liệu, hiển thị hàng thông báo trống
                     tableBody.innerHTML = `<tr><td colspan="8" class="text-center">Không có yêu cầu bảo trì nào.</td></tr>`;
                 } else {
-                    // Nếu có dữ liệu, hiển thị từng hàng
-                    let index = 0; // Biến đếm số thứ tự
+                    let index = 0;
 
                     data.forEach(item => {
-                        index++; // Tăng biến đếm trước mỗi lần render một dòng
-
-                        // Kiểm tra trạng thái để tùy chỉnh nút
+                        index++;
                         const buttonHtml =
                             item.status === "Chưa xử lý"
                                 ? `<button onclick="changeStatus(${item.id})" class="btn btn-success">
-                           <i class="fa fa-check"></i> 
-                       </button>`
+                                        <i class="fa fa-check"></i>
+                                      </button>`
                                 : `<button onclick="changeStatus(${item.id})" class="btn btn-danger">
-                           <i class="fa fa-undo"></i> 
-                       </button>`;
+                                        <i class="fa fa-undo"></i>
+                                      </button>`;
 
-                                const row = `<tr>
-                         <td>${index}</td> <!-- Số thứ tự -->
-                         <td>${item.maintenanceDescription}</td>
-                         <td>${new Date(item.requestDate).toLocaleDateString()}</td>
-                         <td>${item.solveDate ? new Date(item.solveDate).toLocaleDateString() : ""}</td>
-                         <td>${item.roomNumber}</td>
-                         <td>${item.buildingName}</td>
-                         <td>${item.address}</td>
-                         <td>${item.status}</td>
-                         <td>${buttonHtml}</td>
-                         </tr>`;
+                        const row = `<tr>
+                                <td>${index}</td>
+                                <td>${item.maintenanceDescription}</td>
+                                <td>${new Date(item.requestDate).toLocaleDateString()}</td>
+                                <td>${item.solveDate ? new Date(item.solveDate).toLocaleDateString() : ""}</td>
+                                <td>${item.roomNumber}</td>
+                                <td>${item.buildingName}</td>
+                                <td>${item.address}</td>
+                                <td>${item.status}</td>
+                                <td>${buttonHtml}</td>
+                            </tr>`;
 
                         tableBody.innerHTML += row;
                     });
-
-
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
-                // Hiển thị lỗi khi xảy ra lỗi thật sự (ví dụ: server không phản hồi)
                 tableBody.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Không thể tải dữ liệu. Vui lòng thử lại sau!</td></tr>`;
             }
         }
 
-
-        // Hàm thay đổi trạng thái maintenance request
         async function changeStatus(id) {
             try {
                 const response = await fetch(`${apiBaseUrl}/MaintainanceRequest/ChangeMaintainace/${id}`, {
@@ -358,20 +351,20 @@
                 }
 
                 alert("Status changed successfully!");
-                fetchData(1, "status1-table"); // Làm mới danh sách trạng thái 1
-                fetchData(0, "status0-table"); // Làm mới danh sách trạng thái 0
+                fetchData(1, "status1-table");
+                fetchData(0, "status0-table");
             } catch (error) {
                 console.error("Error changing status:", error);
                 alert("Không thể thay đổi trạng thái, vui lòng thử lại!");
             }
         }
 
-        // Gọi API khi trang được tải
         if (token) {
             fetchData(1, "status1-table");
             fetchData(0, "status0-table");
         }
     </script>
+
 </body>
 
 </html>

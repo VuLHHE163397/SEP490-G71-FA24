@@ -248,7 +248,7 @@
                             <span class="hide-menu">Trang chủ</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" aria-expanded="false" onclick="toggleSubmenu(event)" asp-controller="Building" asp-action="ListBuilding">
+                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding">
                                 <span><i class="ti ti-layout-dashboard"></i></span>
                                 <span class="hide-menu">Trang chủ</span>
                             </a>
@@ -264,22 +264,7 @@
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
-                                @*  @if (Model != null && Model.Any())
-                                {
-                                foreach (var building in Model)
-                                {
-                                <li class="sidebar-subitem">
-                                <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@building.Id" class="sidebar-sublink">
-                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
-                                @building.Name
-                                </a>
-                                </li>
-                                }
-                                }
-                                else
-                                {
-                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                } *@
+                                
                             </ul>
                         </li>
                         <li class="sidebar-item">
@@ -320,9 +305,6 @@
                                     <i class="fa fa-bar-chart"></i>
                                 </span>
                                 <span class="hide-menu"> Thống kê phòng</span>
-                                    <i class="fa fa-paper-plane"></i>
-                                </span>
-                                <span class="hide-menu">Danh sách yêu cầu</span>
                             </a>
                         </li>
                     </ul>
@@ -387,28 +369,26 @@
                     <h1>@ViewData["Title"]</h1>
 
                     <form id="addBuildingForm">
-                        <div class="form-group ">
+                        <div class="form-group">
                             <label for="Name">Tên Tòa Nhà</label>
                             <input type="text" class="form-control" id="Name" name="Name" required />
-                            <span id="buildingNameError" class="error-message" style="color: red; display: none;">Tên tòa nhà bị trùng.Vui lòng nhập lại!</span>
+                            <span id="buildingNameError" class="error-message" style="color: red; display: none;">Tên tòa nhà bị trùng. Vui lòng nhập lại!</span>
                         </div>
-                        <div class="form-group ">
+                        <div class="form-group">
                             <label for="TotalFloors">Số Tầng</label>
                             <input type="number" class="form-control" id="TotalFloors" name="TotalFloors" required />
                             <span id="totalFloorsError" class="error-message" style="color: red; display: none;">Số tầng phải là số dương và không vượt quá 100.</span>
                         </div>
-
                         <div class="form-group">
                             <label for="NumberOfRooms">Số Phòng</label>
                             <input type="number" class="form-control" id="NumberOfRooms" name="NumberOfRooms" required />
                             <span id="numberOfRoomsError" class="error-message" style="color: red; display: none;">Số phòng phải là số dương và không vượt quá 500.</span>
                         </div>
                         <div class="form-group">
-                            <label for="Distance">Khoảng cách(km)</label>
+                            <label for="Distance">Khoảng cách (km)</label>
                             <input type="number" class="form-control" id="Distance" name="Distance" required step="0.1" />
                             <span id="distanceError" class="error-message" style="color: red; display: none;">Khoảng cách phải là một số dương.</span>
                         </div>
-
                         <div class="form-group">
                             <label for="ProvinceId">Tỉnh</label>
                             <select id="ProvinceId" name="ProvinceId" class="form-control">
@@ -427,13 +407,12 @@
                                 <option value="">Chọn Xã</option>
                             </select>
                         </div>
-
                         <div class="form-group">
                             <label for="BuildingStatus">Trạng Thái</label>
                             <select class="form-control" id="BuildingStatus" name="BuildingStatus" required>
                                 <option value="Hoạt Động">Hoạt Động</option>
-                                <option value="Hủy hoạt động">Hủy hoạt động</option>
-                                <option value="Sửa chữa">Sửa chữa</option>
+                                <option value="Hủy Hoạt Động">Hủy Hoạt Động</option>
+                                <option value="Sửa Chữa">Sửa Chữa</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -443,34 +422,423 @@
                         <div class="form-group">
                             <label for="LinkEmbedMap">Link Map</label>
                             <input type="text" class="form-control" id="LinkEmbedMap" name="LinkEmbedMap" required />
-                            <a style="color:blue; font-style: italic;font-weight:bold" id="openPopup">Cách lấy link Embed Google Map</a>
+                            <a style="color: blue; font-style: italic; font-weight: bold;" id="openPopup">Cách lấy link Embed Google Map</a>
                         </div>
-
-
                         <button type="submit" class="btn btn-primary">Tạo Tòa Nhà</button>
                         <a asp-controller="Building" asp-action="ListBuilding" class="btn btn-secondary">Trở Về</a>
                     </form>
+
                     <!-- Popup -->
-                    <div class="popup-overlay" id="popupOverlay">
+                    <div class="popup-overlay" id="popupOverlay" style="display: none;">
                         <div class="popup-content">
                             <h2>Hướng dẫn lấy link Embed Google Map</h2>
-                            <p>1. Mở Google Maps trên trình duyệt hoặc ứng dụng</p>
-                            <img src="~/images/1.jpg" alt="Hình ảnh hướng dẫn 1" style="width: 100%; margin: 10px 0;">
-                            <p>2. Tìm địa điểm mà bạn muốn lấy liên kết.</p>
-                            <img src="~/images/2.jpg" alt="Hình ảnh hướng dẫn 2" style="width: 100%; margin: 10px 0;">
+                            <p>1. Mở Google Maps trên trình duyệt hoặc ứng dụng.</p>
+                            <img src="~/images/1.jpg" alt="Hướng dẫn 1" style="width: 100%; margin: 10px 0;">
+                            <p>2. Tìm địa điểm bạn muốn lấy liên kết.</p>
+                            <img src="~/images/2.jpg" alt="Hướng dẫn 2" style="width: 100%; margin: 10px 0;">
                             <p>3. Nhấn nút "Chia sẻ" và chọn "Nhúng bản đồ".</p>
-                            <img src="~/images/3.jpg" alt="Hình ảnh hướng dẫn 3" style="width: 100%; margin: 10px 0;">
-                            <p>4. Sao chép đoạn mã hoặc liên kết nhúng và dán vào ô nhập link embed map phía trên.</p>
+                            <img src="~/images/3.jpg" alt="Hướng dẫn 3" style="width: 100%; margin: 10px 0;">
+                            <p>4. Sao chép đoạn mã nhúng và dán vào ô nhập link embed map ở trên.</p>
                             <button id="closePopup">Đóng</button>
                         </div>
                     </div>
-
                 </div>
+            </div>
+
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
                 <script>
+
+
+                // Kiểm tra giá trị nhập vào của các trường ngay khi người dùng gõ
+                document.getElementById('TotalFloors').addEventListener('input', function () {
+                    validateTotalFloors();
+                });
+
+                document.getElementById('NumberOfRooms').addEventListener('input', function () {
+                    validateNumberOfRooms();
+                });
+
+                document.getElementById('Distance').addEventListener('input', function () {
+                    validateDistance();
+                });
+
+                const submitError = document.getElementById('submitError');
+
+
+
+                function validateTotalFloors() {
+                    const floor = document.getElementById('TotalFloors').value;
+                    const totalFloorsError = document.getElementById('totalFloorsError');
+                    if (parseFloat(floor) <= 0) {
+                        totalFloorsError.style.display = 'inline';
+                        document.getElementById('buttonSave').disabled = true;
+                        submitError.style.display = 'inline';
+                    } else {
+                        priceError.style.display = 'none';
+                        document.getElementById('buttonSave').disabled = false;
+                        submitError.style.display = 'none';
+                    }
+                }
+
+                function validateNumberOfRooms() {
+                    const room = document.getElementById('NumberOfRooms').value;
+                    const numberOfRoomsError = document.getElementById('numberOfRoomsError');
+                    if (parseFloat(room) <= 0) {
+                        numberOfRoomsError.style.display = 'inline';
+                        document.getElementById('buttonSave').disabled = true;
+                        submitError.style.display = 'inline';
+                    } else {
+                        priceError.style.display = 'none';
+                        document.getElementById('buttonSave').disabled = false;
+                        submitError.style.display = 'none';
+                    }
+                }
+
+                function validateDistance() {
+                    const distance = document.getElementById('Distance').value;
+                    const distanceError = document.getElementById('distanceError');
+                    if (parseFloat(distance) <= 0) {
+                        distanceError.style.display = 'inline';
+                        buttonSave.disabled = true;
+                        submitError.style.display = 'inline';
+                    } else {
+                        distanceError.style.display = 'none';
+                        buttonSave.disabled = false;
+                        submitError.style.display = 'none';
+                    }
+                }
+
+                document.getElementById('Name').addEventListener('blur', async function () {
+                    const buildingName = this.value.trim();
+
+                    // Get the token from the cookies
+                    const token = getCookie('AuthToken');
+                    if (!token) {
+                        alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                        window.location.href = "/Auth/login"; // Redirect to login page if no token found
+                        return;
+                    }
+
+                    // Decode the token to extract userId
+                    const userId = getUserIdFromToken(token);
+                    if (!userId) {
+                        alert('Không thể lấy thông tin người dùng từ token.');
+                        return;
+                    }
+
+                    // Check if building name is empty
+                    const buildingNameError = document.getElementById('buildingNameError');
+                    const submitError = document.getElementById('submitError');
+                    const buttonSave = document.getElementById('buttonSave');
+
+                    if (buildingName === '') {
+                        buildingNameError.style.display = 'none';
+                        buildingNameError.textContent = ''; // Clear the error message
+                        buttonSave.disabled = false;
+                        submitError.style.display = 'none'; // Hide submit error if empty
+                        return;
+                    }
+
+                    try {
+                        // Send AJAX request to check if the building name exists
+                        const response = await fetch(`/api/Building/CheckBuildingName/${userId}/${encodeURIComponent(buildingName)}`);
+                        const isDuplicate = await response.json(); // Assuming the API returns a boolean value
+
+                        if (isDuplicate) {
+                            buildingNameError.style.display = 'inline';
+                            buildingNameError.textContent = 'Tên tòa nhà đã tồn tại. Vui lòng nhập lại!';
+                            buttonSave.disabled = true; // Disable save button if duplicate
+                            submitError.style.display = 'inline'; // Show submit error
+                        } else {
+                            buildingNameError.style.display = 'none'; // Hide error message if name is unique
+                            buildingNameError.textContent = ''; // Clear error text
+                            buttonSave.disabled = false; // Enable save button
+                            submitError.style.display = 'none'; // Hide submit error if name is unique
+                        }
+                    } catch (error) {
+                        console.error('Error checking building name:', error);
+                    }
+                });
+
+
+                // Helper function to get cookie value by name
+                function getCookie(name) {
+                    const value = `; ${document.cookie}`;
+                    const parts = value.split(`; ${name}=`);
+                    if (parts.length === 2) return parts.pop().split(';').shift();
+                    return null;
+                }
+
+
+                // Kiểm tra khi submit form
+                document.getElementById('addBuildingForm').addEventListener('submit', function (event) {
+                    validateTotalFloors();
+                    validateNumberOfRooms();
+                    validateDistance();
+
+                    // Nếu có lỗi, ngăn form submit
+                    if (document.querySelectorAll('.error-message[style="display: inline;"]').length > 0) {
+                        event.preventDefault();
+                    }
+                });
+
+                $(document).ready(function () {
+
+
+
+                    getProvinces();
+                    // Province to District Fetch
+                    $('#ProvinceId').change(function () {
+                        var provinceName = encodeURIComponent($(this).val());
+                        var url = `https://localhost:7056/api/Building/GetDistrictsByProvince/${provinceName}`;
+
+                        if (provinceName) {
+                            $.ajax({
+                                url: url,
+                                type: 'GET',
+                                success: function (data) {
+                                    $('#DistrictId').empty();
+                                    $('#DistrictId').append('<option value="">Chọn Quận</option>');
+                                    $.each(data, function (index, district) {
+                                        $('#DistrictId').append('<option value="' + district.name + '">' + district.name + '</option>');
+                                    });
+                                },
+                                error: function () {
+                                    alert('Có lỗi xảy ra khi lấy danh sách quận.');
+                                }
+                            });
+                        } else {
+                            $('#DistrictId').empty().append('<option value="">Chọn Quận</option>');
+                            $('#WardId').empty().append('<option value="">Chọn Xã</option>');
+                        }
+                    });
+
+
+                    // District to Ward Fetch
+                    $('#DistrictId').change(function () {
+                        var districtName = encodeURIComponent($(this).val());
+                        var url = `https://localhost:7056/api/Building/GetWardsByDistrict/${districtName}`;
+
+                        if (districtName) {
+                            $.ajax({
+                                url: url,
+                                type: 'GET',
+                                success: function (data) {
+                                    $('#WardId').empty();
+                                    $('#WardId').append('<option value="">Chọn Xã</option>');
+                                    $.each(data, function (index, ward) {
+                                        $('#WardId').append('<option value="' + ward.name + '">' + ward.name + '</option>');
+                                    });
+                                },
+                                error: function () {
+                                    alert('Có lỗi xảy ra khi lấy xã.');
+                                }
+                            });
+                        } else {
+                            $('#WardId').empty().append('<option value="">Chọn Xã</option>');
+                        }
+                    });
+
+                    // Form Submission
+                    $('#addBuildingForm').submit(function (event) {
+                        event.preventDefault(); // Prevent default form submission
+
+                        // Reset previous error messages
+                        $('.error-message').hide();
+
+                        // Validate TotalFloors, NumberOfRooms, and Distance
+                        var totalFloors = parseInt($('#TotalFloors').val(), 10);
+                        var numberOfRooms = parseInt($('#NumberOfRooms').val(), 10);
+                        var distance = parseFloat($('#Distance').val());
+
+                        let formIsValid = true;
+
+                        // Validate TotalFloors
+                        if (isNaN(totalFloors) || totalFloors < 1 || totalFloors > 100) {
+                            $('#totalFloorsError').show(); // Show error below the input field
+                            formIsValid = false;
+                        }
+
+                        // Validate NumberOfRooms
+                        if (isNaN(numberOfRooms) || numberOfRooms < 1 || numberOfRooms > 500) {
+                            $('#numberOfRoomsError').show(); // Show error below the input field
+                            formIsValid = false;
+                        }
+
+                        // Validate Distance
+                        if (isNaN(distance) || distance <= 0) {
+                            $('#distanceError').show(); // Show error below the input field
+                            formIsValid = false;
+                        }
+
+                        // If any validation fails, prevent form submission
+                        if (!formIsValid) {
+                            return;
+                        }
+
+                        // Get UserId from Token
+                        const token = getCookie('AuthToken');
+                        if (!token) {
+                            alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                            return;
+                        }
+                        var userId = getUserIdFromToken(token);
+                        if (!userId) {
+                            $('#userIdError').show(); // Show error if UserId is missing
+                            return;
+                        }
+
+                        // Prepare Data
+                        var buildingData = {
+                            Name: $('#Name').val(),
+                            TotalFloors: totalFloors,
+                            NumberOfRooms: numberOfRooms,
+                            Distance: distance,
+                            ProvinceName: $('#ProvinceId').val(),
+                            DistrictName: $('#DistrictId').val(),
+                            WardName: $('#WardId').val(),
+                            AddressDetails: $('#AddressDetails').val(),
+                            BuildingStatus: $('#BuildingStatus').val(),
+                            LinkEmbedMap: $('#LinkEmbedMap').val(),
+                            UserId: userId // Include UserId in the request
+                        };
+
+                        // Send Data to API
+                        $.ajax({
+                            url: 'https://localhost:7056/api/Building/AddBuildingbyId',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(buildingData),
+                            success: function (response) {
+                                alert('Tòa nhà đã được tạo thành công.');
+                                window.location.href = '/Building/ListBuilding'; // Redirect to the list page
+                            },
+                            error: function (xhr) {
+                                alert('Có lỗi xảy ra: ' + xhr.responseText);
+                            }
+                        });
+                    });
+
+                    // Utility Function: Extract UserId from Token
+                    function getUserIdFromToken(token) {
+                        try {
+                            const tokenParts = token.split('.');
+                            const payload = JSON.parse(atob(tokenParts[1]));
+                            return payload.UserId;
+                        } catch (error) {
+                            console.error("Không mã hóa đc token:", error);
+                            return null;
+                        }
+                    }
+                });
+
+
+
+
+                //---------------------------------------------------------------
+                //Lấy List Building ở Left Side
+                //Lấy UserId
+
+
+
+                    function getUserIdFromToken(token) {
+                        try {
+                            const tokenParts = token.split('.');
+                            const payload = JSON.parse(atob(tokenParts[1]));
+                            return payload.UserId;
+                        } catch (error) {
+                            console.error("Không mã hóa đc token:", error);
+                            return null;
+
+                        }
+                    }
+
+
+
+                    function getListBuilding() {
+                        const token = getCookie('AuthToken');
+                        if (!token) {
+                            alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                            window.location.href = "/Auth/login";
+                            return;
+                        }
+                        var userId = getUserIdFromToken(token);
+
+                        const url = `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`;
+
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            credentials: 'include',
+                            contentType: 'application/json',
+                            // beforeSend: function (xhr) {
+                            //     xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                            // },
+                            xhrFields: {
+                                withCredentials: true // Cho phép gửi cookie
+                            },
+
+                            success: function (response) {
+                                console.log('Buildings fetched successfully:', response);
+                                displayBuildings(response);
+                            },
+
+                            error: function (xhr) {
+                                console.error('Error fetching buildings:', xhr.responseText);
+                                displayNoBuildingsMessage();
+                            }
+                        });
+                    }
+
+                    function displayBuildings(buildings) {
+                        const sidebarContainer = $('.sidebar-submenu');
+                        const tableContainer = $('#buildingsContainer');
+
+                        // Clear previous content
+                        sidebarContainer.empty();
+                        tableContainer.empty();
+
+                        if (buildings && buildings.length > 0) {
+                            // Update Sidebar
+                            buildings.forEach(building => {
+                                sidebarContainer.append(`
+                                            <li class="sidebar-subitem">
+                                                <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                    <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                </a>
+                                            </li>
+                                        `);
+                            });
+
+                            // Update Table
+                            buildings.forEach((building, index) => {
+                                tableContainer.append(`
+                                            <tr>
+                                                <td>${index + 1}</td> <!-- Số thứ tự -->
+                                                <td>${building.name}</td>
+                                                <td>${building.totalFloors}</td>
+                                                <td>${building.numberOfRooms}</td>
+                                                <td>${building.addressDetails}</td>
+                                                <td>${building.buildingStatus}</td>
+                                                <td>
+                                                    <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
+                                                        <i class="ti ti-eye"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        `);
+                            });
+                        } else {
+                            displayNoBuildingsMessage();
+                        }
+                    }
+
 
                     function getProvinces() {
                         const url = 'https://localhost:7056/api/Building/GetProvinces';
@@ -491,189 +859,12 @@
                             }
                         });
                     }
-                    $(document).ready(function () {
-                        getProvinces();
-                        // Validate Building Name
-                        $('#Name').on('blur', function () {
-                            const buildingName = $(this).val().trim();
-                            const token = getCookie('AuthToken');
-
-                            // Extract UserId from the token
-                            const userId = getUserIdFromToken(token);
-                            if (!userId) {
-                                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
-                                return;
-                            }
-
-                            if (buildingName) {
-                                const url = `https://localhost:7056/api/Building/CheckBuildingName/${userId}/${encodeURIComponent(buildingName)}`;
-                                $.ajax({
-                                    url: url,
-                                    type: 'GET',
-                                    success: function (response) {
-                                        $('#buildingNameError').text(''); // Clear previous error
-                                    },
-                                    error: function (xhr) {
-                                        if (xhr.status === 409) {
-                                            // Conflict: Name already exists
-                                            $('#buildingNameError').text(xhr.responseJSON.message).css('color', 'red');
-                                        } else {
-                                            $('#buildingNameError').text('Có lỗi xảy ra khi kiểm tra tên tòa nhà.').css('color', 'red');
-                                        }
-                                    }
-                                });
-                            } else {
-                                $('#buildingNameError').text('Tên tòa nhà không được để trống.').css('color', 'red');
-                            }
-                        });
-
-                       
-
-                        // Province to District Fetch
-                        $('#ProvinceId').change(function () {
-                            var provinceName = encodeURIComponent($(this).val());
-                            var url = `https://localhost:7056/api/Building/GetDistrictsByProvince/${provinceName}`;
-
-                            if (provinceName) {
-                                $.ajax({
-                                    url: url,
-                                    type: 'GET',
-                                    success: function (data) {
-                                        $('#DistrictId').empty();
-                                        $('#DistrictId').append('<option value="">Chọn Quận</option>');
-                                        $.each(data, function (index, district) {
-                                            $('#DistrictId').append('<option value="' + district.name + '">' + district.name + '</option>');
-                                        });
-                                    },
-                                    error: function () {
-                                        alert('Có lỗi xảy ra khi lấy danh sách quận.');
-                                    }
-                                });
-                            } else {
-                                $('#DistrictId').empty().append('<option value="">Chọn Quận</option>');
-                                $('#WardId').empty().append('<option value="">Chọn Xã</option>');
-                            }
-                        });
 
 
-                        // District to Ward Fetch
-                        $('#DistrictId').change(function () {
-                            var districtName = encodeURIComponent($(this).val());
-                            var url = `https://localhost:7056/api/Building/GetWardsByDistrict/${districtName}`;
 
-                            if (districtName) {
-                                $.ajax({
-                                    url: url,
-                                    type: 'GET',
-                                    success: function (data) {
-                                        $('#WardId').empty();
-                                        $('#WardId').append('<option value="">Chọn Xã</option>');
-                                        $.each(data, function (index, ward) {
-                                            $('#WardId').append('<option value="' + ward.name + '">' + ward.name + '</option>');
-                                        });
-                                    },
-                                    error: function () {
-                                        alert('Có lỗi xảy ra khi lấy xã.');
-                                    }
-                                });
-                            } else {
-                                $('#WardId').empty().append('<option value="">Chọn Xã</option>');
-                            }
-                        });
 
-                        // Form Submission
-                        $('#addBuildingForm').submit(function (event) {
-                            event.preventDefault(); // Prevent default form submission
 
-                            // Reset previous error messages
-                            $('.error-message').hide();
-
-                            // Validate TotalFloors, NumberOfRooms, and Distance
-                            var totalFloors = parseInt($('#TotalFloors').val(), 10);
-                            var numberOfRooms = parseInt($('#NumberOfRooms').val(), 10);
-                            var distance = parseFloat($('#Distance').val());
-
-                            let formIsValid = true;
-
-                            // Validate TotalFloors
-                            if (isNaN(totalFloors) || totalFloors < 1 || totalFloors > 100) {
-                                $('#totalFloorsError').show(); // Show error below the input field
-                                formIsValid = false;
-                            }
-
-                            // Validate NumberOfRooms
-                            if (isNaN(numberOfRooms) || numberOfRooms < 1 || numberOfRooms > 500) {
-                                $('#numberOfRoomsError').show(); // Show error below the input field
-                                formIsValid = false;
-                            }
-
-                            // Validate Distance
-                            if (isNaN(distance) || distance <= 0) {
-                                $('#distanceError').show(); // Show error below the input field
-                                formIsValid = false;
-                            }
-
-                            // If any validation fails, prevent form submission
-                            if (!formIsValid) {
-                                return;
-                            }
-
-                            // Get UserId from Token
-                            const token = getCookie('AuthToken');
-                            if (!token) {
-                                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
-                                return;
-                            }
-                            var userId = getUserIdFromToken(token);
-                            if (!userId) {
-                                $('#userIdError').show(); // Show error if UserId is missing
-                                return;
-                            }
-
-                            // Prepare Data
-                            var buildingData = {
-                                Name: $('#Name').val(),
-                                TotalFloors: totalFloors,
-                                NumberOfRooms: numberOfRooms,
-                                Distance: distance,
-                                ProvinceName: $('#ProvinceId').val(),
-                                DistrictName: $('#DistrictId').val(),
-                                WardName: $('#WardId').val(),
-                                AddressDetails: $('#AddressDetails').val(),
-                                BuildingStatus: $('#BuildingStatus').val(),
-                                LinkEmbedMap: $('#LinkEmbedMap').val(),
-                                UserId: userId // Include UserId in the request
-                            };
-
-                            // Send Data to API
-                            $.ajax({
-                                url: 'https://localhost:7056/api/Building/AddBuildingbyId',
-                                type: 'POST',
-                                contentType: 'application/json',
-                                data: JSON.stringify(buildingData),
-                                success: function (response) {
-                                    alert('Tòa nhà đã được tạo thành công.');
-                                    window.location.href = '/Building/ListBuilding'; // Redirect to the list page
-                                },
-                                error: function (xhr) {
-                                    alert('Có lỗi xảy ra: ' + xhr.responseText);
-                                }
-                            });
-                        });
-
-                        // Utility Function: Extract UserId from Token
-                        function getUserIdFromToken(token) {
-                            try {
-                                const tokenParts = token.split('.');
-                                const payload = JSON.parse(atob(tokenParts[1]));
-                                return payload.UserId;
-                            } catch (error) {
-                                console.error("Không mã hóa đc token:", error);
-                                return null;
-                            }
-                        }
-                    });
-
+                   
                     // Popup Handling
                     const openPopup = document.getElementById('openPopup');
                     const closePopup = document.getElementById('closePopup');
@@ -695,6 +886,13 @@
                             popupOverlay.style.display = 'none';
                         }
                     });
+
+                    function toggleSubmenu(event) {
+                        event.preventDefault();
+                        var submenu = event.currentTarget.nextElementSibling;
+                        submenu.style.display = submenu.style.display === "none" ? "block" : "none";
+                    }
+
                 </script>
 
 

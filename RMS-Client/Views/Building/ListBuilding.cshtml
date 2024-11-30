@@ -196,7 +196,22 @@
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
-
+                                @*  @if (Model != null && Model.Any())
+                                {
+                                foreach (var building in Model)
+                                {
+                                <li class="sidebar-subitem">
+                                <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@building.Id" class="sidebar-sublink">
+                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
+                                @building.Name
+                                </a>
+                                </li>
+                                }
+                                }
+                                else
+                                {
+                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                } *@
                             </ul>
                         </li>
                         <li class="sidebar-item">
@@ -240,17 +255,6 @@
                             </a>
                         </li>
                     </ul>
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
-                                <span>
-                                    <i class="fa fa-paper-plane"></i>
-                                </span>
-                                <span class="hide-menu">Danh sách yêu cầu</span>
-                            </a>
-                        </li>
-
-
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -456,17 +460,11 @@
 
             // Notify in Sidebar
             sidebarContainer.empty();
-            sidebarContainer.append(`
-                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                            `);
+            sidebarContainer.append(` <li class="sidebar-subitem">Không có tòa nhà nào</li> `);
 
             // Notify in Table
             tableContainer.empty();
-            tableContainer.append(`
-                                                                                <tr>
-                                                                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
-                                                                                </tr>
-                                                                            `);
+            tableContainer.append(`<tr> <td colspan="7" class="text-center">Không có dữ liệu</td> </tr>`);
         }
 
         // Redirect to Edit Page
@@ -505,6 +503,12 @@
         //     console.warn('Token not found in localStorage.');
         //     return null;
         // }
+
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            var submenu = event.currentTarget.nextElementSibling;
+            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
+        }
 
     </script>
 

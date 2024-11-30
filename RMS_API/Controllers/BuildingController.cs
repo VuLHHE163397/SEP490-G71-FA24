@@ -154,7 +154,7 @@ namespace RMS_API.Controllers
         }
 
 
-       /* [HttpGet("CheckBuildingName/{userId}/{name}")]
+        [HttpGet("CheckBuildingName/{userId}/{name}")]
         public IActionResult CheckBuildingName(int userId, string name)
         {
             if (string.IsNullOrEmpty(name) || userId <= 0)
@@ -172,7 +172,7 @@ namespace RMS_API.Controllers
 
             // Nếu tên tòa nhà trùng với một userId khác, cho phép tạo mới
             return Ok(new { message = "Building name is available for the specified user or different users." });
-        }*/
+        }
 
         [HttpPost("AddBuildingbyId")]
         public async Task<IActionResult> AddBuildingbyId([FromBody] AddBuildingDTO buildingDto)
@@ -183,7 +183,7 @@ namespace RMS_API.Controllers
 
             if (isDuplicateForCurrentUser)
             {
-                return Conflict("Tên tòa nhà trùng với tên hiện có. Vui lòng nhập lại." );
+                return Conflict("Tên tòa nhà trùng với tên hiện có. Vui lòng nhập lại.");
             }
 
             // Kiểm tra ModelState
@@ -399,6 +399,7 @@ namespace RMS_API.Controllers
         [HttpPut("EditBuilding/{id}")]
         public async Task<ActionResult<BuildingDTO>> EditBuildingById(int id, [FromBody] BuildingDTO buildingDto)
         {
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

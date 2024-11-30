@@ -193,7 +193,7 @@
                             <span class="hide-menu">Trang chủ</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" aria-expanded="false" onclick="toggleSubmenu(event)" asp-controller="Building" asp-action="ListBuilding">
+                            <a class="sidebar-link" asp-controller="Building" asp-action="ListBuilding">
                                 <span><i class="ti ti-layout-dashboard"></i></span>
                                 <span class="hide-menu">Trang chủ</span>
                             </a>
@@ -267,16 +267,6 @@
                                 <span class="hide-menu"> Thống kê phòng</span>
                             </a>
                         </li>
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
-                                <span>
-                                    <i class="fa fa-paper-plane"></i>
-                                </span>
-                                <span class="hide-menu">Danh sách yêu cầu</span>
-                            </a>
-                        </li>
-                        
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->
@@ -497,6 +487,14 @@
                                                 </tr>
                                             `);
                 }
+
+
+                function toggleSubmenu(event) {
+                    event.preventDefault();
+                    var submenu = event.currentTarget.nextElementSibling;
+                    submenu.style.display = submenu.style.display === "none" ? "block" : "none";
+                }
+
 
             </script>
 
