@@ -37,26 +37,6 @@
                 border-color: #004085;
                 transform: scale(1);
             }
-
-        /*  .btn-warning {
-                                                                                    background-color: #ffc107;
-                                                                                    border-color: #ffc107;
-                                                                                    color: #fff;
-                                                                                }
-
-                                                                                    .btn-warning:hover {
-                                                                                        background-color: #e0a800;
-                                                                                        border-color: #e0a800;
-                                                                                        transform: scale(1.05);
-                                                                                    }
-
-                                                                                    .btn-warning:active {
-                                                                                        background-color: #c69500;
-                                                                                        border-color: #c69500;
-                                                                                        transform: scale(1);
-                                                                                    }
-                                                                         */
-        /* Icon styling inside buttons */
         .btn i {
             margin-right: 8px;
         }
@@ -134,30 +114,28 @@
     </style>
 </head>
 <body>
-
     <script>
-        function getCookie(name) {            
+        function getCookie(name) {
             const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
-            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;            
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
         }
 
-        const token = getCookie('AuthToken');        
+        const token = getCookie('AuthToken');
         if (!token) {
-            console.error('Token không tìm thấy trong cookie.');            
-        } 
+            console.error('Token không tìm thấy trong cookie.');
+        }
         const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));       
+        const payload = JSON.parse(atob(tokenParts[1]));
         if (payload.Roles !== "Landlord") {
             window.location.href = "/Auth/login";
         }
 
-        function logout() {            
-            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";            
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
             window.location.href = "/Auth/Login";
         }
 
     </script>
-    <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
         <!-- Sidebar Start -->
@@ -276,15 +254,7 @@
                                         <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
                                             <p class="mb-0 fs-3">Tài Khoản</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
-                                        </a>
+                                        </a>                                      
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
 
                                     </div>
@@ -337,8 +307,6 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
-
-    @* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> *@
     <script>
         $(document).ready(function () {
             console.log('Page Loaded: Fetching buildings...');
@@ -446,16 +414,16 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                            `);
+                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                `);
 
             // Notify in Table
             tableContainer.empty();
             tableContainer.append(`
-                                                                                <tr>
-                                                                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
-                                                                                </tr>
-                                                                            `);
+                                <tr>
+                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
+                                </tr>
+                            `);
         }
 
         // Redirect to Edit Page
@@ -477,24 +445,6 @@
                 alert('Unable to retrieve user ID. Please log in again.');
             }
         }
-
-        // Parse User ID from Token
-        // function getUserIdFromToken() {
-        //     const token = localStorage.getItem("token");
-        //     if (token) {
-        //         try {
-        //             const tokenParts = token.split('.');
-        //             const payload = JSON.parse(atob(tokenParts[1]));
-        //             return payload.UserId || null;
-        //         } catch (e) {
-        //             console.error('Error parsing token:', e);
-        //             return null;
-        //         }
-        //     }
-        //     console.warn('Token not found in localStorage.');
-        //     return null;
-        // }
-
     </script>
 
 </body>
