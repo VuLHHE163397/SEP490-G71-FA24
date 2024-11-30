@@ -12,7 +12,7 @@ namespace RMS_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "Landlord")]
+    [Authorize(Roles = "Landlord")]
     public class MaintainanceRequestController : ControllerBase
     {
         private readonly RMS_SEP490Context _context;
@@ -33,7 +33,7 @@ namespace RMS_API.Controllers
             }
             int? userId = UserHelper.GetUserIdFromToken(token);
             //if (int.IsNullOrEmpty(userId)) return Unauthorized("Invalid User");
-            if(userId == null)
+            if (userId == null)
             {
                 return BadRequest("User not exsit");
             }
@@ -52,21 +52,21 @@ namespace RMS_API.Controllers
                     Status = mr.Status == 1 ? "Chưa xử lý" : "Đã xử lý",
                     RoomNumber = mr.Room.RoomNumber,
                     BuildingName = mr.Room.Building.Name,
-                    Address = mr.Room.Building.Address.Information + " " + mr.Room.Building.Ward.Name 
+                    Address = mr.Room.Building.Address.Information + " " + mr.Room.Building.Ward.Name
                     + " " + mr.Room.Building.District.Name + " " + mr.Room.Building.Province.Name
                 }).ToList();
-            if(!maintainances.Any())
+            if (!maintainances.Any())
             {
                 return NotFound();
             }
 
-        return Ok(maintainances);
+            return Ok(maintainances);
         }
 
         [HttpPost("ChangeMaintainace/{id}")]
         public IActionResult ChangeMaintainaceStatusById(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return BadRequest("Id đang null: " + id);
             }
@@ -74,10 +74,11 @@ namespace RMS_API.Controllers
             var maintainance = _context.MaintainanceRequests
                 .FirstOrDefault(mr => mr.Id == id);
 
-            if(maintainance == null)
+            if (maintainance == null)
             {
                 return NotFound("Không tìm thấy mã bảo trì nào với id: " + id);
-            }else if(maintainance.Status == 0)
+            }
+            else if (maintainance.Status == 0)
             {
                 maintainance.Status = 1;
                 maintainance.SolveDate = null;
