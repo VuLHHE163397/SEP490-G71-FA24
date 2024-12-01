@@ -276,7 +276,7 @@
                             <input type="text" class="form-control" id="searchInput" style="min-width: 200px" onkeyup="filterServices()" placeholder="Tìm kiếm..." />
                         </div>
                     </div>
-                   
+
                     <table class="table table-bordered" id="servicesTable" style="margin-top: 0.5rem">
                         <thead>
                             <tr>
@@ -289,7 +289,6 @@
                         </thead>
 
                         <tbody id="services">
-                            
                         </tbody>
                     </table>
                     <!-- Phân trang -->
@@ -318,7 +317,7 @@
 
         var totalRecord = 0;
         $(document).ready(function () {
-            loadBuilding();          
+            loadBuilding();
             const token = getCookie('AuthToken');
             //Lấy user id
         })
@@ -403,12 +402,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                <li class="sidebar-subitem">
-                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                    </a>
-                                                                </li>
-                                                            `);
+                                                                        <li class="sidebar-subitem">
+                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                            </a>
+                                                                        </li>
+                                                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -421,8 +420,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                    `);
+                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                            `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -439,7 +438,7 @@
         }
 
 
-        function getService(userId,buildingId) {
+        function getService(userId, buildingId) {
             let serviceUrl = 'https://localhost:7056/api/Service/GetAllService';
             const token = getCookie('AuthToken');
             let query = '';
@@ -449,7 +448,7 @@
             else {
                 alert("Vui lòng đăng nhập vào hệ thống");
                 window.location.href = '/Auth/Login';
-            }          
+            }
             if (buildingId) {
                 query += `&buildingId=${buildingId}`
             }
@@ -484,13 +483,13 @@
                 html += `<td>${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}</td>`;
 
                 html += `<td>
-                                    <a href="/Service/EditService?id=${item.id}" class="btn btn-primary">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                                    <button class="btn btn-danger" onclick="DeleteService('${item.id}')">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </td>`;
+                                            <a href="/Service/EditService?id=${item.id}" class="btn btn-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                            <button class="btn btn-danger" onclick="DeleteService('${item.id}')">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </td>`;
                 html += '</tr>';
             }
             if (data.length) {
@@ -521,7 +520,7 @@
 
         ///////////////////////////////////////////////////
         function DeleteService(id) {
-             const token = getCookie('AuthToken');
+            const token = getCookie('AuthToken');
             if (confirm("Bạn có chắc chắn muốn xóa dịch vụ này không?")) {  // Hộp thoại xác nhận xóa
                 $.ajax({
                     url: `https://localhost:7056/api/Service?id=${id}`,  // Đảm bảo URL API đúng

@@ -42,8 +42,8 @@ namespace RMS_API.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var ConnectionString = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetConnectionString("DefaultConnection");
-                optionsBuilder.UseSqlServer(ConnectionString);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("server=DESKTOP-H4U793R\\SQLEXPRESS;database=RMS_SEP490;uid=sa;pwd=sa;TrustServerCertificate=true");
             }
         }
 
@@ -250,9 +250,7 @@ namespace RMS_API.Models
                 entity.Property(e => e.RequestDate)
                     .HasColumnType("date")
                     .HasColumnName("requestDate");
-                entity.Property(e => e.SolveDate)
-                   .HasColumnType("date")
-                   .HasColumnName("solveDate");
+
                 entity.Property(e => e.RoomId).HasColumnName("roomId");
 
                 entity.Property(e => e.Status).HasColumnName("status");
@@ -414,6 +412,10 @@ namespace RMS_API.Models
                 entity.Property(e => e.Price)
                     .HasColumnType("money")
                     .HasColumnName("price");
+
+                entity.Property(e => e.Type)
+                    .HasColumnName("type")
+                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.UserId).HasColumnName("userId");
 
