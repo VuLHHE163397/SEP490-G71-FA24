@@ -55,6 +55,6 @@ app.UseEndpoints(endpoints =>
 // Cấu hình route mặc định cho ứng dụng.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Home}/{id?}"); // Đặt controller mặc định là Home và action là Index
+    pattern: "{controller=Home}/{action=Home}"); 
 
 app.Run();
