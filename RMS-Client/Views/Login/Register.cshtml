@@ -16,7 +16,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RMS</title>
-    <link rel="shortcut icon" type="image/png" href="~/images/logos/rms_logo.png" />
+    <link rel="shortcut icon" type="image/png" href="~/images/logos/house.jpg" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
 
     <style>
@@ -76,6 +76,17 @@
             }
         }
 
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            position: relative;
+            background-image: url('/images/bg1.jpg'); /* Đường dẫn tới ảnh nền */
+            background-size: cover; /* Để ảnh bao phủ toàn màn hình */
+            background-repeat: no-repeat; /* Không lặp lại ảnh */
+            background-position: center; /* Căn giữa ảnh */
+        }
+
         .spinner p {
             margin-top: 10px;
             color: #007bff;
@@ -89,6 +100,12 @@
             position: relative;
         }
 
+        .logo-img img {
+            display: block; /* Đảm bảo ảnh là một phần tử block để không chèn lên các nội dung khác */
+            width: 100px; /* Đặt chiều rộng ảnh to sẵn khi trang được tải (thay đổi kích thước phù hợp) */
+            height: auto; /* Tự động điều chỉnh chiều cao để giữ tỷ lệ gốc */
+            margin: 0 auto; /* Căn giữa ảnh trong khung chứa */
+        }
     </style>
 </head>
 
@@ -102,10 +119,9 @@
                     <div class="col-md-10 col-lg-8 col-xxl-6">
                         <div class="card mb-0">
                             <div class="card-body">
-                                @* <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
-                                    <img src="~/images/logo.jpg" width="180" alt="">
-                                </a> *@
-                                <p class="text-center">RMS_Quản lý trọ theo cách của bạn</p>
+                                <a href="#" class="logo-img text-center d-block py-3 w-100">
+                                    <img src="~/images/logo.jpg" alt="Logo" class="logo-img">
+                                </a>
                                 <form id="registerForm" style="max-width: 1000px; margin: auto;">
                                     <div class="mb-3">
                                         <label class="form-label">Tên đầy đủ</label>
@@ -250,6 +266,11 @@
 
             if (password.length < 5) {
                 showErrorPopup("Mật khẩu ít nhất có 6 kí tự!");
+                return;
+            }
+
+            if (password.length > 32) {
+                showErrorPopup("Mật khẩu không được quá 32 ký tự!");
                 return;
             }
 

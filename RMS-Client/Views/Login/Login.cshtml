@@ -49,13 +49,14 @@
         }
 
         body {
-            /* background-image: url('images/logo.jpg'); /* Đường dẫn tới ảnh */ */ background-size: cover; /* Bao phủ toàn bộ màn hình */
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            position: relative;
+            background-image: url('/images/bg1.jpg'); /* Đường dẫn tới ảnh nền */
+            background-size: cover; /* Để ảnh bao phủ toàn màn hình */
             background-repeat: no-repeat; /* Không lặp lại ảnh */
             background-position: center; /* Căn giữa ảnh */
-            position: relative;
-            margin: 0; /* Xóa margin mặc định của body */
-            padding: 0;
-            height: 100vh; /* Chiều cao toàn màn hình */
         }
 
         /* Overlay for opacity effect */
@@ -65,7 +66,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.5); /* Màu trắng mờ, thay đổi giá trị 0.5 để điều chỉnh */
+            background-color: rgba(255, 255, 255, 0); /* Màu trắng mờ, thay đổi giá trị 0.5 để điều chỉnh */
             z-index: -1; /* Đảm bảo lớp phủ ở phía dưới */
         }
 
@@ -87,7 +88,7 @@
                         <div class="card mb-0">
                             <div class="card-body">
                                 <a href="#" class="text-nowrap logo-img text-center d-block py-3 w-100">
-                                    <img src="~/images/logo.jpg" width="180" alt="">
+                                    <img src="~/images/logo.jpg" width="150" alt="">
                                 </a>
                                 <form id="loginForm">
                                     <div class="mb-3">
