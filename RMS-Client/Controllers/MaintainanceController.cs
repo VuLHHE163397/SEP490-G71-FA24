@@ -14,6 +14,7 @@ namespace RMS_Client.Controllers
             _httpClient = httpClient;
             var contentType = new MediaTypeWithQualityHeaderValue("application/json");
             _httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+
         }
 
         public IActionResult ListMaintainance()
