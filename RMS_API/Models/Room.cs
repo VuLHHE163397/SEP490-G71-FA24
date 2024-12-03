@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace RMS_API.Models
 {
@@ -29,7 +30,7 @@ namespace RMS_API.Models
         public int RoomStatusId { get; set; }
         public DateTime? FreeInFutureDate { get; set; }
         public int? UserId { get; set; }
-
+        [JsonIgnore]
         public virtual Building Building { get; set; } = null!;
         public virtual RoomStatus RoomStatus { get; set; } = null!;
         public virtual ICollection<Facility> Facilities { get; set; }
