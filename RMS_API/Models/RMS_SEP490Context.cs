@@ -250,9 +250,7 @@ namespace RMS_API.Models
                 entity.Property(e => e.RequestDate)
                     .HasColumnType("date")
                     .HasColumnName("requestDate");
-                entity.Property(e => e.SolveDate)
-                   .HasColumnType("date")
-                   .HasColumnName("solveDate");
+
                 entity.Property(e => e.RoomId).HasColumnName("roomId");
 
                 entity.Property(e => e.Status).HasColumnName("status");
@@ -414,6 +412,10 @@ namespace RMS_API.Models
                 entity.Property(e => e.Price)
                     .HasColumnType("money")
                     .HasColumnName("price");
+
+                entity.Property(e => e.Type)
+                    .HasColumnName("type")
+                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.UserId).HasColumnName("userId");
 

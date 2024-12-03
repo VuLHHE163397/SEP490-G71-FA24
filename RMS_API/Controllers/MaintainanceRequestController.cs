@@ -12,7 +12,6 @@ namespace RMS_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Landlord")]
     public class MaintainanceRequestController : ControllerBase
     {
         private readonly RMS_SEP490Context _context;
