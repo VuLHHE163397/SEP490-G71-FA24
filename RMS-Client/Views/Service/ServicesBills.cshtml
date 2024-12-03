@@ -310,7 +310,7 @@
                             <tr>
                                 <th>STT</th>
                                 <th scope="col">Nhà</th>
-                                <th scope="col">Phòng</th>                              
+                                <th scope="col">Phòng</th>
                                 <th scope="col">Số tiền (VND)</th>
                                 <th scope="col">Còn lại (VND)</th>
                                 <th scope="col">Tùy chọn</th>
@@ -476,12 +476,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                <li class="sidebar-subitem">
-                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                    </a>
-                                                                </li>
-                                                            `);
+                                                                        <li class="sidebar-subitem">
+                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                            </a>
+                                                                        </li>
+                                                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -494,8 +494,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                    `);
+                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                            `);
         }
 
         function getBills() {
@@ -532,23 +532,23 @@
             let index = 1;
             for (var item of data) {
                 html += `
-                                    <tr>
-                                        <td>${index++}</td>
-                                        <td>${item.buildingName}</td>
-                                        <td>${item.roomNumber}</td>                                      
-                                        <td>${item.totalPrice}</td>
-                                        <td>${item.remainingPrice}</td>
-                                        <td class="action-icons">
-                                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="getBillDetail(${item.roomId})">
-                                                <i class="fa-solid fa-eye"></i>
-                                            </button>
+                                            <tr>
+                                                <td>${index++}</td>
+                                                <td>${item.buildingName}</td>
+                                                <td>${item.roomNumber}</td>
+                                                <td>${item.totalPrice}</td>
+                                                <td>${item.remainingPrice}</td>
+                                                <td class="action-icons">
+                                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="getBillDetail(${item.roomId})">
+                                                        <i class="fa-solid fa-eye"></i>
+                                                    </button>
 
-                                            <button class="btn btn-danger">
-                                                <i class="fa-solid fa-calculator" onclick="calculate(${item.roomId})" ></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                        `
+                                                    <button class="btn btn-danger">
+                                                        <i class="fa-solid fa-calculator" onclick="calculate(${item.roomId})" ></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                `
             }
             $("#bills").html(html);
         }

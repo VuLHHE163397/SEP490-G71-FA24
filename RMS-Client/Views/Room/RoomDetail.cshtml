@@ -47,15 +47,23 @@
                 border-radius: 5px;
             }
 
+        #displayed-image {
+            width: 100%;
+            height: 300px; /* Hoặc kích thước mong muốn */
+            object-fit: cover; /* Đảm bảo ảnh không bị biến dạng và lấp đầy khung */
+        }
+
         .thumbnail-container {
             display: flex; /* Sử dụng flexbox để hiển thị các hình theo chiều ngang */
             /* overflow-x: auto; */ /* Thêm thanh cuộn ngang nếu các ảnh vượt quá kích thước container */
             gap: 10px; /* Khoảng cách giữa các ảnh */
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
             .thumbnail-container .thumbnail {
-                width: 80px;
-                height: 80px;
+                width: 100px;
+                height: 100px;
                 cursor: pointer;
                 border-radius: 5px;
                 object-fit: cover;
@@ -67,6 +75,8 @@
                 }
 
         .thumbnail-item {
+            width: 100px; /* Đảm bảo kích thước mỗi thumbnail là 100px */
+            height: 100px;
             position: relative;
             flex-shrink: 0;
         }
@@ -323,6 +333,24 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
+                                <span>
+                                    <i class="fa-regular fa-envelope"></i>
+                                </span>
+                                <span class="hide-menu"> Danh sách báo cáo</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-bar-chart"></i>
+                                </span>
+                                <span class="hide-menu"> Thống kê phòng</span>
+                            </a>
+                        </li>
+
                     </ul>
 
                 </nav>
@@ -361,11 +389,20 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">Tài Khoản</p>
+                                            <p class="mb-0 fs-3">My Profile</p>
+                                        </a>
+                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-mail fs-6"></i>
+                                            <p class="mb-0 fs-3">My Account</p>
+                                        </a>
+                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-list-check fs-6"></i>
+                                            <p class="mb-0 fs-3">My Task</p>
                                         </a>
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
+
                                     </div>
                                 </div>
                             </li>
@@ -453,7 +490,7 @@
 
                                     <!-- Hàng dọc thứ hai -->
                                     <div class="col-md-4">
-                                        
+                                        <p><strong>Cơ sở vật chất:</strong></p>
                                         @if (ViewBag.Facilities is List<RMS_API.Models.Facility> facilities && facilities.Any())
                                         {
                                             <ul class="list-unstyled">
@@ -465,7 +502,7 @@
                                         }
                                         else
                                         {
-                                            <p><strong>Cơ sở vật chất:</strong> Hiện tại chưa có cơ sở vật chất.</p>
+                                            <p>Hiện tại chưa có cơ sở vật chất.</p>
                                         }
                                     </div>
 
@@ -515,6 +552,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
+
         $(document).ready(function () {
             // Khởi tạo slick cho container ảnh nhỏ
             $('.slick-carousel').slick({
@@ -615,6 +653,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script>
+
         document.getElementById("generateQrButton").addEventListener("click", function () {
             var roomId = @Model.Id;  // Giả sử @Model.Id chứa ID phòng hiện tại
 
@@ -698,12 +737,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                                <li class="sidebar-subitem">
-                                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                                    </a>
-                                                                                                </li>
-                                                                                            `);
+                                                                                                        <li class="sidebar-subitem">
+                                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                                            </a>
+                                                                                                        </li>
+                                                                                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -716,8 +755,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                                    `);
+                                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                                            `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -751,6 +790,7 @@
                     data: JSON.stringify(selectedServiceIds),
                     success: function () {
                         console.log('Dịch vụ đã được cập nhật.');
+                        location.reload();
                     },
                     error: function (xhr) {
                         console.error(xhr.responseJSON); // Log thông báo lỗi từ server

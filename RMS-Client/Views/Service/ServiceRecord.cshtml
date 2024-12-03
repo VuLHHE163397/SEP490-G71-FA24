@@ -139,23 +139,23 @@
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
                                 @* @{
-                                    var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
+                                var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
                                 }
                                 @if (buildingsss != null && buildingsss.Any())
                                 {
-                                    foreach (var buildingss in buildingsss)
-                                    {
-                                        <li class="sidebar-subitem">
-                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
-                                                @buildingss.Name
-                                            </a>
-                                        </li>
-                                    }
+                                foreach (var buildingss in buildingsss)
+                                {
+                                <li class="sidebar-subitem">
+                                <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
+                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
+                                @buildingss.Name
+                                </a>
+                                </li>
+                                }
                                 }
                                 else
                                 {
-                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
                                 } *@
                             </ul>
                         </li>
@@ -438,12 +438,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                        <li class="sidebar-subitem">
-                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                            </a>
-                                                                                        </li>
-                                                                                    `);
+                                                                                                <li class="sidebar-subitem">
+                                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                                    </a>
+                                                                                                </li>
+                                                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -456,8 +456,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                            `);
+                                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                                    `);
         }
 
         function setData() {
@@ -507,20 +507,20 @@
                 html += `<td>${item.roomNumber}</td>`;
                 //html += `<td class="recordDate">${item.recordDate.split("T")[0]}</td>`;
                 html += `<td>
-                                    <input type="date" class="recordDate form-control" value="${item.recordDate.split("T")[0]}"/>
-                                </td>`;
-                html += `<td>
-                                        <input type="text" value="${item.oldMeter}" class="form-control" id="oldMeter-${item.roomId}" onchange="calculate(${item.roomId})"/>
-                                </td>`;
-                html += `<td>
-                                             <input type="text" value="${item.newMeter}" class="form-control" id="newMeter-${item.roomId}" onchange="calculate(${item.roomId})"/>
+                                            <input type="date" class="recordDate form-control" value="${item.recordDate.split("T")[0]}"/>
                                         </td>`;
                 html += `<td>
-                                             <input type="text" value="${item.totalMeter}" class="form-control" id="totalMeter-${item.roomId}" readonly/>
+                                                <input type="text" value="${item.oldMeter}" class="form-control" id="oldMeter-${item.roomId}" onchange="calculate(${item.roomId})"/>
                                         </td>`;
                 html += `<td>
-                                    <button class="btn btn-primary" onclick="addServiceRecord(${item.roomId}, ${item.buildingId})">Lưu</button>
-                                </td>`
+                                                     <input type="text" value="${item.newMeter}" class="form-control" id="newMeter-${item.roomId}" onchange="calculate(${item.roomId})"/>
+                                                </td>`;
+                html += `<td>
+                                                     <input type="text" value="${item.totalMeter}" class="form-control" id="totalMeter-${item.roomId}" readonly/>
+                                                </td>`;
+                html += `<td>
+                                            <button class="btn btn-primary" onclick="addServiceRecord(${item.roomId}, ${item.buildingId})">Lưu</button>
+                                        </td>`
                 html += '</tr>'
             }
             $("#electrics").html(html);
