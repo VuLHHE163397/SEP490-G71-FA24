@@ -1,4 +1,5 @@
-﻿@model RMS_API.DTOs.RoomLlDTO
+﻿@using Newtonsoft.Json
+@model RMS_API.DTOs.RoomLlDTO
 
 @{
     ViewBag.Title = "Tạo Phòng";
@@ -366,6 +367,14 @@
                             <span class="error-message" id="submitError" style="color: red; display: none;">Thông tin nhập không hợp lệ, vui lòng kiểm tra lại !!!</span>
                         </div>
                     </form>
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                alert(@Html.Raw(JsonConvert.SerializeObject(TempData["ErrorMessage"])));
+                            });
+                        </script>
+                    }
 
                 </div>
             </div>
@@ -400,7 +409,7 @@
         function validatePrice() {
             const price = document.getElementById('Price').value;
             const priceError = document.getElementById('priceError');
-            if (parseFloat(price) <= 0) {
+            if (isNaN(price) || parseFloat(price) <= 0) {
                 priceError.style.display = 'inline';
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
@@ -414,7 +423,7 @@
         function validateFloor() {
             const floor = document.getElementById('Floor').value;
             const floorError = document.getElementById('floorError');
-            if (parseInt(floor) <= 0 || !Number.isInteger(parseFloat(floor))) {
+            if (isNaN(floor) || parseInt(floor) <= 0 || !Number.isInteger(parseFloat(floor))) {
                 floorError.style.display = 'inline';
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
@@ -428,7 +437,7 @@
         function validateArea() {
             const area = document.getElementById('Area').value;
             const areaError = document.getElementById('areaError');
-            if (parseFloat(area) <= 0) {
+            if (isNaN(area) || parseFloat(area) <= 0) {
                 areaError.style.display = 'inline';
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';

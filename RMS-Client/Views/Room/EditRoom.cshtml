@@ -336,7 +336,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 fw-bold text-end align-middle" for="Price">Giá Phòng</label>
                             <div class="col-sm-9">
-                                <input step="0.01" asp-for="Price" class="form-control" id="Price" name="Price" required />
+                                <input step="0.01" asp-for="Price" class="form-control" id="Price" name="Price" value="@Model.Price.ToString("0.#")" required />
                                 <span class="error-message" id="priceError" style="color: red; display: none;">Giá Phòng phải là một số dương</span>
                             </div>
                         </div>
@@ -419,9 +419,6 @@
 
     <script>
 
-
-
-
         // Kiểm tra giá trị nhập vào của các trường ngay khi người dùng gõ
         document.getElementById('Price').addEventListener('input', function () {
             validatePrice();
@@ -453,7 +450,7 @@
         function validatePrice() {
             const price = document.getElementById('Price').value;
             const priceError = document.getElementById('priceError');
-            if (parseFloat(price) <= 0) {
+            if (isNaN(price) || parseFloat(price) <= 0) {
                 priceError.style.display = 'inline';
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
@@ -467,7 +464,7 @@
         function validateFloor() {
             const floor = document.getElementById('Floor').value;
             const floorError = document.getElementById('floorError');
-            if (parseInt(floor) <= 0 || !Number.isInteger(parseFloat(floor))) {
+            if (isNaN(floor) || parseInt(floor) <= 0 || !Number.isInteger(parseFloat(floor))) {
                 floorError.style.display = 'inline';
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
@@ -481,7 +478,7 @@
         function validateArea() {
             const area = document.getElementById('Area').value;
             const areaError = document.getElementById('areaError');
-            if (parseFloat(area) <= 0) {
+            if (isNaN(area) || parseFloat(area) <= 0) {
                 areaError.style.display = 'inline';
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
@@ -498,7 +495,7 @@
             const dateError = document.getElementById('dateError');
 
             if (startedDate && expiredDate) {
-                if (new Date(expiredDate) <= new Date(startedDate)) {
+                if (new Date(expiredDate) < new Date(startedDate)) {
                     dateError.style.display = 'inline';
                     dateError.textContent = 'Ngày hết hạn phải sau ngày bắt đầu thuê';
                     document.getElementById('buttonSave').disabled = true;
@@ -522,6 +519,7 @@
                     dateError2.textContent = 'Ngày Phòng sẽ trống sẽ phải sau hoặc cùng ngày hết hạn phòng';
                     document.getElementById('buttonSave').disabled = true;
                     submitError.style.display = 'inline';
+                    return;
                 } else {
                     dateError2.style.display = 'none';
                     document.getElementById('buttonSave').disabled = false;

@@ -47,15 +47,22 @@
                 border-radius: 5px;
             }
 
+        #displayed-image {
+            width: 100%;
+            height: 300px; /* Hoặc kích thước mong muốn */
+            object-fit: cover; /* Đảm bảo ảnh không bị biến dạng và lấp đầy khung */
+        }
         .thumbnail-container {
             display: flex; /* Sử dụng flexbox để hiển thị các hình theo chiều ngang */
             /* overflow-x: auto; */ /* Thêm thanh cuộn ngang nếu các ảnh vượt quá kích thước container */
             gap: 10px; /* Khoảng cách giữa các ảnh */
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
             .thumbnail-container .thumbnail {
-                width: 80px;
-                height: 80px;
+                width: 100px;
+                height: 100px;
                 cursor: pointer;
                 border-radius: 5px;
                 object-fit: cover;
@@ -67,6 +74,8 @@
                 }
 
         .thumbnail-item {
+            width: 100px; /* Đảm bảo kích thước mỗi thumbnail là 100px */
+            height: 100px;
             position: relative;
             flex-shrink: 0;
         }
@@ -492,7 +501,7 @@
                                         }
                                         else
                                         {
-                                            <p><strong>Cơ sở vật chất:</strong> Hiện tại chưa có cơ sở vật chất.</p>
+                                            <p>Hiện tại chưa có cơ sở vật chất.</p>
                                         }
                                     </div>
 
@@ -727,12 +736,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                        <li class="sidebar-subitem">
-                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                            </a>
-                                                                                        </li>
-                                                                                    `);
+                                                                                                <li class="sidebar-subitem">
+                                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                                    </a>
+                                                                                                </li>
+                                                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -745,8 +754,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                            `);
+                                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                                    `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -780,6 +789,7 @@
                     data: JSON.stringify(selectedServiceIds),
                     success: function () {
                         console.log('Dịch vụ đã được cập nhật.');
+                        location.reload();
                     },
                     error: function (xhr) {
                         console.error(xhr.responseJSON); // Log thông báo lỗi từ server

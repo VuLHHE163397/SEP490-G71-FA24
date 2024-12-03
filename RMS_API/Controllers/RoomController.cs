@@ -251,6 +251,16 @@ namespace RMS_API.Controllers
                 return BadRequest("No file uploaded.");
             }
 
+            // Lấy thông tin tòa nhà để kiểm tra giới hạn số phòng
+            var building = _context.Buildings.FirstOrDefault(b => b.Id == buildingId);
+            if (building == null)
+            {
+                return NotFound("Tòa nhà không tồn tại.");
+            }
+
+            int maxRoomsPerBuilding = (int)building.NumberOfRooms; // Lấy số lượng phòng tối đa từ Building
+            int existingRoomCount = _context.Rooms.Count(r => r.BuildingId == buildingId);
+
             if (file.FileName.EndsWith(".xlsx"))
             {
                 var roomsToAdd = new List<Room>();
@@ -289,9 +299,14 @@ namespace RMS_API.Controllers
 
                         // Danh sách các số phòng xuất hiện trong file import
                         var importedRoomNumbers = new HashSet<string>();
+                        int newRoomsCount = 0;
 
                         for (int row = 2; row <= rowCount; row++)
                         {
+                            if (existingRoomCount + newRoomsCount >= maxRoomsPerBuilding)
+                            {
+                                break;
+                            }
                             var roomNumber = worksheet.Cells[row, headers["Số phòng"]].Text.Trim();
                             if (string.IsNullOrEmpty(roomNumber)) continue;
 
@@ -372,7 +387,7 @@ namespace RMS_API.Controllers
 
                 return Ok(new
                 {
-                    message = "Nhập phòng thành công!",
+                    message = $"Nhập phòng thành công! Thêm mới {roomsToAdd.Count} phòng, cập nhật {existingRoomsToUpdate.Count} phòng.",
                     newRoomsCount = roomsToAdd.Count,
                     updatedRoomsCount = existingRoomsToUpdate.Count
                 });
@@ -446,6 +461,19 @@ namespace RMS_API.Controllers
         [HttpPost("AddRoom")]
         public async Task<IActionResult> AddRoom([FromBody] RoomLlDTO roomDTO)
         {
+            // Kiểm tra xem tòa nhà có tồn tại hay không
+            var building = await _context.Buildings.FirstOrDefaultAsync(b => b.Id == roomDTO.BuildingId);
+            if (building == null)
+            {
+                return BadRequest("Tòa nhà không tồn tại.");
+            }
+
+            // Kiểm tra số lượng phòng đã đạt giới hạn chưa
+            var currentRoomCount = await _context.Rooms.CountAsync(r => r.BuildingId == roomDTO.BuildingId);
+            if (building.NumberOfRooms.HasValue && currentRoomCount >= building.NumberOfRooms)
+            {
+                return BadRequest("Số lượng phòng trong tòa nhà đã đạt giới hạn.");
+            }
 
             // Kiểm tra RoomNumber trong cùng Building có bị trùng không
             var existingRoom = await _context.Rooms
@@ -471,10 +499,11 @@ namespace RMS_API.Controllers
             };
 
             _context.Rooms.Add(room);
-            await _context.SaveChangesAsync(); // Đảm bảo dữ liệu được lưu trước khi trả về
+            await _context.SaveChangesAsync();
 
             return Ok(room);
         }
+
 
         [HttpGet("CheckRoomNameExists")]
         public IActionResult CheckRoomNameExists(string roomName, int buildingId)
