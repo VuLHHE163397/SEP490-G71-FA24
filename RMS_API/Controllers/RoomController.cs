@@ -258,8 +258,9 @@ namespace RMS_API.Controllers
                 return NotFound("Tòa nhà không tồn tại.");
             }
 
-            int maxRoomsPerBuilding = (int)building.NumberOfRooms; // Lấy số lượng phòng tối đa từ Building
-            int existingRoomCount = _context.Rooms.Count(r => r.BuildingId == buildingId);
+            int maxRoomsPerBuilding = (int)building.NumberOfRooms; // Số lượng phòng tối đa từ Building
+            int existingRoomCount = _context.Rooms.Count(r => r.BuildingId == buildingId); // Số phòng hiện có
+            int remainingRoomSpace = maxRoomsPerBuilding - existingRoomCount; // Số phòng còn trống
 
             if (file.FileName.EndsWith(".xlsx"))
             {
@@ -283,6 +284,7 @@ namespace RMS_API.Controllers
                             headers[worksheet.Cells[1, col].Text.Trim()] = col;
                         }
 
+                        // Kiểm tra định dạng file Excel
                         if (!headers.ContainsKey("Số phòng") ||
                             !headers.ContainsKey("Diện tích") ||
                             !headers.ContainsKey("Tầng") ||
@@ -292,39 +294,36 @@ namespace RMS_API.Controllers
                             return BadRequest("Tên cột trong file excel bị sai. Vui lòng kiểm tra lại.");
                         }
 
-                        // Lấy danh sách tất cả các phòng trong database cho tòa nhà hiện tại
+                        // Lấy danh sách tất cả các phòng hiện có trong database cho tòa nhà
                         var existingRoomNumbers = _context.Rooms
                             .Where(r => r.BuildingId == buildingId)
                             .ToDictionary(r => r.RoomNumber, r => r);
 
-                        // Danh sách các số phòng xuất hiện trong file import
+                        // Danh sách các số phòng được import
                         var importedRoomNumbers = new HashSet<string>();
                         int newRoomsCount = 0;
 
                         for (int row = 2; row <= rowCount; row++)
                         {
-                            if (existingRoomCount + newRoomsCount >= maxRoomsPerBuilding)
-                            {
-                                break;
-                            }
                             var roomNumber = worksheet.Cells[row, headers["Số phòng"]].Text.Trim();
                             if (string.IsNullOrEmpty(roomNumber)) continue;
 
-                            importedRoomNumbers.Add(roomNumber); // Thêm số phòng vào danh sách được import
+                            importedRoomNumbers.Add(roomNumber); // Thêm vào danh sách được import
 
+                            // Validate dữ liệu từng cột
                             if (!double.TryParse(worksheet.Cells[row, headers["Diện tích"]].Text, out var area) || area <= 0)
                             {
-                                return BadRequest($"Giá trị lỗi ở hàng {row}: '{worksheet.Cells[row, headers["Diện tích"]].Text}'. Vui lòng kiểm tra và nhập Diện tích là số dương.");
+                                return BadRequest($"Giá trị lỗi ở hàng {row}: '{worksheet.Cells[row, headers["Diện tích"]].Text}'. Vui lòng nhập diện tích là số dương.");
                             }
                             if (!int.TryParse(worksheet.Cells[row, headers["Tầng"]].Text, out var floor) || floor <= 0)
                             {
-                                return BadRequest($"Giá trị lỗi ở hàng {row}: '{worksheet.Cells[row, headers["Tầng"]].Text}'. Vui lòng kiểm tra và nhập Tầng là số nguyên dương.");
+                                return BadRequest($"Giá trị lỗi ở hàng {row}: '{worksheet.Cells[row, headers["Tầng"]].Text}'. Vui lòng nhập tầng là số nguyên dương.");
                             }
                             var rawPrice = worksheet.Cells[row, headers["Giá phòng"]].Text.Trim()
                                 .Replace("VNĐ", "").Replace(",", "").Replace(" ", "");
                             if (!decimal.TryParse(rawPrice, out var price) || price <= 0)
                             {
-                                return BadRequest($"Giá trị lỗi ở hàng {row}: '{worksheet.Cells[row, headers["Giá phòng"]].Text}'. Vui lòng kiểm tra và nhập Giá Phòng là số nguyên dương.");
+                                return BadRequest($"Giá trị lỗi ở hàng {row}: '{worksheet.Cells[row, headers["Giá phòng"]].Text}'. Vui lòng nhập giá phòng là số nguyên dương.");
                             }
                             var status = worksheet.Cells[row, headers["Trạng thái"]].Text.Trim();
                             var description = headers.ContainsKey("Mô tả phòng")
@@ -334,7 +333,7 @@ namespace RMS_API.Controllers
                             var roomStatusId = RoomStatusMapping.ContainsKey(status) ? RoomStatusMapping[status] : (int?)null;
                             if (roomStatusId == null)
                             {
-                                return BadRequest($"Giá trị lỗi ở hàng {status}' in row {row}. Vui lòng kiểm tra và nhập trạng thái của phòng là : Đang Trống, Đang cho thuê, Đang bảo trì, Sắp trống.");
+                                return BadRequest($"Giá trị lỗi ở hàng {row}: '{status}'. Vui lòng nhập trạng thái hợp lệ: Đang Trống, Đang cho thuê, Đang bảo trì, Sắp trống.");
                             }
 
                             if (existingRoomNumbers.ContainsKey(roomNumber))
@@ -350,29 +349,33 @@ namespace RMS_API.Controllers
                             }
                             else
                             {
-                                // Thêm phòng mới nếu chưa tồn tại
-                                var newRoom = new Room
+                                // Chỉ kiểm tra giới hạn khi thêm phòng mới
+                                if (newRoomsCount < remainingRoomSpace)
                                 {
-                                    BuildingId = buildingId,
-                                    RoomNumber = roomNumber,
-                                    Price = price,
-                                    Area = area,
-                                    Description = description,
-                                    Floor = floor,
-                                    RoomStatusId = roomStatusId.Value
-                                };
-                                roomsToAdd.Add(newRoom);
+                                    var newRoom = new Room
+                                    {
+                                        BuildingId = buildingId,
+                                        RoomNumber = roomNumber,
+                                        Price = price,
+                                        Area = area,
+                                        Description = description,
+                                        Floor = floor,
+                                        RoomStatusId = roomStatusId.Value
+                                    };
+                                    roomsToAdd.Add(newRoom);
+                                    newRoomsCount++;
+                                }
+                                else
+                                {
+                                    // Nếu hết chỗ, bỏ qua phòng mới mà không báo lỗi
+                                    continue;
+                                }
                             }
                         }
-
-                        // Bỏ qua các phòng không có trong file import (không xóa, không sửa)
-                        var roomsToIgnore = existingRoomNumbers
-                            .Where(r => !importedRoomNumbers.Contains(r.Key))
-                            .Select(r => r.Value)
-                            .ToList();
                     }
                 }
 
+                // Thêm mới và cập nhật dữ liệu vào database
                 if (roomsToAdd.Any())
                 {
                     _context.Rooms.AddRange(roomsToAdd);
@@ -397,6 +400,7 @@ namespace RMS_API.Controllers
                 return BadRequest("Only Excel files are allowed.");
             }
         }
+
 
         [HttpPost("upload-image/{roomId}")]
         public async Task<IActionResult> UploadImage(IFormFile file, int roomId)
@@ -798,6 +802,7 @@ namespace RMS_API.Controllers
         }
 
         [HttpGet("qr/{roomId}")]
+
         public IActionResult GetRoomQrCode(int roomId)
         {
             string baseUrl = $"https://localhost:5001";
@@ -841,6 +846,7 @@ namespace RMS_API.Controllers
         }
 
         [HttpGet("RoomMaintainance/{roomId}")]
+
         public IActionResult GetByQR(int roomId)
         {
             // Lấy thông tin phòng theo ID
@@ -874,6 +880,7 @@ namespace RMS_API.Controllers
         }
 
         [HttpPost("SaveMaintenanceRequest")]
+
         public IActionResult SaveMaintainancebyQR([FromBody] MaintainanceDTO dto)
         {
             if (dto == null || string.IsNullOrWhiteSpace(dto.Description))
