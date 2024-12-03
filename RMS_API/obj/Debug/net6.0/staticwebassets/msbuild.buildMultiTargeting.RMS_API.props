@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\RMS_API.props" />
-</Project>
