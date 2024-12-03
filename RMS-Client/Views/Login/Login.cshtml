@@ -101,7 +101,7 @@
                                     </div>
                                     <div class="d-flex align-items-center justify-content-between mb-4">
                                         <a class="text-primary fw-bold" href="/Home/Home">Về trang chủ</a>
-                                        <a class="text-primary fw-bold" href="./index.html">Quên mật khẩu</a>
+                                        <a class="text-primary fw-bold" href="/Auth/ForgotPassword">Quên mật khẩu</a>
                                     </div>
                                     <button type="button" onclick="login()" class="btn btn-primary w-100">Đăng nhập</button>
                                     <div class="d-flex align-items-center justify-content-center">
@@ -124,7 +124,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function login() {           
+        function login() {
             var email = $("#email").val();
             var password = $("#password").val();
 
@@ -144,12 +144,12 @@
                 contentType: "application/json",
                 xhrFields: { withCredentials: true },   // Cho phép gửi và nhận cookies
                 data: JSON.stringify({ email: email, Password: password }),
-                success: function (response) {                      
+                success: function (response) {
                     showPopup("Đăng nhập thành công!");
                     try {
                         // Giải mã token JWT
                         const tokenParts = response.token.split('.');
-                        const payload = JSON.parse(atob(tokenParts[1]));                                             
+                        const payload = JSON.parse(atob(tokenParts[1]));
                         // Xét role để chuyển trang
                         setTimeout(function () {
                             if (payload.Roles === "Admin") {
@@ -164,11 +164,42 @@
                     }
                 },
                 error: function (xhr, status, error) {
-                    showErrorPopup("Tài khoản hoặc mật khẩu không tồn tại");
-                    // showErrorPopup("Đăng nhập thất bại: " + xhr.responseText);
+                    // showErrorPopup("Tài khoản hoặc mật khẩu không đúng. Vui lòng nhập lại!");
+                    showErrorPopup(xhr.responseText);
                 }
             });
 
+        }
+
+
+        function ForgotPassword() {
+            const email = $("#email").val(); // Lấy email từ textbox
+
+            if (!email) {
+                // Nếu không có email trong textbox, yêu cầu nhập email
+                const userEmail = prompt("Bạn chưa nhập email. Vui lòng nhập email của bạn:");
+                if (!userEmail) {
+                    alert("Email không hợp lệ.");
+                    return;
+                }
+                // Chuyển đến trang ForgotPassword với email
+                window.location.href = `/Auth/ForgotPassword?email=${encodeURIComponent(userEmail)}`;
+            } else {
+                // Nếu đã có email, xác nhận với người dùng
+                const confirmEmail = confirm(`Email bạn đã nhập là: ${email}. Bạn có muốn tiếp tục với email này không?`);
+                if (confirmEmail) {
+                    // Chuyển đến trang ForgotPassword với email
+                    window.location.href = `/Auth/ForgotPassword?email=${encodeURIComponent(email)}`;
+                } else {
+                    // Yêu cầu nhập email khác
+                    const userEmail = prompt("Vui lòng nhập email khác của bạn:");
+                    if (!userEmail) {
+                        alert("Email không hợp lệ.");
+                        return;
+                    }
+                    window.location.href = `/Auth/ForgotPassword?email=${encodeURIComponent(userEmail)}`;
+                }
+            }
         }
 
         function showPopup(message) {

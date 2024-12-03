@@ -39,7 +39,7 @@ namespace RMS_API.Controllers
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
             if (user == null)
             {
-                return BadRequest("Email không tồn tại.");
+                return BadRequest("Email chưa được đăng k.");
             }
 
             // Generate a random password
@@ -185,17 +185,22 @@ namespace RMS_API.Controllers
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             if (model.Email == null && model.Password == null)
-                return Unauthorized("Xin mời nhập tài khoản và mật khẩu");
+                return Unauthorized("Xin mời nhập đủ tài khoản và mật khẩu");
 
             var user = await _context.Users
         .Include(u => u.Role)
         .SingleOrDefaultAsync(u => u.Email == model.Email);
 
             if (user == null)
-                return Unauthorized("Tài khoản không tồn tại. Xin hãy đăng nhập lại!");
+                return Unauthorized("Tài khoản hoặc mật khẩu không đúng. Vui  lòng nhập lại!");
             if (!BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
                 //if (user.Password != model.Password)
                 return Unauthorized("Mật khẩu không đúng!");
+
+            if (user.UserStatusId == 3)
+            {
+                return Unauthorized("Tài khoản đã bị cấm. Vui lòng dùng tài khoản khác!");
+            }
 
             var token = GenerateJwtToken(user);
 

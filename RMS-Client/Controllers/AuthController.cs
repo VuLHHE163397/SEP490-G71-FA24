@@ -25,9 +25,9 @@ namespace RMS_Client.Controllers
             return View("~/Views/Login/VerifyEmail.cshtml");
         }        
 
-        public IActionResult ResetPassword()
+        public IActionResult ForgotPassword()
         {
-            return View("~/Views/Login/ResetPassword.cshtml");
+            return View("~/Views/Login/ForgotPassword.cshtml");
         }
     }
 }
