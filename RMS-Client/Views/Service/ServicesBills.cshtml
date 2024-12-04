@@ -209,7 +209,7 @@
 
         <div class="body-wrapper">
 
-            <header class="app-header" style="background-color:  #3385ff">
+            <header class="app-header" style="background-color:  whitesmoke">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
@@ -272,8 +272,9 @@
                         <strong style="color: red;">Lưu ý:</strong>
                         <ul class="mb-0">
                             <li>
-                                - Ở chức năng "Quản lý phòng", bạn phải gắn các dịch vụ cho khách thuê trước khi tính tiền.</li>
-                                
+                                - Ở chức năng "Quản lý phòng", bạn phải gắn các dịch vụ cho khách thuê trước khi tính tiền.
+                            </li>
+
                             <li>- Nếu có bất kỳ thay đổi liên quan đến tiền nhà tháng đang tính (...), bạn phải tính lại cho tháng đó.</li>
                         </ul>
                     </div>
@@ -288,19 +289,13 @@
 
                             <div class="col-md-3">
                                 <label for="building" class="form-label">Nhà</label>
-                                <select class="form-select" id="BuildingId">
-                                    <option>Tất cả</option>
-                                    <option>Nhà 1</option>
-                                    <option>Nhà 2</option>
+                                <select class="form-select" id="BuildingId" onchange="onSelectBuilding()">
                                 </select>
                             </div>
 
                             <div class="col-md-3">
                                 <label for="room" class="form-label">Phòng</label>
-                                <select class="form-select" id="RoomId">
-                                    <option>Tất cả</option>
-                                    <option>Phòng 101</option>
-                                    <option>Phòng 201</option>
+                                <select class="form-select" id="RoomId" onchange="getBills()">
                                 </select>
                             </div>
 
@@ -316,33 +311,12 @@
                                 <th>STT</th>
                                 <th scope="col">Nhà</th>
                                 <th scope="col">Phòng</th>
-                                <th scope="col">Tên khách</th>
                                 <th scope="col">Số tiền (VND)</th>
-                                <th scope="col">Đã trả (VND)</th>
                                 <th scope="col">Còn lại (VND)</th>
                                 <th scope="col">Tùy chọn</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Tầng 1</td>
-                                <td>2</td>
-                                <td>Tien Dung</td>
-                                <td>21,943,000</td>
-                                <td>0</td>
-                                <td>21,943,000</td>
-                                <td class="action-icons">
-                                    <button class="btn btn-primary">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-        
-                                    <button class="btn btn-danger">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </button>
-                                </td>
-                            </tr>
-
+                        <tbody id="bills">
                         </tbody>
                     </table>
 
@@ -359,6 +333,30 @@
         </div>
     </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel">Chi phí dịch vụ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body" id="bill-detail">
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/sidebarmenu.js"></script>
@@ -367,11 +365,21 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
     <script>
-       
+
+        var totalRecord = 0;
         $(document).ready(function () {
-            loadRoom();
             loadBuilding();
+            loadRoom();
+            const token = getCookie('AuthToken');
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
+            getBills();
         })
+        function onSelectBuilding() {
+            loadRoom();
+            getBills();
+        }
+        /////////////////////////////////////////
 
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -385,10 +393,16 @@
             }
         }
 
+        //////////////////////////////////////////////////
+
         function loadBuilding() {
             const token = getCookie('AuthToken');
-            //Lấy user id
-            const userId = getUserIdFromToken(token);
+            if (!token) {
+                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
+                return;
+            }
+            var userId = getUserIdFromToken(token);
             $.ajax({
                 url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',
@@ -409,18 +423,29 @@
         function renderBuilding(data) {
             var urlParams = new URLSearchParams(window.location.search);
             var buildingId = urlParams.get('buildingId');
-            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Chọn</option>`;
             for (var item of data) {
                 html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
             }
-            $("#buildings").html(html);
+            $("#BuildingId").html(html);
+
         }
 
+
+        ///////////////////////////////////////////////////////
+
         function loadRoom() {
+            const token = getCookie('AuthToken');
+            var buildingId = $("#BuildingId").val();
+            console.log("buildingId = " + buildingId)
+            const userId = getUserIdFromToken(token);
             $.ajax({
-                url: 'https://localhost:7056/api/Room/GetAllRoom',
+                url: buildingId && buildingId > 0 ? `https://localhost:7056/api/Room/GetRoomByBuilding/${buildingId}` : `https://localhost:7056/api/Room/GetAllRoom/${userId}`,
                 type: 'GET',
                 dataType: 'json',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 success: function (response) {
                     renderRoom(response);
                 },
@@ -430,9 +455,11 @@
             });
         }
         function renderRoom(data) {
-            let html = ``;
+            var urlParams = new URLSearchParams(window.location.search);
+            var roomId = urlParams.get('roomId');
+            let html = `<option value="-1" ${roomId <= 0 ? 'selected' : ''}>Chọn</option>`;
             for (var item of data) {
-                html += `<option value="${item.id}">${item.roomNumber}</option>`
+                html += `<option value="${item.id}" ${roomId == item.id ? 'selected' : ''}>${item.roomNumber}</option>`
             }
             $("#RoomId").html(html);
         }
@@ -449,12 +476,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                        <li class="sidebar-subitem">
-                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                            </a>
-                                                        </li>
-                                                    `);
+                                                                        <li class="sidebar-subitem">
+                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                            </a>
+                                                                        </li>
+                                                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -467,10 +494,124 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                            `);
+                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                            `);
         }
 
+        function getBills() {
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            var url = `https://localhost:7056/api/ServiceBill?userId=${userId}`
+            var buildingId = $("#BuildingId").val();
+            var roomId = $("#RoomId").val();
+            if (buildingId && !Number.isNaN(buildingId) && buildingId > 0) {
+                url += `&buildingId=${buildingId}`;
+            }
+            if (roomId && !Number.isNaN(roomId) && roomId > 0) {
+                url += `&roomId=${roomId}`;
+            }
+            console.log(url);
+            $.ajax({
+                url: url, // The URL of the API you want to request data from
+                type: 'GET', // HTTP method (GET for retrieving data)
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                dataType: 'json', // Data type expected from the server (JSON in this case)
+                success: function (response) {
+                    renderBillData(response)
+                },
+                error: function (xhr, status, error) {
+                    // This function will be called if there's an error with the request
+                    console.error('An error occurred:', error);
+                }
+            });
+        }
+        function renderBillData(data) {
+            let html = '';
+            let index = 1;
+            for (var item of data) {
+                html += `
+                                            <tr>
+                                                <td>${index++}</td>
+                                                <td>${item.buildingName}</td>
+                                                <td>${item.roomNumber}</td>
+                                                <td>${item.totalPrice}</td>
+                                                <td>${item.remainingPrice}</td>
+                                                <td class="action-icons">
+                                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="getBillDetail(${item.roomId})">
+                                                        <i class="fa-solid fa-eye"></i>
+                                                    </button>
+
+                                                    <button class="btn btn-danger">
+                                                        <i class="fa-solid fa-calculator" onclick="calculate(${item.roomId})" ></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                `
+            }
+            $("#bills").html(html);
+        }
+        function calculate(roomId) {
+            console.log('calculate execute')
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            $.ajax({
+                url: `https://localhost:7056/api/ServiceBill?RoomId=${roomId}`, // The URL of the API you want to request data from
+                type: 'POST', // HTTP method (GET for retrieving data)
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                dataType: 'json', // Data type expected from the server (JSON in this case)
+                success: function (response) {
+                    alert('Tính phí dịch vụ thành công')
+                },
+                error: function (xhr, status, error) {
+                    // This function will be called if there's an error with the request
+                    //alert('Lỗi:', xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+            getBills();
+        }
+        function getBillDetail(roomId) {
+            var date = $("#monthYear").val() + "-01";
+            //var formattedDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + (date.getDay() + 1)
+            console.log(`https://localhost:7056/api/ServiceBill/Detail?RoomId=${roomId}&date=${date}`)
+            $.ajax({
+                url: `https://localhost:7056/api/ServiceBill/Detail?RoomId=${roomId}&date=${date}`, // The URL of the API you want to request data from
+                type: 'GET', // HTTP method (GET for retrieving data)
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                dataType: 'json', // Data type expected from the server (JSON in this case)
+                success: function (response) {
+                    renderBillDetail(response)
+                    console.log(response)
+                },
+                error: function (xhr, status, error) {
+                    // This function will be called if there's an error with the request
+                    console.error('An error occurred:', xhr);
+                }
+            });
+        }
+        function renderBillDetail(data) {
+            let html = ''
+            for (var item of data) {
+                html += `<div><strong>${item.name}: </strong> <span>${item.price}</span></div>`;
+            }
+            $("#bill-detail").html(html);
+        }
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+            }
+        }
     </script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">

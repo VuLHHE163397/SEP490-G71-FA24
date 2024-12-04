@@ -40,7 +40,9 @@ namespace RMS_API.Controllers
                 {
                     BuildingName = building.Name,
                     AvailableRooms = building.Rooms.Count(r => r.RoomStatus.Id == 1),  // Phòng trống
-                    RentedRooms = building.Rooms.Count(r => r.RoomStatus.Id != 1)  // Phòng cho thuê
+                    RentedRooms = building.Rooms.Count(r => r.RoomStatus.Id == 2),  // Phòng cho thuê
+                    MaintenanceRooms = building.Rooms.Count(r => r.RoomStatus.Id == 3),//Phòng sắp trống
+                    ExpiringRooms = building.Rooms.Count(r => r.RoomStatus.Id == 4)//Phòng đang bảo trì
                 })
                 .ToListAsync();
 

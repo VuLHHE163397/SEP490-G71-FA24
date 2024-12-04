@@ -135,7 +135,7 @@
         </aside>
         <div class="body-wrapper">
             <!-- Sidebar Start -->
-            <header class="app-header">
+            <header class="app-header" style="background-color:  whitesmoke">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
@@ -217,19 +217,6 @@
                     <div class="col-lg-8 d-flex align-items-stretch">
                         <div class="card w-100">
                             <div class="card-body">
-                                <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                                    <div class="mb-3 mb-sm-0">
-                                        <h5 class="card-title fw-semibold">Thống kê phòng</h5>
-                                    </div>
-                                    <div>
-                                        <select class="form-select">
-                                            <option value="1">March 2023</option>
-                                            <option value="2">April 2023</option>
-                                            <option value="3">May 2023</option>
-                                            <option value="4">June 2023</option>
-                                        </select>
-                                    </div>
-                                </div>
                                 <div id="chart"></div>
                             </div>
                         </div>
@@ -343,15 +330,16 @@
                 const buildingNames = data.map(item => item.buildingName);
                 const availableRooms = data.map(item => item.availableRooms);
                 const rentedRooms = data.map(item => item.rentedRooms);
-
-                renderChart(buildingNames, availableRooms, rentedRooms);
+                const maintenanceRooms = data.map(item => item.maintenanceRooms);
+                const expiringRooms = data.map(item => item.expiringRooms);
+                renderChart(buildingNames, availableRooms, rentedRooms, maintenanceRooms, expiringRooms);
             } catch (error) {
                 console.error('Error fetching room stats:', error);
             }
         }
 
         // Hàm render biểu đồ
-        function renderChart(buildingNames, availableRooms, rentedRooms) {
+        function renderChart(buildingNames, availableRooms, rentedRooms, maintenanceRooms, expiringRooms) {
             const options = {
                 chart: {
                     type: 'bar',
@@ -360,7 +348,7 @@
                 xaxis: {
                     categories: buildingNames
                 },
-                colors: ['#00E396', '#FEB019'],
+                colors: ['#00E396', '#FEB019', '#0099FF', '#FF3300'],
                 title: {
                     text: 'THỐNG KÊ PHÒNG THEO TÒA NHÀ', // Viết hoa kiểu tiếng Việt
                     align: 'center',
@@ -383,8 +371,16 @@
                         data: availableRooms
                     },
                     {
-                        name: 'Phòng đang được sử dụng',
+                        name: 'Phòng đang cho thuê',
                         data: rentedRooms
+                    },
+                    {
+                        name: 'Phòng sắp trả',
+                        data: maintenanceRooms
+                    },
+                    {
+                        name: 'Phòng bảo trì',
+                        data: expiringRooms
                     }
                 ]
             };
