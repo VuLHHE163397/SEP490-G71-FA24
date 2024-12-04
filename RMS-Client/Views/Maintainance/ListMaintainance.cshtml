@@ -265,7 +265,7 @@
         $(document).ready(function () {
             loadBuilding();
         })
-
+       
         function getUserIdFromToken(token) {
             try {
                 const tokenParts = token.split('.');
@@ -322,12 +322,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                        <li class="sidebar-subitem">
-                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                            </a>
-                        </li>
-                    `);
+                <li class="sidebar-subitem">
+                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                    </a>
+                </li>
+            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -340,8 +340,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                    `);
+                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+            `);
         }
         async function fetchData(status, tableId) {
             const tableBody = document.getElementById(tableId);
@@ -388,23 +388,23 @@
                         const buttonHtml =
                             item.status === "Chưa xử lý"
                                 ? `<button onclick="changeStatus(${item.id})" class="btn btn-success">
-                                   <i class="fa fa-check"></i>
-                               </button>`
+                           <i class="fa fa-check"></i> 
+                       </button>`
                                 : `<button onclick="changeStatus(${item.id})" class="btn btn-danger">
-                                   <i class="fa fa-undo"></i>
-                               </button>`;
+                           <i class="fa fa-undo"></i> 
+                       </button>`;
 
-                        const row = `<tr>
-                                 <td>${index}</td> <!-- Số thứ tự -->
-                                 <td>${item.maintenanceDescription}</td>
-                                 <td>${new Date(item.requestDate).toLocaleDateString()}</td>
-                                 <td>${item.solveDate ? new Date(item.solveDate).toLocaleDateString() : ""}</td>
-                                 <td>${item.roomNumber}</td>
-                                 <td>${item.buildingName}</td>
-                                 <td>${item.address}</td>
-                                 <td>${item.status}</td>
-                                 <td>${buttonHtml}</td>
-                                 </tr>`;
+                                const row = `<tr>
+                         <td>${index}</td> <!-- Số thứ tự -->
+                         <td>${item.maintenanceDescription}</td>
+                         <td>${new Date(item.requestDate).toLocaleDateString()}</td>
+                         <td>${item.solveDate ? new Date(item.solveDate).toLocaleDateString() : ""}</td>
+                         <td>${item.roomNumber}</td>
+                         <td>${item.buildingName}</td>
+                         <td>${item.address}</td>
+                         <td>${item.status}</td>
+                         <td>${buttonHtml}</td>
+                         </tr>`;
 
                         tableBody.innerHTML += row;
                     });
@@ -417,7 +417,7 @@
                 tableBody.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Không thể tải dữ liệu. Vui lòng thử lại sau!</td></tr>`;
             }
         }
-
+       
         // Hàm thay đổi trạng thái maintenance request
         async function changeStatus(id) {
             try {

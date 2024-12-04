@@ -154,15 +154,22 @@ namespace RMS_API.Controllers
             try
             {
                 // Kiểm tra danh sách serviceIds
-                if (serviceIds == null || !serviceIds.Any())
-                {
-                    return BadRequest(new { message = "Danh sách dịch vụ không hợp lệ." });
-                }
+                //if (serviceIds == null || !serviceIds.Any())
+                //{
+                //    return BadRequest(new { message = "Danh sách dịch vụ không hợp lệ." });
+                //}
 
                 var room = await _context.Rooms.Include(r => r.Services).FirstOrDefaultAsync(r => r.Id == roomId);
                 if (room == null)
                 {
                     return NotFound(new { message = "Phòng không tồn tại." });
+                }
+
+                if (serviceIds == null || !serviceIds.Any())
+                {
+                    room.Services.Clear();
+                    await _context.SaveChangesAsync();
+                    return Ok(new { message = "Đã xóa toàn bộ dịch vụ của phòng." });
                 }
 
                 // Log danh sách dịch vụ hiện tại của phòng

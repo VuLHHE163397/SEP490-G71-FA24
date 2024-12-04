@@ -201,7 +201,7 @@
                                     <input type="text" id="ServiceName" name="ServiceName" class="form-control" required />
                                 </div>
                             </div>
-
+                            
                         </div>
 
                         <div class="row mb-3">
@@ -214,18 +214,9 @@
                                         <span class="input-group-text">VNĐ</span>
                                     </div>
                                 </div>
-                            </div>
+                            </div>                                             
                         </div>
-                        <div class="row mb-3">
-                            <!-- Nhà -->
-                            <div class="form-group col-md-5">
-                                <label for="type" class="form-label">Loại dịch vụ</label>
-                                <select id="type" class="form-control custom-select">
-                                    <option value="0">Dịch vụ khác</option>
-                                    <option value="1">Điện</option>
-                                </select>
-                            </div>
-                        </div>
+
                         <div class="row mb-3">
                             <!-- Nhà -->
                             <div class="form-group col-md-5">
@@ -233,7 +224,6 @@
                                 <select id="BuildingId" class="form-control custom-select">
                                 </select>
                             </div>
-                        </div>
 
                         <div class="row mb-3">
                             <!-- Ghi chú -->
@@ -259,14 +249,14 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
-
+        
         var totalRecord = 0;
         $(document).ready(function () {
             loadBuilding();
-            // loadRoom();
+            // loadRoom();          
             const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
@@ -320,7 +310,7 @@
                 html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
             }
             $("#BuildingId").html(html);
-
+            
         }
 
         ///////////////////////////////////////////////////////
@@ -337,12 +327,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                <li class="sidebar-subitem">
-                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                    </a>
-                                                                                </li>
-                                                                            `);
+                                                                        <li class="sidebar-subitem">
+                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                            </a>
+                                                                        </li>
+                                                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -355,8 +345,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                    `);
+                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                            `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -380,7 +370,6 @@
                 price: $("#Price").val(),
                 userId: userId,
                 buildingId: $("#BuildingId").val(),
-                type: $("#type").val()
             }
             console.log(service)
             $.ajax({

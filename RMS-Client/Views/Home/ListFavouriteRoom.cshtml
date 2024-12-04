@@ -71,7 +71,15 @@
                         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                             <div class="navbar-nav mr-auto py-0">
                                 <a asp-controller="Home" asp-action="Home" class="nav-item nav-link active">Trang chủ</a>
-                                <a asp-controller="Home" asp-action="Search" class="nav-item nav-link active">Tìm phòng</a>
+                                <!-- Conditional rendering for roles -->
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a href="Admin/manage" class="nav-item nav-link">Quản lí</a>
+                                }
+                                else if (User.IsInRole("Landlord"))
+                                {
+                                    <a href="Landlord/manage" class="nav-item nav-link">Quản lí</a>
+                                }
                             </div>
                         </div>
                         <!-- Favorite Count Icon in Header -->
@@ -170,9 +178,10 @@
                                 <td>${room.address}</td>
                                 <td>
                                     <button class="fas fa-trash-alt fa-lg" title="Xoá" onclick="removeFavorite('${room.id}')" style="font-size: 1.5em;"></button>
-                                    <a href="/Home/RoomDetail?id=${room.id}" class="fas fa-eye fa-lg" style="margin-left: 10px; font-size: 1.5em; color: blue;" title="Xem chi tiết"></a>
+                                    <a href="/Home/RoomDetail/${room.id}" class="fas fa-eye fa-lg" style="margin-left: 10px; font-size: 1.5em; color: blue;" title="Xem chi tiết"></a>
                                 </td>
                             `;
+
                 favoriteRoomsList.appendChild(row);
             });
         }

@@ -827,35 +827,38 @@
                         const priceInMillions = (room.price / 1_000_000).toFixed(1);
 
                         roomElement.innerHTML = `
-                <div class="room-item shadow rounded overflow-hidden"
-                     style="cursor: pointer;"
-                                     onclick="window.open('/Home/RoomDetail?id=${room.id}', '_blank')">
-                    <div class="position-relative">
-                        <img class="img-fluid" src="${room.firstImageLink}" alt="Room Image">
+                                    <div class="room-item shadow rounded overflow-hidden"
+                                         style="cursor: pointer;"
+                                         onclick="window.open('/Home/RoomDetail/${room.id}', '_blank')">
+                                        <div class="position-relative">
+                                            <img class="img-fluid" src="${room.firstImageLink}" alt="Room Image">
 
-                        <!-- Nút trái tim không kích hoạt chuyển trang -->
-                        <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
-                           onclick="event.stopPropagation(); toggleFavorite(this)"
-                           data-room-id="${room.id}"
-                           data-room-image="${room.firstImageLink}"
-                           data-room-address="${room.address}">
-                            <i class="fa fa-heart"></i>
-                        </a>
-                    </div>
-                    <div class="room-details p-3">
-                        <h5 class="mb-2">
-                                            <i class="fa fa-home text-primary me-2"></i>Phòng ${room.roomNumber} - ${room.building}
-                        </h5>
-                        <div class="room-status">${room.roomStatusName}</div>
-
-                        <div class="mt-2" style="font-weight:bold;">
-                            <small class="text-muted d-block"><i class="fa fa-map-marker-alt text-primary me-2"></i>${room.address}</small>
-                            <small class="text-muted d-block"><i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT ${room.distance?.toFixed(0)} km</small>
-                            <small class="text-muted d-block"><i class="fa fa-dollar-sign text-primary me-2"></i>${(room.price / 1_000_000).toFixed(1)} triệu VND</small>
-                            <small class="text-muted d-block"><i class="fa fa-expand text-primary me-2"></i>${room.area} m²</small>
-                        </div>
-                    </div>
-                </div>`;
+                                            <!-- Nút trái tim không kích hoạt chuyển trang -->
+                                            <a href="#" class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-2"
+                                               onclick="event.stopPropagation(); toggleFavorite(this)"
+                                               data-room-id="${room.id}"
+                                               data-room-address="${room.address}">
+                                                <i class="fa fa-heart"></i>
+                                            </a>
+                                        </div>
+                                        <div class="room-details p-3">
+                                            <h5 class="mb-2">
+                                                <i class="fa fa-map-marker-alt text-primary me-2"></i>${room.address}
+                                            </h5>
+                                            <div class="room-status">${room.roomStatusName}</div>
+                                            <div class="mt-2" style="font-weight: bold;">
+                                                <small class="text-muted d-block">
+                                                    <i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT ${room.distance.toFixed(0)} km
+                                                </small>
+                                                <small class="text-muted d-block">
+                                                    <i class="fa fa-dollar-sign text-primary me-2"></i>${(room.price / 1_000_000).toFixed(1)} triệu VND
+                                                </small>
+                                                <small class="text-muted d-block">
+                                                    <i class="fa fa-expand text-primary me-2"></i>${room.area} m²
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>`;
 
                         row.appendChild(roomElement);
                     });

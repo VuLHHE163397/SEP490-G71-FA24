@@ -139,23 +139,23 @@
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
                                 @* @{
-                                var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
+                                    var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
                                 }
                                 @if (buildingsss != null && buildingsss.Any())
                                 {
-                                foreach (var buildingss in buildingsss)
-                                {
-                                <li class="sidebar-subitem">
-                                <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
-                                @buildingss.Name
-                                </a>
-                                </li>
-                                }
+                                    foreach (var buildingss in buildingsss)
+                                    {
+                                        <li class="sidebar-subitem">
+                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
+                                                @buildingss.Name
+                                            </a>
+                                        </li>
+                                    }
                                 }
                                 else
                                 {
-                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
                                 } *@
                             </ul>
                         </li>
@@ -261,8 +261,7 @@
                         <div class="d-flex align-items-center">
                             <button class="btn btn-success">Lưu</button>
                             <a href="/Service/ServiceReport" class="btn btn-primary ms-2">
-                                Báo cáo
-                            </a>
+                                Báo cáo</a>
                             <button class="btn btn-warning ms-2">Xuất file Excel</button>
                         </div>
                     </div>
@@ -282,19 +281,23 @@
                         <div class="row g-3 align-items-center mb-3">
                             <div class="col-md-3">
                                 <label for="datePicker" class="form-label">Ngày/tháng/năm</label>
-                                <input type="date" class="form-control" id="datePicker" onchange="setDate()">
+                                <input type="date" class="form-control" id="datePicker" value="2024-11-28">
                             </div>
                             <div class="col-md-3">
                                 <label for="building" class="form-label">Nhà</label>
-                                <select id="BuildingId" class="form-select" onchange="onSelectBuilding()">
+                                <select id="BuildingId" class="form-select">
+                                    <option selected>Tất cả</option>
+                                    <!-- Các tùy chọn khác -->
                                 </select>
                             </div>
                             <div class="col-md-3">
                                 <label for="room" class="form-label">Phòng</label>
-                                <select id="RoomId" class="form-select" onchange="getElectricRecord()">
+                                <select id="RoomId" class="form-select">
+                                    <option selected>Tất cả</option>
+                                    <!-- Các tùy chọn khác -->
                                 </select>
                             </div>
-
+                            
 
                         </div>
                         <!-- Bảng dữ liệu -->
@@ -302,7 +305,7 @@
                             <thead class="table-dark">
                                 <tr>
                                     <th>Nhà</th>
-                                    <th>Phòng</th>
+                                    <th>Phòng</th>     
                                     <th>Ngày bắt đầu chốt</th>
                                     <th>CS điện cũ</th>
                                     <th>CS điện mới</th>
@@ -310,9 +313,31 @@
                                     <th>Tính</th>
                                 </tr>
                             </thead>
-                            <tbody id="electrics">
+                            <tbody>
+                                <tr>
+                                    <td>Thiên Long Building</td>
+                                    <td>217</td>                                   
+                                    <td>
+                                       28/11/2024
+                                    </td>
+                                    <td><input type="number" class="form-control" value="53"></td>
+                                    <td><input type="number" class="form-control" value="656"></td>
+                                    <td class="text-end">603.0</td>
+                                    <td><button class="btn btn-info btn-sm"><i class="fa-solid fa-calculator"></i></button></td>
+                                </tr>
+                                
+                                
                             </tbody>
                         </table>
+
+                        <!-- Phân trang -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>Đang xem 0 đến 0 trong tổng số 0 mục</div>
+                            <div>
+                                <button class="btn btn-light" disabled>Trước</button>
+                                <button class="btn btn-light" disabled>Tiếp</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -332,16 +357,10 @@
         $(document).ready(function () {
             loadBuilding();
             loadRoom();
-            setData();
-            getElectricRecord();
             const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
         })
-        function onSelectBuilding() {
-            getElectricRecord();
-            loadRoom();
-        }
         /////////////////////////////////////////
 
         //Lấy UserId
@@ -438,12 +457,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                                <li class="sidebar-subitem">
-                                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                                    </a>
-                                                                                                </li>
-                                                                                            `);
+                                                                                <li class="sidebar-subitem">
+                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                    </a>
+                                                                                </li>
+                                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -456,110 +475,15 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                                    `);
+                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                    `);
         }
 
-        function setData() {
-            let today = new Date();
-            let formattedDate = today.toISOString().split('T')[0];
-            $("#datePicker").val(formattedDate)
-        }
-        function setDate() {
-            console.log($("#datePicker").val())
-            $(".recordDate").val($("#datePicker").val());
-        }
-        function getElectricRecord() {
-            const token = getCookie('AuthToken');
-            const userId = getUserIdFromToken(token);
-            var url = `https://localhost:7056/api/ElectricRecord?userId=${userId}`
-            var buildingId = $("#BuildingId").val();
-            var roomId = $("#RoomId").val();
-            console.log("buildingId = " + buildingId + ", roomId = " + roomId);
-            if (buildingId && !Number.isNaN(buildingId) && buildingId > 0) {
-                url += `&buildingId=${buildingId}`;
-            }
-            if (roomId && !Number.isNaN(roomId) && roomId > 0) {
-                url += `&roomId=${roomId}`;
-            }
-            console.log(url);
-            $.ajax({
-                url: url, // The URL of the API you want to request data from
-                type: 'GET', // HTTP method (GET for retrieving data)
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                },
-                dataType: 'json', // Data type expected from the server (JSON in this case)
-                success: function (response) {
-                    renderElectricRecord(response)
-                },
-                error: function (xhr, status, error) {
-                    // This function will be called if there's an error with the request
-                    console.error('An error occurred:', error);
-                }
-            });
-        }
-        function renderElectricRecord(data) {
-            let html = '';
-            for (var item of data) {
-                html += '<tr>';
-                html += `<td>${item.buildingName}</td>`;
-                html += `<td>${item.roomNumber}</td>`;
-                //html += `<td class="recordDate">${item.recordDate.split("T")[0]}</td>`;
-                html += `<td>
-                                            <input type="date" class="recordDate form-control" value="${item.recordDate.split("T")[0]}"/>
-                                        </td>`;
-                html += `<td>
-                                                <input type="text" value="${item.oldMeter}" class="form-control" id="oldMeter-${item.roomId}" onchange="calculate(${item.roomId})"/>
-                                        </td>`;
-                html += `<td>
-                                                     <input type="text" value="${item.newMeter}" class="form-control" id="newMeter-${item.roomId}" onchange="calculate(${item.roomId})"/>
-                                                </td>`;
-                html += `<td>
-                                                     <input type="text" value="${item.totalMeter}" class="form-control" id="totalMeter-${item.roomId}" readonly/>
-                                                </td>`;
-                html += `<td>
-                                            <button class="btn btn-primary" onclick="addServiceRecord(${item.roomId}, ${item.buildingId})">Lưu</button>
-                                        </td>`
-                html += '</tr>'
-            }
-            $("#electrics").html(html);
-        }
-        function calculate(id) {
-            var oldMeter = $(`#oldMeter-${id}`).val();
-            var newMeter = $(`#newMeter-${id}`).val();
-            $(`#totalMeter-${id}`).val(newMeter - oldMeter);
-        }
-        function addServiceRecord(roomId, buildingId) {
-            var electricRecord = {
-                buildingId: buildingId,
-                roomId: roomId,
-                recordDate: $(`#recordDate-${roomId}`).val(),
-                oldMeter: $(`#oldMeter-${roomId}`).val(),
-                newMeter: $(`#newMeter-${roomId}`).val(),
-                totalMeter: $(`#totalMeter-${roomId}`).val(),
-            }
-            console.log(electricRecord)
-            const token = getCookie('AuthToken');
-            $.ajax({
-                url: 'https://localhost:7056/api/ElectricRecord',  // API endpoint
-                type: "POST",
-                contentType: "application/json",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                },
-                data: JSON.stringify(electricRecord),
-                success: function (response) {
-                    alert("Lưu số điện thành công");
-                },
-                error: function (xhr, status, error) {
-                    alert(xhr.responseText);
-                }
-            });
-        }
+        
     </script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 
 </body>
 

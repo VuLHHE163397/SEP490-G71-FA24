@@ -3,7 +3,6 @@
     public class RoomDetailDTO
     {
         public string Building { get; set; }
-        public string RoomNumber { get; set; } = null!;
         public string FullAddress { get; set; }
         public decimal Price { get; set; }
         public double Area { get; set; }
