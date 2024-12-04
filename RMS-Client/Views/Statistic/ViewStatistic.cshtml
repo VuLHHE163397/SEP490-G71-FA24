@@ -330,15 +330,16 @@
                 const buildingNames = data.map(item => item.buildingName);
                 const availableRooms = data.map(item => item.availableRooms);
                 const rentedRooms = data.map(item => item.rentedRooms);
-
-                renderChart(buildingNames, availableRooms, rentedRooms);
+                const maintenanceRooms = data.map(item => item.maintenanceRooms);
+                const expiringRooms = data.map(item => item.expiringRooms);
+                renderChart(buildingNames, availableRooms, rentedRooms, maintenanceRooms, expiringRooms);
             } catch (error) {
                 console.error('Error fetching room stats:', error);
             }
         }
 
         // Hàm render biểu đồ
-        function renderChart(buildingNames, availableRooms, rentedRooms) {
+        function renderChart(buildingNames, availableRooms, rentedRooms, maintenanceRooms, expiringRooms) {
             const options = {
                 chart: {
                     type: 'bar',
@@ -347,7 +348,7 @@
                 xaxis: {
                     categories: buildingNames
                 },
-                colors: ['#00E396', '#FEB019'],
+                colors: ['#00E396', '#FEB019', '#0099FF', '#FF3300'],
                 title: {
                     text: 'THỐNG KÊ PHÒNG THEO TÒA NHÀ', // Viết hoa kiểu tiếng Việt
                     align: 'center',
@@ -370,8 +371,16 @@
                         data: availableRooms
                     },
                     {
-                        name: 'Phòng đang được sử dụng',
+                        name: 'Phòng đang cho thuê',
                         data: rentedRooms
+                    },
+                    {
+                        name: 'Phòng sắp trả',
+                        data: maintenanceRooms
+                    },
+                    {
+                        name: 'Phòng bảo trì',
+                        data: expiringRooms
                     }
                 ]
             };

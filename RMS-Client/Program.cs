@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
+
 // Cấu hình CORS
 builder.Services.AddCors(options =>
 {
@@ -55,6 +56,6 @@ app.UseEndpoints(endpoints =>
 // Cấu hình route mặc định cho ứng dụng.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Home}"); 
+    pattern: "{controller=Home}/{action=Home}/{id?}"); // Đặt controller mặc định là Home và action là Index
 
 app.Run();
