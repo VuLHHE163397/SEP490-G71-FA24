@@ -19,7 +19,7 @@ namespace RMS_API.Controllers
         public UserController(RMS_SEP490Context context)
         {
             _context = context;
-            
+
         }
 
         [HttpGet("GetUserByEmail")]
@@ -31,7 +31,7 @@ namespace RMS_API.Controllers
                 return BadRequest("Email Không được để trống.");
             }
 
-            var user = await _context.Users               
+            var user = await _context.Users
                .Where(u => u.Email == email)
                .Select(b => new ProfileDTO
                {
@@ -232,7 +232,7 @@ namespace RMS_API.Controllers
 
 
         [HttpGet("GetAllLanlord")]
-        
+
         public async Task<IActionResult> GetAllLanlord()//Lanlord se co roleid =2
         {
             // Retrieve all users with RoleId = 2
@@ -288,11 +288,35 @@ namespace RMS_API.Controllers
             // Update the user's status
             user.UserStatusId = request.NewStatusId;
 
-            // Save changes to the database
+            // Save changes to the user's status
             await _context.SaveChangesAsync();
 
-            return Ok(new { Message = "User status updated successfully." });
-        }
+            // Optional: Update building status if the user is a landlord
+            if (user.RoleId == 2) // Assuming 2 is the RoleId for "Landlord"
+            {
+                // Find all buildings associated with this user (landlord)
+                var buildings = await _context.Buildings
+                    .Where(b => b.UserId == user.Id) // Assuming there's a `UserId` field in the Building model
+                    .ToListAsync();
 
+                if (buildings != null && buildings.Count > 0)
+                {
+                    foreach (var building in buildings)
+                    {
+                        // Find the building status by NewStatusId
+                        var buildingStatus = await _context.BuildingStatuses.FindAsync(request.NewStatusId);
+                        if (buildingStatus != null)
+                        {
+                            // Update the status of each building
+                            building.BuildingStatus = buildingStatus; // Assuming `BuildingStatus` is a navigation property
+                        }
+                    }
+
+                    // Save changes to all associated buildings
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return Ok();
+        }
     }
 }
