@@ -3,6 +3,26 @@
   "WorkspaceRootPath": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms_api\\controllers\\servicebillcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\controllers\\servicebillcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms_api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms_api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms_api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms-client\\views\\login\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\login\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms-client\\views\\service\\listservice.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\service\\listservice.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -26,11 +46,73 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ServiceBillController.cs",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\Controllers\\ServiceBillController.cs",
+              "RelativeDocumentMoniker": "RMS_API\\Controllers\\ServiceBillController.cs",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\Controllers\\ServiceBillController.cs",
+              "RelativeToolTip": "RMS_API\\Controllers\\ServiceBillController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-05T16:54:24.211Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\appsettings.json",
+              "RelativeDocumentMoniker": "RMS_API\\appsettings.json",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\appsettings.json",
+              "RelativeToolTip": "RMS_API\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-12-05T08:24:54.996Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\Program.cs",
+              "RelativeDocumentMoniker": "RMS_API\\Program.cs",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\Program.cs",
+              "RelativeToolTip": "RMS_API\\Program.cs",
+              "ViewState": "AQIAAF8AAAAAAAAAAAAAAIMAAAAKAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-05T08:21:43.148Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "RMS_API\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "RMS_API\\Controllers\\AuthController.cs",
+              "ViewState": "AQIAAGYAAAAAAAAAAAAAwBwBAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-05T07:38:44.598Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Login\\Login.cshtml",
+              "RelativeDocumentMoniker": "RMS-Client\\Views\\Login\\Login.cshtml",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Login\\Login.cshtml",
+              "RelativeToolTip": "RMS-Client\\Views\\Login\\Login.cshtml",
+              "ViewState": "AQIAAHUAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-12-05T07:38:34.223Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "ServiceDTO.cs",
               "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\DTOs\\ServiceDTO.cs",
               "RelativeDocumentMoniker": "RMS_API\\DTOs\\ServiceDTO.cs",
@@ -42,7 +124,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
               "Title": "AddService.cshtml",
               "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\AddService.cshtml",
               "RelativeDocumentMoniker": "RMS-Client\\Views\\Service\\AddService.cshtml",
@@ -54,7 +136,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 5,
               "Title": "ListService.cshtml",
               "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\ListService.cshtml",
               "RelativeDocumentMoniker": "RMS-Client\\Views\\Service\\ListService.cshtml",
@@ -62,12 +144,11 @@
               "RelativeToolTip": "RMS-Client\\Views\\Service\\ListService.cshtml",
               "ViewState": "AQIAAMcBAAAAAAAAAAAAANsBAABNAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-04T03:00:15.923Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-04T03:00:15.923Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "ServicesBills.cshtml",
               "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\ServicesBills.cshtml",
               "RelativeDocumentMoniker": "RMS-Client\\Views\\Service\\ServicesBills.cshtml",
