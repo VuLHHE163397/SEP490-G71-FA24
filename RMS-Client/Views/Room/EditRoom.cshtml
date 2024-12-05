@@ -361,6 +361,7 @@
                             <div class="col-sm-9">
                                 <input asp-for="StartedDate" class="form-control" type="date" />
                                 <span asp-validation-for="StartedDate" class="text-danger"></span>
+                                <span class="error-message" id="dateError1" style="color: red; display: none;">Ngày bắt đầu thuê phải trước ngày hết hạn</span>
                             </div>
                         </div>
 
@@ -369,7 +370,7 @@
                             <div class="col-sm-9">
                                 <input asp-for="ExpiredDate" class="form-control" type="date" />
                                 <span asp-validation-for="ExpiredDate" class="text-danger"></span>
-                                <span class="error-message" id="dateError" style="color: red; display: none;">Ngày hết hạn phải sau ngày bắt đầu thuê</span>
+                                <span class="error-message" id="dateError2" style="color: red; display: none;">Ngày hết hạn phải sau ngày bắt đầu thuê</span>
                             </div>
                         </div>
 
@@ -378,7 +379,7 @@
                             <div class="col-sm-9">
                                 <input asp-for="FreeInFutureDate" class="form-control" type="date" />
                                 <span asp-validation-for="FreeInFutureDate" class="text-danger"></span>
-                                <span class="error-message" id="dateError2" style="color: red; display: none;">Ngày Phòng sẽ trống sẽ phải sau hoặc cùng ngày hết hạn phòng</span>
+                                <span class="error-message" id="dateError3" style="color: red; display: none;">Ngày Phòng sẽ trống sẽ phải sau hoặc cùng ngày hết hạn phòng</span>
                             </div>
                         </div>
 
@@ -423,17 +424,11 @@
             validateArea();
         });
 
-        document.getElementById('StartedDate').addEventListener('change', function () {
-            validateDate();
-        });
+        document.getElementById('StartedDate').addEventListener('input',validateDate);
 
-        document.getElementById('ExpiredDate').addEventListener('change', function () {
-            validateDate();
-        });
+        document.getElementById('ExpiredDate').addEventListener('input', validateDate);
 
-        document.getElementById('FreeInFutureDate').addEventListener('change', function () {
-            validateDate2();
-        });
+        document.getElementById('FreeInFutureDate').addEventListener('input', validateDate);
 
         const submitError = document.getElementById('submitError');
 
@@ -499,44 +494,58 @@
             }
         }
 
+
         function validateDate() {
             const startedDate = document.getElementById('StartedDate').value;
             const expiredDate = document.getElementById('ExpiredDate').value;
-            const dateError = document.getElementById('dateError');
-
-            if (startedDate && expiredDate) {
-                if (new Date(expiredDate) < new Date(startedDate)) {
-                    dateError.style.display = 'inline';
-                    dateError.textContent = 'Ngày hết hạn phải sau ngày bắt đầu thuê';
-                    document.getElementById('buttonSave').disabled = true;
-                    submitError.style.display = 'inline';
-                } else {
-                    dateError.style.display = 'none';
-                    document.getElementById('buttonSave').disabled = false;
-                    submitError.style.display = 'none';
-                }
-            }
-        }
-
-        function validateDate2() {
             const freeInFutureDate = document.getElementById('FreeInFutureDate').value;
-            const expiredDate = document.getElementById('ExpiredDate').value;
-            const dateError2 = document.getElementById('dateError2');
 
-            if (freeInFutureDate && expiredDate) {
-                if (new Date(freeInFutureDate) < new Date(expiredDate)) {
-                    dateError2.style.display = 'inline';
-                    dateError2.textContent = 'Ngày Phòng sẽ trống sẽ phải sau hoặc cùng ngày hết hạn phòng';
-                    document.getElementById('buttonSave').disabled = true;
-                    submitError.style.display = 'inline';
-                    return;
-                } else {
-                    dateError2.style.display = 'none';
-                    document.getElementById('buttonSave').disabled = false;
-                    submitError.style.display = 'none';
+            const dateError1 = document.getElementById('dateError1'); // Ngày bắt đầu trước ngày hết hạn
+            const dateError2 = document.getElementById('dateError2'); // Ngày hết hạn sau ngày bắt đầu
+            const dateError3 = document.getElementById('dateError3'); // Ngày trống sau hoặc cùng ngày hết hạn
+
+            const submitError = document.getElementById('submitError'); // Lỗi chung
+            const saveButton = document.getElementById('buttonSave'); // Nút lưu
+
+            // Reset lỗi
+            dateError1.style.display = 'none';
+            dateError2.style.display = 'none';
+            dateError3.style.display = 'none';
+            submitError.style.display = 'none';
+            saveButton.disabled = false;
+
+            let hasError = false;
+
+            // Kiểm tra ngày bắt đầu phải trước ngày hết hạn
+            if (startedDate && expiredDate) {
+                const started = new Date(startedDate);
+                const expired = new Date(expiredDate);
+
+                if (expired < started) {
+                    dateError1.style.display = 'inline';
+                    hasError = true;
                 }
             }
+
+            // Kiểm tra ngày hết hạn phải trước hoặc bằng ngày trống trong tương lai
+            if (freeInFutureDate && expiredDate) {
+                const expired = new Date(expiredDate);
+                const freeInFuture = new Date(freeInFutureDate);
+
+                if (freeInFuture < expired) {
+                    dateError3.style.display = 'inline';
+                    hasError = true;
+                }
+            }
+
+            // Nếu có lỗi, hiển thị lỗi chung và vô hiệu hóa nút lưu
+            if (hasError) {
+                submitError.style.display = 'inline';
+                saveButton.disabled = true;
+            }
         }
+
+
 
         document.getElementById('RoomNumber').addEventListener('blur', async function () {
             const roomName = document.getElementById("RoomNumber").value;
@@ -577,13 +586,14 @@
             }
         });
 
+
         // Kiểm tra khi submit form
         document.getElementById('editRoomForm').addEventListener('submit', function (event) {
             validatePrice();
             validateFloor();
             validateArea();
             validateDate();
-            validateDate2();
+            // validateDate2();
 
             // Nếu có lỗi, ngăn form submit
             if (document.querySelectorAll('.error-message[style="display: inline;"]').length > 0) {
