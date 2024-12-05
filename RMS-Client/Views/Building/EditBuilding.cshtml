@@ -80,7 +80,15 @@
                 background-color: #5a6268;
             }
 
+        .error-message {
+            display: none;
+            color: red;
+            font-size: 0.9em;
+        }
 
+            .error-message.visible {
+                display: block;
+            }
 
         /* Sidebar styling */
         .sidebar-submenu {
@@ -217,22 +225,7 @@
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
-                                @*  @if (Model != null && Model.Any())
-                                {
-                                foreach (var building in Model)
-                                {
-                                <li class="sidebar-subitem">
-                                <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@building.Id" class="sidebar-sublink">
-                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
-                                @building.Name
-                                </a>
-                                </li>
-                                }
-                                }
-                                else
-                                {
-                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                } *@
+                               
                             </ul>
                         </li>
                         <li class="sidebar-item">
@@ -309,9 +302,9 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
+                                            <p class="mb-0 fs-3">Tài Khoản</p>
                                         </a>
                                         <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-mail fs-6"></i>
@@ -332,6 +325,7 @@
                 </nav>
             </header>
             <!--  Header End -->
+           
 
             <div class="container-fluid">
                 <div class="container mt-4">
@@ -400,7 +394,7 @@
 
 
 
-                        <button type="submit" class="btn btn-primary" href="/Building/ListBuilding">Lưu</button>
+                        <button type="submit" class="btn btn-primary" href="/Building/ListBuilding" id="saveButton">Lưu</button>
                     </form>
                 </div>
             </div>
@@ -429,88 +423,44 @@
                 function validateTotalFloors() {
                     const floor = document.getElementById('TotalFloors').value;
                     const totalFloorsError = document.getElementById('totalFloorsError');
+                    const saveButton = document.getElementById('saveButton'); // Đúng ID
+
                     if (parseFloat(floor) <= 0) {
                         totalFloorsError.style.display = 'inline';
-                        document.getElementById('buttonSave').disabled = true;
-                        submitError.style.display = 'inline';
+                        saveButton.disabled = true; // Disable nút lưu khi có lỗi
                     } else {
-                        priceError.style.display = 'none';
-                        document.getElementById('buttonSave').disabled = false;
-                        submitError.style.display = 'none';
+                        totalFloorsError.style.display = 'none';
+                        saveButton.disabled = false; // Kích hoạt nút lưu khi không có lỗi
                     }
                 }
-
                 function validateNumberOfRooms() {
                     const room = document.getElementById('NumberOfRooms').value;
                     const numberOfRoomsError = document.getElementById('numberOfRoomsError');
+                    const saveButton = document.getElementById('saveButton');
+
                     if (parseFloat(room) <= 0) {
                         numberOfRoomsError.style.display = 'inline';
-                        document.getElementById('buttonSave').disabled = true;
-                        submitError.style.display = 'inline';
+                        saveButton.disabled = true;
                     } else {
-                        priceError.style.display = 'none';
-                        document.getElementById('buttonSave').disabled = false;
-                        submitError.style.display = 'none';
+                        numberOfRoomsError.style.display = 'none';
+                        saveButton.disabled = false;
                     }
                 }
 
                 function validateDistance() {
                     const distance = document.getElementById('Distance').value;
                     const distanceError = document.getElementById('distanceError');
+                    const saveButton = document.getElementById('saveButton');
+
                     if (parseFloat(distance) <= 0) {
                         distanceError.style.display = 'inline';
-                        buttonSave.disabled = true;
-                        submitError.style.display = 'inline';
+                        saveButton.disabled = true;
                     } else {
                         distanceError.style.display = 'none';
-                        buttonSave.disabled = false;
-                        submitError.style.display = 'none';
+                        saveButton.disabled = false;
                     }
                 }
 
-                document.getElementById('Name').addEventListener('blur', async function () {
-                    const buildingName = this.value.trim();
-
-                    // Get the token from the cookies
-                    const token = getCookie('AuthToken');
-                    if (!token) {
-                        alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
-                        window.location.href = "/Auth/login"; // Redirect to login page if no token found
-                        return;
-                    }
-
-                    // Decode the token to extract userId
-                    const userId = getUserIdFromToken(token);
-                    if (!userId) {
-                        alert('Không thể lấy thông tin người dùng từ token.');
-                        return;
-                    }
-
-                    // Check if building name is empty
-                    if (buildingName === '') {
-                        document.getElementById('buildingNameError').style.display = 'none';
-                        document.getElementById('buttonSave').disabled = false;
-                        document.getElementById('submitError').style.display = 'none'; // Hide submit error if empty
-                        return;
-                    }
-
-                    // Send AJAX request to check if the building name exists
-                    const response = await fetch(`/api/Building/CheckBuildingName/${userId}/${encodeURIComponent(buildingName)}`);
-                    const isDuplicate = await response.json(); // Assuming the API returns a boolean value
-
-                    const buildingNameError = document.getElementById('buildingNameError');
-                    const submitError = document.getElementById('submitError');
-                    if (isDuplicate) {
-                        buildingNameError.style.display = 'inline';
-                        buildingNameError.textContent = 'Tên tòa nhà đã tồn tại. Vui lòng nhập lại!';
-                        document.getElementById('buttonSave').disabled = true; // Disable save button if duplicate
-                        submitError.style.display = 'inline'; // Show submit error
-                    } else {
-                        buildingNameError.style.display = 'none'; // Hide error message if name is unique
-                        document.getElementById('buttonSave').disabled = false; // Enable save button
-                        submitError.style.display = 'none'; // Hide submit error if name is unique
-                    }
-                });
 
                 // Helper function to get cookie value by name
                 function getCookie(name) {
@@ -531,25 +481,20 @@
                     document.getElementById("BuildingStatusDropdown").style.display = "none";
                 }
 
-                // Hide Dropdown on Click Outside
-                document.addEventListener('click', function (event) {
-                    var input = document.getElementById("BuildingStatus");
-                    var dropdown = document.getElementById("BuildingStatusDropdown");
-                    if (!input.contains(event.target) && !dropdown.contains(event.target)) {
-                        dropdown.style.display = "none";
-                    }
-                });
 
                 document.getElementById('editBuilding').addEventListener('submit', function (event) {
                     validateTotalFloors();
                     validateNumberOfRooms();
                     validateDistance();
 
-                    // Nếu có lỗi, ngăn form submit
-                    if (document.querySelectorAll('.error-message[style="display: inline;"]').length > 0) {
-                        event.preventDefault();
+                    const hasErrors = document.querySelectorAll('.error-message[style="display: inline;"]').length > 0;
+
+                    if (hasErrors) {
+                        event.preventDefault(); // Ngăn không cho submit form
+                        alert("Vui lòng sửa các lỗi trước khi gửi.");
                     }
                 });
+
 
                 // Extract User ID from Token
                 function getUserIdFromToken(token) {
@@ -661,7 +606,7 @@
                         contentType: 'application/json',
                         data: JSON.stringify(buildingData),
                         success: function (response) {
-                            alert('Building updated successfully!');
+                            alert('Cập nhật tòa nhà thành công!');
                             window.location.href = '/Building/ListBuilding';
                         },
                         error: function (xhr) {
@@ -679,7 +624,40 @@
 
                 // On Document Ready, Fetch Buildings
                 $(document).ready(function () {
+                    $('#Name').blur(function () {
+                        const buildingName = $(this).val();
+                        const token = getCookie('AuthToken');
+                        if (!token) {
+                            alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                            return;
+                        }
+                        const userId = getUserIdFromToken(token);
+                        if (!buildingName || !userId) return;
+
+                        const url = `https://localhost:7056/api/Building/CheckBuildingName/${userId}/${encodeURIComponent(buildingName)}`;
+
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            success: function (response) {
+                                // Clear any existing messages
+                                $('#buildingNameError').hide();
+                                $('#buildingNameSuccess').hide();
+
+                                if (response.message === "Thành công.") {
+                                    $('#buildingNameSuccess').show().text('Tên tòa nhà hợp lệ.');
+                                }
+                            },
+                            error: function (xhr) {
+                                $('#buildingNameError').show().text(xhr.responseJSON?.message || 'Có lỗi xảy ra.');
+                            }
+                        });
+                    });
                     getListBuilding();
+                    validateTotalFloors();
+                    validateNumberOfRooms();
+                    validateDistance();
+
                 });
             </script>
 

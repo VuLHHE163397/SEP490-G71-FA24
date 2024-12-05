@@ -143,6 +143,12 @@
             border-radius: 50%;
         }
 
+      
+        
+        .container {
+            padding-top: 80px; /* Adjust to ensure content is not covered */
+        }
+
     </style>
 </head>
 <body>
@@ -301,19 +307,13 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
+                                            <p class="mb-0 fs-3">Tài Khoản</p>
                                         </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
-                                        </a>
+
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
+
                                     </div>
                                 </div>
                             </li>
@@ -323,59 +323,44 @@
                 </nav>
             </header>
             <!--  Header End -->
-            <div class="container-fluid">
-                <div class="container mt-4">
-                    <h1>@ViewData["Title"]</h1>
+            <div class="container mt-4">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white">
+                        <h5>@ViewData["Title"]</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Displaying Information as Profile Text -->
+                        <p><strong>Tên Tòa Nhà:</strong> @Model.Name</p>
+                        <p><strong>Khoảng cách (Km):</strong> @Model.Distance</p>
+                        <p><strong>Số Tầng:</strong> @Model.TotalFloors</p>
+                        <p><strong>Số Phòng:</strong> @Model.NumberOfRooms</p>
+                        <p><strong>Địa Chỉ:</strong> @Model.AddressDetails</p>
+                        <p><strong>Tỉnh/Thành phố:</strong> @Model.ProvinceName</p>
+                        <p><strong>Quận/Huyện:</strong> @Model.DistrictName</p>
+                        <p><strong>Xã/Phường:</strong> @Model.WardName</p>
+                        <p><strong>Trạng Thái:</strong> @Model.BuildingStatus</p>
 
-                    <!-- Form for Editing Building -->
-                    <form id="editBuilding" onsubmit="editBuilding(); return false;">
-                        <input type="hidden" id="BuildingId" name="BuildingId" value="@Model.Id" />
+                        <!-- Displaying Map Link if Exists -->
+                        @if (!string.IsNullOrEmpty(Model.LinkEmbedMap))
+                        {
+                            <h4>Vị trí trên bản đồ</h4>
+                            <div class="map-container">
+                                @Html.Raw(Model.LinkEmbedMap) <!-- Display Embed Map -->
+                            </div>
+                        }
 
-                        <div class="form-group">
-                            <label for="Name">Tên Tòa Nhà</label>
-                            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required readonly/>
+                        <div class="form-group text-center">
+                            <a asp-controller="Building" asp-action="ListBuilding" class="btn btn-secondary">Trở Về</a>
                         </div>
-                        <div class="form-group">
-                            <label for="Distance">Khoảng cách(Km)</label>
-                            <input class="form-control" id="Distance" name="Distance" value="@Model.Distance" required readonly />
-                        </div>
-                        <div class="form-group">
-                            <label for="TotalFloors">Số Tầng</label>
-                            <input type="number" class="form-control" id="TotalFloors" name="TotalFloors" value="@Model.TotalFloors" required readonly />
-                        </div>
-                        <div class="form-group">
-                            <label for="NumberOfRooms">Số Phòng</label>
-                            <input type="number" class="form-control" id="NumberOfRooms" name="NumberOfRooms" value="@Model.NumberOfRooms" required readonly />
-                        </div>
-                        <div class="form-group">
-                            <label for="AddressDetails">Địa Chỉ</label>
-                            <input type="text" class="form-control" id="AddressDetails" name="AddressDetails" value="@Model.AddressDetails" required readonly />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="ProvinceId">Tỉnh/Thành phố</label>
-                            <input class="form-control" id="ProvinceId" name="ProvinceName" value="@Model.ProvinceName" required readonly />
-                        </div>
-                        <div class="form-group">
-                            <label for="DistrictId">Quận/Huyện</label>
-                            <input class="form-control" id="DistrictId" name="DistrictName" value="@Model.DistrictName" required readonly />
-                        </div>
-                        <div class="form-group">
-                            <label for="WardId">Xã/Phường</label>
-                            <input class="form-control" id="WardId" name="WardName" value="@Model.WardName" required readonly />
-                        </div>
-                        <div class="form-group">
-                            <label for="BuildingStatus">Trạng Thái</label>
-                            <input class="form-control" id="BuildingStatus" name="BuildingStatus" value="@Model.BuildingStatus" required readonly />
-                        </div>
-
-                        <a asp-controller="Building" asp-action="ListBuilding" class="btn btn-secondary">Trở Về</a>
-                    </form>
+                    </div>
                 </div>
             </div>
+
+            <!-- External CSS and JS -->
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
             <script>
                 $(document).ready(function () {
                     console.log('Page Loaded: Fetching buildings...');
@@ -435,34 +420,34 @@
                         // Update Sidebar
                         buildings.forEach(building => {
                             sidebarContainer.append(`
-                                        <li class="sidebar-subitem">
-                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                            </a>
-                                        </li>
-                                    `);
+                                    <li class="sidebar-subitem">
+                                        <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                            <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                        </a>
+                                    </li>
+                                `);
                         });
 
                         // Update Table
                         buildings.forEach((building, index) => {
                             tableContainer.append(`
-                                        <tr>
-                                            <td>${index + 1}</td> <!-- Số thứ tự -->
-                                            <td>${building.name}</td>
-                                            <td>${building.totalFloors}</td>
-                                            <td>${building.numberOfRooms}</td>
-                                            <td>${building.addressDetails}</td>
-                                            <td>${building.buildingStatus}</td>
-                                            <td>
-                                                <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
-                                                    <i class="ti ti-eye"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    `);
+                                    <tr>
+                                        <td>${index + 1}</td>
+                                        <td>${building.name}</td>
+                                        <td>${building.totalFloors}</td>
+                                        <td>${building.numberOfRooms}</td>
+                                        <td>${building.addressDetails}</td>
+                                        <td>${building.buildingStatus}</td>
+                                        <td>
+                                            <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
+                                                <i class="ti ti-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                `);
                         });
                     } else {
                         displayNoBuildingsMessage();
@@ -476,27 +461,19 @@
                     // Notify in Sidebar
                     sidebarContainer.empty();
                     sidebarContainer.append(`
-                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                            `);
+                            <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                        `);
 
                     // Notify in Table
                     tableContainer.empty();
                     tableContainer.append(`
-                                                <tr>
-                                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
-                                                </tr>
-                                            `);
+                            <tr>
+                                <td colspan="7" class="text-center">Không có dữ liệu</td>
+                            </tr>
+                        `);
                 }
-
-
-                function toggleSubmenu(event) {
-                    event.preventDefault();
-                    var submenu = event.currentTarget.nextElementSibling;
-                    submenu.style.display = submenu.style.display === "none" ? "block" : "none";
-                }
-
-
             </script>
+
 
         </div>
 

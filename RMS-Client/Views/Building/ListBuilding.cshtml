@@ -38,25 +38,7 @@
                 transform: scale(1);
             }
 
-        /*  .btn-warning {
-                                                                                    background-color: #ffc107;
-                                                                                    border-color: #ffc107;
-                                                                                    color: #fff;
-                                                                                }
-
-                                                                                    .btn-warning:hover {
-                                                                                        background-color: #e0a800;
-                                                                                        border-color: #e0a800;
-                                                                                        transform: scale(1.05);
-                                                                                    }
-
-                                                                                    .btn-warning:active {
-                                                                                        background-color: #c69500;
-                                                                                        border-color: #c69500;
-                                                                                        transform: scale(1);
-                                                                                    }
-                                                                         */
-        /* Icon styling inside buttons */
+       
         .btn i {
             margin-right: 8px;
         }
@@ -292,14 +274,7 @@
                                             <i class="ti ti-user fs-6"></i>
                                             <p class="mb-0 fs-3">Tài Khoản</p>
                                         </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
-                                        </a>
+                                     
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
 
                                     </div>
@@ -313,7 +288,7 @@
             <!--  Header End -->
             <div class="container-fluid">
                 <div class="container mt-4">
-                    <h1 center>@ViewData["Title"]</h1>
+                    <h1 class="text-center">@ViewData["Title"]</h1>
 
                     <!-- Create button -->
                     <div class="mb-3">
@@ -322,29 +297,26 @@
                         </a>
                     </div>
 
-
-                    <table class="table table-striped">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Số thứ tự</th>
-                                <th>Tên</th>
-                                <th>Số tầng</th>
-                                <th>Số phòng</th>
-                                <th>Địa chỉ cụ thể</th>
-                                <th>Trạng thái</th>
-                                <th>Hành động</th>
-                            </tr>
-                        </thead>
-                        <tbody id="buildingsContainer">
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-striped text-center">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th style="width: 10%;">Số thứ tự</th>
+                                    <th style="width: 20%;">Tên tòa nhà</th>
+                                    <th style="width: 15%;">Số tầng của tòa nhà</th>
+                                    <th style="width: 15%;">Số phòng của tòa nhà</th>
+                                    <th style="width: 25%;">Địa chỉ cụ thể</th>
+                                    <th style="width: 15%;">Trạng thái của tòa nhà</th>
+                                    <th style="width: 10%;">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="buildingsContainer">
+                                <!-- Building rows will be populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
-
             </div>
-        </div>
-
-    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/sidebarmenu.js"></script>
@@ -358,7 +330,7 @@
         $(document).ready(function () {
             console.log('Page Loaded: Fetching buildings...');
             getListBuilding();
-            console.log("doc ne");
+            
         });
 
         function getUserIdFromToken(token) {
