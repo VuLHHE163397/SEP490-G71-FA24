@@ -505,7 +505,7 @@
         function renderRoom(data) {
             var urlParams = new URLSearchParams(window.location.search);
             var roomId = $("#rooms").val();
-            let html = `<option value="-1" ${roomId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            let html = `<option value="-1" ${roomId <= 0 ? 'selected' : ''}>Chọn</option>`;
             for (var item of data) {
                 html += `<option value="${item.id}" ${roomId == item.id ? 'selected' : ''}>${item.roomNumber}</option>`
             }
@@ -533,7 +533,7 @@
         function renderStatus(data) {
             var urlParams = new URLSearchParams(window.location.search);
             var roomId = urlParams.get('statusId');
-            let html = `<option value="-1" ${roomId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            let html = `<option value="-1" ${roomId <= 0 ? 'selected' : ''}>Chọn</option>`;
             for (var item of data) {
                 html += `<option value="${item.id}">${item.description}</option>`
             }

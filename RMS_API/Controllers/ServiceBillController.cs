@@ -57,6 +57,7 @@ namespace RMS_API.Controllers
                     var services = context.Services
 
                     .Where(s => s.Rooms.Any(r => r.Id == RoomId))
+                    .Where(s => s.Type != 1)
                     .Select(s => new
                     {
                         s.Id,
@@ -73,7 +74,7 @@ namespace RMS_API.Controllers
                     {
                         var bill = new ServicesBill
                         {
-                            Name = $"${e.Name} tháng {today.Month}/{today.Year}",
+                            Name = $"{e.Name} tháng {today.Month}/{today.Year}",
                             Date = today,
                             Price = e.Price,
                             ServiceId = e.Id,
