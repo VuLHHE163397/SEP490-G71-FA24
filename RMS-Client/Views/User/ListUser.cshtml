@@ -120,6 +120,7 @@
         const token = getCookie('AuthToken');
         if (!token) {
             console.error('Token không tìm thấy trong cookie.');
+            window.location.href = "/Auth/Login";
         }
         const tokenParts = token.split('.');
         const payload = JSON.parse(atob(tokenParts[1]));
@@ -132,6 +133,17 @@
             window.location.href = "/Auth/Login";
         }
 
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+
+            }
+        }
     </script>
 
     <!--  Body Wrapper -->
@@ -197,27 +209,17 @@
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
                                     <img src="~/images/profile/user-1.jpg" alt="" width="50" height="50" class="rounded-circle">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
-                                    <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
-                                        </a>
+                                    <div class="message-body">                                        
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
-
                                     </div>
                                 </div>
                             </li>
@@ -288,6 +290,9 @@
                     <script src="~/js/dashboard.js"></script>
                     <script>
 
+                        $(document).ready(function () {                           
+                            GetUserNameById();                          
+                        });
 
                         // JavaScript function để lọc bảng theo từ khóa tìm kiếm
                         function filterTable() {
@@ -342,6 +347,25 @@
                                 .catch(error => {
                                     alert('Có lỗi xảy ra: ' + error.message);
                                 });
+                        }
+
+                        function GetUserNameById() {
+                            const token = getCookie('AuthToken');
+                            const userId = getUserIdFromToken(token);
+                            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+                            $.ajax({
+                                url: url,
+                                type: 'GET',
+                                success: function (response) {
+                                    if (response && response.fullName) {
+                                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                                    }
+                                },
+                                error: function (xhr) {
+                                    console.error('Error fetching user profile:', xhr.responseText);
+                                }
+                            });
                         }
                     </script>
 

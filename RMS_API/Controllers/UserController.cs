@@ -74,7 +74,8 @@ namespace RMS_API.Controllers
                    Email = b.Email,
                    Phone = b.Phone,
                    FacebookUrl = b.FacebookUrl,
-                   ZaloUrl = b.ZaloUrl
+                   ZaloUrl = b.ZaloUrl,
+                   UserStatusId = b.UserStatusId
                })
                .FirstOrDefaultAsync();
 
@@ -303,11 +304,11 @@ namespace RMS_API.Controllers
             }
 
             // Find the status by the new status ID to validate it exists
-            var status = await _context.UserStatuses.FindAsync(request.NewStatusId);
-            if (status == null)
-            {
-                return NotFound(new { Message = "Status not found." });
-            }
+            //var status = await _context.UserStatuses.FindAsync(request.NewStatusId);
+            //if (status == null)
+            //{
+            //    return NotFound(new { Message = "Status not found." });
+            //}
 
             // Update the user's status
             user.UserStatusId = request.NewStatusId;

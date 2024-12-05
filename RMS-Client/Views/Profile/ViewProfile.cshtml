@@ -174,6 +174,8 @@
         const token = getCookie('AuthToken');
         if (!token) {
             console.error('Token không tìm thấy trong cookie.');
+            alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+            window.location.href = "/Auth/login";
         }
         const tokenParts = token.split('.');
         const payload = JSON.parse(atob(tokenParts[1]));
@@ -292,7 +294,10 @@
                                 <i class="ti ti-menu-2"></i>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item d-flex align-items-center">
+                            <a class="nav-link nav-icon-hover" href="/Building/ListBuilding">
+                                <i class="ti ti-arrow-back" style="font-size: 30px;"></i>
+                            </a>
                             <a class="nav-link nav-icon-hover" href="javascript:void(0)">
                                 <i class="ti ti-bell-ringing"></i>
                                 <div class="notification bg-primary rounded-circle"></div>
@@ -308,18 +313,6 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">Tài khoản</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
-                                        </a>
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
 
                                     </div>
@@ -333,25 +326,16 @@
             <!--  Header End -->
 
             <div class="container-fluid">
-                <div class="container mt-4">
-                    <h1 class="text-center">@ViewData["Title"]</h1>
-
-                    <!-- Create button -->
-                    <div class="mb-3 d-flex justify-content-between">
-                        <a href="/User/EditProfile" class="btn btn-primary">
-                            <i class="fas fa-edit"></i> Cập nhật profile
-                        </a>
-                        <a href="/User/ChangePassword" class="btn btn-warning">
-                            <i class="fas fa-key"></i> Đổi mật khẩu
-                        </a>
-                    </div>
-
+                <div class="container mt-4">     
                     <div class="container mt-5">
                         <div class="row justify-content-center">
                             <div class="col-md-6">
                                 <div class="card shadow-lg">
                                     <div class="card-header text-center bg-primary text-white">
-                                        <h3>My Profile</h3>
+                                        <h3>Thông tin cá nhân</h3> 
+                                        <a href="/User/EditProfile" class="btn btn-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
                                     </div>
                                     <div class="card-body">
                                         <div class="row mb-3">
@@ -376,7 +360,10 @@
                                         </div>
                                     </div>
                                     <div class="card-footer text-center">
-                                        <button class="btn btn-secondary" onclick="window.location.href='/Building/ListBuilding';">Về trang chủ</button>
+                                        @* <button class="btn btn-secondary" onclick="window.location.href='/Building/ListBuilding';">Về trang chủ</button> *@
+                                        <a href="/User/ChangePassword" class="btn btn-warning">
+                                            <i class="fas fa-key"></i> Đổi mật khẩu
+                                        </a>
                                     </div>
                                 </div>
                             </div>
