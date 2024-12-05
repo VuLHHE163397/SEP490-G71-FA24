@@ -608,12 +608,11 @@
                             return;
                         }
 
-                        // Prepare Data
                         var buildingData = {
                             Name: $('#Name').val(),
-                            TotalFloors: totalFloors,
-                            NumberOfRooms: numberOfRooms,
-                            Distance: distance,
+                            TotalFloors: $('#TotalFloors').val(),
+                            NumberOfRooms: $('#NumberOfRooms').val(),
+                            Distance: $('#Distance').val(),
                             ProvinceName: $('#ProvinceId').val(),
                             DistrictName: $('#DistrictId').val(),
                             WardName: $('#WardId').val(),
