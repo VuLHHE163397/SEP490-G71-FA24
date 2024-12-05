@@ -96,7 +96,7 @@
                         </div>
                         <div class="d-flex align-items-center justify-content-between mb-4">
                             <a class="text-primary fw-bold" href="/Home/Home">Về trang chủ</a>
-                            <a class="text-primary fw-bold" href="./index.html">Quên mật khẩu?</a>
+                            <a class="text-primary fw-bold" href="/Auth/ForgotPassword">Quên mật khẩu?</a>
                         </div>
                         <button type="button" onclick="login()" class="btn btn-primary w-100 mb-3">Đăng nhập</button>
 
@@ -251,7 +251,7 @@
                 type: "POST",
                 contentType: "application/json",
                 xhrFields: { withCredentials: true },   // Cho phép gửi và nhận cookies
-                data: JSON.stringify({ email: user.email, Name: user.given_name}),
+                data: JSON.stringify({ email: user.email, Name: user.given_name }),
                 success: function (response) {
                     showPopup("Đăng nhập thành công!");
                     try {
@@ -263,7 +263,7 @@
                             if (payload.Roles === "Admin") {
                                 window.location.href = "/User/ListUser";
                             } else if (payload.Roles === "Landlord") {
-                                window.location.href = "/User/ViewProfile";
+                                window.location.href = "/Building/ListBuilding";
                             }
                         }, 800);
                     } catch (error) {

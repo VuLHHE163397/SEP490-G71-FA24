@@ -355,27 +355,36 @@
                     }
                 });
 
+                // Kiểm tra phản hồi từ server
                 if (!response.ok) {
+                    // Kiểm tra nếu lỗi là 404
                     if (response.status === 404) {
                         console.warn(`API trả về 404 cho status = ${status}.`);
                         tableBody.innerHTML = `<tr><td colspan="8" class="text-center">Không có yêu cầu bảo trì nào.</td></tr>`;
                         return;
                     }
+                    // Nếu lỗi không phải 404, ném lỗi để xử lý trong catch
                     throw new Error(`Lỗi khi gọi API: ${response.status}`);
                 }
+
 
                 const data = await response.json();
                 console.log(`Data for status ${status}:`, data);
 
+                // Xóa trạng thái chờ trước khi hiển thị dữ liệu
                 tableBody.innerHTML = "";
 
                 if (data.length === 0) {
+                    // Nếu không có dữ liệu, hiển thị hàng thông báo trống
                     tableBody.innerHTML = `<tr><td colspan="8" class="text-center">Không có yêu cầu bảo trì nào.</td></tr>`;
                 } else {
-                    let index = 0;
+                    // Nếu có dữ liệu, hiển thị từng hàng
+                    let index = 0; // Biến đếm số thứ tự
 
                     data.forEach(item => {
-                        index++;
+                        index++; // Tăng biến đếm trước mỗi lần render một dòng
+
+                        // Kiểm tra trạng thái để tùy chỉnh nút
                         const buttonHtml =
                             item.status === "Chưa xử lý"
                                 ? `<button onclick="changeStatus(${item.id})" class="btn btn-success">
@@ -399,9 +408,12 @@
 
                         tableBody.innerHTML += row;
                     });
+
+
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
+                // Hiển thị lỗi khi xảy ra lỗi thật sự (ví dụ: server không phản hồi)
                 tableBody.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Không thể tải dữ liệu. Vui lòng thử lại sau!</td></tr>`;
             }
         }
@@ -429,12 +441,12 @@
             }
         }
 
+        // Gọi API khi trang được tải
         if (token) {
             fetchData(1, "status1-table");
             fetchData(0, "status0-table");
         }
     </script>
-
 </body>
 
 </html>
