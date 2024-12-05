@@ -3,7 +3,7 @@
 
 @if (ViewBag.SuccessMessage != null)
 {
-    <script>    
+    <script>
         alert(@Html.Raw(JsonConvert.SerializeObject(ViewBag.SuccessMessage)));
         window.location.href = '@ViewBag.RedirectUrl';
     </script>
@@ -20,28 +20,6 @@
 </head>
 
 <body>
-    <script>
-        function getCookie(name) {
-            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
-            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
-        }
-
-        const token = getCookie('AuthToken');
-        if (!token) {
-            console.error('Token không tìm thấy trong cookie.');
-        }
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-        if (payload.Roles !== "Landlord") {
-            window.location.href = "/Auth/login";
-        }
-
-        function logout() {
-            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
-            window.location.href = "/Auth/Login";
-        }
-
-    </script>
 
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -58,7 +36,7 @@
                         <p class="mb-1"><strong>Tòa nhà:</strong> @Model.BuildingName</p>
                         <p class="mb-1"><strong>Địa chỉ:</strong> @Model.Address</p>
                         <p><strong>Chủ nhà:</strong> @Model.Owner</p>
-                        
+
                     </div>
 
                     <form method="post" asp-action="SaveMaintenanceRequest">
@@ -75,6 +53,7 @@
                 </div>
             </div>
         </div>
+
 
     </div>
 

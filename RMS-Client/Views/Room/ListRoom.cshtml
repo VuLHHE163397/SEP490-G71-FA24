@@ -170,9 +170,17 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
                                 <span>
-                                    <i class="fa fa-paper-plane"></i>
+                                    <i class="fa-regular fa-envelope"></i>
                                 </span>
-                                <span class="hide-menu">Danh sách yêu cầu</span>
+                                <span class="hide-menu"> Danh sách báo cáo</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-bar-chart"></i>
+                                </span>
+                                <span class="hide-menu"> Thống kê phòng</span>
                             </a>
                         </li>
                     </ul>
@@ -208,20 +216,11 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
+                                            <p class="mb-0 fs-3">Tài Khoản</p>
                                         </a>
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
-
                                     </div>
                                 </div>
                             </li>
@@ -257,13 +256,13 @@
                                 </div>
                             </form>
                         </div>
-@* 
+                        @*
                         <div class="col-md-3">
-                            <select class="form-select">
-                                <option selected>Trạng thái phí</option>
-                                <option>Đã đóng tiền</option>
-                                <option>Chưa đóng tiền</option>
-                            </select>
+                        <select class="form-select">
+                        <option selected>Trạng thái phí</option>
+                        <option>Đã đóng tiền</option>
+                        <option>Chưa đóng tiền</option>
+                        </select>
                         </div> *@
 
                         <div class="col-md-3 offset-md-1 d-flex flex-column align-items-end">
@@ -317,23 +316,24 @@
             <table class="table table-striped mt-4">
                 <thead>
                     <tr>
-                        <th>Số Phòng</th>
+                        <th></th> <!-- Thêm cột số thứ tự -->
+                        <th>Tên Phòng</th>
                         <th>Diện tích</th>
                         <th>Giá phòng</th>
                         <th>Trạng thái</th>
-                        <form asp-action="DeleteAllRoomsByBuildingId" method="post">
-                            <input type="hidden" name="buildingId" value="@ViewBag.SelectedBuildingId" />
-                        </form>
+                        <th>Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (Model != null && Model.Any())
                     {
-                        foreach (var room in Model)
+                        for (var i = 0; i < Model.Count(); i++) // Dùng for thay vì foreach
                         {
+                            var room = Model.ElementAt(i);
                             <tr>
+                                <td>@(i + 1)</td> <!-- Hiển thị số thứ tự -->
                                 <td>@room.RoomNumber</td>
-                                <td>@room.Area</td>
+                                <td>@($"{room.Area} m²")</td>
                                 <td>@string.Format("{0:N0} VNĐ", room.Price)</td>
                                 <td>
                                     <form asp-action="UpdateRoomStatus" method="post" id="updateStatusRoom">
@@ -350,8 +350,6 @@
                                         </select>
                                     </form>
                                 </td>
-
-
                                 <td>
                                     <a asp-controller="Room" asp-action="RoomDetail" asp-route-id="@room.Id" class="btn btn-info">
                                         <i class="ti ti-eye"></i>
@@ -366,11 +364,12 @@
                     else
                     {
                         <tr>
-                            <td colspan="5" class="text-center">Tòa nhà chưa có phòng nào !!!</td>
+                            <td colspan="6" class="text-center">Tòa nhà chưa có phòng nào !!!</td>
                         </tr>
                     }
                 </tbody>
             </table>
+
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -443,12 +442,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                        <li class="sidebar-subitem">
-                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                            </a>
-                                                                        </li>
-                                                                    `);
+                                                                                <li class="sidebar-subitem">
+                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                    </a>
+                                                                                </li>
+                                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -461,8 +460,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                            `);
+                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                    `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {

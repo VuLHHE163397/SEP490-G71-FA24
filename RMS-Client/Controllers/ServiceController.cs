@@ -46,5 +46,9 @@ namespace RMS_Client.Controllers
         {
             return View();
         }
+        public IActionResult ServiceReport()
+        {
+            return View();
+        }
     }
 }
