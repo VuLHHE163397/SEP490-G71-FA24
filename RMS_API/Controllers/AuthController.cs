@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RMS_API.Models;
@@ -39,7 +40,7 @@ namespace RMS_API.Controllers
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
             if (user == null)
             {
-                return BadRequest("Email không tồn tại.");
+                return BadRequest("Email chưa được đăng k.");
             }
 
             // Generate a random password
@@ -65,6 +66,7 @@ namespace RMS_API.Controllers
         {
             public string Email { get; set; } = null!;
         }
+
 
         // Helper method to generate a random password (letters and numbers)
         private string GenerateRandomPassword(int length = 8)
@@ -208,16 +210,16 @@ namespace RMS_API.Controllers
                 HttpOnly = false,
                 //Secure = false,
                 //SameSite = SameSiteMode.Lax,
-                SameSite=SameSiteMode.None,
+                SameSite = SameSiteMode.None,
                 //SameSite = SameSiteMode.Strict, // Ngăn CSRF                
-                Expires = DateTime.UtcNow.AddHours(1) 
+                Expires = DateTime.UtcNow.AddHours(1)
             });
 
             Console.WriteLine("Đã gán AuthToken với HttpOnly = false");
 
             HttpContext.Session.SetString("UserId", user.Id.ToString());
 
-            return Ok(new { token });           
+            return Ok(new { token });
         }
 
         public static (string FirstName, string MiddleName, string LastName) SplitName(string fullName)
@@ -269,7 +271,7 @@ namespace RMS_API.Controllers
             {
                 var User = new User
                 {
-                    Phone = "12345566",
+                    Phone = "0123456789",
                     Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                     UserStatusId = 1,
                     Email = model.Email,
@@ -322,7 +324,7 @@ namespace RMS_API.Controllers
             claims.Add(new Claim(JwtRegisteredClaimNames.Name, userInfo.Email));
             claims.Add(new Claim("UserId", userInfo.Id.ToString()));
             claims.Add(new Claim("Roles", userInfo.Role.Name));
-           
+
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 claims,
@@ -330,7 +332,7 @@ namespace RMS_API.Controllers
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        
+
 
             //var tokenHandler = new JwtSecurityTokenHandler();
             //var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024");

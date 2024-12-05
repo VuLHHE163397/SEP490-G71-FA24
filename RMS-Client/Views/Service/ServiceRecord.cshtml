@@ -139,23 +139,23 @@
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
                                 @* @{
-                                    var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
+                                var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
                                 }
                                 @if (buildingsss != null && buildingsss.Any())
                                 {
-                                    foreach (var buildingss in buildingsss)
-                                    {
-                                        <li class="sidebar-subitem">
-                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
-                                                @buildingss.Name
-                                            </a>
-                                        </li>
-                                    }
+                                foreach (var buildingss in buildingsss)
+                                {
+                                <li class="sidebar-subitem">
+                                <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
+                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
+                                @buildingss.Name
+                                </a>
+                                </li>
+                                }
                                 }
                                 else
                                 {
-                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
                                 } *@
                             </ul>
                         </li>
@@ -184,18 +184,23 @@
                                 <span class="hide-menu"> <i class="fa-solid fa-plug-circle-bolt"></i> Chỉ số điện</span>
                             </a>
                         </li>
-
                         <li class="sidebar-item">
                             <a class="sidebar-link" asp-controller="Maintainance" asp-action="ListMaintainance" aria-expanded="false">
                                 <span>
-                                    <i class="fa fa-paper-plane"></i>
+                                    <i class="fa-regular fa-envelope"></i>
                                 </span>
-                                <span class="hide-menu">Danh sách yêu cầu</span>
+                                <span class="hide-menu"> Danh sách báo cáo</span>
                             </a>
                         </li>
-
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" asp-controller="Statistic" asp-action="ViewStatistic" aria-expanded="false">
+                                <span>
+                                    <i class="fa fa-bar-chart"></i>
+                                </span>
+                                <span class="hide-menu"> Thống kê phòng</span>
+                            </a>
+                        </li>
                     </ul>
-
                 </nav>
 
             </div>
@@ -204,7 +209,7 @@
 
         <div class="body-wrapper">
 
-            <header class="app-header" style="background-color:  #3385ff">
+            <header class="app-header" style="background-color:  whitesmoke">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
@@ -228,20 +233,11 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
+                                            <p class="mb-0 fs-3">Tài Khoản</p>
                                         </a>
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
-
                                     </div>
                                 </div>
                             </li>
@@ -264,6 +260,9 @@
                         </style>
                         <div class="d-flex align-items-center">
                             <button class="btn btn-success">Lưu</button>
+                            <a href="/Service/ServiceReport" class="btn btn-primary ms-2">
+                                Báo cáo
+                            </a>
                             <button class="btn btn-warning ms-2">Xuất file Excel</button>
                         </div>
                     </div>
@@ -282,64 +281,38 @@
                         <!-- Bộ lọc -->
                         <div class="row g-3 align-items-center mb-3">
                             <div class="col-md-3">
-                                <label for="monthYear" class="form-label">Tháng/năm</label>
-                                <input type="month" class="form-control" id="monthYear" value="2024-11">
+                                <label for="datePicker" class="form-label">Ngày/tháng/năm</label>
+                                <input type="date" class="form-control" id="datePicker" onchange="setDate()">
                             </div>
                             <div class="col-md-3">
                                 <label for="building" class="form-label">Nhà</label>
-                                <select id="BuildingId" class="form-select">
-                                    <option selected>Tất cả</option>
-                                    <!-- Các tùy chọn khác -->
+                                <select id="BuildingId" class="form-select" onchange="onSelectBuilding()">
                                 </select>
                             </div>
                             <div class="col-md-3">
                                 <label for="room" class="form-label">Phòng</label>
-                                <select id="RoomId" class="form-select">
-                                    <option selected>Tất cả</option>
-                                    <!-- Các tùy chọn khác -->
+                                <select id="RoomId" class="form-select" onchange="getElectricRecord()">
                                 </select>
                             </div>
-                            
+
 
                         </div>
                         <!-- Bảng dữ liệu -->
                         <table class="table table-bordered align-middle">
-                            <thead class="table-light">
+                            <thead class="table-dark">
                                 <tr>
                                     <th>Nhà</th>
                                     <th>Phòng</th>
-                                    <th>Khách thuê</th>
-                                    <th>Ngày chốt</th>
-                                    <th>CS Điện Cũ</th>
-                                    <th>CS Điện Mới</th>
+                                    <th>Ngày bắt đầu chốt</th>
+                                    <th>CS điện cũ</th>
+                                    <th>CS điện mới</th>
                                     <th>Sử dụng</th>
                                     <th>Tính</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Thiên Long Building</td>
-                                    <td>217</td>
-                                    <td>Nguyen Vy</td>
-                                    <td><input type="month" class="form-control" id="monthYear" value="2024-11"></td>
-                                    <td><input type="number" class="form-control" value="53"></td>
-                                    <td><input type="number" class="form-control" value="656"></td>
-                                    <td class="text-end">603.0</td>
-                                    <td><button class="btn btn-info btn-sm"><i class="fa-solid fa-calculator"></i></button></td>
-                                </tr>
-                                
-                                
+                            <tbody id="electrics">
                             </tbody>
                         </table>
-
-                        <!-- Phân trang -->
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>Đang xem 0 đến 0 trong tổng số 0 mục</div>
-                            <div>
-                                <button class="btn btn-light" disabled>Trước</button>
-                                <button class="btn btn-light" disabled>Tiếp</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -355,11 +328,21 @@
     <script>
 
 
+        var totalRecord = 0;
         $(document).ready(function () {
-            loadRoom();
             loadBuilding();
-            loadStatusRoom();
+            loadRoom();
+            setData();
+            getElectricRecord();
+            const token = getCookie('AuthToken');
+            //Lấy user id
+            const userId = getUserIdFromToken(token);
         })
+        function onSelectBuilding() {
+            getElectricRecord();
+            loadRoom();
+        }
+        /////////////////////////////////////////
 
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -373,10 +356,16 @@
             }
         }
 
+        //////////////////////////////////////////////////
+
         function loadBuilding() {
             const token = getCookie('AuthToken');
-            //Lấy user id
-            const userId = getUserIdFromToken(token);
+            if (!token) {
+                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
+                return;
+            }
+            var userId = getUserIdFromToken(token);
             $.ajax({
                 url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
                 type: 'GET',
@@ -397,18 +386,29 @@
         function renderBuilding(data) {
             var urlParams = new URLSearchParams(window.location.search);
             var buildingId = urlParams.get('buildingId');
-            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Chọn</option>`;
             for (var item of data) {
                 html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
             }
-            $("#buildings").html(html);
+            $("#BuildingId").html(html);
+
         }
 
+
+        ///////////////////////////////////////////////////////
+
         function loadRoom() {
+            const token = getCookie('AuthToken');
+            var buildingId = $("#BuildingId").val();
+            console.log("buildingId = " + buildingId)
+            const userId = getUserIdFromToken(token);
             $.ajax({
-                url: 'https://localhost:7056/api/Room/GetAllRoom',
+                url: buildingId && buildingId > 0 ? `https://localhost:7056/api/Room/GetRoomByBuilding/${buildingId}` : `https://localhost:7056/api/Room/GetAllRoom/${userId}`,
                 type: 'GET',
                 dataType: 'json',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 success: function (response) {
                     renderRoom(response);
                 },
@@ -418,9 +418,11 @@
             });
         }
         function renderRoom(data) {
-            let html = ``;
+            var urlParams = new URLSearchParams(window.location.search);
+            var roomId = urlParams.get('roomId');
+            let html = `<option value="-1" ${roomId <= 0 ? 'selected' : ''}>Chọn</option>`;
             for (var item of data) {
-                html += `<option value="${item.id}">${item.roomNumber}</option>`
+                html += `<option value="${item.id}" ${roomId == item.id ? 'selected' : ''}>${item.roomNumber}</option>`
             }
             $("#RoomId").html(html);
         }
@@ -436,12 +438,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                <li class="sidebar-subitem">
-                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                    </a>
-                                                                                </li>
-                                                                            `);
+                                                                                                <li class="sidebar-subitem">
+                                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                                    </a>
+                                                                                                </li>
+                                                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -454,35 +456,110 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                    `);
+                                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                                    `);
         }
 
-        function loadStatusRoom() {
+        function setData() {
+            let today = new Date();
+            let formattedDate = today.toISOString().split('T')[0];
+            $("#datePicker").val(formattedDate)
+        }
+        function setDate() {
+            console.log($("#datePicker").val())
+            $(".recordDate").val($("#datePicker").val());
+        }
+        function getElectricRecord() {
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            var url = `https://localhost:7056/api/ElectricRecord?userId=${userId}`
+            var buildingId = $("#BuildingId").val();
+            var roomId = $("#RoomId").val();
+            console.log("buildingId = " + buildingId + ", roomId = " + roomId);
+            if (buildingId && !Number.isNaN(buildingId) && buildingId > 0) {
+                url += `&buildingId=${buildingId}`;
+            }
+            if (roomId && !Number.isNaN(roomId) && roomId > 0) {
+                url += `&roomId=${roomId}`;
+            }
+            console.log(url);
             $.ajax({
-                url: 'https://localhost:7056/api/Room/GetAllStatus',
-                type: 'GET',
-                dataType: 'json',
+                url: url, // The URL of the API you want to request data from
+                type: 'GET', // HTTP method (GET for retrieving data)
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                dataType: 'json', // Data type expected from the server (JSON in this case)
                 success: function (response) {
-                    renderStatus(response);
+                    renderElectricRecord(response)
                 },
                 error: function (xhr, status, error) {
-                    console.error("Có lỗi xảy ra:", error);
+                    // This function will be called if there's an error with the request
+                    console.error('An error occurred:', error);
                 }
             });
         }
-        function renderStatusRoom(data) {
-            let html = ``;
+        function renderElectricRecord(data) {
+            let html = '';
             for (var item of data) {
-                html += `<option value="${item.id}">${item.description}</option>`
+                html += '<tr>';
+                html += `<td>${item.buildingName}</td>`;
+                html += `<td>${item.roomNumber}</td>`;
+                //html += `<td class="recordDate">${item.recordDate.split("T")[0]}</td>`;
+                html += `<td>
+                                            <input type="date" class="recordDate form-control" value="${item.recordDate.split("T")[0]}"/>
+                                        </td>`;
+                html += `<td>
+                                                <input type="text" value="${item.oldMeter}" class="form-control" id="oldMeter-${item.roomId}" onchange="calculate(${item.roomId})"/>
+                                        </td>`;
+                html += `<td>
+                                                     <input type="text" value="${item.newMeter}" class="form-control" id="newMeter-${item.roomId}" onchange="calculate(${item.roomId})"/>
+                                                </td>`;
+                html += `<td>
+                                                     <input type="text" value="${item.totalMeter}" class="form-control" id="totalMeter-${item.roomId}" readonly/>
+                                                </td>`;
+                html += `<td>
+                                            <button class="btn btn-primary" onclick="addServiceRecord(${item.roomId}, ${item.buildingId})">Lưu</button>
+                                        </td>`
+                html += '</tr>'
             }
-            $("#roomStatus").html(html);
+            $("#electrics").html(html);
         }
-
+        function calculate(id) {
+            var oldMeter = $(`#oldMeter-${id}`).val();
+            var newMeter = $(`#newMeter-${id}`).val();
+            $(`#totalMeter-${id}`).val(newMeter - oldMeter);
+        }
+        function addServiceRecord(roomId, buildingId) {
+            var electricRecord = {
+                buildingId: buildingId,
+                roomId: roomId,
+                recordDate: $(`#recordDate-${roomId}`).val(),
+                oldMeter: $(`#oldMeter-${roomId}`).val(),
+                newMeter: $(`#newMeter-${roomId}`).val(),
+                totalMeter: $(`#totalMeter-${roomId}`).val(),
+            }
+            console.log(electricRecord)
+            const token = getCookie('AuthToken');
+            $.ajax({
+                url: 'https://localhost:7056/api/ElectricRecord',  // API endpoint
+                type: "POST",
+                contentType: "application/json",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                data: JSON.stringify(electricRecord),
+                success: function (response) {
+                    alert("Lưu số điện thành công");
+                },
+                error: function (xhr, status, error) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
     </script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
 
 </body>
 

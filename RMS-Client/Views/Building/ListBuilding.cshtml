@@ -116,30 +116,28 @@
     </style>
 </head>
 <body>
-
     <script>
-        function getCookie(name) {            
+        function getCookie(name) {
             const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
-            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;            
+            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
         }
 
-        const token = getCookie('AuthToken');        
+        const token = getCookie('AuthToken');
         if (!token) {
-            console.error('Token không tìm thấy trong cookie.');            
-        } 
+            console.error('Token không tìm thấy trong cookie.');
+        }
         const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));       
+        const payload = JSON.parse(atob(tokenParts[1]));
         if (payload.Roles !== "Landlord") {
             window.location.href = "/Auth/login";
         }
 
-        function logout() {            
-            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";            
+        function logout() {
+            document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
             window.location.href = "/Auth/Login";
         }
 
     </script>
-    <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
         <!-- Sidebar Start -->
@@ -246,7 +244,7 @@
         <!--  Main wrapper -->
         <div class="body-wrapper">
 
-            <header class="app-header" style="background-color:  #3385ff">
+            <header class="app-header" style="background-color:  whitesmoke">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
@@ -324,8 +322,6 @@
     <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
-
-    @* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> *@
     <script>
         $(document).ready(function () {
             console.log('Page Loaded: Fetching buildings...');
@@ -411,10 +407,10 @@
                             <td>${building.addressDetails}</td>
                             <td>${building.buildingStatus}</td>
                             <td>
-                                <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
+                                <a href="/Building/EditBuilding?id=${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
+                                <a href="/Building/BuildingDetail?id=${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
                                     <i class="ti ti-eye"></i>
                                 </a>
                             </td>

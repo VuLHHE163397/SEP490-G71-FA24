@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RMS</title>
-    <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
+    <link rel="shortcut icon" type="image/jpg" href="~/images/logo.jpg" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
@@ -33,7 +33,9 @@
             window.location.href = "/Auth/Login";
         }
 
+
     </script>
+
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -260,20 +262,87 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script>
         const apiBaseUrl = "https://localhost:7056/api"; // Đặt URL gốc của API
+        $(document).ready(function () {
+            loadBuilding();
+        })
 
-        function getCookie(name) {
-            const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${name}=`));
-            return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+            }
         }
 
-        const token = getCookie("AuthToken"); // Lấy token từ cookie
-
-        if (!token) {
-            console.error("Authorization token is missing!");
-            alert("Bạn cần đăng nhập trước khi thực hiện chức năng này!");
-            window.location.href = "/Auth/login"; // Redirect to login if token is missing
+        function loadBuilding() {
+            const token = getCookie('AuthToken');
+            if (!token) {
+                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
+                return;
+            }
+            var userId = getUserIdFromToken(token);
+            $.ajax({
+                url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                },
+                success: function (response) {
+                    renderBuilding(response);
+                    displayBuildings(response); //Thêm cái này nữa
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
         }
 
+        function renderBuilding(data) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var buildingId = urlParams.get('buildingId');
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
+            for (var item of data) {
+                html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
+            }
+            $("#buildings").html(html);
+        }
+
+        function displayBuildings(buildings) {
+            const sidebarContainer = $('.sidebar-submenu');
+
+            // Clear previous content
+            sidebarContainer.empty();
+
+            if (buildings && buildings.length > 0) {
+                // Update Sidebar
+                buildings.forEach(building => {
+                    sidebarContainer.append(`
+                        <li class="sidebar-subitem">
+                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                            </a>
+                        </li>
+                    `);
+                });
+            } else {
+                displayNoBuildingsMessage();
+            }
+        }
+        function displayNoBuildingsMessage() {
+            const sidebarContainer = $('.sidebar-submenu');
+            const tableContainer = $('#buildingsContainer');
+
+            // Notify in Sidebar
+            sidebarContainer.empty();
+            sidebarContainer.append(`
+                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                    `);
+        }
         async function fetchData(status, tableId) {
             const tableBody = document.getElementById(tableId);
             tableBody.innerHTML = `<tr><td colspan="8" class="text-center">Đang tải dữ liệu...</td></tr>`; // Hiển thị trạng thái chờ
@@ -310,23 +379,23 @@
                         const buttonHtml =
                             item.status === "Chưa xử lý"
                                 ? `<button onclick="changeStatus(${item.id})" class="btn btn-success">
-                                        <i class="fa fa-check"></i>
-                                      </button>`
+                                   <i class="fa fa-check"></i>
+                               </button>`
                                 : `<button onclick="changeStatus(${item.id})" class="btn btn-danger">
-                                        <i class="fa fa-undo"></i>
-                                      </button>`;
+                                   <i class="fa fa-undo"></i>
+                               </button>`;
 
                         const row = `<tr>
-                                <td>${index}</td>
-                                <td>${item.maintenanceDescription}</td>
-                                <td>${new Date(item.requestDate).toLocaleDateString()}</td>
-                                <td>${item.solveDate ? new Date(item.solveDate).toLocaleDateString() : ""}</td>
-                                <td>${item.roomNumber}</td>
-                                <td>${item.buildingName}</td>
-                                <td>${item.address}</td>
-                                <td>${item.status}</td>
-                                <td>${buttonHtml}</td>
-                            </tr>`;
+                                 <td>${index}</td> <!-- Số thứ tự -->
+                                 <td>${item.maintenanceDescription}</td>
+                                 <td>${new Date(item.requestDate).toLocaleDateString()}</td>
+                                 <td>${item.solveDate ? new Date(item.solveDate).toLocaleDateString() : ""}</td>
+                                 <td>${item.roomNumber}</td>
+                                 <td>${item.buildingName}</td>
+                                 <td>${item.address}</td>
+                                 <td>${item.status}</td>
+                                 <td>${buttonHtml}</td>
+                                 </tr>`;
 
                         tableBody.innerHTML += row;
                     });
@@ -337,6 +406,7 @@
             }
         }
 
+        // Hàm thay đổi trạng thái maintenance request
         async function changeStatus(id) {
             try {
                 const response = await fetch(`${apiBaseUrl}/MaintainanceRequest/ChangeMaintainace/${id}`, {
@@ -350,9 +420,9 @@
                     throw new Error(`Lỗi khi thay đổi trạng thái: ${response.status}`);
                 }
 
-                alert("Status changed successfully!");
-                fetchData(1, "status1-table");
-                fetchData(0, "status0-table");
+                alert("Chuyển trạng thái thành công!");
+                fetchData(1, "status1-table"); // Làm mới danh sách trạng thái 1
+                fetchData(0, "status0-table"); // Làm mới danh sách trạng thái 0
             } catch (error) {
                 console.error("Error changing status:", error);
                 alert("Không thể thay đổi trạng thái, vui lòng thử lại!");

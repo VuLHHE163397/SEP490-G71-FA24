@@ -490,6 +490,8 @@ namespace RMS_API.Controllers
         
 
 
+
+
         [HttpGet("GetBuildingStatus")]
         public async Task<IActionResult> GetBuildingStaus()
         {
