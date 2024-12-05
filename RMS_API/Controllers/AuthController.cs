@@ -165,7 +165,6 @@ namespace RMS_API.Controllers
                 Password = BCrypt.Net.BCrypt.HashPassword(registerModel.Password),
                 UserStatusId = 1,
                 RoleId = 2,
-                
             };
 
             _context.Users.Add(user);
@@ -256,7 +255,7 @@ namespace RMS_API.Controllers
 
 
         [HttpPost("LoginByGoogle")]
-        public async Task<IActionResult> LoginByGoogles([FromBody] LoginByGoogle model )
+        public async Task<IActionResult> LoginByGoogles([FromBody] LoginByGoogle model)
         {
 
 
@@ -279,15 +278,16 @@ namespace RMS_API.Controllers
                     MidName = middleName,
                     LastName = lastName,
                     RoleId = 2,
-                    Role = new Role { Name = "Landlord" } // Gán vai trò mặc định
-
-
+                    Role = new Role { Name = "Landlord" }
                 };
                 _context.Users.Add(User);
                 _context.SaveChanges();
                 user = User;
-                
+
             }
+
+
+
 
             var token = GenerateJwtToken(user);
 

@@ -19,7 +19,7 @@
 
     <!-- Custom CSS Styles -->
     <style>
-        
+
 
         .btn-primary {
             background-color: #0d6efd;
@@ -160,10 +160,6 @@
             font-weight: bold;
         }
         /* Responsive Table for smaller screens */
-
-        .text-red {
-            color: red;
-        }
 
     </style>
 </head>
@@ -312,11 +308,18 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">Tài Khoản</p>
+                                            <p class="mb-0 fs-3">Tài khoản</p>
                                         </a>
-
+                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-mail fs-6"></i>
+                                            <p class="mb-0 fs-3">My Account</p>
+                                        </a>
+                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-list-check fs-6"></i>
+                                            <p class="mb-0 fs-3">My Task</p>
+                                        </a>
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
 
                                     </div>
@@ -354,7 +357,7 @@
                                         <div class="row mb-3">
                                             <label class="col-sm-4 font-weight-bold">Họ và Tên:</label>
                                             <div class="col-sm-8" id="fullName">Loading...</div>
-                                        </div>
+                                        </div>                                        
                                         <div class="row mb-3">
                                             <label class="col-sm-4 font-weight-bold">Email:</label>
                                             <div class="col-sm-8" id="email">Loading...</div>
@@ -378,20 +381,11 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Thêm khung chú ý -->
-                        <div class="container mt-4">
-                            <div class="card bg-warning text-white shadow-lg">
-                                <div class="card-body">
-                                    <h5 class="card-title">Lưu ý:</h5>
-                                    <p class="card-text text-red">Nếu bạn đăng nhập bằng Google Mail xin hãy đổi số điện thoại và mật khẩu(Mật khẩu hiện tại do hệ thống tự cung cấp mặc định là :123456) .</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
 
+        </div>
 
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
