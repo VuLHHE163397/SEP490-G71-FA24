@@ -56,7 +56,6 @@ namespace RMS_API.Controllers
 
         [HttpGet("GetUserById")]
         [Authorize(Roles = "Landlord")]
-
         public async Task<IActionResult> GetUserById([FromQuery] int id)
         {
             if (id == null)
@@ -83,6 +82,31 @@ namespace RMS_API.Controllers
             {
                 return NotFound("Không tìm thấy người dùng.");
             }
+            return Ok(user);
+        }
+
+
+        [HttpGet("GetUserNameById")]        
+        public async Task<IActionResult> GetUserNameById([FromQuery] int id)
+        {
+            if (id == 0) // Kiểm tra ID
+            {
+                return BadRequest("Id không được để trống.");
+            }
+
+            var user = await _context.Users
+                .Where(u => u.Id == id)
+                .Select(b => new UserNameDTO
+                {                    
+                    FullName = $"{b.LastName} {b.MidName} {b.FirstName}".Trim(), // Gộp họ tên                    
+                })
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound("Không tìm thấy người dùng.");
+            }
+
             return Ok(user);
         }
 
@@ -294,5 +318,10 @@ namespace RMS_API.Controllers
             return Ok(new { Message = "User status updated successfully." });
         }
 
+
+        public class UserNameDTO
+        {
+            public string FullName { get; set; }
+        }
     }
 }

@@ -159,7 +159,28 @@
             font-size: 1.5rem;
             font-weight: bold;
         }
-        /* Responsive Table for smaller screens */
+        
+        .status-button {
+            padding: 8px 15px;
+            margin: 0 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+            .status-button.active {
+                background-color: #28a745;
+                color: white;
+            }
+
+            .status-button.deactive {
+                background-color: #dc3545;
+                color: white;
+            }           
+
+            .status-button:hover {
+                opacity: 0.8;
+            }
 
     </style>
 </head>
@@ -380,10 +401,14 @@
                                                     <input type="text" class="form-control" id="zaloUrl" placeholder="Nhập đường dẫn zalo">
                                                 </div>
                                             </div>
+                                            <div class="row mb-3">
+                                                <button onclick="changeStatus(@userId, 1)" class="status-button @(user.UserStatusId == 1 ? "active" : "")">Active</button>
+                                                <button onclick="changeStatus(@userId, 2)" class="status-button @(user.UserStatusId == 2 ? "deactive" : "")">Deactive</button>
+                                            </div>
                                         </form>
                                     </div>
                                     <div class="card-footer text-center">
-                                        <button class="btn btn-secondary" onclick="window.location.href='/User/ViewProfile';">Quay lại</button>
+                                        <button class="btn btn-primary" onclick="window.location.href='/User/ViewProfile';">Quay lại</button>
                                         <button class="btn btn-primary" onclick="UpdateProfile()">Cập nhật</button>
                                     </div>
                                 </div>
@@ -410,7 +435,42 @@
             console.log('Page Loaded: Fetching buildings...');
             getListBuilding();
             getUser();
+            const token = getCookie('AuthToken');
+            var userId = getUserIdFromToken(token);
         });
+
+        function changeStatus(userId, newStatusId) {
+            const data = { Id: userId, NewStatusId: newStatusId };
+            fetch('https://localhost:7056/api/User/UpdateStatus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (!result.success) {
+                        // Cập nhật trạng thái thành công, hiển thị thông báo và cập nhật bảng
+                        alert('Cập nhật trạng thái thành công!');
+
+                        // Cập nhật trạng thái mới trực tiếp trên giao diện
+                        const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
+                        const statusButtonContainer = userRow.querySelector("td:nth-child(7) div");
+
+                        // Cập nhật lại màu và trạng thái của các button
+                        statusButtonContainer.innerHTML = `
+                                                                                        <button onclick="changeStatus(${userId}, 1)" class="status-button ${newStatusId === 1 ? "active" : ""}">Active</button>
+                                                                                        <button onclick="changeStatus(${userId}, 2)" class="status-button ${newStatusId === 2 ? "deactive" : ""}">Deactive</button>                                                                                        
+                                                                                    `;
+                    } else {
+                        alert('Có lỗi xảy ra: ' + result.message);
+                    }
+                })
+                .catch(error => {
+                    alert('Có lỗi xảy ra: ' + error.message);
+                });
+        }
 
         function UpdateProfile() {
             const token = getCookie('AuthToken');

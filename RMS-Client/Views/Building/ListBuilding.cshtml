@@ -129,6 +129,24 @@
                 color: #0d6efd;
             }
 
+        #welcome-message {
+            background-color: white;
+            z-index: 3; /* Đảm bảo thông báo không bị che */
+            position: relative;           
+            color: white; 
+            font-weight: bold;
+        }
+
+        navbar-collapse {
+            position: relative; /* Đảm bảo các phần tử con hiển thị đúng */
+            z-index: 2; /* Đưa lên lớp trên nếu cần */
+        }
+
+        navbar-nav{
+            position: relative; /* Đảm bảo các phần tử con hiển thị đúng */
+            z-index: 2; /* Đưa lên lớp trên nếu cần */
+        }
+
         /* Responsive Table for smaller screens */
 
     </style>
@@ -260,6 +278,9 @@
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -337,6 +358,7 @@
         $(document).ready(function () {
             console.log('Page Loaded: Fetching buildings...');
             getListBuilding();
+            GetUserNameById();
             console.log("doc ne");
         });
 
@@ -488,6 +510,25 @@
         //     console.warn('Token not found in localStorage.');
         //     return null;
         // }
+
+        function GetUserNameById() {
+            const token = getCookie('AuthToken');            
+            const userId = getUserIdFromToken(token);
+            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+            $.ajax({
+                url: url,
+                type: 'GET',                
+                success: function (response) {                  
+                    if (response && response.fullName) {
+                        $('#welcome-message').text(`Xin chào ${response.fullName}`); 
+                    } 
+                },
+                error: function (xhr) {
+                    console.error('Error fetching user profile:', xhr.responseText);
+                }
+            });
+        }
 
     </script>
 
