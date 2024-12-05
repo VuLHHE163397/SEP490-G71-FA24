@@ -295,20 +295,11 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
+                                            <p class="mb-0 fs-3">Tài Khoản</p>
                                         </a>
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
-
                                     </div>
                                 </div>
                             </li>
@@ -448,9 +439,16 @@
 
         // Hàm validate cho từng trường
         function validatePrice() {
-            const price = document.getElementById('Price').value;
+            const price = document.getElementById('Price').value.trim();
             const priceError = document.getElementById('priceError');
-            if (isNaN(price) || parseFloat(price) <= 0) {
+
+            if (price === "") {
+                priceError.textContent = "Giá phòng không được để trống";
+                priceError.style.display = 'inline';
+                document.getElementById('buttonSave').disabled = true;
+                submitError.style.display = 'inline';
+            }
+            else if (isNaN(price) || parseFloat(price) <= 0) {
                 priceError.style.display = 'inline';
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
@@ -462,9 +460,15 @@
         }
 
         function validateFloor() {
-            const floor = document.getElementById('Floor').value;
+            const floor = document.getElementById('Floor').value.trim();
             const floorError = document.getElementById('floorError');
-            if (isNaN(floor) || parseInt(floor) <= 0 || !Number.isInteger(parseFloat(floor))) {
+            if (floor === "") {
+                floorError.textContent = "Tầng không được để trống";
+                floorError.style.display = 'inline';
+                document.getElementById('buttonSave').disabled = true;
+                submitError.style.display = 'inline';
+            }
+            else if (isNaN(floor) || parseInt(floor) <= 0 || !Number.isInteger(parseFloat(floor))) {
                 floorError.style.display = 'inline';
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
@@ -476,9 +480,15 @@
         }
 
         function validateArea() {
-            const area = document.getElementById('Area').value;
+            const area = document.getElementById('Area').value.trim();
             const areaError = document.getElementById('areaError');
-            if (isNaN(area) || parseFloat(area) <= 0) {
+            if (area === "") {
+                areaError.textContent = "Diện tích không được để trống";
+                areaError.style.display = 'inline';
+                document.getElementById('buttonSave').disabled = true;
+                submitError.style.display = 'inline';
+            }
+            else if (isNaN(area) || parseFloat(area) <= 0) {
                 areaError.style.display = 'inline';
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
@@ -532,6 +542,15 @@
             const roomName = document.getElementById("RoomNumber").value;
             const buildingId = document.getElementById('BuildingId').value;
             const oldRoomName = '@Model.RoomNumber';  // Lấy tên phòng cũ từ model
+            const roomNumberError = document.getElementById('roomNumberError');
+
+            // Kiểm tra nếu để trống
+            if (roomName === "") {
+                roomNumberError.style.display = 'inline';
+                roomNumberError.textContent = 'Tên Phòng không được để trống';
+                document.getElementById('buttonSave').disabled = true;
+                return;
+            }
 
             // Nếu tên phòng chưa thay đổi, không cần kiểm tra lại
             if (roomName === oldRoomName) {
@@ -544,7 +563,7 @@
             const response = await fetch(`/api/Room/CheckRoomNameExists?roomName=${roomName}&buildingId=${buildingId}`);
             const roomExists = await response.json();
 
-            const roomNumberError = document.getElementById('roomNumberError');
+            
             if (roomExists) {
                 roomNumberError.style.display = 'inline';
                 roomNumberError.textContent = 'Tên Phòng đã tồn tại trong tòa nhà này';
