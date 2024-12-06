@@ -93,19 +93,6 @@
           "SelectedChildIndex": 12,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ProfileDTO.cs",
-              "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\DTOs\\ProfileDTO.cs",
-              "RelativeDocumentMoniker": "RMS_API\\DTOs\\ProfileDTO.cs",
-              "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\DTOs\\ProfileDTO.cs",
-              "RelativeToolTip": "RMS_API\\DTOs\\ProfileDTO.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAASAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-05T13:45:34.222Z",
-              "EditorCaption": ""
-            },
-            {
               "$type": "Bookmark",
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             },
@@ -147,6 +134,18 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ProfileDTO.cs",
+              "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\DTOs\\ProfileDTO.cs",
+              "RelativeDocumentMoniker": "RMS_API\\DTOs\\ProfileDTO.cs",
+              "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\DTOs\\ProfileDTO.cs",
+              "RelativeToolTip": "RMS_API\\DTOs\\ProfileDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-05T13:45:34.222Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
               "Title": "ListUser.cshtml",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\Views\\User\\ListUser.cshtml",
@@ -155,8 +154,7 @@
               "RelativeToolTip": "RMS-Client\\Views\\User\\ListUser.cshtml",
               "ViewState": "AQIAABABAAAAAAAAAAAAAEcBAAAVAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-05T08:20:02.875Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-05T08:20:02.875Z"
             },
             {
               "$type": "Document",
@@ -193,8 +191,7 @@
               "RelativeToolTip": "RMS_API\\Controllers\\UserController.cs",
               "ViewState": "AQIAAAUAAAAAAAAAAAAiwE0AAAAwAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-05T05:44:56.017Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-05T05:44:56.017Z"
             },
             {
               "$type": "Document",
@@ -230,8 +227,7 @@
               "RelativeToolTip": "RMS-Client\\Controllers\\UserController.cs",
               "ViewState": "AQIAAA4AAAAAAAAAAAAAwAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-05T05:44:40.432Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-05T05:44:40.432Z"
             },
             {
               "$type": "Document",
