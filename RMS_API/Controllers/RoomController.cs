@@ -671,6 +671,7 @@ namespace RMS_API.Controllers
                     Distance = r.Building.Distance,
                     FirstImageLink = r.Images.OrderBy(i => i.Id).Select(i => i.Link).FirstOrDefault() // Lấy link ảnh đầu tiên
                 })
+                .OrderByDescending(r => r.Id) // Sắp xếp theo Id giảm dần
                 .ToList();
 
             return Ok(rooms);
@@ -713,6 +714,7 @@ namespace RMS_API.Controllers
                 Price = room.Price,
                 Area = room.Area,
                 Distance = room.Building?.Distance ?? 0,
+                FreeInFutureDate = room.FreeInFutureDate,
                 Description = room.Description,
                 RoomStatus = room.RoomStatus?.Name ?? "Trạng thái không xác định",
                 OwnerName = $"{room.Building?.User?.LastName ?? ""} " +
@@ -786,6 +788,7 @@ namespace RMS_API.Controllers
                     (searchDto.MinArea == null || r.Area >= searchDto.MinArea) &&
                     (searchDto.MaxArea == null || r.Area <= searchDto.MaxArea)
                 )
+                .OrderBy(r => r.FreeInFutureDate.HasValue ? r.FreeInFutureDate.Value : DateTime.MaxValue) // Sắp xếp theo FreeInFutureDate
                 .Select(r => new
                 {
                     Id = r.Id,
@@ -796,6 +799,7 @@ namespace RMS_API.Controllers
                     Price = r.Price,
                     Area = r.Area,
                     RoomStatusName = r.RoomStatus.Name,
+                    FreeInFutureDate = r.FreeInFutureDate.HasValue ? r.FreeInFutureDate.Value.ToString("dd/MM/yyyy"):"",
                     FirstImageLink = r.Images.OrderBy(i => i.Id).Select(i => i.Link).FirstOrDefault()
                 })
                 .ToListAsync();

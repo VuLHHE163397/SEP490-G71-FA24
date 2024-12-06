@@ -163,10 +163,9 @@
                 <!-- End Sidebar navigation -->
         </div>
         <!-- End Sidebar scroll-->
-        </aside>
         <div class="body-wrapper">
             <!-- Sidebar Start -->
-            <header class="app-header">
+            <header class="app-header" style="background-color:  whitesmoke">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
@@ -190,19 +189,12 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
+                                            <p class="mb-0 fs-3">Tài Khoản</p>
                                         </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
-                                        </a>
-                                        <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                                        <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
+
                                     </div>
                                 </div>
                             </li>
@@ -217,7 +209,7 @@
                     <div class="col-lg-8 d-flex align-items-stretch">
                         <div class="card w-100">
                             <div class="card-body">
-                                <div id="chart"></div>
+                                <div id="chart" style="min-height: 500px;"></div>
                             </div>
                         </div>
                     </div>

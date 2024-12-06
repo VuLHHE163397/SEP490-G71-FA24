@@ -192,7 +192,7 @@
                                     else
                                     {
                                         <div class="carousel-item active">
-                                            <img src="~/images/default-room.jpg" class="d-block w-100" alt="Default Room Image">
+                                            <img src="~/images/room1.jpg" class="d-block w-100" alt="Default Room Image">
                                         </div>
                                     }
                                 </div>
@@ -222,7 +222,7 @@
                                     else
                                     {
                                         <div class="col-2">
-                                            <img src="~/images/default-room.jpg" class="img-thumbnail thumbnail-image" alt="Default Thumbnail">
+                                            <img src="~/images/room2.jpg" class="img-thumbnail thumbnail-image" alt="Default Thumbnail">
                                         </div>
                                     }
                                 </div>
@@ -242,6 +242,7 @@
                             <p><strong>Diện tích:</strong> @Model.Area.ToString("0") m²</p>
                             <p><strong>Khoảng cách:</strong> @Model.Distance?.ToString("0") km</p>
                             <p><strong>Trạng thái phòng:</strong> @Model.RoomStatus</p>
+                            <p><strong>Phòng sẽ trống vào ngày:</strong> @Model.FreeInFutureDate?.ToString("dd/MM/yyyy")</p>
                             <p><strong>Mô tả chi tiết:</strong> @Model.Description</p>
                             @if (!string.IsNullOrEmpty(Model.LinkEmbedMap))
                             {

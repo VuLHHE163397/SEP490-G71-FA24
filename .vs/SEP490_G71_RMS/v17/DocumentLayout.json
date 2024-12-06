@@ -1,7 +1,16 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Acer\\OneDrive\\M\u00E1y t\u00EDnh\\SaveCode\\toan\\SEP490-G71-FA24\\",
-  "Documents": [],
+  "WorkspaceRootPath": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\fulearning\\fall2024\\datn\\sep490-g71-fa24\\sep490-g71-fa24\\rms_api\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\fulearning\\fall2024\\datn\\sep490-g71-fa24\\sep490-g71-fa24\\rms-client\\views\\home\\home.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\home\\home.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,6 +59,31 @@
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RoomController.cs",
+              "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\Controllers\\RoomController.cs",
+              "RelativeDocumentMoniker": "RMS_API\\Controllers\\RoomController.cs",
+              "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS_API\\Controllers\\RoomController.cs",
+              "RelativeToolTip": "RMS_API\\Controllers\\RoomController.cs",
+              "ViewState": "AQIAABMDAAAAAAAAAAAIwKECAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-06T08:15:13.217Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Home.cshtml",
+              "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\Views\\Home\\Home.cshtml",
+              "RelativeDocumentMoniker": "RMS-Client\\Views\\Home\\Home.cshtml",
+              "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\SEP490-G71-FA24\\SEP490-G71-FA24\\RMS-Client\\Views\\Home\\Home.cshtml",
+              "RelativeToolTip": "RMS-Client\\Views\\Home\\Home.cshtml",
+              "ViewState": "AQIAAN4AAAAAAAAAAAAAAOkAAAAyAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-12-06T08:12:17.298Z"
             }
           ]
         },

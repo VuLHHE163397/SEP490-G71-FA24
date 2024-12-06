@@ -141,7 +141,7 @@
         </aside>
         <div class="body-wrapper">
             <!-- Sidebar Start -->
-            <header class="app-header">
+            <header class="app-header" style="background-color:  whitesmoke">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
@@ -165,19 +165,11 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
+                                            <p class="mb-0 fs-3">Tài Khoản</p>
                                         </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
-                                        </a>
-                                        <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                                        <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
                                     </div>
                                 </div>
                             </li>
@@ -322,12 +314,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                        <li class="sidebar-subitem">
-                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                            </a>
-                        </li>
-                    `);
+                                <li class="sidebar-subitem">
+                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                    </a>
+                                </li>
+                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -340,8 +332,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                    `);
+                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                            `);
         }
         async function fetchData(status, tableId) {
             const tableBody = document.getElementById(tableId);
@@ -388,23 +380,23 @@
                         const buttonHtml =
                             item.status === "Chưa xử lý"
                                 ? `<button onclick="changeStatus(${item.id})" class="btn btn-success">
-                                   <i class="fa fa-check"></i>
-                               </button>`
+                                           <i class="fa fa-check"></i>
+                                       </button>`
                                 : `<button onclick="changeStatus(${item.id})" class="btn btn-danger">
-                                   <i class="fa fa-undo"></i>
-                               </button>`;
+                                           <i class="fa fa-undo"></i>
+                                       </button>`;
 
                         const row = `<tr>
-                                 <td>${index}</td> <!-- Số thứ tự -->
-                                 <td>${item.maintenanceDescription}</td>
-                                 <td>${new Date(item.requestDate).toLocaleDateString()}</td>
-                                 <td>${item.solveDate ? new Date(item.solveDate).toLocaleDateString() : ""}</td>
-                                 <td>${item.roomNumber}</td>
-                                 <td>${item.buildingName}</td>
-                                 <td>${item.address}</td>
-                                 <td>${item.status}</td>
-                                 <td>${buttonHtml}</td>
-                                 </tr>`;
+                                         <td>${index}</td> <!-- Số thứ tự -->
+                                         <td>${item.maintenanceDescription}</td>
+                                         <td>${new Date(item.requestDate).toLocaleDateString()}</td>
+                                         <td>${item.solveDate ? new Date(item.solveDate).toLocaleDateString() : ""}</td>
+                                         <td>${item.roomNumber}</td>
+                                         <td>${item.buildingName}</td>
+                                         <td>${item.address}</td>
+                                         <td>${item.status}</td>
+                                         <td>${buttonHtml}</td>
+                                         </tr>`;
 
                         tableBody.innerHTML += row;
                     });

@@ -62,7 +62,6 @@
     <None Include="Views\Home\RoomDetail.cshtml" />
     <None Include="Views\Login\Login.cshtml" />
     <None Include="Views\Login\Register.cshtml" />
-    <None Include="Views\Profile\ChangedPassword.cshtml" />
     <None Include="Views\Profile\EditProfile.cshtml" />
     <None Include="Views\Profile\ViewProfile.cshtml" />
     <None Include="Views\Report\ListReport.cshtml" />
