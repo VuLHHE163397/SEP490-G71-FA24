@@ -33,6 +33,22 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.AuthController",
+    "Method": "LoginByGoogles",
+    "RelativePath": "api/Auth/LoginByGoogle",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "RMS_API.Controllers.AuthController\u002BLoginByGoogle",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.AuthController",
     "Method": "Logout",
     "RelativePath": "api/Auth/logout",
     "HttpMethod": "POST",
@@ -84,6 +100,27 @@
       {
         "Name": "buildingDto",
         "Type": "RMS_API.DTOs.AddBuildingDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.BuildingController",
+    "Method": "CheckBuildingName",
+    "RelativePath": "api/Building/CheckBuildingName/{userId}/{name}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "name",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],
