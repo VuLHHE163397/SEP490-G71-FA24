@@ -19,8 +19,6 @@ namespace RMS_API.Controllers
             _context = context;
         }
 
-        
-
         [HttpGet("GetBuildingsByUserId/{userId}")]
         [Authorize(Roles = "Landlord")]         // Chỉ cho phép Landlord truy cập
         public async Task<IActionResult> GetBuildingsByUserId(int userId)
@@ -94,6 +92,7 @@ namespace RMS_API.Controllers
             return Ok(buildings);
         }
 
+
         [HttpGet("GetProvinces")]
         public IActionResult GetProvinces()
         {
@@ -142,19 +141,22 @@ namespace RMS_API.Controllers
         [HttpGet("GetWardsByDistrict/{districtName}")]
         public IActionResult GetWardsByDistrict(string districtName)
         {
+            // Check if districtName is provided
+            if (string.IsNullOrEmpty(districtName))
+            {
+                return BadRequest("District name cannot be null or empty.");
+            }
+
             var wards = _context.Wards
                 .Where(w => w.District.Name == districtName)
-                .Select(w => new
-                {
-                    Id = w.Id,
-                    Name = w.Name
-                }).ToList();
+                .Select(w => new { Id = w.Id, Name = w.Name })
+                .ToList();  // Convert to List to handle LINQ query
 
-            return Ok(wards);
+            return Ok(wards);  // Will return Ok([]) if no wards are found
         }
 
 
-       /* [HttpGet("CheckBuildingName/{userId}/{name}")]
+        [HttpGet("CheckBuildingName/{userId}/{name}")]
         public IActionResult CheckBuildingName(int userId, string name)
         {
             if (string.IsNullOrEmpty(name) || userId <= 0)
@@ -167,12 +169,12 @@ namespace RMS_API.Controllers
 
             if (isDuplicateForCurrentUser)
             {
-                return Conflict(new { message = "Building name already exists for the specified user." });
+                return Conflict(new { message = "Tên tòa nhà trùng với tên hiện có. Vui lòng nhập lại." });
             }
 
             // Nếu tên tòa nhà trùng với một userId khác, cho phép tạo mới
-            return Ok(new { message = "Building name is available for the specified user or different users." });
-        }*/
+            return Ok(new { message = "Thành công." });
+        }
 
         [HttpPost("AddBuildingbyId")]
         public async Task<IActionResult> AddBuildingbyId([FromBody] AddBuildingDTO buildingDto)
@@ -183,7 +185,7 @@ namespace RMS_API.Controllers
 
             if (isDuplicateForCurrentUser)
             {
-                return Conflict("Tên tòa nhà trùng với tên hiện có. Vui lòng nhập lại." );
+                return Conflict("Tên tòa nhà trùng với tên hiện có. Vui lòng nhập lại.");
             }
 
             // Kiểm tra ModelState
@@ -282,12 +284,6 @@ namespace RMS_API.Controllers
             return Ok(responseDto);
         }
 
-
-
-
-
-
-      
         [HttpDelete("DeleteBuilding/{id}")]
         public async Task<IActionResult> DeleteBuilding(int id)
         {
@@ -304,19 +300,6 @@ namespace RMS_API.Controllers
 
             return Ok("Building deleted successfully.");
         }
-
-
-        /*[HttpGet("EditBuilding")]
-        public IActionResult EditBuilding()
-        {
-            ViewBag.Provinces = _context.Provinces.ToList();
-
-            ViewBag.BuildingStatuses = _context.BuildingStatuses.ToList();
-
-            return View();
-        }*/
-
-
 
         [HttpGet("GetBuildinImformationgById/{id}")]
         public async Task<IActionResult> GetBuildinImformationgById(int id)
@@ -394,11 +377,19 @@ namespace RMS_API.Controllers
         }
 
 
-
+        private async Task<bool> IsDuplicateBuildingName(int userId, string buildingName, int currentBuildingId)
+        {
+            return await _context.Buildings.AnyAsync(b =>
+                b.UserId == userId &&
+                b.Name == buildingName &&
+                b.Id != currentBuildingId); // Tránh trùng với chính tòa nhà đang chỉnh sửa
+        }
 
         [HttpPut("EditBuilding/{id}")]
         public async Task<ActionResult<BuildingDTO>> EditBuildingById(int id, [FromBody] BuildingDTO buildingDto)
         {
+           
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -412,6 +403,12 @@ namespace RMS_API.Controllers
             if (building == null)
             {
                 return NotFound("Building not found.");
+            }
+
+            // Kiểm tra trùng tên
+            if (await IsDuplicateBuildingName(building.UserId, buildingDto.Name, id))
+            {
+                return Conflict("Tên tòa nhà trùng với tên hiện có. Vui lòng nhập lại.");
             }
 
             // Find Province
@@ -489,6 +486,10 @@ namespace RMS_API.Controllers
             // Return the updated building DTO
             return Ok(buildingDto);
         }
+
+        
+
+
 
 
         [HttpGet("GetBuildingStatus")]

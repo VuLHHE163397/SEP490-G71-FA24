@@ -18,7 +18,6 @@ namespace RMS_API.Models
         public int BuildingId { get; set; }
         public int? UserId { get; set; }
         public int? Type { get; set; }
-
         public virtual Building Building { get; set; } = null!;
         public virtual ICollection<ServicesBill> ServicesBills { get; set; }
         public virtual ICollection<ServicesRecord> ServicesRecords { get; set; }
