@@ -100,7 +100,7 @@
             window.location.href = "/Auth/Login";
         }
 
-    </script>    
+    </script>
 
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -442,12 +442,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                <li class="sidebar-subitem">
-                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                    </a>
-                                                                                </li>
-                                                                            `);
+                                                                                        <li class="sidebar-subitem">
+                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                            </a>
+                                                                                        </li>
+                                                                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -460,8 +460,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                    `);
+                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                            `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {

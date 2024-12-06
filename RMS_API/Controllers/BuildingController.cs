@@ -169,11 +169,11 @@ namespace RMS_API.Controllers
 
             if (isDuplicateForCurrentUser)
             {
-                return Conflict(new { message = "Building name already exists for the specified user." });
+                return Conflict(new { message = "Tên tòa nhà trùng với tên hiện có. Vui lòng nhập lại." });
             }
 
             // Nếu tên tòa nhà trùng với một userId khác, cho phép tạo mới
-            return Ok(new { message = "Building name is available for the specified user or different users." });
+            return Ok(new { message = "Thành công." });
         }
 
         [HttpPost("AddBuildingbyId")]
@@ -388,7 +388,7 @@ namespace RMS_API.Controllers
         [HttpPut("EditBuilding/{id}")]
         public async Task<ActionResult<BuildingDTO>> EditBuildingById(int id, [FromBody] BuildingDTO buildingDto)
         {
-
+           
 
             if (!ModelState.IsValid)
             {
@@ -486,6 +486,8 @@ namespace RMS_API.Controllers
             // Return the updated building DTO
             return Ok(buildingDto);
         }
+
+        
 
 
 

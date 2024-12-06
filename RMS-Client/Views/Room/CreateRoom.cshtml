@@ -355,6 +355,18 @@
                             <textarea class="form-control" id="Description" name="Description" required></textarea>
                         </div>
 
+                        <div class="form-group row">
+                            <label for="StartedDate">Ngày bắt đầu thuê</label>
+                            <input class="form-control" type="date" id="StartedDate" name="StartedDate" />
+                            <span class="error-message" id="dateError1" style="color: red; display: none;">Ngày bắt đầu thuê phải trước ngày hết hạn</span>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="ExpiredDate">Ngày hết hạn</label>
+                            <input class="form-control" type="date" id="ExpiredDate" name="ExpiredDate" />
+                            <span class="error-message" id="dateError2" style="color: red; display: none;">Ngày hết hạn phải sau ngày bắt đầu thuê</span>
+                        </div>
+
                         <div class="form-group row" style="display:none">
                             <label class="col-sm-3 fw-bold text-end align-middle" for="BuildingId">BuildingId</label>
                             <div class="col-sm-9">
@@ -406,13 +418,23 @@
             validateArea();
         });
 
+        document.getElementById('StartedDate').addEventListener('imput', validateDate);
+        document.getElementById('ExpiredDate').addEventListener('input', validateDate);
+
         const submitError = document.getElementById('submitError');
 
         // Hàm validate cho từng trường
         function validatePrice() {
-            const price = document.getElementById('Price').value;
+            const price = document.getElementById('Price').value.trim();
             const priceError = document.getElementById('priceError');
-            if (isNaN(price) || parseFloat(price) <= 0) {
+
+            if (price === "") {
+                priceError.textContent = "Giá phòng không được để trống";
+                priceError.style.display = 'inline';
+                document.getElementById('buttonSave').disabled = true;
+                submitError.style.display = 'inline';
+            }
+            else if (isNaN(price) || parseFloat(price) <= 0) {
                 priceError.style.display = 'inline';
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
@@ -424,9 +446,15 @@
         }
 
         function validateFloor() {
-            const floor = document.getElementById('Floor').value;
+            const floor = document.getElementById('Floor').value.trim();
             const floorError = document.getElementById('floorError');
-            if (isNaN(floor) || parseInt(floor) <= 0 || !Number.isInteger(parseFloat(floor))) {
+            if (floor === "") {
+                floorError.textContent = "Tầng không được để trống";
+                floorError.style.display = 'inline';
+                document.getElementById('buttonSave').disabled = true;
+                submitError.style.display = 'inline';
+            }
+            else if (isNaN(floor) || parseInt(floor) <= 0 || !Number.isInteger(parseFloat(floor))) {
                 floorError.style.display = 'inline';
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
@@ -438,9 +466,15 @@
         }
 
         function validateArea() {
-            const area = document.getElementById('Area').value;
+            const area = document.getElementById('Area').value.trim();
             const areaError = document.getElementById('areaError');
-            if (isNaN(area) || parseFloat(area) <= 0) {
+            if (area === "") {
+                areaError.textContent = "Diện tích không được để trống";
+                areaError.style.display = 'inline';
+                document.getElementById('buttonSave').disabled = true;
+                submitError.style.display = 'inline';
+            }
+            else if (isNaN(area) || parseFloat(area) <= 0) {
                 areaError.style.display = 'inline';
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
@@ -451,15 +485,49 @@
             }
         }
 
+        function validateDate() {
+            const startedDate = document.getElementById('StartedDate').value;
+            const expiredDate = document.getElementById('ExpiredDate').value;
+
+            const dateError1 = document.getElementById('dateError1');
+            const dateError2 = document.getElementById('dateError2');
+            const submitButton = document.getElementById('buttonSave');
+
+            if (startedDate && expiredDate) {
+                if (new Date(expiredDate) <= new Date(startedDate)) {
+                    dateError1.style.display = 'inline';
+                    dateError2.style.display = 'inline';
+                    submitButton.disabled = true;
+                } else {
+                    dateError1.style.display = 'none';
+                    dateError2.style.display = 'none';
+                    submitButton.disabled = false;
+                }
+            } else {
+                // Nếu chưa điền đủ ngày, không hiển thị lỗi nhưng vẫn khóa nút
+                dateError1.style.display = 'none';
+                dateError2.style.display = 'none';
+                submitButton.disabled = true;
+            }
+        }
+
         // Kiểm tra RoomNumber ngay khi người dùng nhập xong và rời khỏi trường input
         document.getElementById('RoomNumber').addEventListener('blur', async function () {
-            const roomName = this.value;
+            const roomName = this.value.trim();
             const buildingId = '@ViewBag.SelectedBuildingId';
+            const roomNumberError = document.getElementById('roomNumberError');
+
+            // Kiểm tra nếu để trống
+            if (roomName === "") {
+                roomNumberError.style.display = 'inline';
+                roomNumberError.textContent = 'Tên Phòng không được để trống';
+                document.getElementById('buttonSave').disabled = true;
+                return;
+            }
 
             const response = await fetch(`/api/Room/CheckRoomNameExists?roomName=${roomName}&buildingId=${buildingId}`);
             const roomExists = await response.json();
 
-            const roomNumberError = document.getElementById('roomNumberError');
             if (roomExists) {
                 roomNumberError.style.display = 'inline';
                 roomNumberError.textContent = 'Tên Phòng đã tồn tại trong tòa nhà này';
@@ -478,6 +546,7 @@
             validatePrice();
             validateFloor();
             validateArea();
+            validateDate();
 
             // Nếu có lỗi, ngăn form submit
             if (document.querySelectorAll('.error-message[style="display: inline;"]').length > 0) {
@@ -548,12 +617,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                        <li class="sidebar-subitem">
-                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                            </a>
-                                                                                        </li>
-                                                                                    `);
+                                                                                                                <li class="sidebar-subitem">
+                                                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                                                    </a>
+                                                                                                                </li>
+                                                                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -566,8 +635,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                            `);
+                                                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                                                    `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {

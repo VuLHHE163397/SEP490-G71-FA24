@@ -100,7 +100,7 @@ builder.Services.AddCors(opts =>
                .AllowAnyMethod()
                .AllowCredentials()
                .SetIsOriginAllowed(origin => true); // Cấu hình cho phép tất cả các nguồn
-                //.WithOrigins("https://localhost:5001");    ///thêm vào để kiểm tra fe url3
+                                                    //.WithOrigins("https://localhost:5001");    ///thêm vào để kiểm tra fe url3
     });
 });
 

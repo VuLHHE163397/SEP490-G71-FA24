@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RMS_API.Models;
@@ -65,6 +66,7 @@ namespace RMS_API.Controllers
         {
             public string Email { get; set; } = null!;
         }
+
 
         // Helper method to generate a random password (letters and numbers)
         private string GenerateRandomPassword(int length = 8)
@@ -212,17 +214,110 @@ namespace RMS_API.Controllers
                 HttpOnly = false,
                 //Secure = false,
                 //SameSite = SameSiteMode.Lax,
-                SameSite=SameSiteMode.None,
+                SameSite = SameSiteMode.None,
                 //SameSite = SameSiteMode.Strict, // Ngăn CSRF                
-                Expires = DateTime.UtcNow.AddHours(1) 
+                Expires = DateTime.UtcNow.AddHours(1)
             });
 
             Console.WriteLine("Đã gán AuthToken với HttpOnly = false");
 
             HttpContext.Session.SetString("UserId", user.Id.ToString());
 
-            return Ok(new { token });           
+            return Ok(new { token });
         }
+
+        public static (string FirstName, string MiddleName, string LastName) SplitName(string fullName)
+        {
+            if (string.IsNullOrWhiteSpace(fullName))
+            {
+                return (string.Empty, string.Empty, string.Empty);
+            }
+
+            // Loại bỏ khoảng trắng thừa
+            fullName = fullName.Trim();
+            var parts = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length == 1)
+            {
+                // Trường hợp chỉ có 1 từ
+                return (parts[0], string.Empty, string.Empty);
+            }
+            else if (parts.Length == 2)
+            {
+                // Trường hợp có 2 từ
+                return (parts[0], string.Empty, parts[1]);
+            }
+            else
+            {
+                // Trường hợp có 3 từ trở lên
+                var firstName = parts[0]; // Từ đầu tiên
+                var lastName = parts[^1]; // Từ cuối cùng
+                var middleName = string.Join(" ", parts[1..^1]); // Các từ ở giữa
+
+                return (firstName, middleName, lastName);
+            }
+        }
+
+
+        [HttpPost("LoginByGoogle")]
+        public async Task<IActionResult> LoginByGoogles([FromBody] LoginByGoogle model)
+        {
+
+
+            if (model.Email == null || model.Name == null)
+                return Unauthorized("Xin mời nhập tài khoản và mật khẩu");
+
+            var user = await _context.Users
+        .Include(u => u.Role)
+        .SingleOrDefaultAsync(u => u.Email == model.Email);
+            var (firstName, middleName, lastName) = SplitName(model.Name);
+            if (user == null)
+            {
+                var User = new User
+                {
+                    Phone = "0123456789",
+                    Password = BCrypt.Net.BCrypt.HashPassword("123456"),
+                    UserStatusId = 1,
+                    Email = model.Email,
+                    FirstName = firstName,
+                    MidName = middleName,
+                    LastName = lastName,
+                    RoleId = 2,
+                    Role = new Role { Name = "Landlord" }
+                };
+                _context.Users.Add(User);
+                _context.SaveChanges();
+                user = User;
+
+            }
+
+
+
+
+            var token = GenerateJwtToken(user);
+
+            Response.Cookies.Append("AuthToken", token, new CookieOptions
+            {
+                //HttpOnly = true,
+                Secure = true,
+                Path = "/",
+                HttpOnly = false,
+                //Secure = false,
+                //SameSite = SameSiteMode.Lax,
+                SameSite = SameSiteMode.None,
+                //SameSite = SameSiteMode.Strict, // Ngăn CSRF                
+                Expires = DateTime.UtcNow.AddHours(1)
+            });
+
+            Console.WriteLine("Đã gán AuthToken với HttpOnly = false");
+
+            HttpContext.Session.SetString("UserId", user.Id.ToString());
+
+            return Ok(new { token });
+        }
+
+
+
 
         //Gen token for jwt
         private string GenerateJwtToken(User userInfo)
@@ -234,7 +329,7 @@ namespace RMS_API.Controllers
             claims.Add(new Claim(JwtRegisteredClaimNames.Name, userInfo.Email));
             claims.Add(new Claim("UserId", userInfo.Id.ToString()));
             claims.Add(new Claim("Roles", userInfo.Role.Name));
-           
+
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 claims,
@@ -242,7 +337,7 @@ namespace RMS_API.Controllers
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        
+
 
             //var tokenHandler = new JwtSecurityTokenHandler();
             //var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024");
@@ -271,7 +366,17 @@ namespace RMS_API.Controllers
         }
 
 
+        //Model login
+        public class LoginByGoogle
+        {
+            [Required]
+            [DataType(DataType.Text)]
+            public string Email { get; set; } = string.Empty;
 
+            [Required]
+            [DataType(DataType.Password)]
+            public string Name { get; set; } = string.Empty;
+        }
 
 
         //Model login

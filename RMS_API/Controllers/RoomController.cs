@@ -663,6 +663,7 @@ namespace RMS_API.Controllers
                 {
                     Id = r.Id,
                     Building = r.Building.Name,
+                    RoomNumber = r.RoomNumber,
                     Address = $"{r.Building.Address.Information}, {r.Building.Address.Ward.Name}, {r.Building.Address.District.Name}, {r.Building.Address.Province.Name}",
                     Price = r.Price,
                     Area = r.Area,
@@ -701,6 +702,10 @@ namespace RMS_API.Controllers
             // Tạo RoomDetailDto từ dữ liệu phòng
             var roomDetailDto = new RoomDetailDTO
             {
+                Building = room.Building.Name,
+                RoomNumber = room.RoomNumber,
+                Facebook = room.Building?.User.FacebookUrl ?? "Chưa có link Facebook",
+                Zalo = room.Building?.User.ZaloUrl ?? "Chưa có thông tin Zalo",
                 FullAddress = $"{room.Building?.Address?.Information ?? "Chưa có địa chỉ chi tiết"}, " +
                                $"{room.Building?.Ward?.Name ?? "Chưa có phường"}, " +
                                $"{room.Building?.District?.Name ?? "Chưa có quận"}, " +
@@ -785,6 +790,7 @@ namespace RMS_API.Controllers
                 {
                     Id = r.Id,
                     Building = r.Building.Name,
+                    RoomNumber = r.RoomNumber,
                     Distance = r.Building.Distance,
                     Address = $"{r.Building.Address.Information}, {r.Building.Address.Ward.Name}, {r.Building.Address.District.Name}, {r.Building.Address.Province.Name}",
                     Price = r.Price,

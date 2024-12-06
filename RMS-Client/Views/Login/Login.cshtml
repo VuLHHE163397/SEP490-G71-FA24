@@ -1,4 +1,5 @@
-﻿<!doctype html>
+﻿
+<!doctype html>
 <html lang="en">
 
 <head>
@@ -8,44 +9,33 @@
 
     <link rel="shortcut icon" type="image/png" href="~/images/logos/house.jpg" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         /* Popup styling */
-        #popupMessage {
+        #popupMessage, #popupErrorMessage {
             display: none;
             position: fixed;
             bottom: 20px;
             right: 20px;
             padding: 15px 20px;
-            background-color: #4caf50;
             color: white;
             border-radius: 5px;
             font-size: 16px;
             z-index: 1000;
+        }
+
+        #popupMessage {
+            background-color: #4caf50;
         }
 
         #popupErrorMessage {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 15px 20px;
             background-color: #C53500;
-            color: white;
-            border-radius: 5px;
-            font-size: 16px;
-            z-index: 1000;
         }
 
         .card {
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
-            height: 500px;
             margin: auto;
-            / position: relative;
-        }
-
-        .page-wrapper {
-            padding: 20px;
         }
 
         body {
@@ -72,50 +62,81 @@
 
         .page-wrapper {
             position: relative;
-            z-index: 1; /* Nội dung nằm trên lớp nền */
+            z-index: 1;
             padding: 20px;
+        }
+
+        .text-center .g_id_signin {
+            display: inline-block;
         }
     </style>
 </head>
 
 <body>
-    <div class="overlay"></div> <!-- Lớp phủ nền -->
-    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="overlay"></div> <!-- Overlay -->
+    <div class="page-wrapper">
         <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
-            <div class="d-flex align-items-center justify-content-center w-100">
-                <div class="row justify-content-center w-100">
-                    <div class="col-md-10 col-lg-8 col-xxl-6">
-                        <div class="card mb-0">
-                            <div class="card-body">
-                                <a href="#" class="text-nowrap logo-img text-center d-block py-3 w-100">
-                                    <img src="~/images/logo.jpg" width="150" alt="">
-                                </a>
-                                <form id="loginForm">
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label">Tài khoản</label>
-                                        <input type="email" class="form-control" id="email" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="password" class="form-label">Mật khẩu</label>
-                                        <input type="password" class="form-control" id="password" required onkeydown="handleKeyPress(event)">
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between mb-4">
-                                        <a class="text-primary fw-bold" href="/Home/Home">Về trang chủ</a>
-                                        <a class="text-primary fw-bold" href="/Auth/ForgotPassword">Quên mật khẩu</a>
-                                    </div>
-                                    <button type="button" onclick="login()" class="btn btn-primary w-100">Đăng nhập</button>
-                                    <div class="d-flex align-items-center justify-content-center">
-                                        <p class="fs-4 mb-0 fw-bold">Chưa có tài khoản?</p>
-                                        <a class="text-primary fw-bold ms-2" href="Register">Đăng ký</a>
-                                    </div>
-                                </form>
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="text-center mb-4">
+                        <a href="#" class="text-nowrap logo-img">
+                            <img src="~/images/logo.jpg" width="180" alt="Logo">
+                        </a>
+                    </div>
+
+                    <!-- Form Login -->
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Tài khoản</label>
+                            <input type="email" class="form-control" id="email" placeholder="Nhập email của bạn" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu" onkeydown="handleKeyPress(event)" required>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <a class="text-primary fw-bold" href="/Home/Home">Về trang chủ</a>
+                            <a class="text-primary fw-bold" href="/Auth/ForgotPassword">Quên mật khẩu?</a>
+                        </div>
+                        <button type="button" onclick="login()" class="btn btn-primary w-100 mb-3">Đăng nhập</button>
+
+                        <!-- Divider -->
+                        <div class="text-center mb-3">
+                            <span class="text-muted">hoặc</span>
+                        </div>
+
+                        <!-- Google Sign-In Section -->
+                        <div class="text-center">
+                            <div id="g_id_onload"
+                                 data-client_id="496416397837-mlmbshr1ci83d21utn0q4eghu50rn04s.apps.googleusercontent.com"
+                                 data-callback="handleCredentialResponse"
+                                 data-auto_prompt="false">
+                            </div>
+                            <div class="g_id_signin"
+                                 data-type="standard"
+                                 data-shape="rectangular"
+                                 data-theme="outline"
+                                 data-text="sign_in_with"
+                                 data-size="large"
+                                 data-logo_alignment="left">
                             </div>
                         </div>
+                    </form>
+
+                    <!-- Register Link -->
+                    <div class="text-center mt-4">
+                        <p class="mb-0">
+                            Chưa có tài khoản?
+                            <a class="text-primary fw-bold" href="Register">Đăng ký</a>
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
 
     <!-- Popup Message -->
     <div id="popupMessage">Đăng nhập thành công!</div>
@@ -169,6 +190,35 @@
                 }
             });
 
+        }
+        function ForgotPassword() {
+            const email = $("#email").val(); // Lấy email từ textbox
+
+            if (!email) {
+                // Nếu không có email trong textbox, yêu cầu nhập email
+                const userEmail = prompt("Bạn chưa nhập email. Vui lòng nhập email của bạn:");
+                if (!userEmail) {
+                    alert("Email không hợp lệ.");
+                    return;
+                }
+                // Chuyển đến trang ForgotPassword với email
+                window.location.href = `/Auth/ForgotPassword?email=${encodeURIComponent(userEmail)}`;
+            } else {
+                // Nếu đã có email, xác nhận với người dùng
+                const confirmEmail = confirm(`Email bạn đã nhập là: ${email}. Bạn có muốn tiếp tục với email này không?`);
+                if (confirmEmail) {
+                    // Chuyển đến trang ForgotPassword với email
+                    window.location.href = `/Auth/ForgotPassword?email=${encodeURIComponent(email)}`;
+                } else {
+                    // Yêu cầu nhập email khác
+                    const userEmail = prompt("Vui lòng nhập email khác của bạn:");
+                    if (!userEmail) {
+                        alert("Email không hợp lệ.");
+                        return;
+                    }
+                    window.location.href = `/Auth/ForgotPassword?email=${encodeURIComponent(userEmail)}`;
+                }
+            }
         }
 
         function handleKeyPress(event) {
@@ -224,6 +274,56 @@
                 popup.fadeOut();
             }, 3000);
         }
+
+        const CLIENT_ID = "496416397837-mlmbshr1ci83d21utn0q4eghu50rn04s.apps.googleusercontent.com";
+
+        function handleCredentialResponse(response) {
+            // Decode the JWT token to get user info
+            const user = jwt_decode(response.credential);
+
+            console.log('user', user);
+
+            $.ajax({
+                url: "https://localhost:7056/api/Auth/LoginByGoogle",
+                type: "POST",
+                contentType: "application/json",
+                xhrFields: { withCredentials: true },   // Cho phép gửi và nhận cookies
+                data: JSON.stringify({ email: user.email, Name: user.given_name }),
+                success: function (response) {
+                    showPopup("Đăng nhập thành công!");
+                    try {
+                        // Giải mã token JWT
+                        const tokenParts = response.token.split('.');
+                        const payload = JSON.parse(atob(tokenParts[1]));
+                        // Xét role để chuyển trang
+                        setTimeout(function () {
+                            if (payload.Roles === "Admin") {
+                                window.location.href = "/User/ListUser";
+                            } else if (payload.Roles === "Landlord") {
+                                window.location.href = "/Building/ListBuilding";
+                            }
+                        }, 800);
+                    } catch (error) {
+                        console.error("Failed to decode token", error);
+                        alert("Đăng nhập thành công, nhưng có lỗi xảy ra khi xử lý thông tin người dùng.");
+                    }
+                    console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    showErrorPopup("Tài khoản hoặc mật khẩu không tồn tại");
+                    // showErrorPopup("Đăng nhập thất bại: " + xhr.responseText);
+                }
+            });
+
+        }
+
+        // Load JWT decode library
+        (function () {
+            const script = document.createElement('script');
+            script.src = "https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js";
+            script.async = true;
+            document.head.appendChild(script);
+        })();
     </script>
 </body>
 

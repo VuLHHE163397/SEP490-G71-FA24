@@ -200,16 +200,7 @@
                         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                             <div class="navbar-nav mr-auto py-0">
                                 <a asp-controller="Home" asp-action="Home" class="nav-item nav-link active">Trang chủ</a>
-                                <a asp-controller="Home" asp-action="Search" class="nav-item nav-link active">Tìm phòng</a>
-                                <!-- Conditional rendering for roles -->
-                                @if (User.IsInRole("Admin"))
-                                {
-                                    <a href="Admin/manage" class="nav-item nav-link">Quản lí</a>
-                                }
-                                else if (User.IsInRole("Landlord"))
-                                {
-                                    <a href="Landlord/manage" class="nav-item nav-link">Quản lí</a>
-                                }
+                                <a asp-controller="Home" asp-action="Search" class="nav-item nav-link active">Tìm phòng</a>                               
                             </div>
                         </div>
                         <!-- Favorite Count Icon in Header -->
@@ -281,7 +272,7 @@
                 </div>
 
                 <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                    <h1 class="section-title text-center text-primary text-uppercase">Tất cả phòng đang trống</h1>
+                    <h1 class="section-title text-center text-primary text-uppercase">Các phòng đang trống</h1>
                 </div>
 
                 <div class="row">
@@ -306,15 +297,17 @@
                                 </div>
                                 <div class="room-details p-3">
                                     <h5 class="mb-2">
-                                        <i class="fa fa-map-marker-alt text-primary me-2"></i>@room.Address
+                                        <i class="fa fa-home text-primary me-2"></i>Phòng @room.RoomNumber - @room.Building 
                                     </h5>
                                     <div class="room-status">@room.RoomStatusName</div>
+
                                     <div class="mt-2" style="font-weight:bold;">
+                                        <small class="text-muted d-block"><i class="fa fa-map-marker-alt text-primary me-2"></i>@room.Address</small>
                                         <small class="text-muted d-block"><i class="fa fa-road text-primary me-2"></i>Cách ĐH FPT @room.Distance?.ToString("0") km</small>
                                         @{
                                             decimal priceInMillions = room.Price / 1_000_000;
                                             string formattedPrice = priceInMillions.ToString("0.0");
-                                        }
+                                        }                              
                                         <small class="text-muted d-block"><i class="fa fa-dollar-sign text-primary me-2"></i>@formattedPrice triệu VND</small>
                                         <small class="text-muted d-block"><i class="fa fa-expand text-primary me-2"></i>@room.Area m²</small>
                                     </div>
@@ -356,9 +349,6 @@
         <script src="~/lib/counterup/counterup.min.js"></script>
         <!-- JavaScript for noUiSlider and modal control -->
         <script>
-            function navigateToDetail(url) {
-                window.location.href = url;
-            }
             // Function to get favorites from cookies
             function getFavorites() {
                 const favorites = document.cookie
