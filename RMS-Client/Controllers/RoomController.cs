@@ -168,7 +168,7 @@ namespace RMS_Client.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> CreateRoom(int? buildingId)
+        public async Task<IActionResult> CreateRoom(int? buildingId, int userId)
         {
 
             // Lấy danh sách Building từ API

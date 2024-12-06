@@ -287,12 +287,49 @@ namespace RMS_API.Controllers
 
             // Update the user's status
             user.UserStatusId = request.NewStatusId;
-
-            // Save changes to the database
             await _context.SaveChangesAsync();
 
-            return Ok(new { Message = "User status updated successfully." });
+            // Optional: Update building status if the user is a landlord
+            if (user.RoleId == 2) // Assuming 2 is the RoleId for "Landlord"
+            {
+                // Find all buildings associated with this user (landlord)
+                var buildings = await _context.Buildings
+                    .Where(b => b.UserId == user.Id)
+                    .ToListAsync();
+
+                if (buildings != null && buildings.Count > 0)
+                {
+                    foreach (var building in buildings)
+                    {
+                        // Update the status of each building based on the UserStatusId
+                        if (request.NewStatusId == 1) // User is active
+                        {
+                            // Set building status to active
+                            var activeStatus = await _context.BuildingStatuses.FirstOrDefaultAsync(bs => bs.Id == 1);
+                            if (activeStatus != null)
+                            {
+                                building.BuildingStatusId = activeStatus.Id;
+                            }
+                        }
+                        else // User is deactivated or banned
+                        {
+                            // Set building status to deactivated
+                            var inactiveStatus = await _context.BuildingStatuses.FirstOrDefaultAsync(bs => bs.Id == 2);
+                            if (inactiveStatus != null)
+                            {
+                                building.BuildingStatusId = inactiveStatus.Id;
+                            }
+                        }
+                    }
+
+                    // Save changes to all associated buildings
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            return Ok();
         }
+        
 
     }
 }
