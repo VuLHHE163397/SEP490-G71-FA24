@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "z58obHC7p24dLAzAyfLZzQmOeUYrMKGG7PgFuaOZswA=",
+  "Hash": "SOtuamYWXuO8Z0WN01fI9wA/WWG3kBYRg4/zPYgmzcY=",
   "Source": "RMS_Client",
   "BasePath": "_content/RMS_Client",
   "Mode": "Default",
@@ -369,6 +369,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\backgrounds\\rocket.png"
+    },
+    {
+      "Identity": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\bg1.jpg",
+      "SourceId": "RMS_Client",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\",
+      "BasePath": "_content/RMS_Client",
+      "RelativePath": "images/bg1.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\bg1.jpg"
     },
     {
       "Identity": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\wwwroot\\images\\logo.jpg",

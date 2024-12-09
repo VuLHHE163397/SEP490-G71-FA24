@@ -111,32 +111,32 @@ namespace RMS_API.Controllers
             return Ok(user);
         }
 
-        [HttpPut("ChangePassword")]
-        [Authorize(Roles = "Landlord")]
-        public async Task<IActionResult> ChangePassword([FromQuery] string email, [FromQuery] string currentPassword, [FromQuery] string newPassword)
-        {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(currentPassword) || string.IsNullOrEmpty(newPassword))
-            {
-                return BadRequest("Email,mật khẩu hiện tại và mật khẩu mới không được trống.");
-            }
+        //[HttpPut("ChangePassword")]
+        //[Authorize(Roles = "Landlord")]
+        //public async Task<IActionResult> ChangePassword([FromQuery] string email, [FromQuery] string currentPassword, [FromQuery] string newPassword)
+        //{
+        //    if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(currentPassword) || string.IsNullOrEmpty(newPassword))
+        //    {
+        //        return BadRequest("Mật khẩu hiện tại và mật khẩu mới không được trống.");
+        //    }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        //    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
-            if (user == null)
-            {
-                return NotFound("Email không tồn tại.");
-            }
+        //    if (user == null)
+        //    {
+        //        return NotFound("Không tìm thấy tài khoản.");
+        //    }
 
-            if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.Password)) // Adjust according to your password hashing method if applicable
-            {
-                return BadRequest("Mật khẩu hiện tại sai.");
-            }
+        //    if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.Password)) // Adjust according to your password hashing method if applicable
+        //    {
+        //        return BadRequest("Mật khẩu cũ sai! Vui lòng nhập lại.");
+        //    }
 
-            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword); // Hash the password if needed
-            await _context.SaveChangesAsync();
+        //    user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword); // Hash the password if needed
+        //    await _context.SaveChangesAsync();
 
-            return Ok("Cập nhật mật khẩu thành công.");
-        }
+        //    return Ok("Cập nhật mật khẩu thành công.");
+        //}
 
         [HttpPut("UpdateProfileByEmail")]
         [Authorize(Roles = "Landlord")]
@@ -304,21 +304,56 @@ namespace RMS_API.Controllers
             }
 
             // Find the status by the new status ID to validate it exists
-            //var status = await _context.UserStatuses.FindAsync(request.NewStatusId);
-            //if (status == null)
-            //{
-            //    return NotFound(new { Message = "Status not found." });
-            //}
+            var status = await _context.UserStatuses.FindAsync(request.NewStatusId);
+            if (status == null)
+            {
+                return NotFound(new { Message = "Status not found." });
+            }
 
             // Update the user's status
             user.UserStatusId = request.NewStatusId;
-
-            // Save changes to the database
             await _context.SaveChangesAsync();
 
-            return Ok(new { Message = "User status updated successfully." });
-        }
+            // Optional: Update building status if the user is a landlord
+            if (user.RoleId == 2) // Assuming 2 is the RoleId for "Landlord"
+            {
+                // Find all buildings associated with this user (landlord)
+                var buildings = await _context.Buildings
+                    .Where(b => b.UserId == user.Id)
+                    .ToListAsync();
 
+                if (buildings != null && buildings.Count > 0)
+                {
+                    foreach (var building in buildings)
+                    {
+                        // Update the status of each building based on the UserStatusId
+                        if (request.NewStatusId == 1) // User is active
+                        {
+                            // Set building status to active
+                            var activeStatus = await _context.BuildingStatuses.FirstOrDefaultAsync(bs => bs.Id == 1);
+                            if (activeStatus != null)
+                            {
+                                building.BuildingStatusId = activeStatus.Id;
+                            }
+                        }
+                        else // User is deactivated or banned
+                        {
+                            // Set building status to deactivated
+                            var inactiveStatus = await _context.BuildingStatuses.FirstOrDefaultAsync(bs => bs.Id == 2);
+                            if (inactiveStatus != null)
+                            {
+                                building.BuildingStatusId = inactiveStatus.Id;
+                            }
+                        }
+                    }
+
+                    // Save changes to all associated buildings
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            return Ok();
+        }
 
         public class UserNameDTO
         {

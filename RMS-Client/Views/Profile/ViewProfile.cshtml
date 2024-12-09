@@ -159,7 +159,23 @@
             font-size: 1.5rem;
             font-weight: bold;
         }
-        /* Responsive Table for smaller screens */
+       
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+            .card-header h3 {
+                margin: 0;
+                flex-grow: 1; /* Để tiêu đề chiếm khoảng trống */
+                text-align: center; /* Đảm bảo tiêu đề căn giữa */
+            }
+
+            .card-header a {
+                flex-shrink: 0; /* Đảm bảo nút không bị co lại */
+            }
+
 
     </style>
 </head>
@@ -331,9 +347,9 @@
                         <div class="row justify-content-center">
                             <div class="col-md-6">
                                 <div class="card shadow-lg">
-                                    <div class="card-header text-center bg-primary text-white">
-                                        <h3>Thông tin cá nhân</h3> 
-                                        <a href="/User/EditProfile" class="btn btn-primary">
+                                    <div class="card-header d-flex align-items-center justify-content-between bg-primary text-white">
+                                        <h3 class="mb-0">Thông tin cá nhân</h3>
+                                        <a href="/User/EditProfile" class="btn btn-light btn-sm">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     </div>
@@ -351,11 +367,11 @@
                                             <div class="col-sm-8" id="phone">Loading...</div>
                                         </div>
                                         <div class="row mb-3">
-                                            <label class="col-sm-4 font-weight-bold">Link Facebook:</label>
+                                            <label class="col-sm-4 font-weight-bold">Facebook:</label>
                                             <div class="col-sm-8" id="facebookUrl">Loading...</div>
                                         </div>
                                         <div class="row mb-3">
-                                            <label class="col-sm-4 font-weight-bold">Link Zalo:</label>
+                                            <label class="col-sm-4 font-weight-bold">Zalo:</label>
                                             <div class="col-sm-8" id="zaloUrl">Loading...</div>
                                         </div>
                                     </div>

@@ -98,6 +98,22 @@
           "lib/net6.0/EPPlus.System.Drawing.dll": {}
         }
       },
+      "Microsoft.AspNetCore.Authentication.Google/6.0.36": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Microsoft.AspNetCore.Authentication.Google.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.AspNetCore.Authentication.Google.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.30": {
         "type": "package",
         "dependencies": {
@@ -2545,6 +2561,7 @@
           "BCrypt.Net-Next": "4.0.3",
           "CloudinaryDotNet": "1.26.2",
           "EPPlus": "6.2.19",
+          "Microsoft.AspNetCore.Authentication.Google": "6.0.36",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.30",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.36",
           "Microsoft.AspNetCore.OData": "8.2.0",
@@ -2759,6 +2776,21 @@
         "lib/netstandard2.1/EPPlus.System.Drawing.dll",
         "license.md",
         "readme.md"
+      ]
+    },
+    "Microsoft.AspNetCore.Authentication.Google/6.0.36": {
+      "sha512": "NNg7Ce9GC+UprcUIYPZlRwyNm/QBMbtOIyX+LgO3/Z4bAtmg7ZpNLMDGhwDeNWFqMaTPXtW2HQOb3hcV1Oja1A==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authentication.google/6.0.36",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net6.0/Microsoft.AspNetCore.Authentication.Google.dll",
+        "lib/net6.0/Microsoft.AspNetCore.Authentication.Google.xml",
+        "microsoft.aspnetcore.authentication.google.6.0.36.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.google.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.30": {
