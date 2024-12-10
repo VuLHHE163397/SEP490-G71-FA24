@@ -109,24 +109,6 @@
 
     </style>
 </head>
-@* <script>
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-        window.location.href = "/Auth/Login";
-    }
-    const tokenParts = token.split('.');
-    const payload = JSON.parse(atob(tokenParts[1]));
-    console.log('pay', payload);
-    if (payload.Roles !== "Admin") {
-        window.location.href = "/Auth/Login";
-    }
-
-    function logout() {
-        sessionStorage.removeItem("token");
-        window.location.href = "/Auth/Login";
-    }
-</script>
- *@
 <body>
 
     <script>
@@ -138,6 +120,7 @@
         const token = getCookie('AuthToken');
         if (!token) {
             console.error('Token không tìm thấy trong cookie.');
+            window.location.href = "/Auth/Login";
         }
         const tokenParts = token.split('.');
         const payload = JSON.parse(atob(tokenParts[1]));
@@ -150,6 +133,17 @@
             window.location.href = "/Auth/Login";
         }
 
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+
+            }
+        }
     </script>
 
     <!--  Body Wrapper -->
@@ -198,7 +192,7 @@
         <!--  Main wrapper -->
         <div class="body-wrapper">
             <!--  Header Start -->
-            <header class="app-header">
+            <header class="app-header" style="background-color:  #3385ff">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
@@ -215,27 +209,17 @@
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
                                     <img src="~/images/profile/user-1.jpg" alt="" width="50" height="50" class="rounded-circle">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
-                                    <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
-                                        </a>
+                                    <div class="message-body">                                        
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
-
                                     </div>
                                 </div>
                             </li>
@@ -284,9 +268,9 @@
                                             <td>@user.Phone</td>
                                             <td>
                                                 <div>
-                                                    <button onclick="changeStatus(@user.Id, 1)" class="status-button @(user.UserStatusId == 1 ? "active" : "")">Active</button>
-                                                    <button onclick="changeStatus(@user.Id, 2)" class="status-button @(user.UserStatusId == 2 ? "deactive" : "")">Deactive</button>
-                                                    <button onclick="changeStatus(@user.Id, 3)" class="status-button @(user.UserStatusId == 3 ? "banned" : "")">Banned</button>
+                                                    <button onclick="changeStatus(@user.Id, 1)" class="status-button @(user.UserStatusId == 1 ? "active" : "")">Hoạt động</button>
+                                                    <button onclick="changeStatus(@user.Id, 2)" class="status-button @(user.UserStatusId == 2 ? "deactive" : "")">Không hoạt động</button>
+                                                    <button onclick="changeStatus(@user.Id, 3)" class="status-button @(user.UserStatusId == 3 ? "banned" : "")">Bị cấm</button>
                                                 </div>
                                             </td>
                                             <td>@user.RoleName</td>
@@ -306,6 +290,9 @@
                     <script src="~/js/dashboard.js"></script>
                     <script>
 
+                        $(document).ready(function () {                           
+                            GetUserNameById();                          
+                        });
 
                         // JavaScript function để lọc bảng theo từ khóa tìm kiếm
                         function filterTable() {
@@ -328,42 +315,72 @@
                         }
 
                         // JavaScript function để thay đổi trạng thái người dùng
-                        function changeStatus(userId, newStatusId) {
-                            const data = { Id: userId, NewStatusId: newStatusId };
-                            fetch('https://localhost:7056/api/User/UpdateStatus', {
+                          function changeStatus(userId, newStatusId) {
+                            const url = 'https://localhost:7056/api/User/UpdateStatus';
+
+                            const requestData = {
+                                id: userId,
+                                newStatusId: newStatusId
+                            };
+
+                            fetch(url, {
                                 method: 'POST',
                                 headers: {
-                                    'Content-Type': 'application/json'
+                                    'Content-Type': 'application/json',
                                 },
-                                body: JSON.stringify(data)
+                                body: JSON.stringify(requestData),
                             })
-                                .then(response => response.json())
-                                .then(result => {
-                                    if (!result.success) {
-                                        // Cập nhật trạng thái thành công, hiển thị thông báo và cập nhật bảng
-                                        alert('Cập nhật trạng thái thành công!');
-
-                                        // Cập nhật trạng thái mới trực tiếp trên giao diện
-                                        const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
-                                        const statusButtonContainer = userRow.querySelector("td:nth-child(7) div");
-
-                                        // Cập nhật lại màu và trạng thái của các button
-                                        statusButtonContainer.innerHTML = `
-                                                                                <button onclick="changeStatus(${userId}, 1)" class="status-button ${newStatusId === 1 ? "active" : ""}">Active</button>
-                                                                                <button onclick="changeStatus(${userId}, 2)" class="status-button ${newStatusId === 2 ? "deactive" : ""}">Deactive</button>
-                                                                                <button onclick="changeStatus(${userId}, 3)" class="status-button ${newStatusId === 3 ? "banned" : ""}">Banned</button>
-                                                                            `;
-                                    } else {
-                                        alert('Có lỗi xảy ra: ' + result.message);
+                                .then(response => {
+                                    // Kiểm tra nếu phản hồi không thành công (mã trạng thái khác 2xx)
+                                    if (!response.ok) {
+                                        return response.text().then(error => {
+                                            throw new Error(error || 'Đã xảy ra lỗi không xác định.');
+                                        });
                                     }
+                                    // Kiểm tra nếu phản hồi là trống (HTTP 204)
+                                    if (response.status === 204) {
+                                        return 'Cập nhật thành công nhưng không có dữ liệu trả về.';
+                                        window.location.reload();
+                                    }
+                                    // Chỉ lấy phản hồi dưới dạng văn bản
+                                    return response.text(); // Lấy nội dung thông báo dưới dạng chuỗi
+
+                                })
+                                .then(data => {
+                                    // Hiển thị thông báo thành công hoặc lỗi
+                                    alert(data || 'Cập nhật trạng thái thành công!');
+                                    window.location.reload();
                                 })
                                 .catch(error => {
-                                    alert('Có lỗi xảy ra: ' + error.message);
+                                    // Xử lý lỗi
+                                    console.error('Lỗi khi gọi API:', error);
+                                    alert(Có lỗi xảy ra: ${error.message});
                                 });
+                        }
+
+                        function GetUserNameById() {
+                            const token = getCookie('AuthToken');
+                            const userId = getUserIdFromToken(token);
+                            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+                            $.ajax({
+                                url: url,
+                                type: 'GET',
+                                success: function (response) {
+                                    if (response && response.fullName) {
+                                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                                    }
+                                },
+                                error: function (xhr) {
+                                    console.error('Error fetching user profile:', xhr.responseText);
+                                }
+                            });
                         }
                     </script>
 
+                </div>
 
+            </div>
 
 </body>
 

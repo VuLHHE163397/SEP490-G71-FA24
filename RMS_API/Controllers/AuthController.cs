@@ -40,7 +40,7 @@ namespace RMS_API.Controllers
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
             if (user == null)
             {
-                return BadRequest("Email chưa được đăng k.");
+                return BadRequest("Email chưa được đăng ký.");
             }
 
             // Generate a random password
@@ -98,7 +98,7 @@ namespace RMS_API.Controllers
             // Store the verification code in the dictionary
             _verificationCodes[user.Email] = verificationCode;
 
-            var subject = "Verify user của bạn";
+            var subject = "RMS: Xác thực tài khoản của bạn";
             var body = $"Mã code của bạn là: {verificationCode}." +
                 $"\nXin không chia sẻ cho bất kỳ ai.";
 
@@ -187,17 +187,22 @@ namespace RMS_API.Controllers
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             if (model.Email == null && model.Password == null)
-                return Unauthorized("Xin mời nhập tài khoản và mật khẩu");
+                return Unauthorized("Xin mời nhập đủ tài khoản và mật khẩu");
 
             var user = await _context.Users
         .Include(u => u.Role)
         .SingleOrDefaultAsync(u => u.Email == model.Email);
 
             if (user == null)
-                return Unauthorized("Tài khoản không tồn tại. Xin hãy đăng nhập lại!");
+                return Unauthorized("Không tìm thấy tài khoản. Vui lòng nhập lại!");
             if (!BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
                 //if (user.Password != model.Password)
                 return Unauthorized("Mật khẩu không đúng!");
+
+            if (user.UserStatusId == 3)
+            {
+                return Unauthorized("Tài khoản đã bị cấm. Vui lòng dùng tài khoản khác!");
+            }
 
             var token = GenerateJwtToken(user);
 
@@ -212,9 +217,7 @@ namespace RMS_API.Controllers
                 SameSite = SameSiteMode.None,
                 //SameSite = SameSiteMode.Strict, // Ngăn CSRF                
                 Expires = DateTime.UtcNow.AddHours(1)
-            });
-
-            Console.WriteLine("Đã gán AuthToken với HttpOnly = false");
+            });           
 
             HttpContext.Session.SetString("UserId", user.Id.ToString());
 
@@ -301,10 +304,8 @@ namespace RMS_API.Controllers
                 //SameSite = SameSiteMode.Lax,
                 SameSite = SameSiteMode.None,
                 //SameSite = SameSiteMode.Strict, // Ngăn CSRF                
-                Expires = DateTime.UtcNow.AddHours(1)
-            });
-
-            Console.WriteLine("Đã gán AuthToken với HttpOnly = false");
+                Expires = DateTime.UtcNow.AddHours(3)
+            });      
 
             HttpContext.Session.SetString("UserId", user.Id.ToString());
 
@@ -332,32 +333,6 @@ namespace RMS_API.Controllers
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-
-
-            //var tokenHandler = new JwtSecurityTokenHandler();
-            //var key = Encoding.ASCII.GetBytes("Subjectcode_SoftwareProject490_Group71_Fall2024");
-
-            //        var claims = new List<Claim>
-            //{
-            //    new Claim(ClaimTypes.Name, user.Email),
-            //    new Claim("UserId", user.Id.ToString()) 
-            //};
-
-            //        if (user.Role != null && !string.IsNullOrEmpty(user.Role.Name))
-            //        {
-            //            claims.Add(new Claim(ClaimTypes.Role, user.Role.Name));
-            //        }
-
-            //        var tokenDescriptor = new SecurityTokenDescriptor
-            //        {
-            //            Subject = new ClaimsIdentity(claims),
-            //            Expires = DateTime.UtcNow.AddHours(10),
-            //            SigningCredentials = new SigningCredentials(
-            //                new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            //        };
-
-            //        var token = tokenHandler.CreateToken(tokenDescriptor);
-            //        return tokenHandler.WriteToken(token);
         }
 
 

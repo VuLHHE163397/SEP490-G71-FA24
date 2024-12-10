@@ -56,7 +56,6 @@ namespace RMS_API.Controllers
 
         [HttpGet("GetUserById")]
         [Authorize(Roles = "Landlord")]
-
         public async Task<IActionResult> GetUserById([FromQuery] int id)
         {
             if (id == null)
@@ -75,7 +74,8 @@ namespace RMS_API.Controllers
                    Email = b.Email,
                    Phone = b.Phone,
                    FacebookUrl = b.FacebookUrl,
-                   ZaloUrl = b.ZaloUrl
+                   ZaloUrl = b.ZaloUrl,
+                   UserStatusId = b.UserStatusId
                })
                .FirstOrDefaultAsync();
 
@@ -86,32 +86,57 @@ namespace RMS_API.Controllers
             return Ok(user);
         }
 
-        [HttpPut("ChangePassword")]
-        [Authorize(Roles = "Landlord")]
-        public async Task<IActionResult> ChangePassword([FromQuery] string email, [FromQuery] string currentPassword, [FromQuery] string newPassword)
+
+        [HttpGet("GetUserNameById")]        
+        public async Task<IActionResult> GetUserNameById([FromQuery] int id)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(currentPassword) || string.IsNullOrEmpty(newPassword))
+            if (id == 0) // Kiểm tra ID
             {
-                return BadRequest("Email,mật khẩu hiện tại và mật khẩu mới không được trống.");
+                return BadRequest("Id không được để trống.");
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _context.Users
+                .Where(u => u.Id == id)
+                .Select(b => new UserNameDTO
+                {                    
+                    FullName = $"{b.LastName} {b.MidName} {b.FirstName}".Trim(), // Gộp họ tên                    
+                })
+                .FirstOrDefaultAsync();
 
             if (user == null)
             {
-                return NotFound("Email không tồn tại.");
+                return NotFound("Không tìm thấy người dùng.");
             }
 
-            if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.Password)) // Adjust according to your password hashing method if applicable
-            {
-                return BadRequest("Mật khẩu hiện tại sai.");
-            }
-
-            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword); // Hash the password if needed
-            await _context.SaveChangesAsync();
-
-            return Ok("Cập nhật mật khẩu thành công.");
+            return Ok(user);
         }
+
+        //[HttpPut("ChangePassword")]
+        //[Authorize(Roles = "Landlord")]
+        //public async Task<IActionResult> ChangePassword([FromQuery] string email, [FromQuery] string currentPassword, [FromQuery] string newPassword)
+        //{
+        //    if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(currentPassword) || string.IsNullOrEmpty(newPassword))
+        //    {
+        //        return BadRequest("Mật khẩu hiện tại và mật khẩu mới không được trống.");
+        //    }
+
+        //    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+        //    if (user == null)
+        //    {
+        //        return NotFound("Không tìm thấy tài khoản.");
+        //    }
+
+        //    if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.Password)) // Adjust according to your password hashing method if applicable
+        //    {
+        //        return BadRequest("Mật khẩu cũ sai! Vui lòng nhập lại.");
+        //    }
+
+        //    user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword); // Hash the password if needed
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok("Cập nhật mật khẩu thành công.");
+        //}
 
         [HttpPut("UpdateProfileByEmail")]
         [Authorize(Roles = "Landlord")]
@@ -287,12 +312,52 @@ namespace RMS_API.Controllers
 
             // Update the user's status
             user.UserStatusId = request.NewStatusId;
-
-            // Save changes to the database
             await _context.SaveChangesAsync();
 
-            return Ok(new { Message = "User status updated successfully." });
+            // Optional: Update building status if the user is a landlord
+            if (user.RoleId == 2) // Assuming 2 is the RoleId for "Landlord"
+            {
+                // Find all buildings associated with this user (landlord)
+                var buildings = await _context.Buildings
+                    .Where(b => b.UserId == user.Id)
+                    .ToListAsync();
+
+                if (buildings != null && buildings.Count > 0)
+                {
+                    foreach (var building in buildings)
+                    {
+                        // Update the status of each building based on the UserStatusId
+                        if (request.NewStatusId == 1) // User is active
+                        {
+                            // Set building status to active
+                            var activeStatus = await _context.BuildingStatuses.FirstOrDefaultAsync(bs => bs.Id == 1);
+                            if (activeStatus != null)
+                            {
+                                building.BuildingStatusId = activeStatus.Id;
+                            }
+                        }
+                        else // User is deactivated or banned
+                        {
+                            // Set building status to deactivated
+                            var inactiveStatus = await _context.BuildingStatuses.FirstOrDefaultAsync(bs => bs.Id == 2);
+                            if (inactiveStatus != null)
+                            {
+                                building.BuildingStatusId = inactiveStatus.Id;
+                            }
+                        }
+                    }
+
+                    // Save changes to all associated buildings
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            return Ok();
         }
 
+        public class UserNameDTO
+        {
+            public string FullName { get; set; }
+        }
     }
 }
