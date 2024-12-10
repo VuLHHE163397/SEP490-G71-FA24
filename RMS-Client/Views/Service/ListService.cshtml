@@ -298,14 +298,7 @@
                             
                         </tbody>
                     </table>
-                    <!-- Phân trang -->
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>Đang xem 0 đến 0 trong tổng số 0 mục</div>
-                        <div>
-                            <button class="btn btn-light" disabled>Trước</button>
-                            <button class="btn btn-light" disabled>Tiếp</button>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -487,7 +480,7 @@
                 html += `<td>${stt++}</td>`;
                 html += `<td>${item.name}</td>`;
                 html += `<td>${item.buildingName}</td>`;
-                html += `<td>${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}</td>`;
+                html += `<td>${item.price.toLocaleString('vi-VN')} VND</td>`;
 
                 html += `<td>
                                     <a href="/Service/EditService?id=${item.id}" class="btn btn-primary">

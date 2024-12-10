@@ -355,6 +355,18 @@
                             <textarea class="form-control" id="Description" name="Description" required></textarea>
                         </div>
 
+                        <div class="form-group row">
+                            <label for="StartedDate">Ngày bắt đầu thuê</label>
+                            <input class="form-control" type="date" id="StartedDate" name="StartedDate" />
+                            <span class="error-message" id="dateError1" style="color: red; display: none;">Ngày bắt đầu thuê phải trước ngày hết hạn</span>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="ExpiredDate">Ngày hết hạn</label>
+                            <input class="form-control" type="date" id="ExpiredDate" name="ExpiredDate" />
+                            <span class="error-message" id="dateError2" style="color: red; display: none;">Ngày hết hạn phải sau ngày bắt đầu thuê</span>
+                        </div>
+
                         <div class="form-group row" style="display:none">
                             <label class="col-sm-3 fw-bold text-end align-middle" for="BuildingId">BuildingId</label>
                             <div class="col-sm-9">
@@ -364,7 +376,7 @@
                                 <span asp-validation-for="BuildingId" class="text-danger"></span>
                             </div>
                         </div>
-
+                        <input type="hidden" id="UserId" name="UserId" />
                         <div class="form-group row">
                             <input type="submit" class="btn btn-primary w-100" id="buttonSave" value="Tạo phòng"></input>
                             <span class="error-message" id="submitError" style="color: red; display: none;">Thông tin nhập không hợp lệ, vui lòng kiểm tra lại !!!</span>
@@ -405,6 +417,9 @@
         document.getElementById('Area').addEventListener('input', function () {
             validateArea();
         });
+
+        document.getElementById('StartedDate').addEventListener('imput', validateDate);
+        document.getElementById('ExpiredDate').addEventListener('input', validateDate);
 
         const submitError = document.getElementById('submitError');
 
@@ -459,7 +474,7 @@
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
             }
-            else if(isNaN(area) || parseFloat(area) <= 0) {
+            else if (isNaN(area) || parseFloat(area) <= 0) {
                 areaError.style.display = 'inline';
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
@@ -467,6 +482,32 @@
                 areaError.style.display = 'none';
                 document.getElementById('buttonSave').disabled = false;
                 submitError.style.display = 'none';
+            }
+        }
+
+        function validateDate() {
+            const startedDate = document.getElementById('StartedDate').value;
+            const expiredDate = document.getElementById('ExpiredDate').value;
+
+            const dateError1 = document.getElementById('dateError1');
+            const dateError2 = document.getElementById('dateError2');
+            const submitButton = document.getElementById('buttonSave');
+
+            if (startedDate && expiredDate) {
+                if (new Date(expiredDate) <= new Date(startedDate)) {
+                    dateError1.style.display = 'inline';
+                    dateError2.style.display = 'inline';
+                    submitButton.disabled = true;
+                } else {
+                    dateError1.style.display = 'none';
+                    dateError2.style.display = 'none';
+                    submitButton.disabled = false;
+                }
+            } else {
+                // Nếu chưa điền đủ ngày, không hiển thị lỗi nhưng vẫn khóa nút
+                dateError1.style.display = 'none';
+                dateError2.style.display = 'none';
+                submitButton.disabled = true;
             }
         }
 
@@ -505,6 +546,7 @@
             validatePrice();
             validateFloor();
             validateArea();
+            validateDate();
 
             // Nếu có lỗi, ngăn form submit
             if (document.querySelectorAll('.error-message[style="display: inline;"]').length > 0) {
@@ -514,6 +556,9 @@
 
         $(document).ready(function () {
             loadBuilding();
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            $("#UserId").val(userId);
         })
 
         //---------------------------------------------------------------
@@ -575,12 +620,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                                        <li class="sidebar-subitem">
-                                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                                            </a>
-                                                                                                        </li>
-                                                                                                    `);
+                                                                                                                <li class="sidebar-subitem">
+                                                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                                                    </a>
+                                                                                                                </li>
+                                                                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -593,8 +638,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                                            `);
+                                                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                                                    `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
