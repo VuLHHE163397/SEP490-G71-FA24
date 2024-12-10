@@ -21,6 +21,8 @@ namespace RMS_API.Controllers
                     .Where(e => filter.RoomId == null || filter.RoomId <= 0 || e.Id == filter.RoomId)
                     .Where(e => filter.BuildingId == null || filter.BuildingId <= 0 || e.BuildingId == filter.BuildingId)
                     .Where(e => e.UserId == filter.UserId)
+                    .Where(e => (e.StartedDate == null) || filter.Date == null || (filter.Date.Value.Date >= e.StartedDate.Value.Date))
+                    .Where(e => (e.ExpiredDate == null) || filter.Date == null || (filter.Date.Value.Date <= e.ExpiredDate.Value.Date))
                     .ToList();
                 var roomIds = rooms.Select(e => e.Id).ToList();
                 var serviceBills = context.ServicesBills

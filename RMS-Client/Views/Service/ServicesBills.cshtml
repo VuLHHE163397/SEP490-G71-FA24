@@ -284,7 +284,7 @@
                         <div class="row g-3 align-items-center mb-3">
                             <div class="col-md-3">
                                 <label for="monthYear" class="form-label">Tháng/năm</label>
-                                <input type="month" class="form-control" id="monthYear" value="2024-11">
+                                <input type="month" class="form-control" id="monthYear" value="2024-11" onchange="getBills()">
                             </div>
 
                             <div class="col-md-3">
@@ -495,9 +495,10 @@
         }
 
         function getBills() {
+            var date = $("#monthYear").val() + "-01";
             const token = getCookie('AuthToken');
             const userId = getUserIdFromToken(token);
-            var url = `https://localhost:7056/api/ServiceBill?userId=${userId}`
+            var url = `https://localhost:7056/api/ServiceBill?userId=${userId}&date=${date}`
             var buildingId = $("#BuildingId").val();
             var roomId = $("#RoomId").val();
             if (buildingId && !Number.isNaN(buildingId) && buildingId > 0) {
@@ -506,6 +507,7 @@
             if (roomId && !Number.isNaN(roomId) && roomId > 0) {
                 url += `&roomId=${roomId}`;
             }
+
             console.log(url);
             $.ajax({
                 url: url, // The URL of the API you want to request data from
@@ -532,8 +534,8 @@
                                                 <td>${index++}</td>
                                                 <td>${item.buildingName}</td>
                                                 <td>${item.roomNumber}</td>
-                                                <td>${item.totalPrice}</td>
-                                                <td>${item.remainingPrice}</td>
+                                                        <td>${item.totalPrice.toLocaleString('vi-VN')} VND</td>
+                                                        <td>${item.remainingPrice.toLocaleString('vi-VN')} VND</td>
                                                 <td class="action-icons">
                                                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="getBillDetail(${item.roomId})">
                                                         <i class="fa-solid fa-eye"></i>

@@ -507,6 +507,7 @@ namespace RMS_API.Controllers
                 ExpiredDate = roomDTO.ExpiredDate,
                 BuildingId = roomDTO.BuildingId,
                 RoomStatusId = roomDTO.RoomStatusId,
+                UserId = roomDTO.UserId,
             };
 
             _context.Rooms.Add(room);
