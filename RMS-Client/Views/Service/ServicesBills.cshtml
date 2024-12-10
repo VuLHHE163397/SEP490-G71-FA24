@@ -534,8 +534,8 @@
                                                 <td>${index++}</td>
                                                 <td>${item.buildingName}</td>
                                                 <td>${item.roomNumber}</td>
-                                                <td>${item.totalPrice}</td>
-                                                <td>${item.remainingPrice}</td>
+                                                        <td>${item.totalPrice.toLocaleString('vi-VN')} VND</td>
+                                                        <td>${item.remainingPrice.toLocaleString('vi-VN')} VND</td>
                                                 <td class="action-icons">
                                                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="getBillDetail(${item.roomId})">
                                                         <i class="fa-solid fa-eye"></i>
