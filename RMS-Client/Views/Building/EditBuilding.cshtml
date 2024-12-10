@@ -336,17 +336,17 @@
                         <div class="form-group">
                             <label for="Distance">Khoảng cách(Km)</label>
                             <input type="number" class="form-control" id="Distance" name="Distance" value="@Model.Distance" step="0.1" required  />
-                            <span id="distanceError" class="error-message" style="color: red; display: none;">Khoảng cách phải là một số dương.</span>
+                            <span id="distanceError" class="error-message" style="color: red; display: none;">Khoảng cách phải là một số dương và không chứa kí tự đặc biệt.</span>
                         </div>
                         <div class="form-group">
                             <label for="TotalFloors">Số Tầng</label>
                             <input type="number" class="form-control" id="TotalFloors" name="TotalFloors" value="@Model.TotalFloors" required />
-                            <span id="totalFloorsError" class="error-message" style="color: red; display: none;">Số tầng phải là số dương và không vượt quá 100.</span>
+                            <span id="totalFloorsError" class="error-message" style="color: red; display: none;">Số tầng phải là số nguyên dương và không chứa kí tự đặc biệt .</span>
                         </div>
                         <div class="form-group">
                             <label for="NumberOfRooms">Số Phòng</label>
                             <input type="number" class="form-control" id="NumberOfRooms" name="NumberOfRooms" value="@Model.NumberOfRooms" required />
-                            <span id="numberOfRoomsError" class="error-message" style="color: red; display: none;">Số phòng phải là số dương và không vượt quá 500.</span>
+                            <span id="numberOfRoomsError" class="error-message" style="color: red; display: none;">Số phòng phải là số nguyên dương và không chứa kí tự đặc biệt .</span>
                         </div>
                         <div class="form-group">
                             <label for="AddressDetails">Địa Chỉ</label>
@@ -412,13 +412,19 @@
                 const submitError = document.getElementById('submitError');
 
 
-
+               
                 function validateTotalFloors() {
+                    const specialCharPattern = /[^a-zA-Z0-9]/;
                     const floor = document.getElementById('TotalFloors').value;
                     const totalFloorsError = document.getElementById('totalFloorsError');
                     const saveButton = document.getElementById('saveButton'); // Đúng ID
-
-                    if (parseFloat(floor) <= 0) {
+                    if (floor === "") {
+                        totalFloorsError.textContent = "Số tầng của tòa nhà không được để trống";
+                        totalFloorsError.style.display = 'inline';
+                        document.getElementById('buttonSave').disabled = true;
+                        submitError.style.display = 'inline';
+                    }
+                    else if (specialCharPattern.test(floor) || parseFloat(floor) <= 0) {
                         totalFloorsError.style.display = 'inline';
                         saveButton.disabled = true; // Disable nút lưu khi có lỗi
                     } else {
@@ -427,11 +433,17 @@
                     }
                 }
                 function validateNumberOfRooms() {
+                    const specialCharPattern = /[^a-zA-Z0-9]/;
                     const room = document.getElementById('NumberOfRooms').value;
                     const numberOfRoomsError = document.getElementById('numberOfRoomsError');
                     const saveButton = document.getElementById('saveButton');
-
-                    if (parseFloat(room) <= 0) {
+                    if (room === "") {
+                        numberOfRoomsError.textContent = "Số phòng của tòa nhà không được để trống";
+                        numberOfRoomsError.style.display = 'inline';
+                        document.getElementById('buttonSave').disabled = true;
+                        submitError.style.display = 'inline';
+                    }
+                    else if (specialCharPattern.test(room) || parseFloat(room) <= 0) {
                         numberOfRoomsError.style.display = 'inline';
                         saveButton.disabled = true;
                     } else {
@@ -441,11 +453,19 @@
                 }
 
                 function validateDistance() {
-                    const distance = document.getElementById('Distance').value;
+                    const specialCharPattern = /[^0-9.]/;  // Kiểm tra nếu có ký tự không phải số hoặc dấu chấm
+                    const distance = document.getElementById('Distance').value.trim();  // Loại bỏ khoảng trắng thừa
                     const distanceError = document.getElementById('distanceError');
                     const saveButton = document.getElementById('saveButton');
 
-                    if (parseFloat(distance) <= 0) {
+                    if (distance === "") {
+                        distanceError.textContent = "Khoảng cách không được để trống";
+                        distanceError.style.display = 'inline';
+                        document.getElementById('buttonSave').disabled = true;
+                        submitError.style.display = 'inline';
+                    }
+                    // Kiểm tra nếu khoảng cách có ký tự đặc biệt hoặc không phải là số hợp lệ hoặc nhỏ hơn hoặc bằng 0
+                    else if (specialCharPattern.test(distance) || isNaN(distance) || parseFloat(distance) <= 0) {
                         distanceError.style.display = 'inline';
                         saveButton.disabled = true;
                     } else {
@@ -453,6 +473,17 @@
                         saveButton.disabled = false;
                     }
                 }
+
+                document.getElementById('editBuilding').addEventListener('submit', function (event) {
+                    validateDistance();
+                    validateNumberOfRooms();
+                    validateTotalFloors();
+
+                    // Nếu có lỗi, ngăn form submit
+                    if (document.querySelectorAll('.error-message[style="display: inline;"]').length > 0) {
+                        event.preventDefault();
+                    }
+                });
 
 
                 // Helper function to get cookie value by name
@@ -620,10 +651,21 @@
                     $('#Name').blur(function () {
                         const buildingName = $(this).val();
                         const token = getCookie('AuthToken');
+
+                        // Kiểm tra nếu tên tòa nhà bỏ trống
+                        if (!buildingName) {
+                            $('#buildingNameError').show().text('Tên tòa nhà không được để trống.');
+                            $('#buildingNameSuccess').hide();
+                            document.getElementById('saveButton').disabled = true; // Disable nút lưu
+                            submitError.style.display = 'inline';
+                            return;
+                        }
+
                         if (!token) {
                             alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
                             return;
                         }
+
                         const userId = getUserIdFromToken(token);
                         if (!buildingName || !userId) return;
 
@@ -639,10 +681,12 @@
 
                                 if (response.message === "Thành công.") {
                                     $('#buildingNameSuccess').show().text('Tên tòa nhà hợp lệ.');
+                                    document.getElementById('saveButton').disabled = false; // Kích hoạt nút lưu nếu tên hợp lệ
                                 }
                             },
                             error: function (xhr) {
                                 $('#buildingNameError').show().text(xhr.responseJSON?.message || 'Có lỗi xảy ra.');
+                                document.getElementById('saveButton').disabled = true; // Disable nút lưu nếu có lỗi
                             }
                         });
                     });

@@ -287,8 +287,6 @@ namespace RMS_API.Controllers
 
             // Update the user's status
             user.UserStatusId = request.NewStatusId;
-
-            // Save changes to the user's status
             await _context.SaveChangesAsync();
 
             // Optional: Update building status if the user is a landlord
@@ -296,19 +294,31 @@ namespace RMS_API.Controllers
             {
                 // Find all buildings associated with this user (landlord)
                 var buildings = await _context.Buildings
-                    .Where(b => b.UserId == user.Id) // Assuming there's a `UserId` field in the Building model
+                    .Where(b => b.UserId == user.Id)
                     .ToListAsync();
 
                 if (buildings != null && buildings.Count > 0)
                 {
                     foreach (var building in buildings)
                     {
-                        // Find the building status by NewStatusId
-                        var buildingStatus = await _context.BuildingStatuses.FindAsync(request.NewStatusId);
-                        if (buildingStatus != null)
+                        // Update the status of each building based on the UserStatusId
+                        if (request.NewStatusId == 1) // User is active
                         {
-                            // Update the status of each building
-                            building.BuildingStatus = buildingStatus; // Assuming `BuildingStatus` is a navigation property
+                            // Set building status to active
+                            var activeStatus = await _context.BuildingStatuses.FirstOrDefaultAsync(bs => bs.Id == 1);
+                            if (activeStatus != null)
+                            {
+                                building.BuildingStatusId = activeStatus.Id;
+                            }
+                        }
+                        else // User is deactivated or banned
+                        {
+                            // Set building status to deactivated
+                            var inactiveStatus = await _context.BuildingStatuses.FirstOrDefaultAsync(bs => bs.Id == 2);
+                            if (inactiveStatus != null)
+                            {
+                                building.BuildingStatusId = inactiveStatus.Id;
+                            }
                         }
                     }
 
@@ -316,7 +326,9 @@ namespace RMS_API.Controllers
                     await _context.SaveChangesAsync();
                 }
             }
+
             return Ok();
         }
+
     }
 }

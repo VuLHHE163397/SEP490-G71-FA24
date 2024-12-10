@@ -1,7 +1,7 @@
 ﻿@model List<RMS_API.DTOs.UserDTO>
 
 @{
-    ViewData["Title"] = "Quản lí người dùng"; // Page title
+    ViewData["Title"] = "Quản lí chủ nhà"; // Page title
 }
 
 <!doctype html>
@@ -18,14 +18,29 @@
 
     <!-- Custom CSS Styles -->
     <style>
+        .filter-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
+        .search-input {
+            width: 50%;
+            padding: 5px;
+        }
+
+        .form-select {
+            width: 30%;
+            padding: 5px;
+        }
 
         /* CSS cho trang */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f6f9;
             color: #333;
-            padding: 20px;
+           
         }
 
         h2 {
@@ -107,6 +122,19 @@
                 opacity: 0.8;
             }
 
+        /* Container and page layout */
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Main content area padding */
+        .body-wrapper {
+            /*  padding: 20px; */
+            flex-grow: 1;
+        }
+
     </style>
 </head>
 <body>
@@ -171,7 +199,7 @@
         <!--  Main wrapper -->
         <div class="body-wrapper">
 
-            <header class="app-header" style="background-color:  #3385ff">
+            <header class="app-header" style="background-color:  whitesmoke">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
@@ -214,7 +242,14 @@
             <div class="container-fluid">
                 <div class="container mt-4">
                     <h2 center>@ViewData["Title"]</h2>
-
+                    <div class="filter-container">
+                        <select id="statusFilter" class="form-select" onchange="filterByStatus()">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="1">Hoạt động</option>
+                            <option value="2">Không hoạt động</option>
+                            <option value="3">Bị cấm</option>
+                        </select>
+                    </div>
                     <div class="search-container">
                         <input type="text" class="search-input" id="searchInput" onkeyup="filterTable()" placeholder="Tìm kiếm theo tên...">
                     </div>
@@ -229,21 +264,23 @@
                             <table class="table" id="userTable">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Số thứ tự</th> <!-- Sequential Number -->
                                         <th>Họ</th>
                                         <th>Tên đệm</th>
                                         <th>Tên</th>
                                         <th>Email</th>
                                         <th>Số điện thoại</th>
                                         <th>Trạng thái</th>
-                                        <th>Vai trò</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @{
+                                        int index = 1; // Initialize the counter for sequential numbers
+                                    }
                                     @foreach (var user in Model)
                                     {
-                                        <tr data-user-id="@user.Id">
-                                            <td>@user.Id</td>
+                                        <tr>
+                                            <td>@index</td> <!-- Sequential number displayed here -->
                                             <td>@user.FirstName</td>
                                             <td>@user.MidName</td>
                                             <td>@user.LastName</td>
@@ -256,8 +293,8 @@
                                                     <button onclick="changeStatus(@user.Id, 3)" class="status-button @(user.UserStatusId == 3 ? "banned" : "")">Bị cấm</button>
                                                 </div>
                                             </td>
-                                            <td>@user.RoleName</td>
                                         </tr>
+                                        index++; // Increment the counter
                                     }
                                 </tbody>
                             </table>
@@ -333,6 +370,29 @@
                                     console.error('Lỗi khi gọi API:', error);
                                     alert(`Có lỗi xảy ra: ${error.message}`);
                                 });
+                        }
+
+
+                        function filterByStatus() {
+                            const statusFilter = document.getElementById("statusFilter").value;
+                            const table = document.getElementById("userTable");
+                            const rows = table.getElementsByTagName("tr");
+
+                            for (let i = 1; i < rows.length; i++) {
+                                const statusCell = rows[i].getElementsByTagName("td")[6]; // Cột trạng thái
+                                const statusButton = statusCell.querySelector(".status-button.active") ||
+                                    statusCell.querySelector(".status-button.deactive") ||
+                                    statusCell.querySelector(".status-button.banned");
+                                const userStatus = statusButton ? statusButton.textContent.trim() : "";
+
+                                if (!statusFilter || (statusFilter === "1" && userStatus === "Hoạt động") ||
+                                    (statusFilter === "2" && userStatus === "Không hoạt động") ||
+                                    (statusFilter === "3" && userStatus === "Bị cấm")) {
+                                    rows[i].style.display = "";
+                                } else {
+                                    rows[i].style.display = "none";
+                                }
+                            }
                         }
 
                     </script>
