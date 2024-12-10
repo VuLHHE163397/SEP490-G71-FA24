@@ -74,6 +74,11 @@
             height: 40px;
             border-radius: 50%;
         }
+
+        .welcome-message {
+            position: relative;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -219,15 +224,12 @@
                                 <i class="ti ti-menu-2"></i>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
-                        </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -359,6 +361,7 @@
         loadPaging();
         loadStatus();
         $(document).ready(function () {
+            GetUserNameById();
             var buildingId = $("#buildings").val();
             var roomId = $("#rooms").val();
             var statusId = $("#status").val();
@@ -702,6 +705,25 @@
                 html += '</tr>'
                 $("#facilities").html(html)
             }
+        }
+
+        function GetUserNameById() {
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    if (response && response.fullName) {
+                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Error fetching user profile:', xhr.responseText);
+                }
+            });
         }
     </script>
 </body>

@@ -773,13 +773,11 @@
                 // Thu thập tất cả các service-id từ các checkbox được chọn
                 $('input[type="checkbox"]:checked').each(function () {
                     selectedServiceIds.push($(this).data('service-id'));
-                });
-                console.log("truowcs")
+                });                
                 // Gửi yêu cầu cập nhật danh sách dịch vụ
                 $.ajax({
                     url: '/api/Room/UpdateServicesForRoom/' + roomId,
-                    method: 'POST',
-                    console.log("goi api")
+                    method: 'POST',                    
                     contentType: 'application/json',
                     data: JSON.stringify(selectedServiceIds),
                     success: function () {

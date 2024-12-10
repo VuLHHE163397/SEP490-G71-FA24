@@ -8,7 +8,12 @@
     <link rel="shortcut icon" type="image/jpg" href="~/images/logo.jpg" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
+    <style>
+        #welcome-message {
+            position: relative;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
@@ -149,15 +154,12 @@
                                 <i class="ti ti-menu-2"></i>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
-                        </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -264,6 +266,8 @@
         const apiBaseUrl = "https://localhost:7056/api"; // Đặt URL gốc của API
         $(document).ready(function () {
             loadBuilding();
+            GetUserNameById();
+
         })
 
         function getUserIdFromToken(token) {
@@ -445,6 +449,25 @@
         if (token) {
             fetchData(1, "status1-table");
             fetchData(0, "status0-table");
+        }
+
+        function GetUserNameById() {
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    if (response && response.fullName) {
+                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Error fetching user profile:', xhr.responseText);
+                }
+            });
         }
     </script>
 </body>
