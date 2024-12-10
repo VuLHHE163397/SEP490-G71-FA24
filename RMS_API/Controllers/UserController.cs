@@ -138,33 +138,33 @@ namespace RMS_API.Controllers
         //    return Ok("Cập nhật mật khẩu thành công.");
         //}
 
-        [HttpPut("UpdateProfileByEmail")]
-        [Authorize(Roles = "Landlord")]
-        public async Task<IActionResult> UpdateProfileByEmail([FromBody] ProfileDTO userDTO)
-        {
-            if (userDTO == null || string.IsNullOrEmpty(userDTO.Email))
-            {
-                return BadRequest("Không tìm thấy người dùng.");
-            }
+        //[HttpPut("UpdateProfileByEmail")]
+        //[Authorize(Roles = "Landlord")]
+        //public async Task<IActionResult> UpdateProfileByEmail([FromBody] ProfileDTO userDTO)
+        //{
+        //    if (userDTO == null || string.IsNullOrEmpty(userDTO.Email))
+        //    {
+        //        return BadRequest("Không tìm thấy người dùng.");
+        //    }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userDTO.Email);
+        //    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userDTO.Email);
 
-            if (user == null)
-            {
-                return NotFound("Không tìm thấy người dùng.");
-            }
+        //    if (user == null)
+        //    {
+        //        return NotFound("Không tìm thấy người dùng.");
+        //    }
 
-            user.FirstName = userDTO.FirstName;
-            user.LastName = userDTO.LastName;
-            user.MidName = userDTO.MidName;
-            user.Phone = userDTO.Phone;
-            user.FacebookUrl = userDTO.FacebookUrl;
-            user.ZaloUrl = userDTO.ZaloUrl;
+        //    user.FirstName = userDTO.FirstName;
+        //    user.LastName = userDTO.LastName;
+        //    user.MidName = userDTO.MidName;
+        //    user.Phone = userDTO.Phone;
+        //    user.FacebookUrl = userDTO.FacebookUrl;
+        //    user.ZaloUrl = userDTO.ZaloUrl;
 
-            await _context.SaveChangesAsync();
+        //    await _context.SaveChangesAsync();
 
-            return Ok("Cập nhật profile thành công.");
-        }
+        //    return Ok("Cập nhật profile thành công.");
+        //}
 
         [HttpPut("UpdateProfile")]
         [Authorize(Roles = "Landlord")]

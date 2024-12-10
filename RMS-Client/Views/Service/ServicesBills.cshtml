@@ -74,6 +74,20 @@
             height: 40px;
             border-radius: 50%;
         }
+
+        .bill-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px; /* khoảng cách giữa các dòng */
+        }
+
+            .bill-item strong {
+                flex: 1; /* chiếm toàn bộ không gian bên trái */
+            }
+
+            .bill-item span {
+                text-align: right;
+            }
     </style>
 </head>
 
@@ -332,9 +346,11 @@
             <div class="modal-content">
 
                 <!-- Modal Header -->
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detailModalLabel">Chi phí dịch vụ</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header d-flex justify-content-center align-items-center position-relative">
+                    <!-- Centered Title -->
+                    <h5 class="modal-title mx-auto" id="detailModalLabel">Hóa đơn tiền nhà</h5>
+                    <!-- Close Button (Aligned to Right) -->
+                    <button type="button" class="btn-close position-absolute end-0 me-2" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <!-- Modal Body -->
@@ -343,10 +359,8 @@
 
                 <!-- Modal Footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <h5 id="totalPrice">TỔNG CỘNG: 0 VND</h5>
                 </div>
-
             </div>
         </div>
     </div>
@@ -364,10 +378,7 @@
         $(document).ready(function () {
             var buildingId = $("#BuildingId").val();
             var roomId = $("#RoomId").val();
-
-
-            const token = getCookie('AuthToken');
-            //Lấy user id
+            const token = getCookie('AuthToken');            
             const userId = getUserIdFromToken(token);
             getBills();
         })
@@ -574,10 +585,9 @@
         }
         function getBillDetail(roomId) {
             var date = $("#monthYear").val() + "-01";
-            //var formattedDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + (date.getDay() + 1)
-            console.log(`https://localhost:7056/api/ServiceBill/Detail?RoomId=${roomId}&date=${date}`)
+            //var formattedDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + (date.getDay() + 1)           
             $.ajax({
-                url: `https://localhost:7056/api/ServiceBill/Detail?RoomId=${roomId}&date=${date}`, // The URL of the API you want to request data from
+                url: `https://localhost:7056/api/ServiceBill/Detail?RoomId=${roomId}&date=${date}`, 
                 type: 'GET', // HTTP method (GET for retrieving data)
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -595,10 +605,14 @@
         }
         function renderBillDetail(data) {
             let html = '';
-            for (var item of data) {
-                // Sử dụng toLocaleString để định dạng số với dấu chấm
+            for (var item of data) {                
                 let formattedPrice = item.price.toLocaleString('vi-VN');
-                html += `<div><strong>${item.name}: </strong> <span>${formattedPrice} VND </span></div>`;
+                html += `                   
+
+                    <div class="bill-item">
+                        <strong>${item.name}</strong>
+                        <span>${formattedPrice} VND</span>
+                    </div>`;
             }
             $("#bill-detail").html(html);
         }
