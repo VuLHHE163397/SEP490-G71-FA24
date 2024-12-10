@@ -507,6 +507,7 @@ namespace RMS_API.Controllers
                 ExpiredDate = roomDTO.ExpiredDate,
                 BuildingId = roomDTO.BuildingId,
                 RoomStatusId = roomDTO.RoomStatusId,
+                UserId = roomDTO.UserId,
             };
 
             _context.Rooms.Add(room);
@@ -583,76 +584,6 @@ namespace RMS_API.Controllers
             return Ok("Cập nhật trạng thái phòng thành công!!!");
         }
 
-
-        [HttpDelete("DeleteRoomById/{roomId}")]
-        public IActionResult DeteleRoomById(int roomId)
-        {
-            // Kiểm tra nếu phòng không tồn tại
-            var room = _context.Rooms.FirstOrDefault(r => r.Id == roomId);
-            if (room == null)
-            {
-                return NotFound($"Room with ID {roomId} not found.");
-            }
-
-            // Xóa các liên kết dữ liệu liên quan đến phòng (Facilities, RoomHistories, ServicesOfRooms, Tennants)
-            var facilities = _context.Facilities.Where(f => f.RoomId == roomId);
-            _context.Facilities.RemoveRange(facilities);
-
-            var roomHistories = _context.RoomHistories.Where(h => h.RoomId == roomId);
-            _context.RoomHistories.RemoveRange(roomHistories);
-
-            var tenants = _context.Tennants.Where(t => t.RoomId == roomId);
-            _context.Tennants.RemoveRange(tenants);
-
-            var images = _context.Images.Where(i => i.RoomId == roomId);
-            _context.Images.RemoveRange(images);
-
-            // Xóa phòng
-            _context.Rooms.Remove(room);
-
-            // Lưu thay đổi vào database
-            _context.SaveChanges();
-
-            return NoContent(); // Trả về 204 No Content sau khi xóa thành công
-        }
-
-        [HttpDelete("DeleteAllRoom/{buildingId}")]
-        public IActionResult DeleteAllRoomByBuildingId(int buildingId)
-        {
-            // Kiểm tra xem có phòng nào thuộc tòa nhà với buildingId không
-            var rooms = _context.Rooms.Where(r => r.BuildingId == buildingId).ToList();
-            if (!rooms.Any())
-            {
-                return NotFound("Không tìm thấy phòng nào thuộc tòa nhà có ID = " + buildingId);
-            }
-
-            // Xóa các đối tượng liên quan đến phòng
-            foreach (var room in rooms)
-            {
-                // Xóa Facilities liên quan đến room
-                var facilities = _context.Facilities.Where(f => f.RoomId == room.Id);
-                _context.Facilities.RemoveRange(facilities);
-
-                // Xóa RoomHistories liên quan đến room
-                var roomHistories = _context.RoomHistories.Where(h => h.RoomId == room.Id);
-                _context.RoomHistories.RemoveRange(roomHistories);
-
-                // Xóa Tennants liên quan đến room
-                var tenants = _context.Tennants.Where(t => t.RoomId == room.Id);
-                _context.Tennants.RemoveRange(tenants);
-
-                var images = _context.Images.Where(i => i.RoomId == room.Id);
-                _context.Images.RemoveRange(images);
-            }
-
-            // Cuối cùng, xóa các phòng
-            _context.Rooms.RemoveRange(rooms);
-
-            // Lưu thay đổi vào database
-            _context.SaveChanges();
-
-            return Ok("Đã xóa tất cả phòng thuộc tòa nhà có ID = " + buildingId);
-        }
 
         [HttpGet("GetActiveRooms")]
         public IActionResult GetActiveRooms()

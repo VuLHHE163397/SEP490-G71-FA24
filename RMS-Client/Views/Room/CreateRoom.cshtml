@@ -158,6 +158,11 @@
             margin-top: 0;
             padding-top: 0; /* Loại bỏ padding nếu có */
         }
+
+        #welcome-message {
+            position: relative;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -289,15 +294,15 @@
                         <li class="nav-item">
                             <a class="nav-link nav-icon-hover" asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingId">
                                 <i class="ti ti-arrow-back" style="font-size: 30px;"></i>
-                            </a>
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
+                            </a>                            
                         </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
+
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -355,6 +360,18 @@
                             <textarea class="form-control" id="Description" name="Description" required></textarea>
                         </div>
 
+                        <div class="form-group row">
+                            <label for="StartedDate">Ngày bắt đầu thuê</label>
+                            <input class="form-control" type="date" id="StartedDate" name="StartedDate" />
+                            <span class="error-message" id="dateError1" style="color: red; display: none;">Ngày bắt đầu thuê phải trước ngày hết hạn</span>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="ExpiredDate">Ngày hết hạn</label>
+                            <input class="form-control" type="date" id="ExpiredDate" name="ExpiredDate" />
+                            <span class="error-message" id="dateError2" style="color: red; display: none;">Ngày hết hạn phải sau ngày bắt đầu thuê</span>
+                        </div>
+
                         <div class="form-group row" style="display:none">
                             <label class="col-sm-3 fw-bold text-end align-middle" for="BuildingId">BuildingId</label>
                             <div class="col-sm-9">
@@ -364,7 +381,7 @@
                                 <span asp-validation-for="BuildingId" class="text-danger"></span>
                             </div>
                         </div>
-
+                        <input type="hidden" id="UserId" name="UserId" />
                         <div class="form-group row">
                             <input type="submit" class="btn btn-primary w-100" id="buttonSave" value="Tạo phòng"></input>
                             <span class="error-message" id="submitError" style="color: red; display: none;">Thông tin nhập không hợp lệ, vui lòng kiểm tra lại !!!</span>
@@ -405,6 +422,9 @@
         document.getElementById('Area').addEventListener('input', function () {
             validateArea();
         });
+
+        document.getElementById('StartedDate').addEventListener('imput', validateDate);
+        document.getElementById('ExpiredDate').addEventListener('input', validateDate);
 
         const submitError = document.getElementById('submitError');
 
@@ -459,7 +479,7 @@
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
             }
-            else if(isNaN(area) || parseFloat(area) <= 0) {
+            else if (isNaN(area) || parseFloat(area) <= 0) {
                 areaError.style.display = 'inline';
                 document.getElementById('buttonSave').disabled = true;
                 submitError.style.display = 'inline';
@@ -467,6 +487,32 @@
                 areaError.style.display = 'none';
                 document.getElementById('buttonSave').disabled = false;
                 submitError.style.display = 'none';
+            }
+        }
+
+        function validateDate() {
+            const startedDate = document.getElementById('StartedDate').value;
+            const expiredDate = document.getElementById('ExpiredDate').value;
+
+            const dateError1 = document.getElementById('dateError1');
+            const dateError2 = document.getElementById('dateError2');
+            const submitButton = document.getElementById('buttonSave');
+
+            if (startedDate && expiredDate) {
+                if (new Date(expiredDate) <= new Date(startedDate)) {
+                    dateError1.style.display = 'inline';
+                    dateError2.style.display = 'inline';
+                    submitButton.disabled = true;
+                } else {
+                    dateError1.style.display = 'none';
+                    dateError2.style.display = 'none';
+                    submitButton.disabled = false;
+                }
+            } else {
+                // Nếu chưa điền đủ ngày, không hiển thị lỗi nhưng vẫn khóa nút
+                dateError1.style.display = 'none';
+                dateError2.style.display = 'none';
+                submitButton.disabled = true;
             }
         }
 
@@ -505,6 +551,7 @@
             validatePrice();
             validateFloor();
             validateArea();
+            validateDate();
 
             // Nếu có lỗi, ngăn form submit
             if (document.querySelectorAll('.error-message[style="display: inline;"]').length > 0) {
@@ -514,6 +561,10 @@
 
         $(document).ready(function () {
             loadBuilding();
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            $("#UserId").val(userId);
+            GetUserNameById();
         })
 
         //---------------------------------------------------------------
@@ -575,12 +626,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                                        <li class="sidebar-subitem">
-                                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                                            </a>
-                                                                                                        </li>
-                                                                                                    `);
+                                                                                                                <li class="sidebar-subitem">
+                                                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                                                    </a>
+                                                                                                                </li>
+                                                                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -593,8 +644,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                                            `);
+                                                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                                                    `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -606,6 +657,25 @@
                 console.error("Không mã hóa đc token:", error);
                 return null;
             }
+        }
+
+        function GetUserNameById() {
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    if (response && response.fullName) {
+                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Error fetching user profile:', xhr.responseText);
+                }
+            });
         }
 
     </script>

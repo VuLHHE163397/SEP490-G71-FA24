@@ -1,7 +1,7 @@
 ﻿@model List<RMS_API.DTOs.UserDTO>
 
 @{
-    ViewData["Title"] = "Quản lí người dùng"; // Page title
+    ViewData["Title"] = "Quản lí chủ nhà"; // Page title
 }
 
 <!doctype html>
@@ -18,14 +18,29 @@
 
     <!-- Custom CSS Styles -->
     <style>
+        .filter-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
+        .search-input {
+            width: 50%;
+            padding: 5px;
+        }
+
+        .form-select {
+            width: 30%;
+            padding: 5px;
+        }
 
         /* CSS cho trang */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f6f9;
             color: #333;
-            padding: 20px;
+           
         }
 
         h2 {
@@ -107,26 +122,25 @@
                 opacity: 0.8;
             }
 
+        #welcome-message {
+            position: relative;
+            font-weight: bold;
+        /* Container and page layout */
+        }
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Main content area padding */
+        .body-wrapper {
+            /*  padding: 20px; */
+            flex-grow: 1;
+        }
+
     </style>
 </head>
-@* <script>
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-        window.location.href = "/Auth/Login";
-    }
-    const tokenParts = token.split('.');
-    const payload = JSON.parse(atob(tokenParts[1]));
-    console.log('pay', payload);
-    if (payload.Roles !== "Admin") {
-        window.location.href = "/Auth/Login";
-    }
-
-    function logout() {
-        sessionStorage.removeItem("token");
-        window.location.href = "/Auth/Login";
-    }
-</script>
- *@
 <body>
 
     <script>
@@ -138,6 +152,7 @@
         const token = getCookie('AuthToken');
         if (!token) {
             console.error('Token không tìm thấy trong cookie.');
+            window.location.href = "/Auth/Login";
         }
         const tokenParts = token.split('.');
         const payload = JSON.parse(atob(tokenParts[1]));
@@ -150,6 +165,17 @@
             window.location.href = "/Auth/Login";
         }
 
+        function getUserIdFromToken(token) {
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                return payload.UserId;
+            } catch (error) {
+                console.error("Không mã hóa đc token:", error);
+                return null;
+
+            }
+        }
     </script>
 
     <!--  Body Wrapper -->
@@ -180,15 +206,6 @@
                                 <span class="hide-menu">Quản lí người dùng</span>
                             </a>
                         </li>
-
-
-
-
-
-
-
-
-
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -197,57 +214,49 @@
         <!--  Sidebar End -->
         <!--  Main wrapper -->
         <div class="body-wrapper">
-            <!--  Header Start -->
-            <header class="app-header">
+
+            <header class="app-header" style="background-color:  whitesmoke">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
                             <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
                                 <i class="ti ti-menu-2"></i>
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
-                        </li>
+                        </li>                        
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-                        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">                            
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary">Kính chào Admin </span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
                                     <img src="~/images/profile/user-1.jpg" alt="" width="50" height="50" class="rounded-circle">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
-                                    <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
-                                        </a>
+                                    <div class="message-body">                                        
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
-
                                     </div>
                                 </div>
                             </li>
                         </ul>
                     </div>
+
                 </nav>
             </header>
             <!--  Header End -->
             <div class="container-fluid">
                 <div class="container mt-4">
                     <h2 center>@ViewData["Title"]</h2>
-
+                    <div class="filter-container">
+                        <select id="statusFilter" class="form-select" onchange="filterByStatus()">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="1">Hoạt động</option>
+                            <option value="2">Không hoạt động</option>
+                            <option value="3">Bị cấm</option>
+                        </select>
+                    </div>
                     <div class="search-container">
                         <input type="text" class="search-input" id="searchInput" onkeyup="filterTable()" placeholder="Tìm kiếm theo tên...">
                     </div>
@@ -262,21 +271,23 @@
                             <table class="table" id="userTable">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Số thứ tự</th> <!-- Sequential Number -->
                                         <th>Họ</th>
                                         <th>Tên đệm</th>
                                         <th>Tên</th>
                                         <th>Email</th>
                                         <th>Số điện thoại</th>
                                         <th>Trạng thái</th>
-                                        <th>Vai trò</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @{
+                                        int index = 1; // Initialize the counter for sequential numbers
+                                    }
                                     @foreach (var user in Model)
                                     {
-                                        <tr data-user-id="@user.Id">
-                                            <td>@user.Id</td>
+                                        <tr>
+                                            <td>@index</td> <!-- Sequential number displayed here -->
                                             <td>@user.FirstName</td>
                                             <td>@user.MidName</td>
                                             <td>@user.LastName</td>
@@ -284,13 +295,13 @@
                                             <td>@user.Phone</td>
                                             <td>
                                                 <div>
-                                                    <button onclick="changeStatus(@user.Id, 1)" class="status-button @(user.UserStatusId == 1 ? "active" : "")">Active</button>
-                                                    <button onclick="changeStatus(@user.Id, 2)" class="status-button @(user.UserStatusId == 2 ? "deactive" : "")">Deactive</button>
-                                                    <button onclick="changeStatus(@user.Id, 3)" class="status-button @(user.UserStatusId == 3 ? "banned" : "")">Banned</button>
+                                                    <button onclick="changeStatus(@user.Id, 1)" class="status-button @(user.UserStatusId == 1 ? "active" : "")">Hoạt động</button>
+                                                    <button onclick="changeStatus(@user.Id, 2)" class="status-button @(user.UserStatusId == 2 ? "deactive" : "")">Không hoạt động</button>
+                                                    <button onclick="changeStatus(@user.Id, 3)" class="status-button @(user.UserStatusId == 3 ? "banned" : "")">Bị cấm</button>
                                                 </div>
                                             </td>
-                                            <td>@user.RoleName</td>
                                         </tr>
+                                        index++; // Increment the counter
                                     }
                                 </tbody>
                             </table>
@@ -306,6 +317,9 @@
                     <script src="~/js/dashboard.js"></script>
                     <script>
 
+                        $(document).ready(function () {                           
+                            GetUserNameById();                          
+                        });
 
                         // JavaScript function để lọc bảng theo từ khóa tìm kiếm
                         function filterTable() {
@@ -327,43 +341,77 @@
                             }
                         }
 
-                        // JavaScript function để thay đổi trạng thái người dùng
                         function changeStatus(userId, newStatusId) {
-                            const data = { Id: userId, NewStatusId: newStatusId };
-                            fetch('https://localhost:7056/api/User/UpdateStatus', {
+                            const url = 'https://localhost:7056/api/User/UpdateStatus';
+
+                            const requestData = {
+                                id: userId,
+                                newStatusId: newStatusId
+                            };
+
+                            fetch(url, {
                                 method: 'POST',
                                 headers: {
-                                    'Content-Type': 'application/json'
+                                    'Content-Type': 'application/json',
                                 },
-                                body: JSON.stringify(data)
+                                body: JSON.stringify(requestData),
                             })
-                                .then(response => response.json())
-                                .then(result => {
-                                    if (!result.success) {
-                                        // Cập nhật trạng thái thành công, hiển thị thông báo và cập nhật bảng
-                                        alert('Cập nhật trạng thái thành công!');
-
-                                        // Cập nhật trạng thái mới trực tiếp trên giao diện
-                                        const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
-                                        const statusButtonContainer = userRow.querySelector("td:nth-child(7) div");
-
-                                        // Cập nhật lại màu và trạng thái của các button
-                                        statusButtonContainer.innerHTML = `
-                                                                                <button onclick="changeStatus(${userId}, 1)" class="status-button ${newStatusId === 1 ? "active" : ""}">Active</button>
-                                                                                <button onclick="changeStatus(${userId}, 2)" class="status-button ${newStatusId === 2 ? "deactive" : ""}">Deactive</button>
-                                                                                <button onclick="changeStatus(${userId}, 3)" class="status-button ${newStatusId === 3 ? "banned" : ""}">Banned</button>
-                                                                            `;
-                                    } else {
-                                        alert('Có lỗi xảy ra: ' + result.message);
+                                .then(response => {
+                                    // Kiểm tra nếu phản hồi không thành công (mã trạng thái khác 2xx)
+                                    if (!response.ok) {
+                                        return response.text().then(error => {
+                                            throw new Error(error || 'Đã xảy ra lỗi không xác định.');
+                                        });
                                     }
+                                    // Kiểm tra nếu phản hồi là trống (HTTP 204)
+                                    if (response.status === 204) {
+                                        return 'Cập nhật thành công nhưng không có dữ liệu trả về.';
+                                        window.location.reload();
+                                    }
+                                    // Chỉ lấy phản hồi dưới dạng văn bản
+                                    return response.text(); // Lấy nội dung thông báo dưới dạng chuỗi
+
+                                })
+                                .then(data => {
+                                    // Hiển thị thông báo thành công hoặc lỗi
+                                    alert(data || 'Cập nhật trạng thái thành công!');
+                                    window.location.reload();
                                 })
                                 .catch(error => {
-                                    alert('Có lỗi xảy ra: ' + error.message);
+                                    // Xử lý lỗi
+                                    console.error('Lỗi khi gọi API:', error);
+                                    alert(Có lỗi xảy ra: ${error.message});
                                 });
                         }
+
+
+                        function filterByStatus() {
+                            const statusFilter = document.getElementById("statusFilter").value;
+                            const table = document.getElementById("userTable");
+                            const rows = table.getElementsByTagName("tr");
+
+                            for (let i = 1; i < rows.length; i++) {
+                                const statusCell = rows[i].getElementsByTagName("td")[6]; // Cột trạng thái
+                                const statusButton = statusCell.querySelector(".status-button.active") ||
+                                    statusCell.querySelector(".status-button.deactive") ||
+                                    statusCell.querySelector(".status-button.banned");
+                                const userStatus = statusButton ? statusButton.textContent.trim() : "";
+
+                                if (!statusFilter || (statusFilter === "1" && userStatus === "Hoạt động") ||
+                                    (statusFilter === "2" && userStatus === "Không hoạt động") ||
+                                    (statusFilter === "3" && userStatus === "Bị cấm")) {
+                                    rows[i].style.display = "";
+                                } else {
+                                    rows[i].style.display = "none";
+                                }
+                            }
+                        }
+
                     </script>
 
+                </div>
 
+            </div>
 
 </body>
 

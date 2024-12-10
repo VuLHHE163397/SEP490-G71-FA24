@@ -39,13 +39,14 @@
         }
 
         body {
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-            position: relative;
             margin: 0;
             padding: 0;
             height: 100vh;
+            position: relative;
+            background-image: url('/images/bg1.jpg'); /* Đường dẫn tới ảnh nền */
+            background-size: cover; /* Để ảnh bao phủ toàn màn hình */
+            background-repeat: no-repeat; /* Không lặp lại ảnh */
+            background-position: center; /* Căn giữa ảnh */
         }
 
         /* Overlay for opacity effect */
@@ -55,8 +56,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.5);
-            z-index: -1;
+            background-color: rgba(255, 255, 255, 0); /* Màu trắng mờ, thay đổi giá trị 0.5 để điều chỉnh */
+            z-index: -1; /* Đảm bảo lớp phủ ở phía dưới */
         }
 
         .page-wrapper {
@@ -92,7 +93,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Mật khẩu</label>
-                            <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu" required>
+                            <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu" onkeydown="handleKeyPress(event)" required>
                         </div>
                         <div class="d-flex align-items-center justify-content-between mb-4">
                             <a class="text-primary fw-bold" href="/Home/Home">Về trang chủ</a>
@@ -184,12 +185,48 @@
                     }
                 },
                 error: function (xhr, status, error) {
-                    showErrorPopup("Tài khoản hoặc mật khẩu không tồn tại");
-                    // showErrorPopup("Đăng nhập thất bại: " + xhr.responseText);
+                    // showErrorPopup("Tài khoản hoặc mật khẩu không đúng. Vui lòng nhập lại!");
+                    showErrorPopup(xhr.responseText);
                 }
             });
 
         }
+        function ForgotPassword() {
+            const email = $("#email").val(); // Lấy email từ textbox
+
+            if (!email) {
+                // Nếu không có email trong textbox, yêu cầu nhập email
+                const userEmail = prompt("Bạn chưa nhập email. Vui lòng nhập email của bạn:");
+                if (!userEmail) {
+                    alert("Email không hợp lệ.");
+                    return;
+                }
+                // Chuyển đến trang ForgotPassword với email
+                window.location.href = `/Auth/ForgotPassword?email=${encodeURIComponent(userEmail)}`;
+            } else {
+                // Nếu đã có email, xác nhận với người dùng
+                const confirmEmail = confirm(`Email bạn đã nhập là: ${email}. Bạn có muốn tiếp tục với email này không?`);
+                if (confirmEmail) {
+                    // Chuyển đến trang ForgotPassword với email
+                    window.location.href = `/Auth/ForgotPassword?email=${encodeURIComponent(email)}`;
+                } else {
+                    // Yêu cầu nhập email khác
+                    const userEmail = prompt("Vui lòng nhập email khác của bạn:");
+                    if (!userEmail) {
+                        alert("Email không hợp lệ.");
+                        return;
+                    }
+                    window.location.href = `/Auth/ForgotPassword?email=${encodeURIComponent(userEmail)}`;
+                }
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                login(); // Gọi hàm đăng nhập
+            }
+        }
+
         function ForgotPassword() {
             const email = $("#email").val(); // Lấy email từ textbox
 

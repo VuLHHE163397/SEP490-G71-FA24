@@ -151,6 +151,11 @@
             border-radius: 50%;
         }
 
+        #welcome-message {
+            position: relative;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
@@ -278,20 +283,18 @@
                         <li class="nav-item d-flex align-items-center" " >
                             <a class="nav-link nav-icon-hover" asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingId">
                                 <i class="ti ti-arrow-back" style="font-size: 30px;"></i>
-                            </a>
-
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
+                            </a>                            
                         </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
-                                    <img src="~/images/profile/user-1.jpg" alt="" width="50" height="50" class="rounded-circle">
+                                    <img src="/images/profile/user-1.jpg" alt="" width="50" height="50" class="rounded-circle">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
@@ -361,24 +364,25 @@
                             <div class="col-sm-9">
                                 <input asp-for="StartedDate" class="form-control" type="date" />
                                 <span asp-validation-for="StartedDate" class="text-danger"></span>
+                                <span class="error-message" id="dateError1" style="color: red; display: none;">Ngày bắt đầu thuê phải trước ngày hết hạn</span>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-3 fw-bold text-end align-middle" for="ExpiredDate">Ngày hết hạn phòng</label>
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="ExpiredDate">Ngày hết hạn</label>
                             <div class="col-sm-9">
                                 <input asp-for="ExpiredDate" class="form-control" type="date" />
                                 <span asp-validation-for="ExpiredDate" class="text-danger"></span>
-                                <span class="error-message" id="dateError" style="color: red; display: none;">Ngày hết hạn phải sau ngày bắt đầu thuê</span>
+                                <span class="error-message" id="dateError2" style="color: red; display: none;">Ngày hết hạn phải sau ngày bắt đầu thuê</span>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-3 fw-bold text-end align-middle" for="FreeInFutureDate">Ngày Phòng sẽ trống trong tương lai</label>
+                            <label class="col-sm-3 fw-bold text-end align-middle" for="FreeInFutureDate">Ngày Phòng sẽ trống</label>
                             <div class="col-sm-9">
                                 <input asp-for="FreeInFutureDate" class="form-control" type="date" />
                                 <span asp-validation-for="FreeInFutureDate" class="text-danger"></span>
-                                <span class="error-message" id="dateError2" style="color: red; display: none;">Ngày Phòng sẽ trống sẽ phải sau hoặc cùng ngày hết hạn phòng</span>
+                                <span class="error-message" id="dateError3" style="color: red; display: none;">Ngày Phòng sẽ trống sẽ phải sau hoặc cùng ngày hết hạn phòng</span>
                             </div>
                         </div>
 
@@ -402,11 +406,8 @@
 
         </div>
     </div>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="~/lib/simplebar/dist/simplebar.js"></script>
 
     <script>
 
@@ -423,17 +424,11 @@
             validateArea();
         });
 
-        document.getElementById('StartedDate').addEventListener('change', function () {
-            validateDate();
-        });
+        document.getElementById('StartedDate').addEventListener('input',validateDate);
 
-        document.getElementById('ExpiredDate').addEventListener('change', function () {
-            validateDate();
-        });
+        document.getElementById('ExpiredDate').addEventListener('input', validateDate);
 
-        document.getElementById('FreeInFutureDate').addEventListener('change', function () {
-            validateDate2();
-        });
+        document.getElementById('FreeInFutureDate').addEventListener('input', validateDate);
 
         const submitError = document.getElementById('submitError');
 
@@ -499,44 +494,58 @@
             }
         }
 
+
         function validateDate() {
             const startedDate = document.getElementById('StartedDate').value;
             const expiredDate = document.getElementById('ExpiredDate').value;
-            const dateError = document.getElementById('dateError');
-
-            if (startedDate && expiredDate) {
-                if (new Date(expiredDate) < new Date(startedDate)) {
-                    dateError.style.display = 'inline';
-                    dateError.textContent = 'Ngày hết hạn phải sau ngày bắt đầu thuê';
-                    document.getElementById('buttonSave').disabled = true;
-                    submitError.style.display = 'inline';
-                } else {
-                    dateError.style.display = 'none';
-                    document.getElementById('buttonSave').disabled = false;
-                    submitError.style.display = 'none';
-                }
-            }
-        }
-
-        function validateDate2() {
             const freeInFutureDate = document.getElementById('FreeInFutureDate').value;
-            const expiredDate = document.getElementById('ExpiredDate').value;
-            const dateError2 = document.getElementById('dateError2');
 
-            if (freeInFutureDate && expiredDate) {
-                if (new Date(freeInFutureDate) < new Date(expiredDate)) {
-                    dateError2.style.display = 'inline';
-                    dateError2.textContent = 'Ngày Phòng sẽ trống sẽ phải sau hoặc cùng ngày hết hạn phòng';
-                    document.getElementById('buttonSave').disabled = true;
-                    submitError.style.display = 'inline';
-                    return;
-                } else {
-                    dateError2.style.display = 'none';
-                    document.getElementById('buttonSave').disabled = false;
-                    submitError.style.display = 'none';
+            const dateError1 = document.getElementById('dateError1'); // Ngày bắt đầu trước ngày hết hạn
+            const dateError2 = document.getElementById('dateError2'); // Ngày hết hạn sau ngày bắt đầu
+            const dateError3 = document.getElementById('dateError3'); // Ngày trống sau hoặc cùng ngày hết hạn
+
+            const submitError = document.getElementById('submitError'); // Lỗi chung
+            const saveButton = document.getElementById('buttonSave'); // Nút lưu
+
+            // Reset lỗi
+            dateError1.style.display = 'none';
+            dateError2.style.display = 'none';
+            dateError3.style.display = 'none';
+            submitError.style.display = 'none';
+            saveButton.disabled = false;
+
+            let hasError = false;
+
+            // Kiểm tra ngày bắt đầu phải trước ngày hết hạn
+            if (startedDate && expiredDate) {
+                const started = new Date(startedDate);
+                const expired = new Date(expiredDate);
+
+                if (expired < started) {
+                    dateError1.style.display = 'inline';
+                    hasError = true;
                 }
             }
+
+            // Kiểm tra ngày hết hạn phải trước hoặc bằng ngày trống trong tương lai
+            if (freeInFutureDate && expiredDate) {
+                const expired = new Date(expiredDate);
+                const freeInFuture = new Date(freeInFutureDate);
+
+                if (freeInFuture < expired) {
+                    dateError3.style.display = 'inline';
+                    hasError = true;
+                }
+            }
+
+            // Nếu có lỗi, hiển thị lỗi chung và vô hiệu hóa nút lưu
+            if (hasError) {
+                submitError.style.display = 'inline';
+                saveButton.disabled = true;
+            }
         }
+
+
 
         document.getElementById('RoomNumber').addEventListener('blur', async function () {
             const roomName = document.getElementById("RoomNumber").value;
@@ -577,13 +586,14 @@
             }
         });
 
+
         // Kiểm tra khi submit form
         document.getElementById('editRoomForm').addEventListener('submit', function (event) {
             validatePrice();
             validateFloor();
             validateArea();
             validateDate();
-            validateDate2();
+            // validateDate2();
 
             // Nếu có lỗi, ngăn form submit
             if (document.querySelectorAll('.error-message[style="display: inline;"]').length > 0) {
@@ -593,6 +603,8 @@
 
         $(document).ready(function () {
             loadBuilding();
+            GetUserNameById();
+
         })
 
         //---------------------------------------------------------------
@@ -687,6 +699,25 @@
             }
         }
 
+        function GetUserNameById() {
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    if (response && response.fullName) {
+                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Error fetching user profile:', xhr.responseText);
+                }
+            });
+        }
+
     </script>
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -700,6 +731,7 @@
     <!-- Thêm Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>
