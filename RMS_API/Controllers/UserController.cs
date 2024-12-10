@@ -19,7 +19,7 @@ namespace RMS_API.Controllers
         public UserController(RMS_SEP490Context context)
         {
             _context = context;
-            
+
         }
 
         [HttpGet("GetUserByEmail")]
@@ -31,7 +31,7 @@ namespace RMS_API.Controllers
                 return BadRequest("Email Không được để trống.");
             }
 
-            var user = await _context.Users               
+            var user = await _context.Users
                .Where(u => u.Email == email)
                .Select(b => new ProfileDTO
                {
@@ -87,7 +87,7 @@ namespace RMS_API.Controllers
         }
 
 
-        [HttpGet("GetUserNameById")]        
+        [HttpGet("GetUserNameById")]
         public async Task<IActionResult> GetUserNameById([FromQuery] int id)
         {
             if (id == 0) // Kiểm tra ID
@@ -98,7 +98,7 @@ namespace RMS_API.Controllers
             var user = await _context.Users
                 .Where(u => u.Id == id)
                 .Select(b => new UserNameDTO
-                {                    
+                {
                     FullName = $"{b.LastName} {b.MidName} {b.FirstName}".Trim(), // Gộp họ tên                    
                 })
                 .FirstOrDefaultAsync();
@@ -257,7 +257,7 @@ namespace RMS_API.Controllers
 
 
         [HttpGet("GetAllLanlord")]
-        
+
         public async Task<IActionResult> GetAllLanlord()//Lanlord se co roleid =2
         {
             // Retrieve all users with RoleId = 2
@@ -286,7 +286,6 @@ namespace RMS_API.Controllers
 
             return Ok(users);
         }
-
 
         [HttpPost("UpdateStatus")]
         public async Task<IActionResult> UpdateStatus([FromBody] UpdateStatusRequest request)
@@ -360,5 +359,6 @@ namespace RMS_API.Controllers
         {
             public string FullName { get; set; }
         }
+
     }
 }

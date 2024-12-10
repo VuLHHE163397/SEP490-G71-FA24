@@ -258,24 +258,12 @@
                                 </div>
                             </form>
                         </div>
-                        @*
-                        <div class="col-md-3">
-                        <select class="form-select">
-                        <option selected>Trạng thái phí</option>
-                        <option>Đã đóng tiền</option>
-                        <option>Chưa đóng tiền</option>
-                        </select>
-                        </div> *@
 
                         <div class="col-md-3 offset-md-1 d-flex flex-column align-items-end">
                             <div class="btn-group-vertical">
                                 <!-- Nhập phòng -->
                                 <a class="btn btn-success mb-2" style="width: 200px;" data-toggle="modal" data-target="#importRoomModal">
                                     <i class="ti ti-file-import"></i> Nhập Phòng
-                                </a>
-                                <!-- Các nút khác -->
-                                <a class="btn btn-success mb-2" style="width: 200px;">
-                                    <i class="ti ti-user"></i> Khách thuê
                                 </a>
                                 <a class="btn btn-success mb-2" style="width: 200px;" asp-controller="Room" asp-action="CreateRoom" asp-route-buildingId="@buildingId">
                                     <i class="ti ti-bed"></i> Thêm Phòng

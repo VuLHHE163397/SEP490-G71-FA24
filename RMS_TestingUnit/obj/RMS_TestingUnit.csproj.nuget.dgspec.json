@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS_TestingUnit\\RMS_TestingUnit.csproj": {}
+    "D:\\GitHub\\SEP490-G71-FA24\\RMS_TestingUnit\\RMS_TestingUnit.csproj": {}
   },
   "projects": {
-    "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
+    "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
+        "projectUniqueName": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
         "projectName": "RMS_API",
-        "projectPath": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
-        "packagesPath": "C:\\Users\\Phong Vu\\.nuget\\packages\\",
-        "outputPath": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS_API\\obj\\",
+        "projectPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj",
+        "packagesPath": "C:\\Users\\bangc\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "D:\\Visual Studio 2022\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Phong Vu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\bangc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -39,11 +39,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -130,24 +125,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS_TestingUnit\\RMS_TestingUnit.csproj": {
+    "D:\\GitHub\\SEP490-G71-FA24\\RMS_TestingUnit\\RMS_TestingUnit.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS_TestingUnit\\RMS_TestingUnit.csproj",
+        "projectUniqueName": "D:\\GitHub\\SEP490-G71-FA24\\RMS_TestingUnit\\RMS_TestingUnit.csproj",
         "projectName": "RMS_TestingUnit",
-        "projectPath": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS_TestingUnit\\RMS_TestingUnit.csproj",
-        "packagesPath": "C:\\Users\\Phong Vu\\.nuget\\packages\\",
-        "outputPath": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS_TestingUnit\\obj\\",
+        "projectPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS_TestingUnit\\RMS_TestingUnit.csproj",
+        "packagesPath": "C:\\Users\\bangc\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS_TestingUnit\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "D:\\Visual Studio 2022\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Phong Vu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\bangc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -163,8 +158,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
-                "projectPath": "D:\\Prj_Đồ Án\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj"
+              "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj": {
+                "projectPath": "D:\\GitHub\\SEP490-G71-FA24\\RMS_API\\RMS_API.csproj"
               }
             }
           }
@@ -173,11 +168,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -229,7 +219,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
