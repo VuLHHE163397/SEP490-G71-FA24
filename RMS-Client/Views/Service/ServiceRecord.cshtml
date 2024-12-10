@@ -466,13 +466,13 @@
             $("#datePicker").val(formattedDate)
         }
         function setDate() {
-            getElectricRecord();
+            console.log($("#datePicker").val())
+            $(".recordDate").val($("#datePicker").val());
         }
         function getElectricRecord() {
-            var date = $("#datePicker").val();
             const token = getCookie('AuthToken');
             const userId = getUserIdFromToken(token);
-            var url = `https://localhost:7056/api/ElectricRecord?userId=${userId}&SignedDate=${date}`
+            var url = `https://localhost:7056/api/ElectricRecord?userId=${userId}`
             var buildingId = $("#BuildingId").val();
             var roomId = $("#RoomId").val();
             console.log("buildingId = " + buildingId + ", roomId = " + roomId);
@@ -491,8 +491,6 @@
                 },
                 dataType: 'json', // Data type expected from the server (JSON in this case)
                 success: function (response) {
-                    console.log("Success")
-                    console.log(response)
                     renderElectricRecord(response)
                 },
                 error: function (xhr, status, error) {
@@ -502,7 +500,6 @@
             });
         }
         function renderElectricRecord(data) {
-            console.log("checked")
             let html = '';
             for (var item of data) {
                 html += '<tr>';
@@ -527,7 +524,6 @@
                 html += '</tr>'
             }
             $("#electrics").html(html);
-            $(".recordDate").val($("#datePicker").val());
         }
         function calculate(id) {
             var oldMeter = $(`#oldMeter-${id}`).val();

@@ -123,7 +123,7 @@
                                 </a>
                                 <form id="registerForm" style="max-width: 1000px; margin: auto;">
                                     <div class="mb-3">
-                                        <label class="form-label">Họ và Tên</label>
+                                        <label class="form-label">Tên đầy đủ</label>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" required id="lastName" placeholder="Họ">
@@ -138,20 +138,39 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="phone" class="form-label">Số điện thoại</label>
-                                        <input type="text" class="form-control" required pattern="[0-9]{10}" id="phone" placeholder="0987456123">
+                                        <input type="text" class="form-control" required pattern="[0-9]{10}" id="phone">
                                     </div>
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" required pattern="^[^@@\s]+@@[^@@\s]+\.[^@@\s]+$" id="email" placeholder="example@@gmail.com">
+                                        <input type="email" class="form-control" required pattern="^[^@@\s]+@@[^@@\s]+\.[^@@\s]+$" id="email">
                                     </div>
                                     <div class="mb-4">
                                         <label for="password" class="form-label">Mật khẩu</label>
-                                        <input type="password" class="form-control" required id="password" placeholder="Độ dài từ 6-32 ký tự">
+                                        <input type="password" class="form-control" required id="password">
                                     </div>
                                     <div class="mb-4">
                                         <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
-                                        <input type="password" class="form-control" required id="confirmPassword" >
-                                    </div>                                   
+                                        <input type="password" class="form-control" required id="confirmPassword">
+                                    </div>
+                                    @* <div class="mb-4">
+                                    <button type="button" class="btn btn-primary" onclick="sendVerificationCode()">Gửi mã qua email</button>
+                                    </div> *@
+                                    @* <div class="mb-4">
+                                    <label for="verificationCode" class="form-label">Mã xác nhận qua mail</label>
+                                    <input type="text" class="form-control" id="verificationCode">
+                                    </div> *@
+                                    @* <div class="mb-4">
+                                    <label for="verificationCode" class="form-label">Mã xác nhận qua mail</label>
+                                    <div id="verificationCode" class="d-flex justify-content-between">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 1">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 2">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 3">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 4">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 5">
+                                    <input type="text" maxlength="1" class="form-control code-input" aria-label="Digit 6">
+                                    </div>
+                                    </div> *@
+
                                     <a onclick="sendVerificationCode()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</a>
                                     <div class="d-flex align-items-center justify-content-center">
                                         <p class="fs-4 mb-0 fw-bold">Bạn đã có tài khoản?</p>

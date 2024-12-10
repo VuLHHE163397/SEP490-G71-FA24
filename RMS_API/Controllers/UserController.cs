@@ -19,7 +19,7 @@ namespace RMS_API.Controllers
         public UserController(RMS_SEP490Context context)
         {
             _context = context;
-            
+
         }
 
         [HttpGet("GetUserByEmail")]
@@ -31,7 +31,7 @@ namespace RMS_API.Controllers
                 return BadRequest("Email Không được để trống.");
             }
 
-            var user = await _context.Users               
+            var user = await _context.Users
                .Where(u => u.Email == email)
                .Select(b => new ProfileDTO
                {
@@ -56,6 +56,7 @@ namespace RMS_API.Controllers
 
         [HttpGet("GetUserById")]
         [Authorize(Roles = "Landlord")]
+
         public async Task<IActionResult> GetUserById([FromQuery] int id)
         {
             if (id == null)
@@ -74,8 +75,7 @@ namespace RMS_API.Controllers
                    Email = b.Email,
                    Phone = b.Phone,
                    FacebookUrl = b.FacebookUrl,
-                   ZaloUrl = b.ZaloUrl,
-                   UserStatusId = b.UserStatusId
+                   ZaloUrl = b.ZaloUrl
                })
                .FirstOrDefaultAsync();
 
@@ -86,57 +86,32 @@ namespace RMS_API.Controllers
             return Ok(user);
         }
 
-
-        [HttpGet("GetUserNameById")]        
-        public async Task<IActionResult> GetUserNameById([FromQuery] int id)
+        [HttpPut("ChangePassword")]
+        [Authorize(Roles = "Landlord")]
+        public async Task<IActionResult> ChangePassword([FromQuery] string email, [FromQuery] string currentPassword, [FromQuery] string newPassword)
         {
-            if (id == 0) // Kiểm tra ID
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(currentPassword) || string.IsNullOrEmpty(newPassword))
             {
-                return BadRequest("Id không được để trống.");
+                return BadRequest("Email,mật khẩu hiện tại và mật khẩu mới không được trống.");
             }
 
-            var user = await _context.Users
-                .Where(u => u.Id == id)
-                .Select(b => new UserNameDTO
-                {                    
-                    FullName = $"{b.LastName} {b.MidName} {b.FirstName}".Trim(), // Gộp họ tên                    
-                })
-                .FirstOrDefaultAsync();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
             if (user == null)
             {
-                return NotFound("Không tìm thấy người dùng.");
+                return NotFound("Email không tồn tại.");
             }
 
-            return Ok(user);
+            if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.Password)) // Adjust according to your password hashing method if applicable
+            {
+                return BadRequest("Mật khẩu hiện tại sai.");
+            }
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword); // Hash the password if needed
+            await _context.SaveChangesAsync();
+
+            return Ok("Cập nhật mật khẩu thành công.");
         }
-
-        //[HttpPut("ChangePassword")]
-        //[Authorize(Roles = "Landlord")]
-        //public async Task<IActionResult> ChangePassword([FromQuery] string email, [FromQuery] string currentPassword, [FromQuery] string newPassword)
-        //{
-        //    if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(currentPassword) || string.IsNullOrEmpty(newPassword))
-        //    {
-        //        return BadRequest("Mật khẩu hiện tại và mật khẩu mới không được trống.");
-        //    }
-
-        //    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-
-        //    if (user == null)
-        //    {
-        //        return NotFound("Không tìm thấy tài khoản.");
-        //    }
-
-        //    if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.Password)) // Adjust according to your password hashing method if applicable
-        //    {
-        //        return BadRequest("Mật khẩu cũ sai! Vui lòng nhập lại.");
-        //    }
-
-        //    user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword); // Hash the password if needed
-        //    await _context.SaveChangesAsync();
-
-        //    return Ok("Cập nhật mật khẩu thành công.");
-        //}
 
         [HttpPut("UpdateProfileByEmail")]
         [Authorize(Roles = "Landlord")]
@@ -257,7 +232,7 @@ namespace RMS_API.Controllers
 
 
         [HttpGet("GetAllLanlord")]
-        
+
         public async Task<IActionResult> GetAllLanlord()//Lanlord se co roleid =2
         {
             // Retrieve all users with RoleId = 2

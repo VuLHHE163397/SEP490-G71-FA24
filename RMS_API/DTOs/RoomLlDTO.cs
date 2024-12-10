@@ -11,6 +11,5 @@
         public DateTime? ExpiredDate { get; set; }
         public int BuildingId { get; set; }
         public int RoomStatusId { get; set; }
-        public int UserId { get; set; }
     }
 }

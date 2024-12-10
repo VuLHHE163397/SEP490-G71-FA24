@@ -19,7 +19,7 @@
 
     <!-- Custom CSS Styles -->
     <style>
-
+        
 
         .btn-primary {
             background-color: #0d6efd;
@@ -159,23 +159,11 @@
             font-size: 1.5rem;
             font-weight: bold;
         }
-       
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        /* Responsive Table for smaller screens */
+
+        .text-red {
+            color: red;
         }
-
-            .card-header h3 {
-                margin: 0;
-                flex-grow: 1; /* Để tiêu đề chiếm khoảng trống */
-                text-align: center; /* Đảm bảo tiêu đề căn giữa */
-            }
-
-            .card-header a {
-                flex-shrink: 0; /* Đảm bảo nút không bị co lại */
-            }
-
 
     </style>
 </head>
@@ -190,8 +178,6 @@
         const token = getCookie('AuthToken');
         if (!token) {
             console.error('Token không tìm thấy trong cookie.');
-            alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
-            window.location.href = "/Auth/login";
         }
         const tokenParts = token.split('.');
         const payload = JSON.parse(atob(tokenParts[1]));
@@ -310,10 +296,7 @@
                                 <i class="ti ti-menu-2"></i>
                             </a>
                         </li>
-                        <li class="nav-item d-flex align-items-center">
-                            <a class="nav-link nav-icon-hover" href="/Building/ListBuilding">
-                                <i class="ti ti-arrow-back" style="font-size: 30px;"></i>
-                            </a>
+                        <li class="nav-item">
                             <a class="nav-link nav-icon-hover" href="javascript:void(0)">
                                 <i class="ti ti-bell-ringing"></i>
                                 <div class="notification bg-primary rounded-circle"></div>
@@ -329,6 +312,11 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
+                                        <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
+                                            <i class="ti ti-user fs-6"></i>
+                                            <p class="mb-0 fs-3">Tài Khoản</p>
+                                        </a>
+
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
 
                                     </div>
@@ -342,22 +330,31 @@
             <!--  Header End -->
 
             <div class="container-fluid">
-                <div class="container mt-4">     
+                <div class="container mt-4">
+                    <h1 class="text-center">@ViewData["Title"]</h1>
+
+                    <!-- Create button -->
+                    <div class="mb-3 d-flex justify-content-between">
+                        <a href="/User/EditProfile" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Cập nhật profile
+                        </a>
+                        <a href="/User/ChangePassword" class="btn btn-warning">
+                            <i class="fas fa-key"></i> Đổi mật khẩu
+                        </a>
+                    </div>
+
                     <div class="container mt-5">
                         <div class="row justify-content-center">
                             <div class="col-md-6">
                                 <div class="card shadow-lg">
-                                    <div class="card-header d-flex align-items-center justify-content-between bg-primary text-white">
-                                        <h3 class="mb-0">Thông tin cá nhân</h3>
-                                        <a href="/User/EditProfile" class="btn btn-light btn-sm">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
+                                    <div class="card-header text-center bg-primary text-white">
+                                        <h3>My Profile</h3>
                                     </div>
                                     <div class="card-body">
                                         <div class="row mb-3">
                                             <label class="col-sm-4 font-weight-bold">Họ và Tên:</label>
                                             <div class="col-sm-8" id="fullName">Loading...</div>
-                                        </div>                                        
+                                        </div>
                                         <div class="row mb-3">
                                             <label class="col-sm-4 font-weight-bold">Email:</label>
                                             <div class="col-sm-8" id="email">Loading...</div>
@@ -367,20 +364,27 @@
                                             <div class="col-sm-8" id="phone">Loading...</div>
                                         </div>
                                         <div class="row mb-3">
-                                            <label class="col-sm-4 font-weight-bold">Facebook:</label>
+                                            <label class="col-sm-4 font-weight-bold">Link Facebook:</label>
                                             <div class="col-sm-8" id="facebookUrl">Loading...</div>
                                         </div>
                                         <div class="row mb-3">
-                                            <label class="col-sm-4 font-weight-bold">Zalo:</label>
+                                            <label class="col-sm-4 font-weight-bold">Link Zalo:</label>
                                             <div class="col-sm-8" id="zaloUrl">Loading...</div>
                                         </div>
                                     </div>
                                     <div class="card-footer text-center">
-                                        @* <button class="btn btn-secondary" onclick="window.location.href='/Building/ListBuilding';">Về trang chủ</button> *@
-                                        <a href="/User/ChangePassword" class="btn btn-warning">
-                                            <i class="fas fa-key"></i> Đổi mật khẩu
-                                        </a>
+                                        <button class="btn btn-secondary" onclick="window.location.href='/Building/ListBuilding';">Về trang chủ</button>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thêm khung chú ý -->
+                        <div class="container mt-4">
+                            <div class="card bg-warning text-white shadow-lg">
+                                <div class="card-body">
+                                    <h5 class="card-title">Lưu ý:</h5>
+                                    <p class="card-text text-red">Nếu bạn đăng nhập bằng Google Mail xin hãy đổi số điện thoại và mật khẩu(Mật khẩu hiện tại do hệ thống tự cung cấp mặc định là :123456) .</p>
                                 </div>
                             </div>
                         </div>
@@ -388,7 +392,6 @@
                 </div>
             </div>
 
-        </div>
 
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -10,6 +10,5 @@
         public string Phone { get; set; } = null!;
         public string? FacebookUrl { get; set; }
         public string? ZaloUrl { get; set; }
-        public int UserStatusId { get; set; }
     }
 }

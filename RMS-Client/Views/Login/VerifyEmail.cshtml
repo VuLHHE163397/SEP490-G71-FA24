@@ -133,13 +133,13 @@
                 contentType: "application/json",
                 data: JSON.stringify(user),
                 success: function (response) {
-                    showPopup("Xác thực thành công!", "popupMessage");
+                    showPopup("Đăng ký thành công!", "popupMessage");
                     setTimeout(function () {
                         window.location.href = "/Auth/Login";
                     }, 2000);
                 },
                 error: function (xhr) {
-                    showErrorPopup("Xác thực thất bại: " + xhr.responseText, "popupErrorMessage");
+                    showErrorPopup("Đăng ký thất bại: " + xhr.responseText, "popupErrorMessage");
                 }
             });
         }

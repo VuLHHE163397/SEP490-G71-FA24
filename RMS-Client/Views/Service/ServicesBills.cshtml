@@ -262,7 +262,7 @@
                         <div class="d-flex align-items-center btn-spacing">
                             <button class="btn btn-warning">Xuất file Excel</button>
                             <button class="btn btn-secondary">In danh sách</button>
-                            
+                            <button class="btn btn-success"> <i class="fa-solid fa-calculator"></i> Tính</button>
                             <a href="/Service/ListService" class="btn btn-info"> <i class="fa-solid fa-rotate-left" style="color: #FFD43B;"></i> Quay về</a>
                         </div>
                     </div>
@@ -284,7 +284,7 @@
                         <div class="row g-3 align-items-center mb-3">
                             <div class="col-md-3">
                                 <label for="monthYear" class="form-label">Tháng/năm</label>
-                                <input type="month" class="form-control" id="monthYear" value="2024-11" onchange="getBills()">
+                                <input type="month" class="form-control" id="monthYear" value="2024-11">
                             </div>
 
                             <div class="col-md-3">
@@ -320,7 +320,14 @@
                         </tbody>
                     </table>
 
-                    
+                    <!-- Phân trang -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>Đang xem 0 đến 0 trong tổng số 0 mục</div>
+                        <div>
+                            <button class="btn btn-light" disabled>Trước</button>
+                            <button class="btn btn-light" disabled>Tiếp</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -360,12 +367,9 @@
     <script>
 
         var totalRecord = 0;
-        loadBuilding();
         $(document).ready(function () {
-            var buildingId = $("#BuildingId").val();
-            var roomId = $("#RoomId").val();
-
-
+            loadBuilding();
+            loadRoom();
             const token = getCookie('AuthToken');
             //Lấy user id
             const userId = getUserIdFromToken(token);
@@ -375,7 +379,7 @@
             loadRoom();
             getBills();
         }
-        ///////////////////////////////////////
+        /////////////////////////////////////////
 
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -419,12 +423,12 @@
         function renderBuilding(data) {
             var urlParams = new URLSearchParams(window.location.search);
             var buildingId = urlParams.get('buildingId');
-            let html = '';
+            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Chọn</option>`;
             for (var item of data) {
                 html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
             }
             $("#BuildingId").html(html);
-            loadRoom();
+
         }
 
 
@@ -433,7 +437,7 @@
         function loadRoom() {
             const token = getCookie('AuthToken');
             var buildingId = $("#BuildingId").val();
-            console.log("buildingId = " + buildingId);            
+            console.log("buildingId = " + buildingId)
             const userId = getUserIdFromToken(token);
             $.ajax({
                 url: buildingId && buildingId > 0 ? `https://localhost:7056/api/Room/GetRoomByBuilding/${buildingId}` : `https://localhost:7056/api/Room/GetAllRoom/${userId}`,
@@ -452,7 +456,7 @@
         }
         function renderRoom(data) {
             var urlParams = new URLSearchParams(window.location.search);
-            var roomId = $("#RoomId").val();
+            var roomId = urlParams.get('roomId');
             let html = `<option value="-1" ${roomId <= 0 ? 'selected' : ''}>Chọn</option>`;
             for (var item of data) {
                 html += `<option value="${item.id}" ${roomId == item.id ? 'selected' : ''}>${item.roomNumber}</option>`
@@ -495,10 +499,9 @@
         }
 
         function getBills() {
-            var date = $("#monthYear").val() + "-01";
             const token = getCookie('AuthToken');
             const userId = getUserIdFromToken(token);
-            var url = `https://localhost:7056/api/ServiceBill?userId=${userId}&date=${date}`
+            var url = `https://localhost:7056/api/ServiceBill?userId=${userId}`
             var buildingId = $("#BuildingId").val();
             var roomId = $("#RoomId").val();
             if (buildingId && !Number.isNaN(buildingId) && buildingId > 0) {
@@ -507,7 +510,6 @@
             if (roomId && !Number.isNaN(roomId) && roomId > 0) {
                 url += `&roomId=${roomId}`;
             }
-
             console.log(url);
             $.ajax({
                 url: url, // The URL of the API you want to request data from
@@ -534,8 +536,8 @@
                                                 <td>${index++}</td>
                                                 <td>${item.buildingName}</td>
                                                 <td>${item.roomNumber}</td>
-                                                        <td>${item.totalPrice.toLocaleString('vi-VN')} VND</td>
-                                                        <td>${item.remainingPrice.toLocaleString('vi-VN')} VND</td>
+                                                <td>${item.totalPrice}</td>
+                                                <td>${item.remainingPrice}</td>
                                                 <td class="action-icons">
                                                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="getBillDetail(${item.roomId})">
                                                         <i class="fa-solid fa-eye"></i>
@@ -566,7 +568,7 @@
                 },
                 error: function (xhr, status, error) {
                     // This function will be called if there's an error with the request
-                    alert('Lỗi:', xhr.responseText);
+                    //alert('Lỗi:', xhr.responseText);
                     console.log(xhr);
                 }
             });
@@ -594,11 +596,9 @@
             });
         }
         function renderBillDetail(data) {
-            let html = '';
+            let html = ''
             for (var item of data) {
-                // Sử dụng toLocaleString để định dạng số với dấu chấm
-                let formattedPrice = item.price.toLocaleString('vi-VN');
-                html += `<div><strong>${item.name}: </strong> <span>${formattedPrice} VND </span></div>`;
+                html += `<div><strong>${item.name}: </strong> <span>${item.price}</span></div>`;
             }
             $("#bill-detail").html(html);
         }
