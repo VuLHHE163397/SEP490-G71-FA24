@@ -92,5 +92,24 @@ namespace RMS_API.Controllers
             _context.SaveChanges();
             return Ok(maintainance);
         }
+
+        [HttpGet("CountUnresolvedReports")]
+        public IActionResult CountUnresolvedReports()
+        {
+            try
+            {
+                // Đếm số lượng báo cáo có Status = 1
+                var unresolvedReportsCount = _context.MaintainanceRequests.Count(r => r.Status == 1);
+
+                // Trả về số lượng
+                return Ok(new { Count = unresolvedReportsCount });
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi
+                return StatusCode(500, new { Message = "Error while counting unresolved reports", Error = ex.Message });
+            }
+        }
+
     }
 }

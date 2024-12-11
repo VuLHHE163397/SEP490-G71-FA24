@@ -11,9 +11,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Dropbox.Api;
-using Dropbox.Api.Files;
-using static Dropbox.Api.Files.ListRevisionsMode;
 using RMS_Client.Models;
 
 
@@ -168,7 +165,7 @@ namespace RMS_Client.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> CreateRoom(int? buildingId)
+        public async Task<IActionResult> CreateRoom(int? buildingId, int userId)
         {
 
             // Lấy danh sách Building từ API

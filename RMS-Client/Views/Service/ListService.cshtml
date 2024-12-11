@@ -74,6 +74,11 @@
             height: 40px;
             border-radius: 50%;
         }
+
+        #welcome-message {
+            position: relative;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -219,16 +224,13 @@
                             <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
                                 <i class="ti ti-menu-2"></i>
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
-                        </li>
+                        </li>                        
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -298,14 +300,7 @@
                             
                         </tbody>
                     </table>
-                    <!-- Phân trang -->
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>Đang xem 0 đến 0 trong tổng số 0 mục</div>
-                        <div>
-                            <button class="btn btn-light" disabled>Trước</button>
-                            <button class="btn btn-light" disabled>Tiếp</button>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -327,6 +322,8 @@
             loadBuilding();          
             const token = getCookie('AuthToken');
             //Lấy user id
+            GetUserNameById();
+
         })
         ////////////////////////////////////////////////////////////
 
@@ -487,7 +484,7 @@
                 html += `<td>${stt++}</td>`;
                 html += `<td>${item.name}</td>`;
                 html += `<td>${item.buildingName}</td>`;
-                html += `<td>${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}</td>`;
+                html += `<td>${item.price.toLocaleString('vi-VN')} VND</td>`;
 
                 html += `<td>
                                     <a href="/Service/EditService?id=${item.id}" class="btn btn-primary">
@@ -548,6 +545,25 @@
             }
         }
 
+
+        function GetUserNameById() {
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    if (response && response.fullName) {
+                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Error fetching user profile:', xhr.responseText);
+                }
+            });
+        }
     </script>
 
 </body>

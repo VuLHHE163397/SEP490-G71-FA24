@@ -5,6 +5,7 @@
     ViewData["Title"] = ""; // Page title
 }
 
+
 <!doctype html>
 <html lang="en">
 
@@ -159,7 +160,28 @@
             font-size: 1.5rem;
             font-weight: bold;
         }
-        /* Responsive Table for smaller screens */
+        
+        .status-button {
+            padding: 8px 15px;
+            margin: 0 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+            .status-button.active {
+                background-color: #28a745;
+                color: white;
+            }
+
+            .status-button.deactive {
+                background-color: #dc3545;
+                color: white;
+            }           
+
+            .status-button:hover {
+                opacity: 0.8;
+            }
 
     </style>
 </head>
@@ -291,11 +313,10 @@
                                 <i class="ti ti-menu-2"></i>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
+                        <li class="nav-item d-flex align-items-center">
+                            <a class="nav-link nav-icon-hover" href="/User/ViewProfile">
+                                <i class="ti ti-arrow-back" style="font-size: 30px;"></i>
+                            </a>                            
                         </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
@@ -307,20 +328,7 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">Tài khoản</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
-                                        </a>
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
-
                                     </div>
                                 </div>
                             </li>
@@ -334,7 +342,6 @@
             <div class="container-fluid">
                 <div class="container mt-4">
                     <h1 class="text-center">@ViewData["Title"]</h1>
-
                     <div class="container mt-5">
                         <div class="row justify-content-center">
                             <div class="col-md-6">
@@ -361,7 +368,7 @@
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" id="firstName" placeholder="Nhập tên">
                                                 </div>
-                                            </div>                                            
+                                            </div>
                                             <div class="row mb-3">
                                                 <label for="phone" class="col-sm-4 font-weight-bold">Số điện thoại:</label>
                                                 <div class="col-sm-8">
@@ -369,22 +376,34 @@
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
-                                                <label for="facebookUrl" class="col-sm-4 font-weight-bold">Link Facebook:</label>
+                                                <label for="facebookUrl" class="col-sm-4 font-weight-bold">Facebook:</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" id="facebookUrl" placeholder="Nhập đường dẫn facebook">
+                                                    <input type="text" class="form-control" id="facebookUrl" placeholder="Nhập đường dẫn Facebook">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
-                                                <label for="zaloUrl" class="col-sm-4 font-weight-bold">Link Zalo:</label>
+                                                <label for="zaloUrl" class="col-sm-4 font-weight-bold">Zalo:</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" id="zaloUrl" placeholder="Nhập đường dẫn zalo">
+                                                    <input type="text" class="form-control" id="zaloUrl" placeholder="Nhập đường dẫn Zalo">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label for="Status" class="col-sm-4 font-weight-bold">Trạng thái:</label>
+                                                <div class="col">
+                                                    <button id="activeButton" onclick="changeStatus(getUserIdFromToken(getCookie('AuthToken')), 1)"
+                                                            class="status-button">
+                                                        Đang hoạt động
+                                                    </button>
+                                                    <button id="deactiveButton" onclick="changeStatus(getUserIdFromToken(getCookie('AuthToken')), 2)"
+                                                            class="status-button">
+                                                        Dừng hoạt động
+                                                    </button>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
                                     <div class="card-footer text-center">
-                                        <button class="btn btn-secondary" onclick="window.location.href='/User/ViewProfile';">Quay lại</button>
-                                        <button class="btn btn-primary" onclick="UpdateProfile()">Cập nhật</button>
+                                        <button class="btn btn-primary" onclick="UpdateProfile()">Lưu thay đổi</button>
                                     </div>
                                 </div>
                             </div>
@@ -392,9 +411,7 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -410,7 +427,94 @@
             console.log('Page Loaded: Fetching buildings...');
             getListBuilding();
             getUser();
+            const token = getCookie('AuthToken');
+            const currentUserId = getUserIdFromToken(token);         
+
         });
+        document.addEventListener('DOMContentLoaded', initStatus);
+
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     console.log('Page Loaded: Fetching buildings...');
+        //     getListBuilding();
+        //     getUser();
+        //     initStatus();
+        // });
+
+        function changeStatus(userId, newStatusId) {
+            const data = { Id: userId, NewStatusId: newStatusId };
+
+            fetch('https://localhost:7056/api/User/UpdateStatus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    alert('Cập nhật trạng thái thành công!');
+                    updateButtonStyles(newStatusId); // Cập nhật giao diện nút
+                })
+                .catch(error => {
+                    alert('Cập nhật thành công');
+                });
+        }
+
+        function updateButtonStyles(statusId) {
+            const activeButton = document.getElementById('activeButton');
+            const deactiveButton = document.getElementById('deactiveButton');
+
+            if (statusId === 1) {
+                activeButton.style.backgroundColor = 'green';
+                activeButton.style.color = 'white';
+                deactiveButton.style.backgroundColor = 'gray';
+                deactiveButton.style.color = 'black';
+            } else if (statusId === 2) {
+                activeButton.style.backgroundColor = 'gray';
+                activeButton.style.color = 'black';
+                deactiveButton.style.backgroundColor = 'red';
+                deactiveButton.style.color = 'white';
+            }
+        }
+
+        // Hàm khởi tạo trạng thái khi trang được tải
+        function initStatus() {
+            const token = getCookie('AuthToken');
+            if (!token) {
+                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                window.location.href = "/Auth/login";
+                return;
+            }
+
+            const userId = getUserIdFromToken(token);
+            // Lấy trạng thái hiện tại từ server
+            fetch(`https://localhost:7056/api/User/GetUserById?id=${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Thêm token vào header
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(user => {
+                    // Nếu API trả về trạng thái trực tiếp
+                    const currentStatusId = parseInt(user.userStatusId); // Giả sử trả về trực tiếp `userStatusId`
+                    updateButtonStyles(currentStatusId); // Áp dụng màu sắc cho nút
+                })
+                .catch(error => {
+                    alert('Có lỗi xảy ra khi lấy trạng thái: ' + error.message);
+                });
+        }
+
+     
+        
 
         function UpdateProfile() {
             const token = getCookie('AuthToken');
@@ -628,7 +732,6 @@
                                                         </tr>
                                                     `);
         }
-
 
 
 

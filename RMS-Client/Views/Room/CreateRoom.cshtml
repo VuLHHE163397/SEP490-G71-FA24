@@ -158,6 +158,11 @@
             margin-top: 0;
             padding-top: 0; /* Loại bỏ padding nếu có */
         }
+
+        #welcome-message {
+            position: relative;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -289,15 +294,15 @@
                         <li class="nav-item">
                             <a class="nav-link nav-icon-hover" asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingId">
                                 <i class="ti ti-arrow-back" style="font-size: 30px;"></i>
-                            </a>
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
+                            </a>                            
                         </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
+
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -376,7 +381,7 @@
                                 <span asp-validation-for="BuildingId" class="text-danger"></span>
                             </div>
                         </div>
-
+                        <input type="hidden" id="UserId" name="UserId" />
                         <div class="form-group row">
                             <input type="submit" class="btn btn-primary w-100" id="buttonSave" value="Tạo phòng"></input>
                             <span class="error-message" id="submitError" style="color: red; display: none;">Thông tin nhập không hợp lệ, vui lòng kiểm tra lại !!!</span>
@@ -556,6 +561,10 @@
 
         $(document).ready(function () {
             loadBuilding();
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            $("#UserId").val(userId);
+            GetUserNameById();
         })
 
         //---------------------------------------------------------------
@@ -648,6 +657,25 @@
                 console.error("Không mã hóa đc token:", error);
                 return null;
             }
+        }
+
+        function GetUserNameById() {
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    if (response && response.fullName) {
+                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Error fetching user profile:', xhr.responseText);
+                }
+            });
         }
 
     </script>
