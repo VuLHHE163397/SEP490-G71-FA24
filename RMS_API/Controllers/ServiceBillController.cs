@@ -92,6 +92,7 @@ namespace RMS_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpGet("Detail")]
         public IActionResult GetDetail(int RoomId, DateTime date)
         {
@@ -112,7 +113,7 @@ namespace RMS_API.Controllers
                         ServiceId = e.Id,
                         Room = e.Room,
                         RoomId = e.RoomId,
-                        ServiceRecordId = e.Id
+                        ServiceRecordId = e.Id                        
                     })
                     .ToList();
                 serviceBills.Add(new ServicesBill

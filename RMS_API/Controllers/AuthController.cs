@@ -268,6 +268,12 @@ namespace RMS_API.Controllers
             var user = await _context.Users
         .Include(u => u.Role)
         .SingleOrDefaultAsync(u => u.Email == model.Email);
+
+            if (user.UserStatusId == 3)
+            {
+                return Unauthorized("Tài khoản đã bị cấm. Vui lòng dùng tài khoản khác!");
+            }
+
             var (firstName, middleName, lastName) = SplitName(model.Name);
             if (user == null)
             {
@@ -280,17 +286,12 @@ namespace RMS_API.Controllers
                     FirstName = firstName,
                     MidName = middleName,
                     LastName = lastName,
-                    RoleId = 2,
-                    Role = new Role { Name = "Landlord" }
+                    RoleId = 2
                 };
                 _context.Users.Add(User);
                 _context.SaveChanges();
                 user = User;
-
             }
-
-
-
 
             var token = GenerateJwtToken(user);
 
@@ -304,7 +305,7 @@ namespace RMS_API.Controllers
                 //SameSite = SameSiteMode.Lax,
                 SameSite = SameSiteMode.None,
                 //SameSite = SameSiteMode.Strict, // Ngăn CSRF                
-                Expires = DateTime.UtcNow.AddHours(3)
+                Expires = DateTime.UtcNow.AddHours(1)
             });      
 
             HttpContext.Session.SetString("UserId", user.Id.ToString());
@@ -329,7 +330,7 @@ namespace RMS_API.Controllers
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 claims,
-                expires: DateTime.Now.AddDays(7),
+                expires: DateTime.Now.AddHours(1),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

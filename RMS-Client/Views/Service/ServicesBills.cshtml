@@ -350,6 +350,7 @@
                 <!-- Modal Header -->
                 <div class="modal-header d-flex justify-content-center align-items-center position-relative">
                     <!-- Centered Title -->
+                    <div id="buildingName"></div>
                     <h5 class="modal-title mx-auto" id="detailModalLabel">Hóa đơn tiền nhà</h5>
                     <!-- Close Button (Aligned to Right) -->
                     <button type="button" class="btn-close position-absolute end-0 me-2" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -360,9 +361,9 @@
                 </div>
 
                 <!-- Modal Footer -->
-                @* <div class="modal-footer">
-                    <h5 id="totalPrice">TỔNG CỘNG: 0 VND</h5>
-                </div> *@
+                <div class="modal-footer">
+                    <h5 id="totalPrice"></h5>
+                </div>
             </div>
         </div>
     </div>
@@ -609,6 +610,12 @@
         }
         function renderBillDetail(data) {
             let html = '';
+
+            let total = 0;
+            // if (data.length > 0) {
+            //     $("#buildingName").text(`Tên trọ: ${data[0].room?.name || "Không xác định"}`);
+            // }
+
             for (var item of data) {                
                 let formattedPrice = item.price.toLocaleString('vi-VN');
                 html += `                   
@@ -617,9 +624,12 @@
                         <strong>${item.name}</strong>
                         <span>${formattedPrice} VND</span>
                     </div>`;
+                total += item.price;
             }
             $("#bill-detail").html(html);
+            $("#totalPrice").text(`TỔNG CỘNG: ${total.toLocaleString('vi-VN')} VND`);
         }
+
         function getUserIdFromToken(token) {
             try {
                 const tokenParts = token.split('.');
