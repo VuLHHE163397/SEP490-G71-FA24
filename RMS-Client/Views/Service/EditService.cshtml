@@ -294,6 +294,8 @@
                     $("#ServiceName").val(response.name);
                     $("#Price").val(response.price);
                     $("#BuildingId").val(response.buildingId);
+                    // Set the default selected value for the #type dropdown
+                    $("#type").val(response.type).change();
 
                 },
                 error: function (xhr, status, error) {
@@ -310,7 +312,7 @@
                 name: $("#ServiceName").val(),
                 price: $("#Price").val(),
                 buildingId: $("#BuildingId").val(),
-                type: $("type").val(),
+                type: $("#type").val(),
             }
             $.ajax({
                 url: "https://localhost:7056/api/Service",
@@ -426,7 +428,11 @@
                 return null;
             }
         }
-
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            var submenu = event.currentTarget.nextElementSibling;
+            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
+        }
 
 
     </script>

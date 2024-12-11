@@ -540,6 +540,11 @@
                 alert("Hủy xóa dịch vụ");  // Thông báo khi hủy xóa
             }
         }
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            var submenu = event.currentTarget.nextElementSibling;
+            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
+        }
 
     </script>
 

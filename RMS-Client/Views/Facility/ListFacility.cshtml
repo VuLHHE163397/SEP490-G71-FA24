@@ -279,9 +279,9 @@
                             </div>
                             <div>
                                 <a href="/Facility/AddFacility" class="btn btn-success">
-                                    + Thêm
+                                    + Thêm cơ sở vật chất
                                 </a>
-                                <button class="btn btn-primary">Xuất file excel</button>
+                                
                             </div>
                         </div>
 
@@ -702,6 +702,11 @@
                 html += '</tr>'
                 $("#facilities").html(html)
             }
+        }
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            var submenu = event.currentTarget.nextElementSibling;
+            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
         }
     </script>
 </body>

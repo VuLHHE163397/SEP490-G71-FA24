@@ -401,6 +401,11 @@
                 }
             })
         }
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            var submenu = event.currentTarget.nextElementSibling;
+            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
+        }
     </script>
 </body>
 

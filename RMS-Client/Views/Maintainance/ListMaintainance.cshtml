@@ -446,6 +446,11 @@
             fetchData(1, "status1-table");
             fetchData(0, "status0-table");
         }
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            var submenu = event.currentTarget.nextElementSibling;
+            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
+        }
     </script>
 </body>
 

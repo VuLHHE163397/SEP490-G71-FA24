@@ -283,8 +283,8 @@
                         <!-- Bộ lọc -->
                         <div class="row g-3 align-items-center mb-3">
                             <div class="col-md-3">
-                                <label for="monthYear" class="form-label">Tháng/năm</label>
-                                <input type="month" class="form-control" id="monthYear" value="2024-11" onchange="getBills()">
+                                <label for="monthYear" class="form-label">Ngày/Tháng/năm</label>
+                                <input type="date" class="form-control" id="monthYear" value="2024-11" onchange="getBills()">
                             </div>
 
                             <div class="col-md-3">
@@ -611,6 +611,11 @@
                 console.error("Không mã hóa đc token:", error);
                 return null;
             }
+        }
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            var submenu = event.currentTarget.nextElementSibling;
+            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
         }
     </script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
