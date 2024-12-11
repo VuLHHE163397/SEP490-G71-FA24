@@ -40,23 +40,23 @@
             }
 
         /*  .btn-warning {
-                                                    background-color: #ffc107;
-                                                    border-color: #ffc107;
-                                                    color: #fff;
-                                                }
+                                                            background-color: #ffc107;
+                                                            border-color: #ffc107;
+                                                            color: #fff;
+                                                        }
 
-                                                    .btn-warning:hover {
-                                                        background-color: #e0a800;
-                                                        border-color: #e0a800;
-                                                        transform: scale(1.05);
-                                                    }
+                                                            .btn-warning:hover {
+                                                                background-color: #e0a800;
+                                                                border-color: #e0a800;
+                                                                transform: scale(1.05);
+                                                            }
 
-                                                    .btn-warning:active {
-                                                        background-color: #c69500;
-                                                        border-color: #c69500;
-                                                        transform: scale(1);
-                                                    }
-                                         */
+                                                            .btn-warning:active {
+                                                                background-color: #c69500;
+                                                                border-color: #c69500;
+                                                                transform: scale(1);
+                                                            }
+                                                 */
         /* Icon styling inside buttons */
         .btn i {
             margin-right: 8px;
@@ -313,11 +313,7 @@
                         <li class="nav-item d-flex align-items-center">
                             <a class="nav-link nav-icon-hover" href="/Building/ListBuilding">
                                 <i class="ti ti-arrow-back" style="font-size: 30px;"></i>
-                            </a>
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
+                            </a>                            
                         </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
@@ -357,7 +353,7 @@
                                         <div class="row mb-3">
                                             <label class="col-sm-4 font-weight-bold">Họ và Tên:</label>
                                             <div class="col-sm-8" id="fullName">Loading...</div>
-                                        </div>                                        
+                                        </div>
                                         <div class="row mb-3">
                                             <label class="col-sm-4 font-weight-bold">Email:</label>
                                             <div class="col-sm-8" id="email">Loading...</div>
@@ -495,34 +491,34 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                        <li class="sidebar-subitem">
-                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                            </a>
-                                                        </li>
-                                                    `);
+                                                                <li class="sidebar-subitem">
+                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                    </a>
+                                                                </li>
+                                                            `);
                 });
 
                 // Update Table
                 buildings.forEach(building => {
                     tableContainer.append(`
-                                                        <tr>
-                                                            <td>${building.id}</td>
-                                                            <td>${building.name}</td>
-                                                            <td>${building.totalFloors}</td>
-                                                            <td>${building.numberOfRooms}</td>
-                                                            <td>${building.addressDetails}</td>
-                                                            <td>${building.buildingStatus}</td>
-                                                            <td>
-                                                                <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
-                                                                    <i class="fas fa-edit"></i>
-                                                                </a>
-                                                                <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
-                                                                    <i class="ti ti-eye"></i>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                    `);
+                                                                <tr>
+                                                                    <td>${building.id}</td>
+                                                                    <td>${building.name}</td>
+                                                                    <td>${building.totalFloors}</td>
+                                                                    <td>${building.numberOfRooms}</td>
+                                                                    <td>${building.addressDetails}</td>
+                                                                    <td>${building.buildingStatus}</td>
+                                                                    <td>
+                                                                        <a href="/Building/EditBuilding/${building.id}" title="Sửa" style="font-size: 1.5em; color: black; margin-right: 10px;">
+                                                                            <i class="fas fa-edit"></i>
+                                                                        </a>
+                                                                        <a href="/Building/BuildingDetail/${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
+                                                                            <i class="ti ti-eye"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -536,16 +532,16 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                            `);
+                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                    `);
 
             // Notify in Table
             tableContainer.empty();
             tableContainer.append(`
-                                                <tr>
-                                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
-                                                </tr>
-                                            `);
+                                                        <tr>
+                                                            <td colspan="7" class="text-center">Không có dữ liệu</td>
+                                                        </tr>
+                                                    `);
         }
 
 

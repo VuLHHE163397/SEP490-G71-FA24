@@ -19,7 +19,7 @@ namespace RMS_API.Controllers
         public UserController(RMS_SEP490Context context)
         {
             _context = context;
-            
+
         }
 
         [HttpGet("GetUserByEmail")]
@@ -31,7 +31,7 @@ namespace RMS_API.Controllers
                 return BadRequest("Email Không được để trống.");
             }
 
-            var user = await _context.Users               
+            var user = await _context.Users
                .Where(u => u.Email == email)
                .Select(b => new ProfileDTO
                {
@@ -87,7 +87,7 @@ namespace RMS_API.Controllers
         }
 
 
-        [HttpGet("GetUserNameById")]        
+        [HttpGet("GetUserNameById")]
         public async Task<IActionResult> GetUserNameById([FromQuery] int id)
         {
             if (id == 0) // Kiểm tra ID
@@ -98,7 +98,7 @@ namespace RMS_API.Controllers
             var user = await _context.Users
                 .Where(u => u.Id == id)
                 .Select(b => new UserNameDTO
-                {                    
+                {
                     FullName = $"{b.LastName} {b.MidName} {b.FirstName}".Trim(), // Gộp họ tên                    
                 })
                 .FirstOrDefaultAsync();
@@ -138,33 +138,33 @@ namespace RMS_API.Controllers
         //    return Ok("Cập nhật mật khẩu thành công.");
         //}
 
-        [HttpPut("UpdateProfileByEmail")]
-        [Authorize(Roles = "Landlord")]
-        public async Task<IActionResult> UpdateProfileByEmail([FromBody] ProfileDTO userDTO)
-        {
-            if (userDTO == null || string.IsNullOrEmpty(userDTO.Email))
-            {
-                return BadRequest("Không tìm thấy người dùng.");
-            }
+        //[HttpPut("UpdateProfileByEmail")]
+        //[Authorize(Roles = "Landlord")]
+        //public async Task<IActionResult> UpdateProfileByEmail([FromBody] ProfileDTO userDTO)
+        //{
+        //    if (userDTO == null || string.IsNullOrEmpty(userDTO.Email))
+        //    {
+        //        return BadRequest("Không tìm thấy người dùng.");
+        //    }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userDTO.Email);
+        //    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userDTO.Email);
 
-            if (user == null)
-            {
-                return NotFound("Không tìm thấy người dùng.");
-            }
+        //    if (user == null)
+        //    {
+        //        return NotFound("Không tìm thấy người dùng.");
+        //    }
 
-            user.FirstName = userDTO.FirstName;
-            user.LastName = userDTO.LastName;
-            user.MidName = userDTO.MidName;
-            user.Phone = userDTO.Phone;
-            user.FacebookUrl = userDTO.FacebookUrl;
-            user.ZaloUrl = userDTO.ZaloUrl;
+        //    user.FirstName = userDTO.FirstName;
+        //    user.LastName = userDTO.LastName;
+        //    user.MidName = userDTO.MidName;
+        //    user.Phone = userDTO.Phone;
+        //    user.FacebookUrl = userDTO.FacebookUrl;
+        //    user.ZaloUrl = userDTO.ZaloUrl;
 
-            await _context.SaveChangesAsync();
+        //    await _context.SaveChangesAsync();
 
-            return Ok("Cập nhật profile thành công.");
-        }
+        //    return Ok("Cập nhật profile thành công.");
+        //}
 
         [HttpPut("UpdateProfile")]
         [Authorize(Roles = "Landlord")]
@@ -257,7 +257,7 @@ namespace RMS_API.Controllers
 
 
         [HttpGet("GetAllLanlord")]
-        
+
         public async Task<IActionResult> GetAllLanlord()//Lanlord se co roleid =2
         {
             // Retrieve all users with RoleId = 2
@@ -286,7 +286,6 @@ namespace RMS_API.Controllers
 
             return Ok(users);
         }
-
 
         [HttpPost("UpdateStatus")]
         public async Task<IActionResult> UpdateStatus([FromBody] UpdateStatusRequest request)
@@ -354,10 +353,12 @@ namespace RMS_API.Controllers
 
             return Ok();
         }
+        
 
         public class UserNameDTO
         {
             public string FullName { get; set; }
         }
+
     }
 }

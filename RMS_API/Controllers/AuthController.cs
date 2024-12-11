@@ -173,7 +173,7 @@ namespace RMS_API.Controllers
             // Remove the verification code after successful registration
             _verificationCodes.Remove(registerModel.VerificationCode);
 
-            return Ok("Đăng ký thành công.");
+            return Ok("Xác thực thành công.");
         }
 
         [HttpPost("logout")]

@@ -74,6 +74,25 @@
             height: 40px;
             border-radius: 50%;
         }
+
+        .bill-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px; /* khoảng cách giữa các dòng */
+        }
+
+            .bill-item strong {
+                flex: 1; /* chiếm toàn bộ không gian bên trái */
+            }
+
+            .bill-item span {
+                text-align: right;
+            }
+
+        #welcome-message {
+            position: relative;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -217,15 +236,12 @@
                                 <i class="ti ti-menu-2"></i>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
-                        </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -283,8 +299,8 @@
                         <!-- Bộ lọc -->
                         <div class="row g-3 align-items-center mb-3">
                             <div class="col-md-3">
-                                <label for="monthYear" class="form-label">Tháng/năm</label>
-                                <input type="month" class="form-control" id="monthYear" value="2024-11" onchange="getBills()">
+                                <label for="monthYear" class="form-label">Ngày/Tháng/năm</label>
+                                <input type="date" class="form-control" id="monthYear" value="2024-11" onchange="getBills()">
                             </div>
 
                             <div class="col-md-3">
@@ -332,9 +348,11 @@
             <div class="modal-content">
 
                 <!-- Modal Header -->
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detailModalLabel">Chi phí dịch vụ</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header d-flex justify-content-center align-items-center position-relative">
+                    <!-- Centered Title -->
+                    <h5 class="modal-title mx-auto" id="detailModalLabel">Hóa đơn tiền nhà</h5>
+                    <!-- Close Button (Aligned to Right) -->
+                    <button type="button" class="btn-close position-absolute end-0 me-2" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <!-- Modal Body -->
@@ -342,11 +360,9 @@
                 </div>
 
                 <!-- Modal Footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-
+                @* <div class="modal-footer">
+                    <h5 id="totalPrice">TỔNG CỘNG: 0 VND</h5>
+                </div> *@
             </div>
         </div>
     </div>
@@ -364,12 +380,11 @@
         $(document).ready(function () {
             var buildingId = $("#BuildingId").val();
             var roomId = $("#RoomId").val();
-
-
-            const token = getCookie('AuthToken');
-            //Lấy user id
+            const token = getCookie('AuthToken');            
             const userId = getUserIdFromToken(token);
             getBills();
+            GetUserNameById();
+
         })
         function onSelectBuilding() {
             loadRoom();
@@ -574,10 +589,9 @@
         }
         function getBillDetail(roomId) {
             var date = $("#monthYear").val() + "-01";
-            //var formattedDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + (date.getDay() + 1)
-            console.log(`https://localhost:7056/api/ServiceBill/Detail?RoomId=${roomId}&date=${date}`)
+            //var formattedDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + (date.getDay() + 1)           
             $.ajax({
-                url: `https://localhost:7056/api/ServiceBill/Detail?RoomId=${roomId}&date=${date}`, // The URL of the API you want to request data from
+                url: `https://localhost:7056/api/ServiceBill/Detail?RoomId=${roomId}&date=${date}`, 
                 type: 'GET', // HTTP method (GET for retrieving data)
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -595,10 +609,14 @@
         }
         function renderBillDetail(data) {
             let html = '';
-            for (var item of data) {
-                // Sử dụng toLocaleString để định dạng số với dấu chấm
+            for (var item of data) {                
                 let formattedPrice = item.price.toLocaleString('vi-VN');
-                html += `<div><strong>${item.name}: </strong> <span>${formattedPrice} VND </span></div>`;
+                html += `                   
+
+                    <div class="bill-item">
+                        <strong>${item.name}</strong>
+                        <span>${formattedPrice} VND</span>
+                    </div>`;
             }
             $("#bill-detail").html(html);
         }
@@ -611,6 +629,25 @@
                 console.error("Không mã hóa đc token:", error);
                 return null;
             }
+        }
+
+        function GetUserNameById() {
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    if (response && response.fullName) {
+                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Error fetching user profile:', xhr.responseText);
+                }
+            });
         }
     </script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
