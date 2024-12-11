@@ -151,6 +151,11 @@
             border-radius: 50%;
         }
 
+        #welcome-message {
+            position: relative;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
@@ -279,14 +284,13 @@
                             <a class="nav-link nav-icon-hover" asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingId">
                                 <i class="ti ti-arrow-back" style="font-size: 30px;"></i>
                             </a>
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
                         </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -420,7 +424,7 @@
             validateArea();
         });
 
-        document.getElementById('StartedDate').addEventListener('input',validateDate);
+        document.getElementById('StartedDate').addEventListener('input', validateDate);
 
         document.getElementById('ExpiredDate').addEventListener('input', validateDate);
 
@@ -568,7 +572,7 @@
             const response = await fetch(`/api/Room/CheckRoomNameExists?roomName=${roomName}&buildingId=${buildingId}`);
             const roomExists = await response.json();
 
-            
+
             if (roomExists) {
                 roomNumberError.style.display = 'inline';
                 roomNumberError.textContent = 'Tên Phòng đã tồn tại trong tòa nhà này';
@@ -599,6 +603,8 @@
 
         $(document).ready(function () {
             loadBuilding();
+            GetUserNameById();
+
         })
 
         //---------------------------------------------------------------
@@ -660,12 +666,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                                <li class="sidebar-subitem">
-                                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                                    </a>
-                                                                                                </li>
-                                                                                            `);
+                                                                                                        <li class="sidebar-subitem">
+                                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                                            </a>
+                                                                                                        </li>
+                                                                                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -678,8 +684,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                                    `);
+                                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                                            `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -691,6 +697,25 @@
                 console.error("Không mã hóa đc token:", error);
                 return null;
             }
+        }
+
+        function GetUserNameById() {
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    if (response && response.fullName) {
+                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Error fetching user profile:', xhr.responseText);
+                }
+            });
         }
 
     </script>
