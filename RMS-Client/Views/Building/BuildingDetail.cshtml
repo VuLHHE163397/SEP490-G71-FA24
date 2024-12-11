@@ -1,4 +1,4 @@
-﻿@model RMS_API.DTOs.BuildingDTO
+@model RMS_API.DTOs.BuildingDTO
 
 @{
     ViewData["Title"] = "Thông tin chi tiết của tòa nhà "; // Page title
@@ -151,6 +151,11 @@
             padding-top: 80px; /* Adjust to ensure content is not covered */
         }
 
+        #welcome-message {
+            position: relative;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
@@ -275,16 +280,13 @@
                             <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
                                 <i class="ti ti-menu-2"></i>
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
-                        </li>
+                        </li>                        
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -350,6 +352,7 @@
                 $(document).ready(function () {
                     console.log('Page Loaded: Fetching buildings...');
                     getListBuilding();
+                    GetUserNameById();
                 });
 
                 function getUserIdFromToken(token) {
@@ -457,7 +460,6 @@
                             </tr>
                         `);
                 }
-
                 function GetUserNameById() {
                     const token = getCookie('AuthToken');
                     const userId = getUserIdFromToken(token);

@@ -8,7 +8,12 @@
     <link rel="shortcut icon" type="image/jpg" href="~/images/logo.jpg" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
+    <style>
+        #welcome-message {
+            position: relative;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
@@ -141,7 +146,7 @@
         </aside>
         <div class="body-wrapper">
             <!-- Sidebar Start -->
-            <header class="app-header">
+            <header class="app-header" style="background-color:  whitesmoke">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
@@ -149,15 +154,12 @@
                                 <i class="ti ti-menu-2"></i>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
-                        </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -165,19 +167,11 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                     <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                                        <a href="/User/ViewProfile" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
+                                            <p class="mb-0 fs-3">Tài Khoản</p>
                                         </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
-                                        </a>
-                                        <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                                        <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
                                     </div>
                                 </div>
                             </li>
@@ -264,6 +258,8 @@
         const apiBaseUrl = "https://localhost:7056/api"; // Đặt URL gốc của API
         $(document).ready(function () {
             loadBuilding();
+            GetUserNameById();
+
         })
 
         function getUserIdFromToken(token) {
@@ -322,12 +318,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                        <li class="sidebar-subitem">
-                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                            </a>
-                        </li>
-                    `);
+                                <li class="sidebar-subitem">
+                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                    </a>
+                                </li>
+                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -340,8 +336,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                    `);
+                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                            `);
         }
         async function fetchData(status, tableId) {
             const tableBody = document.getElementById(tableId);
@@ -388,23 +384,23 @@
                         const buttonHtml =
                             item.status === "Chưa xử lý"
                                 ? `<button onclick="changeStatus(${item.id})" class="btn btn-success">
-                                   <i class="fa fa-check"></i>
-                               </button>`
+                                           <i class="fa fa-check"></i>
+                                       </button>`
                                 : `<button onclick="changeStatus(${item.id})" class="btn btn-danger">
-                                   <i class="fa fa-undo"></i>
-                               </button>`;
+                                           <i class="fa fa-undo"></i>
+                                       </button>`;
 
                         const row = `<tr>
-                                 <td>${index}</td> <!-- Số thứ tự -->
-                                 <td>${item.maintenanceDescription}</td>
-                                 <td>${new Date(item.requestDate).toLocaleDateString()}</td>
-                                 <td>${item.solveDate ? new Date(item.solveDate).toLocaleDateString() : ""}</td>
-                                 <td>${item.roomNumber}</td>
-                                 <td>${item.buildingName}</td>
-                                 <td>${item.address}</td>
-                                 <td>${item.status}</td>
-                                 <td>${buttonHtml}</td>
-                                 </tr>`;
+                                         <td>${index}</td> <!-- Số thứ tự -->
+                                         <td>${item.maintenanceDescription}</td>
+                                         <td>${new Date(item.requestDate).toLocaleDateString()}</td>
+                                         <td>${item.solveDate ? new Date(item.solveDate).toLocaleDateString() : ""}</td>
+                                         <td>${item.roomNumber}</td>
+                                         <td>${item.buildingName}</td>
+                                         <td>${item.address}</td>
+                                         <td>${item.status}</td>
+                                         <td>${buttonHtml}</td>
+                                         </tr>`;
 
                         tableBody.innerHTML += row;
                     });
@@ -450,6 +446,24 @@
             event.preventDefault();
             var submenu = event.currentTarget.nextElementSibling;
             submenu.style.display = submenu.style.display === "none" ? "block" : "none";
+
+        function GetUserNameById() {
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    if (response && response.fullName) {
+                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Error fetching user profile:', xhr.responseText);
+                }
+            });
         }
     </script>
 </body>

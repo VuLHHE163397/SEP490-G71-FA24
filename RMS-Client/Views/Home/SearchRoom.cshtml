@@ -72,7 +72,7 @@
             padding: 0.3rem 0.5rem;
         }
 
-
+       
         .btn {
             min-width: 40px; /* Chiều rộng tối thiểu cho nút */
             height: 40px; /* Chiều cao cố định cho nút */
@@ -220,7 +220,7 @@
             }
 
         .room-status {
-            font-size: 1.1rem; /* Giảm kích thước chữ */
+            font-size: 1rem; /* Giảm kích thước chữ */
             background-color: rgba(0, 128, 0, 0.8); /* Màu nền xanh lá nổi bật với độ mờ */
             color: #fff; /* Màu chữ trắng */
             font-weight: bold; /* Chữ đậm */
@@ -248,7 +248,7 @@
 
             .room-details h5 {
                 font-size: 1rem; /* Đảm bảo kích thước đồng nhất cho tiêu đề */
-                color: #white; /* Màu sắc đồng nhất cho tiêu đề */
+                color: black; /* Màu sắc đồng nhất cho tiêu đề */
                 margin: 0; /* Để xóa khoảng cách mặc định */
             }
 
@@ -329,31 +329,31 @@
                         <form id="selectAddressForm" style="display: flex; gap: 10px; align-items: center; margin: 0;">
                             <!-- Row for select elements -->
                             <div class="d-flex gap-2 align-items-center select-row" style="display: flex; gap: 10px;">
-                                <select id="province" name="provinceId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 100px;">
+                                <select id="province" name="provinceId" required style="padding: 5px 10px; border: 2px solid #ccc; border-radius: 4px; min-width: 100px;">
                                     <option value="">Tỉnh/Thành phố</option>
                                 </select>
 
-                                <select id="district" name="districtId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 180px;">
+                                <select id="district" name="districtId" required style="padding: 5px 10px; border: 2px solid #ccc; border-radius: 4px; min-width: 180px;">
                                     <option value="">Quận/Huyện/Thị xã</option>
                                 </select>
 
-                                <select id="ward" name="wardId" required style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 220px;">
+                                <select id="ward" name="wardId" required style="padding: 5px 10px; border: 2px solid #ccc; border-radius: 4px; min-width: 220px;">
                                     <option value="">Xã/Phường/Thị trấn</option>
                                 </select>
                             </div>
                         </form>
                         <button class="d-flex gap-2 align-items-center select-row" id="selected-distance-range"
-                                style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; white-space: nowrap; cursor: pointer;"
+                                style="padding: 5px 10px; border: 2px solid #ccc; border-radius: 4px; white-space: nowrap; cursor: pointer;"
                                 onclick="toggleDistanceModal(true)">
                             Khoảng cách
                         </button>
                         <button class="d-flex gap-2 align-items-center select-row" id="selected-price-range"
-                                style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; white-space: nowrap; cursor: pointer;"
+                                style="padding: 5px 10px; border: 2px solid #ccc; border-radius: 4px; white-space: nowrap; cursor: pointer;"
                                 onclick="toggleModal(true)">
                             Giá tiền
                         </button>
                         <button class="d-flex gap-2 align-items-center select-row" id="selected-area-range"
-                                style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; white-space: nowrap; cursor: pointer;"
+                                style="padding: 5px 10px; border: 2px solid #ccc; border-radius: 4px; white-space: nowrap; cursor: pointer;"
                                 onclick="toggleAreaModal(true)">
                             Diện tích
                         </button>
@@ -827,7 +827,7 @@
                         const priceInMillions = (room.price / 1_000_000).toFixed(1);
 
                         roomElement.innerHTML = `
-                <div class="room-item shadow rounded overflow-hidden"
+                    <div class="room-item shadow rounded overflow-hidden"
                      style="cursor: pointer;"
                                      onclick="window.open('/Home/RoomDetail?id=${room.id}', '_blank')">
                     <div class="position-relative">
@@ -844,9 +844,9 @@
                     </div>
                     <div class="room-details p-3">
                         <h5 class="mb-2">
-                                            <i class="fa fa-home text-primary me-2"></i>Phòng ${room.roomNumber} - ${room.building}
+                        <i class="fa fa-home text-primary me-2"></i>Phòng ${room.roomNumber}-${room.building}
                         </h5>
-                        <div class="room-status">${room.roomStatusName}</div>
+                        <div class="room-status">${room.roomStatusName}${room.freeInFutureDate}</div>
 
                         <div class="mt-2" style="font-weight:bold;">
                             <small class="text-muted d-block"><i class="fa fa-map-marker-alt text-primary me-2"></i>${room.address}</small>

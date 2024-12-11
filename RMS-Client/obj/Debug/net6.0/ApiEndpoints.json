@@ -541,6 +541,16 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.MaintainanceRequestController",
+    "Method": "CountUnresolvedReports",
+    "RelativePath": "api/MaintainanceRequest/CountUnresolvedReports",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.MaintainanceRequestController",
     "Method": "GetListMaintainance",
     "RelativePath": "api/MaintainanceRequest/getMaintainedByUserId/{status}",
     "HttpMethod": "GET",
@@ -610,22 +620,6 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "DeleteAllRoomByBuildingId",
-    "RelativePath": "api/Room/DeleteAllRoom/{buildingId}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "buildingId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.RoomController",
     "Method": "DeleteImageById",
     "RelativePath": "api/Room/DeleteImageById/{id}",
     "HttpMethod": "DELETE",
@@ -634,22 +628,6 @@
     "Parameters": [
       {
         "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.RoomController",
-    "Method": "DeteleRoomById",
-    "RelativePath": "api/Room/DeleteRoomById/{roomId}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "roomId",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -1287,32 +1265,6 @@
     "ContainingType": "RMS_API.Controllers.UserController",
     "Method": "ChangePassword",
     "RelativePath": "api/User/ChangePassword",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "currentPassword",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "newPassword",
-        "Type": "System.String",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "RMS_API.Controllers.UserController",
-    "Method": "ChangePassword",
-    "RelativePath": "api/User/ChangePassword",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -1385,24 +1337,24 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.UserController",
-    "Method": "UpdateProfile",
-    "RelativePath": "api/User/UpdateProfile",
-    "HttpMethod": "PUT",
+    "Method": "GetUserNameById",
+    "RelativePath": "api/User/GetUserNameById",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "userDTO",
-        "Type": "RMS_API.DTOs.ProfileDTO",
-        "IsRequired": true
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
   },
   {
     "ContainingType": "RMS_API.Controllers.UserController",
-    "Method": "UpdateProfileByEmail",
-    "RelativePath": "api/User/UpdateProfileByEmail",
+    "Method": "UpdateProfile",
+    "RelativePath": "api/User/UpdateProfile",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,

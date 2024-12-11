@@ -61,7 +61,7 @@
                                 <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
                                     <img src="~/images/logo.jpg" width="180" alt="">
                                 </a>
-                                <p class="text-center">RMS_Quản lý trọ theo cách của bạn</p>
+                               
                                 <form id="verificationForm">
                                     <div class="mb-3">
                                         <label for="verificationCode" class="form-label">Chúng tôi đã gửi mã qua mail bạn cung cấp. Xin nhập mã xác thực</label>
@@ -133,13 +133,13 @@
                 contentType: "application/json",
                 data: JSON.stringify(user),
                 success: function (response) {
-                    showPopup("Đăng ký thành công!", "popupMessage");
+                    showPopup("Xác thực thành công!", "popupMessage");
                     setTimeout(function () {
                         window.location.href = "/Auth/Login";
                     }, 2000);
                 },
                 error: function (xhr) {
-                    showErrorPopup("Đăng ký thất bại: " + xhr.responseText, "popupErrorMessage");
+                    showErrorPopup("Xác thực thất bại: " + xhr.responseText, "popupErrorMessage");
                 }
             });
         }
