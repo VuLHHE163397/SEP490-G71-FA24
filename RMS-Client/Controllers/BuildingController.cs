@@ -6,7 +6,6 @@ using RMS_API.DTOs;
 using RMS_API.Models;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using static Dropbox.Api.Files.SearchMatchType;
 
 namespace RMS_Client.Controllers
 {

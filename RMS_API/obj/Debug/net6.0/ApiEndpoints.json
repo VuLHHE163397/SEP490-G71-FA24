@@ -573,6 +573,16 @@
   },
   {
     "ContainingType": "RMS_API.Controllers.MaintainanceRequestController",
+    "Method": "CountUnresolvedReports",
+    "RelativePath": "api/MaintainanceRequest/CountUnresolvedReports",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RMS_API.Controllers.MaintainanceRequestController",
     "Method": "GetListMaintainance",
     "RelativePath": "api/MaintainanceRequest/getMaintainedByUserId/{status}",
     "HttpMethod": "GET",

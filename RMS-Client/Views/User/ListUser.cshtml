@@ -40,7 +40,6 @@
             font-family: Arial, sans-serif;
             background-color: #f4f6f9;
             color: #333;
-           
         }
 
         h2 {
@@ -122,11 +121,7 @@
                 opacity: 0.8;
             }
 
-        #welcome-message {
-            position: relative;
-            font-weight: bold;
         /* Container and page layout */
-        }
         .page-wrapper {
             display: flex;
             flex-direction: column;
@@ -165,17 +160,6 @@
             window.location.href = "/Auth/Login";
         }
 
-        function getUserIdFromToken(token) {
-            try {
-                const tokenParts = token.split('.');
-                const payload = JSON.parse(atob(tokenParts[1]));
-                return payload.UserId;
-            } catch (error) {
-                console.error("Không mã hóa đc token:", error);
-                return null;
-
-            }
-        }
     </script>
 
     <!--  Body Wrapper -->
@@ -222,12 +206,18 @@
                             <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
                                 <i class="ti ti-menu-2"></i>
                             </a>
-                        </li>                        
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
+                                <i class="ti ti-bell-ringing"></i>
+                                <div class="notification bg-primary rounded-circle"></div>
+                            </a>
+                        </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-                        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">                            
+                        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
                             <li class="nav-item me-3">
-                                <span id="welcome-message" class="fw-bold text-primary">Kính chào Admin </span>
+                                <span id="welcome-message" class="fw-bold text-primary">Xin chào Admin </span>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
@@ -235,7 +225,7 @@
                                     <img src="~/images/profile/user-1.jpg" alt="" width="50" height="50" class="rounded-circle">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
-                                    <div class="message-body">                                        
+                                    <div class="message-body">
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
                                     </div>
                                 </div>
@@ -316,11 +306,6 @@
                     <script src="~/lib/simplebar/dist/simplebar.js"></script>
                     <script src="~/js/dashboard.js"></script>
                     <script>
-
-                        $(document).ready(function () {                           
-                            GetUserNameById();                          
-                        });
-
                         // JavaScript function để lọc bảng theo từ khóa tìm kiếm
                         function filterTable() {
                             const input = document.getElementById("searchInput");
@@ -380,7 +365,7 @@
                                 .catch(error => {
                                     // Xử lý lỗi
                                     console.error('Lỗi khi gọi API:', error);
-                                    alert(Có lỗi xảy ra: ${error.message});
+                                    alert(`Có lỗi xảy ra: ${error.message}`);
                                 });
                         }
 
@@ -408,11 +393,7 @@
                         }
 
                     </script>
-
                 </div>
-
             </div>
-
 </body>
-
-</html>
+</html> 

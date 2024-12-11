@@ -57,13 +57,9 @@
               "target": "Package",
               "version": "[1.26.2, )"
             },
-            "Dropbox.Api": {
-              "target": "Package",
-              "version": "[7.0.0, )"
-            },
             "EPPlus": {
               "target": "Package",
-              "version": "[7.4.2, )"
+              "version": "[6.2.19, )"
             },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
