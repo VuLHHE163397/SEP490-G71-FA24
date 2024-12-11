@@ -551,27 +551,28 @@
             $("#bills").html(html);
         }
         function calculate(roomId) {
-            console.log('calculate execute')
+            console.log('calculate execute');
             const token = getCookie('AuthToken');
             const userId = getUserIdFromToken(token);
             $.ajax({
-                url: `https://localhost:7056/api/ServiceBill?RoomId=${roomId}`, // The URL of the API you want to request data from
-                type: 'POST', // HTTP method (GET for retrieving data)
+                url: `https://localhost:7056/api/ServiceBill?RoomId=${roomId}`,
+                type: 'POST',
                 headers: {
                     "Authorization": `Bearer ${token}`
                 },
-                dataType: 'json', // Data type expected from the server (JSON in this case)
+                dataType: 'json',
                 success: function (response) {
-                    alert('Tính phí dịch vụ thành công')
+                    console.log('Response:', response);
+                    alert('Tính phí dịch vụ thành công');
                 },
                 error: function (xhr, status, error) {
-                    // This function will be called if there's an error with the request
-                    alert('Lỗi:', xhr.responseText);
-                    console.log(xhr);
+                    console.error('Error:', xhr.responseText, status, error);
+                    alert(`Lỗi: ${xhr.status} - ${xhr.responseText}`);
                 }
             });
             getBills();
         }
+
         function getBillDetail(roomId) {
             var date = $("#monthYear").val() + "-01";
             //var formattedDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + (date.getDay() + 1)

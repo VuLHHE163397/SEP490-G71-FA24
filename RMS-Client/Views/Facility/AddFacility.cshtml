@@ -485,6 +485,25 @@
             var submenu = event.currentTarget.nextElementSibling;
             submenu.style.display = submenu.style.display === "none" ? "block" : "none";
         }
+
+        function GetUserNameById() {
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    if (response && response.fullName) {
+                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Error fetching user profile:', xhr.responseText);
+                }
+            });
+        }
     </script>
 </body>
 
