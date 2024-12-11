@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\fulearning\\fall2024\\datn\\project\\sep490-g71-fa24\\bugngunhu\\sep490\\sep490-g71-fa24\\rms_api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\fulearning\\fall2024\\datn\\project\\sep490-g71-fa24\\bugngunhu\\sep490\\sep490-g71-fa24\\rms-client\\views\\service\\servicesbills.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\service\\servicesbills.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -50,7 +54,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 13,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Bookmark",
@@ -94,7 +98,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "RMS_API\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "RMS_API\\Controllers\\AuthController.cs",
+              "ViewState": "AQIAAOUAAAAAAAAAAAAQwPwAAABRAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-11T08:30:28.24Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "ServiceDTO.cs",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\DTOs\\ServiceDTO.cs",
               "RelativeDocumentMoniker": "RMS_API\\DTOs\\ServiceDTO.cs",
@@ -102,12 +119,11 @@
               "RelativeToolTip": "RMS_API\\DTOs\\ServiceDTO.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAqAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-11T07:31:11.935Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-11T07:31:11.935Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "ServiceController.cs",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\Controllers\\ServiceController.cs",
               "RelativeDocumentMoniker": "RMS_API\\Controllers\\ServiceController.cs",
@@ -115,12 +131,11 @@
               "RelativeToolTip": "RMS_API\\Controllers\\ServiceController.cs",
               "ViewState": "AQIAAIAAAAAAAAAAAAAswAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-11T07:30:40.999Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-11T07:30:40.999Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "ServicesBillDTO.cs",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\DTOs\\ServicesBillDTO.cs",
               "RelativeDocumentMoniker": "RMS_API\\DTOs\\ServicesBillDTO.cs",
@@ -128,25 +143,24 @@
               "RelativeToolTip": "RMS_API\\DTOs\\ServicesBillDTO.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAoAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-11T07:09:50.089Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-11T07:09:50.089Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "ServicesBills.cshtml",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\ServicesBills.cshtml",
               "RelativeDocumentMoniker": "RMS-Client\\Views\\Service\\ServicesBills.cshtml",
               "ToolTip": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\ServicesBills.cshtml",
               "RelativeToolTip": "RMS-Client\\Views\\Service\\ServicesBills.cshtml",
-              "ViewState": "AQIAAFECAAAAAAAAAAAAAGwCAAAsAAAA",
+              "ViewState": "AQIAAFoCAAAAAAAAAAAAAGwCAAAsAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-12-11T06:32:48.889Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "ServiceBillController.cs",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\Controllers\\ServiceBillController.cs",
               "RelativeDocumentMoniker": "RMS_API\\Controllers\\ServiceBillController.cs",
@@ -154,12 +168,11 @@
               "RelativeToolTip": "RMS_API\\Controllers\\ServiceBillController.cs",
               "ViewState": "AQIAAA4AAAAAAAAAAAAAwGoAAAAxAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-09T07:22:01.472Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-09T07:22:01.472Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "AddBuilding.cshtml",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\Views\\Building\\AddBuilding.cshtml",
               "RelativeDocumentMoniker": "RMS-Client\\Views\\Building\\AddBuilding.cshtml",
@@ -167,12 +180,11 @@
               "RelativeToolTip": "RMS-Client\\Views\\Building\\AddBuilding.cshtml",
               "ViewState": "AQIAAEoBAAAAAAAAAAAAAF4BAACRAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-10T07:09:05.043Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-10T07:09:05.043Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "RoomMaintainance.cshtml",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\Views\\Room\\RoomMaintainance.cshtml",
               "RelativeDocumentMoniker": "RMS-Client\\Views\\Room\\RoomMaintainance.cshtml",
@@ -180,12 +192,11 @@
               "RelativeToolTip": "RMS-Client\\Views\\Room\\RoomMaintainance.cshtml",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-10T05:18:03.173Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-10T05:18:03.173Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "ServiceRecord.cshtml",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\ServiceRecord.cshtml",
               "RelativeDocumentMoniker": "RMS-Client\\Views\\Service\\ServiceRecord.cshtml",
@@ -197,7 +208,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "UserController.cs",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\Controllers\\UserController.cs",
               "RelativeDocumentMoniker": "RMS_API\\Controllers\\UserController.cs",
@@ -205,12 +216,11 @@
               "RelativeToolTip": "RMS_API\\Controllers\\UserController.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-11T05:48:02.002Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-11T05:48:02.002Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "ServicesBill.cs",
               "DocumentMoniker": "D:\\FULearning\\FALL2024\\DATN\\Project\\SEP490-G71-FA24\\BugNguNhu\\SEP490\\SEP490-G71-FA24\\RMS_API\\Models\\ServicesBill.cs",
               "RelativeDocumentMoniker": "RMS_API\\Models\\ServicesBill.cs",
@@ -218,8 +228,7 @@
               "RelativeToolTip": "RMS_API\\Models\\ServicesBill.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAqAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-11T04:00:49.847Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-11T04:00:49.847Z"
             }
           ]
         },

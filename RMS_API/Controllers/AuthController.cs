@@ -251,33 +251,36 @@ namespace RMS_API.Controllers
                 var firstName = parts[0]; // Từ đầu tiên
                 var lastName = parts[^1]; // Từ cuối cùng
                 var middleName = string.Join(" ", parts[1..^1]); // Các từ ở giữa
-
                 return (firstName, middleName, lastName);
             }
         }
-
 
         [HttpPost("LoginByGoogle")]
         public async Task<IActionResult> LoginByGoogles([FromBody] LoginByGoogle model)
         {
 
-
             if (model.Email == null || model.Name == null)
                 return Unauthorized("Xin mời nhập tài khoản và mật khẩu");
 
             var user = await _context.Users
-        .Include(u => u.Role)
-        .SingleOrDefaultAsync(u => u.Email == model.Email);
-
-            if (user.UserStatusId == 3)
-            {
-                return Unauthorized("Tài khoản đã bị cấm. Vui lòng dùng tài khoản khác!");
-            }
+                .Include(u => u.Role)
+                .SingleOrDefaultAsync(u => u.Email == model.Email);
 
             var (firstName, middleName, lastName) = SplitName(model.Name);
+
             if (user == null)
             {
-                var User = new User
+                // Tìm kiếm role đã tồn tại với RoleId = 2
+                var landlordRole = await _context.Roles.SingleOrDefaultAsync(r => r.Id == 2);
+
+                // Nếu không tìm thấy role với RoleId = 2, bạn có thể xử lý hoặc thông báo lỗi
+                if (landlordRole == null)
+                {
+                    return Unauthorized("Role Landlord không tồn tại.");
+                }
+
+                // Tạo người dùng mới với role đã có
+                var newUser = new User
                 {
                     Phone = "0123456789",
                     Password = BCrypt.Net.BCrypt.HashPassword("123456"),
@@ -286,11 +289,14 @@ namespace RMS_API.Controllers
                     FirstName = firstName,
                     MidName = middleName,
                     LastName = lastName,
-                    RoleId = 2
+                    RoleId = landlordRole.Id, // Sử dụng RoleId = 2 đã tồn tại
+                    Role = landlordRole // Gán role vào người dùng
                 };
-                _context.Users.Add(User);
-                _context.SaveChanges();
-                user = User;
+
+                _context.Users.Add(newUser);
+                await _context.SaveChangesAsync(); // Đảm bảo gọi SaveChangesAsync() để lưu dữ liệu
+
+                user = newUser;
             }
 
             var token = GenerateJwtToken(user);
@@ -306,15 +312,14 @@ namespace RMS_API.Controllers
                 SameSite = SameSiteMode.None,
                 //SameSite = SameSiteMode.Strict, // Ngăn CSRF                
                 Expires = DateTime.UtcNow.AddHours(1)
-            });      
+            });
+
+            Console.WriteLine("Đã gán AuthToken với HttpOnly = false");
 
             HttpContext.Session.SetString("UserId", user.Id.ToString());
 
             return Ok(new { token });
         }
-
-
-
 
         //Gen token for jwt
         private string GenerateJwtToken(User userInfo)
