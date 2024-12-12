@@ -38,7 +38,7 @@
                 transform: scale(1);
             }
 
-       
+
         .btn i {
             margin-right: 8px;
         }
@@ -110,6 +110,12 @@
             .sidebar-sublink:hover {
                 color: #0d6efd;
             }
+
+        #welcome-message {
+            position: relative;
+            font-weight: bold;
+        }
+
 
         /* Responsive Table for smaller screens */
 
@@ -252,15 +258,12 @@
                                 <i class="ti ti-menu-2"></i>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
-                        </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -272,7 +275,7 @@
                                             <i class="ti ti-user fs-6"></i>
                                             <p class="mb-0 fs-3">Tài Khoản</p>
                                         </a>
-                                     
+
                                         <a href="/Auth/Login" class="btn btn-outline-primary mx-3 mt-2 d-block " onclick="logout()">Đăng xuất</a>
 
                                     </div>
@@ -315,13 +318,13 @@
                     </div>
                 </div>
             </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/sidebarmenu.js"></script>
-    <script src="~/js/app.min.js"></script>
-    <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
-    <script src="~/lib/simplebar/dist/simplebar.js"></script>
-    <script src="~/js/dashboard.js"></script>
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="~/js/sidebarmenu.js"></script>
+            <script src="~/js/app.min.js"></script>
+            <script src="~/lib/apexcharts/dist/apexcharts.min.js"></script>
+            <script src="~/lib/simplebar/dist/simplebar.js"></script>
+            <script src="~/js/dashboard.js"></script>
 
             <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -333,163 +336,165 @@
 
             <!-- Thêm Bootstrap JS -->
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            console.log('Page Loaded: Fetching buildings...');
-            getListBuilding();
-            
-        });
+            <script>
+                $(document).ready(function () {
+                    console.log('Page Loaded: Fetching buildings...');
+                    getListBuilding();
+                    GetUserNameById();
+                });
 
-        function getUserIdFromToken(token) {
-            try {
-                const tokenParts = token.split('.');
-                const payload = JSON.parse(atob(tokenParts[1]));
-                return payload.UserId;
-            } catch (error) {
-                console.error("Không mã hóa đc token:", error);
-                return null;
+                function getUserIdFromToken(token) {
+                    try {
+                        const tokenParts = token.split('.');
+                        const payload = JSON.parse(atob(tokenParts[1]));
+                        return payload.UserId;
+                    } catch (error) {
+                        console.error("Không mã hóa đc token:", error);
+                        return null;
 
-            }
-        }
-
-        function getListBuilding() {
-            const token = getCookie('AuthToken');            
-            if (!token) {
-                alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
-                window.location.href = "/Auth/login";
-                return;
-            }            
-            var userId = getUserIdFromToken(token);           
-
-            const url = `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`;
-
-            $.ajax({
-                url: url,
-                type: 'GET',
-                credentials: 'include',
-                contentType: 'application/json',
-                // beforeSend: function (xhr) {
-                //     xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-                // },
-                xhrFields: {
-                    withCredentials: true // Cho phép gửi cookie
-                },
-
-                success: function (response) {
-                    console.log('Buildings fetched successfully:', response);
-                    displayBuildings(response);
-                },
-
-                error: function (xhr) {
-                    console.error('Error fetching buildings:', xhr.responseText);
-                    displayNoBuildingsMessage();
+                    }
                 }
-            });
-        }
 
-        function displayBuildings(buildings) {
-            const sidebarContainer = $('.sidebar-submenu');
-            const tableContainer = $('#buildingsContainer');
+                function getListBuilding() {
+                    const token = getCookie('AuthToken');
+                    if (!token) {
+                        alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+                        window.location.href = "/Auth/login";
+                        return;
+                    }
+                    var userId = getUserIdFromToken(token);
 
-            // Clear previous content
-            sidebarContainer.empty();
-            tableContainer.empty();
+                    const url = `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`;
 
-            if (buildings && buildings.length > 0) {
-                // Update Sidebar
-                buildings.forEach(building => {
-                    sidebarContainer.append(`
-                        <li class="sidebar-subitem">
-                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                            </a>
-                        </li>
-                    `);
-                });
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        credentials: 'include',
+                        contentType: 'application/json',
+                        // beforeSend: function (xhr) {
+                        //     xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                        // },
+                        xhrFields: {
+                            withCredentials: true // Cho phép gửi cookie
+                        },
 
-                // Update Table
-                buildings.forEach((building, index) => {
-                    tableContainer.append(`
-                        <tr>
-                            <td>${index + 1}</td> <!-- Số thứ tự -->
-                            <td>${building.name}</td>
-                            <td>${building.totalFloors}</td>
-                            <td>${building.numberOfRooms}</td>
-                            <td>${building.addressDetails}</td>
-                            <td>${building.buildingStatus}</td>
-                            <td>
-                                <a href="/Building/EditBuilding?id=${building.id}" title="Sửa" style="font-size: 1.5em; color: black;">
-                                    <i class="fas fa-edit "></i>
-                                </a>
-                                <a href="/Building/BuildingDetail?id=${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
-                                    <i class="ti ti-eye "></i>
-                                </a>
-                            </td>
-                        </tr>
-                    `);
-                });
-            } else {
-                displayNoBuildingsMessage();
-            }
-        }
+                        success: function (response) {
+                            console.log('Buildings fetched successfully:', response);
+                            displayBuildings(response);
+                        },
 
-        function displayNoBuildingsMessage() {
-            const sidebarContainer = $('.sidebar-submenu');
-            const tableContainer = $('#buildingsContainer');
+                        error: function (xhr) {
+                            console.error('Error fetching buildings:', xhr.responseText);
+                            displayNoBuildingsMessage();
+                        }
+                    });
+                }
 
-            // Notify in Sidebar
-            sidebarContainer.empty();
-            sidebarContainer.append(` <li class="sidebar-subitem">Không có tòa nhà nào</li> `);
+                function displayBuildings(buildings) {
+                    const sidebarContainer = $('.sidebar-submenu');
+                    const tableContainer = $('#buildingsContainer');
 
-            // Notify in Table
-            tableContainer.empty();
-            tableContainer.append(`<tr> <td colspan="7" class="text-center">Không có dữ liệu</td> </tr>`);
-        }
+                    // Clear previous content
+                    sidebarContainer.empty();
+                    tableContainer.empty();
 
-        // Redirect to Edit Page
-        function editBuilding(id) {
-            const userId = getUserIdFromToken();
-            if (userId) {
-                window.location.href = `/Building/EditBuilding/${id}?userId=${userId}`;
-            } else {
-                alert('Unable to retrieve user ID. Please log in again.');
-            }
-        }
+                    if (buildings && buildings.length > 0) {
+                        // Update Sidebar
+                        buildings.forEach(building => {
+                            sidebarContainer.append(`
+                                        <li class="sidebar-subitem">
+                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                            </a>
+                                        </li>
+                                    `);
+                        });
 
-        // Redirect to Details Page
-        function buildingDetail(id) {
-            const userId = getUserIdFromToken();
-            if (userId) {
-                window.location.href = `/Building/BuildingDetail/${id}?userId=${userId}`;
-            } else {
-                alert('Unable to retrieve user ID. Please log in again.');
-            }
-        }
+                        // Update Table
+                        buildings.forEach((building, index) => {
+                            tableContainer.append(`
+                                        <tr>
+                                            <td>${index + 1}</td> <!-- Số thứ tự -->
+                                            <td>${building.name}</td>
+                                            <td>${building.totalFloors}</td>
+                                            <td>${building.numberOfRooms}</td>
+                                            <td>${building.addressDetails}</td>
+                                            <td>${building.buildingStatus}</td>
+                                            <td>
+                                                <a href="/Building/EditBuilding?id=${building.id}" title="Sửa" style="font-size: 1.5em; color: black;">
+                                                    <i class="fas fa-edit "></i>
+                                                </a>
+                                                <a href="/Building/BuildingDetail?id=${building.id}" title="Xem Chi tiết" style="font-size: 1.5em;">
+                                                    <i class="ti ti-eye "></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    `);
+                        });
+                    } else {
+                        displayNoBuildingsMessage();
+                    }
+                }
 
-        // Parse User ID from Token
-        // function getUserIdFromToken() {
-        //     const token = localStorage.getItem("token");
-        //     if (token) {
-        //         try {
-        //             const tokenParts = token.split('.');
-        //             const payload = JSON.parse(atob(tokenParts[1]));
-        //             return payload.UserId || null;
-        //         } catch (e) {
-        //             console.error('Error parsing token:', e);
-        //             return null;
-        //         }
-        //     }
-        //     console.warn('Token not found in localStorage.');
-        //     return null;
-        // }
+                function displayNoBuildingsMessage() {
+                    const sidebarContainer = $('.sidebar-submenu');
+                    const tableContainer = $('#buildingsContainer');
 
-        function toggleSubmenu(event) {
-            event.preventDefault();
-            var submenu = event.currentTarget.nextElementSibling;
-            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
-        }
+                    // Notify in Sidebar
+                    sidebarContainer.empty();
+                    sidebarContainer.append(` <li class="sidebar-subitem">Không có tòa nhà nào</li> `);
 
-    </script>
+                    // Notify in Table
+                    tableContainer.empty();
+                    tableContainer.append(`<tr> <td colspan="7" class="text-center">Không có dữ liệu</td> </tr>`);
+                }
+
+                // Redirect to Edit Page
+                function editBuilding(id) {
+                    const userId = getUserIdFromToken();
+                    if (userId) {
+                        window.location.href = `/Building/EditBuilding/${id}?userId=${userId}`;
+                    } else {
+                        alert('Unable to retrieve user ID. Please log in again.');
+                    }
+                }
+
+                // Redirect to Details Page
+                function buildingDetail(id) {
+                    const userId = getUserIdFromToken();
+                    if (userId) {
+                        window.location.href = `/Building/BuildingDetail/${id}?userId=${userId}`;
+                    } else {
+                        alert('Unable to retrieve user ID. Please log in again.');
+                    }
+                }
+
+                function GetUserNameById() {
+                    const token = getCookie('AuthToken');
+                    const userId = getUserIdFromToken(token);
+                    const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function (response) {
+                            if (response && response.fullName) {
+                                $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                            }
+                        },
+                        error: function (xhr) {
+                            console.error('Error fetching user profile:', xhr.responseText);
+                        }
+                    });
+                }
+
+                function toggleSubmenu(event) {
+                    event.preventDefault();
+                    var submenu = event.currentTarget.nextElementSibling;
+                    submenu.style.display = submenu.style.display === "none" ? "block" : "none";
+                }
+
+            </script>
 
 </body>
 

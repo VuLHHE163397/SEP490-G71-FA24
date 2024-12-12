@@ -160,6 +160,10 @@
                 background-color: aqua;
             }
 
+        #welcome-message {
+            position: relative;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -225,7 +229,6 @@
                                 <span><i class="ti ti-chevron-down"></i></span>
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
-                               
                             </ul>
                         </li>
                         <li class="sidebar-item">
@@ -286,15 +289,12 @@
                                 <i class="ti ti-menu-2"></i>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
-                            </a>
-                        </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item me-3">
+                                <span id="welcome-message" class="fw-bold text-primary"></span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -318,7 +318,7 @@
                 </nav>
             </header>
             <!--  Header End -->
-           
+
 
             <div class="container-fluid">
                 <div class="container mt-4">
@@ -335,7 +335,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Distance">Khoảng cách(Km)</label>
-                            <input type="number" class="form-control" id="Distance" name="Distance" value="@Model.Distance" step="0.1" required  />
+                            <input type="number" class="form-control" id="Distance" name="Distance" value="@Model.Distance" step="0.1" required />
                             <span id="distanceError" class="error-message" style="color: red; display: none;">Khoảng cách phải là một số dương và không chứa kí tự đặc biệt.</span>
                         </div>
                         <div class="form-group">
@@ -412,38 +412,46 @@
                 const submitError = document.getElementById('submitError');
 
 
-               
+
                 function validateTotalFloors() {
                     const specialCharPattern = /[^a-zA-Z0-9]/;
                     const floor = document.getElementById('TotalFloors').value;
                     const totalFloorsError = document.getElementById('totalFloorsError');
-                    const saveButton = document.getElementById('saveButton'); // Đúng ID
+                    const saveButton = document.getElementById('saveButton');
+
                     if (floor === "") {
                         totalFloorsError.textContent = "Số tầng của tòa nhà không được để trống";
                         totalFloorsError.style.display = 'inline';
                         document.getElementById('buttonSave').disabled = true;
                         submitError.style.display = 'inline';
                     }
-                    else if (specialCharPattern.test(floor) || parseFloat(floor) <= 0) {
+                    // Kiểm tra giá trị không hợp lệ (bao gồm ký tự đặc biệt hoặc giá trị nhỏ hơn hoặc bằng 0)
+                    else if (specialCharPattern.test(floor) || parseFloat(floor) <= 0 || parseFloat(floor) > 50) {
+                        totalFloorsError.textContent = "Số tầng phải là số nguyên dương và không quá 50 và không chứa kí tự đặc biệt";
                         totalFloorsError.style.display = 'inline';
-                        saveButton.disabled = true; // Disable nút lưu khi có lỗi
+                        saveButton.disabled = true;
+                        submitError.style.display = 'inline';
                     } else {
                         totalFloorsError.style.display = 'none';
-                        saveButton.disabled = false; // Kích hoạt nút lưu khi không có lỗi
+                        saveButton.disabled = false;
                     }
                 }
+
                 function validateNumberOfRooms() {
                     const specialCharPattern = /[^a-zA-Z0-9]/;
                     const room = document.getElementById('NumberOfRooms').value;
                     const numberOfRoomsError = document.getElementById('numberOfRoomsError');
                     const saveButton = document.getElementById('saveButton');
+
                     if (room === "") {
                         numberOfRoomsError.textContent = "Số phòng của tòa nhà không được để trống";
                         numberOfRoomsError.style.display = 'inline';
                         document.getElementById('buttonSave').disabled = true;
                         submitError.style.display = 'inline';
                     }
-                    else if (specialCharPattern.test(room) || parseFloat(room) <= 0) {
+                    // Kiểm tra giá trị không hợp lệ (bao gồm ký tự đặc biệt, giá trị nhỏ hơn hoặc bằng 0, hoặc lớn hơn 100)
+                    else if (specialCharPattern.test(room) || parseFloat(room) <= 0 || parseFloat(room) > 100) {
+                        numberOfRoomsError.textContent = "Số phòng phải là số nguyên dương và không quá 100 và không chứa kí tự đặc biệt";
                         numberOfRoomsError.style.display = 'inline';
                         saveButton.disabled = true;
                     } else {
@@ -453,8 +461,8 @@
                 }
 
                 function validateDistance() {
-                    const specialCharPattern = /[^0-9.]/;  // Kiểm tra nếu có ký tự không phải số hoặc dấu chấm
-                    const distance = document.getElementById('Distance').value.trim();  // Loại bỏ khoảng trắng thừa
+                    const specialCharPattern = /[^0-9.]/;
+                    const distance = document.getElementById('Distance').value.trim();
                     const distanceError = document.getElementById('distanceError');
                     const saveButton = document.getElementById('saveButton');
 
@@ -464,8 +472,9 @@
                         document.getElementById('buttonSave').disabled = true;
                         submitError.style.display = 'inline';
                     }
-                    // Kiểm tra nếu khoảng cách có ký tự đặc biệt hoặc không phải là số hợp lệ hoặc nhỏ hơn hoặc bằng 0
+                    // Kiểm tra giá trị không hợp lệ (bao gồm ký tự đặc biệt, không phải số, hoặc giá trị nhỏ hơn hoặc bằng 0)
                     else if (specialCharPattern.test(distance) || isNaN(distance) || parseFloat(distance) <= 0) {
+                        distanceError.textContent = "Khoảng cách phải là số dương và không chứa kí tự đặc biệt";
                         distanceError.style.display = 'inline';
                         saveButton.disabled = true;
                     } else {
@@ -571,31 +580,31 @@
                     if (buildings && buildings.length > 0) {
                         buildings.forEach(building => {
                             sidebarContainer.append(`
-                                    <li class="sidebar-subitem">
-                                        <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                            <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                        </a>
-                                    </li>
-                                `);
+                                                    <li class="sidebar-subitem">
+                                                        <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                            <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                        </a>
+                                                    </li>
+                                                `);
 
                             tableContainer.append(`
-                                    <tr>
-                                        <td>${building.id}</td>
-                                        <td>${building.name}</td>
-                                        <td>${building.totalFloors}</td>
-                                        <td>${building.numberOfRooms}</td>
-                                        <td>${building.addressDetails}</td>
-                                        <td>${building.buildingStatus}</td>
-                                        <td>
-                                            <a href="/Building/EditBuilding/${building.id}" title="Edit" style="font-size: 1.5em; color: black; margin-right: 10px;">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="/Building/BuildingDetail/${building.id}" title="View Details" style="font-size: 1.5em;">
-                                                <i class="ti ti-eye"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                `);
+                                                    <tr>
+                                                        <td>${building.id}</td>
+                                                        <td>${building.name}</td>
+                                                        <td>${building.totalFloors}</td>
+                                                        <td>${building.numberOfRooms}</td>
+                                                        <td>${building.addressDetails}</td>
+                                                        <td>${building.buildingStatus}</td>
+                                                        <td>
+                                                            <a href="/Building/EditBuilding/${building.id}" title="Edit" style="font-size: 1.5em; color: black; margin-right: 10px;">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                            <a href="/Building/BuildingDetail/${building.id}" title="View Details" style="font-size: 1.5em;">
+                                                                <i class="ti ti-eye"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                `);
                         });
                     } else {
                         displayNoBuildingsMessage();
@@ -648,29 +657,35 @@
 
                 // On Document Ready, Fetch Buildings
                 $(document).ready(function () {
+                    GetUserNameById();
                     $('#Name').blur(function () {
                         const buildingName = $(this).val();
                         const token = getCookie('AuthToken');
+                        const buildingId = $('#BuildingId').val(); // Assuming a hidden input or another element holds the buildingId
+                        const userId = getUserIdFromToken(token);
 
-                        // Kiểm tra nếu tên tòa nhà bỏ trống
+                        // Validate the input
                         if (!buildingName) {
                             $('#buildingNameError').show().text('Tên tòa nhà không được để trống.');
                             $('#buildingNameSuccess').hide();
-                            document.getElementById('saveButton').disabled = true; // Disable nút lưu
-                            submitError.style.display = 'inline';
                             return;
                         }
-
                         if (!token) {
                             alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
                             return;
                         }
+                        if (!userId) {
+                            $('#buildingNameError').show().text('Không xác định được User ID.');
+                            return;
+                        }
 
-                        const userId = getUserIdFromToken(token);
-                        if (!buildingName || !userId) return;
+                        // Construct the API URL with buildingId if provided
+                        let url = `https://localhost:7056/api/Building/CheckBuildingName/${userId}/${encodeURIComponent(buildingName)}`;
+                        if (buildingId) {
+                            url += `/${buildingId}`;
+                        }
 
-                        const url = `https://localhost:7056/api/Building/CheckBuildingName/${userId}/${encodeURIComponent(buildingName)}`;
-
+                        // Make the AJAX request
                         $.ajax({
                             url: url,
                             type: 'GET',
@@ -681,21 +696,39 @@
 
                                 if (response.message === "Thành công.") {
                                     $('#buildingNameSuccess').show().text('Tên tòa nhà hợp lệ.');
-                                    document.getElementById('saveButton').disabled = false; // Kích hoạt nút lưu nếu tên hợp lệ
                                 }
                             },
                             error: function (xhr) {
                                 $('#buildingNameError').show().text(xhr.responseJSON?.message || 'Có lỗi xảy ra.');
-                                document.getElementById('saveButton').disabled = true; // Disable nút lưu nếu có lỗi
                             }
                         });
                     });
+
                     getListBuilding();
                     validateTotalFloors();
                     validateNumberOfRooms();
                     validateDistance();
 
                 });
+
+                function GetUserNameById() {
+                    const token = getCookie('AuthToken');
+                    const userId = getUserIdFromToken(token);
+                    const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function (response) {
+                            if (response && response.fullName) {
+                                $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                            }
+                        },
+                        error: function (xhr) {
+                            console.error('Error fetching user profile:', xhr.responseText);
+                        }
+                    });
+                }
             </script>
 
         </div>

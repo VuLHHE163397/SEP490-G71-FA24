@@ -273,7 +273,7 @@
                     console.log(response);
                 },
                 error: function (xhr, status, error) {
-                    showErrorPopup("Tài khoản hoặc mật khẩu không tồn tại");
+                    showErrorPopup(xhr.responseText);
                     // showErrorPopup("Đăng nhập thất bại: " + xhr.responseText);
                 }
             });

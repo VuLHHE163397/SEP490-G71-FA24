@@ -156,23 +156,26 @@ namespace RMS_API.Controllers
         }
 
 
-        [HttpGet("CheckBuildingName/{userId}/{name}")]
-        public IActionResult CheckBuildingName(int userId, string name)
+        [HttpGet("CheckBuildingName/{userId}/{name}/{buildingId?}")]
+        public IActionResult CheckBuildingName(int userId, string name, int? buildingId = null)
         {
             if (string.IsNullOrEmpty(name) || userId <= 0)
             {
                 return BadRequest(new { message = "Invalid input data." });
             }
 
-            // Kiểm tra tên tòa nhà đã tồn tại cho UserId hiện tại
-            var isDuplicateForCurrentUser = _context.Buildings.Any(b => b.UserId == userId && b.Name == name);
+            // Check if the name is already in use for the same userId, excluding the current building
+            var isDuplicateForCurrentUser = _context.Buildings.Any(b =>
+                b.UserId == userId &&
+                b.Name == name &&
+                (!buildingId.HasValue || b.Id != buildingId.Value));
 
             if (isDuplicateForCurrentUser)
             {
                 return Conflict(new { message = "Tên tòa nhà trùng với tên hiện có. Vui lòng nhập lại." });
             }
 
-            // Nếu tên tòa nhà trùng với một userId khác, cho phép tạo mới
+            // If the name is not a duplicate, allow the operation
             return Ok(new { message = "Thành công." });
         }
 
