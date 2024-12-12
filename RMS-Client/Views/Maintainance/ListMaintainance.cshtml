@@ -318,12 +318,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                <li class="sidebar-subitem">
-                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                    </a>
-                                </li>
-                            `);
+                                        <li class="sidebar-subitem">
+                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                            </a>
+                                        </li>
+                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -336,8 +336,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                            `);
+                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                    `);
         }
         async function fetchData(status, tableId) {
             const tableBody = document.getElementById(tableId);
@@ -384,23 +384,23 @@
                         const buttonHtml =
                             item.status === "Chưa xử lý"
                                 ? `<button onclick="changeStatus(${item.id})" class="btn btn-success">
-                                           <i class="fa fa-check"></i>
-                                       </button>`
+                                                   <i class="fa fa-check"></i>
+                                               </button>`
                                 : `<button onclick="changeStatus(${item.id})" class="btn btn-danger">
-                                           <i class="fa fa-undo"></i>
-                                       </button>`;
+                                                   <i class="fa fa-undo"></i>
+                                               </button>`;
 
                         const row = `<tr>
-                                         <td>${index}</td> <!-- Số thứ tự -->
-                                         <td>${item.maintenanceDescription}</td>
-                                         <td>${new Date(item.requestDate).toLocaleDateString()}</td>
-                                         <td>${item.solveDate ? new Date(item.solveDate).toLocaleDateString() : ""}</td>
-                                         <td>${item.roomNumber}</td>
-                                         <td>${item.buildingName}</td>
-                                         <td>${item.address}</td>
-                                         <td>${item.status}</td>
-                                         <td>${buttonHtml}</td>
-                                         </tr>`;
+                                                 <td>${index}</td> <!-- Số thứ tự -->
+                                                 <td>${item.maintenanceDescription}</td>
+                                                 <td>${new Date(item.requestDate).toLocaleDateString()}</td>
+                                                 <td>${item.solveDate ? new Date(item.solveDate).toLocaleDateString() : ""}</td>
+                                                 <td>${item.roomNumber}</td>
+                                                 <td>${item.buildingName}</td>
+                                                 <td>${item.address}</td>
+                                                 <td>${item.status}</td>
+                                                 <td>${buttonHtml}</td>
+                                                 </tr>`;
 
                         tableBody.innerHTML += row;
                     });
@@ -442,10 +442,6 @@
             fetchData(1, "status1-table");
             fetchData(0, "status0-table");
         }
-        function toggleSubmenu(event) {
-            event.preventDefault();
-            var submenu = event.currentTarget.nextElementSibling;
-            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
 
         function GetUserNameById() {
             const token = getCookie('AuthToken');

@@ -86,10 +86,12 @@ namespace RMS_API.Controllers
                     });
                     await context.SaveChangesAsync();
                 }
-                return Ok("Success");
-            } catch (Exception ex)
+
+                return Ok(new { message = "Tính phí dịch vụ thành công" });
+            }
+            catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { error = ex.Message });
             }
         }
         [HttpGet("Detail")]

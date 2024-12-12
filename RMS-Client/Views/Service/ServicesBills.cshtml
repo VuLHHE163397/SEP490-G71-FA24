@@ -276,9 +276,7 @@
                             }
                         </style>
                         <div class="d-flex align-items-center btn-spacing">
-                            <button class="btn btn-warning">Xuất file Excel</button>
-                            <button class="btn btn-secondary">In danh sách</button>
-                            
+                            <button class="btn btn-warning">Xuất file Excel</button>                          
                             <a href="/Service/ListService" class="btn btn-info"> <i class="fa-solid fa-rotate-left" style="color: #FFD43B;"></i> Quay về</a>
                         </div>
                     </div>
@@ -350,6 +348,7 @@
                 <!-- Modal Header -->
                 <div class="modal-header d-flex justify-content-center align-items-center position-relative">
                     <!-- Centered Title -->
+                    <div id="buildingName"></div>
                     <h5 class="modal-title mx-auto" id="detailModalLabel">Hóa đơn tiền nhà</h5>
                     <!-- Close Button (Aligned to Right) -->
                     <button type="button" class="btn-close position-absolute end-0 me-2" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -359,10 +358,11 @@
                 <div class="modal-body" id="bill-detail">
                 </div>
 
-                <!-- Modal Footer -->
-                @* <div class="modal-footer">
-                    <h5 id="totalPrice">TỔNG CỘNG: 0 VND</h5>
-                </div> *@
+                <div class="modal-footer">
+
+                    <h5 id="totalPrice"></h5>
+
+                </div>
             </div>
         </div>
     </div>
@@ -566,26 +566,47 @@
             $("#bills").html(html);
         }
         function calculate(roomId) {
-            console.log('calculate execute');
+
+            console.log('calculate execute')
+
             const token = getCookie('AuthToken');
+
             const userId = getUserIdFromToken(token);
+
             $.ajax({
-                url: `https://localhost:7056/api/ServiceBill?RoomId=${roomId}`,
-                type: 'POST',
+
+                url: `https://localhost:7056/api/ServiceBill?RoomId=${roomId}`, // The URL of the API you want to request data from
+
+                type: 'POST', // HTTP method (GET for retrieving data)
+
                 headers: {
+
                     "Authorization": `Bearer ${token}`
+
                 },
-                dataType: 'json',
+
+                dataType: 'json', // Data type expected from the server (JSON in this case)
+
                 success: function (response) {
-                    console.log('Response:', response);
-                    alert('Tính phí dịch vụ thành công');
+
+                    alert('Tính phí dịch vụ thành công')
+
                 },
+
                 error: function (xhr, status, error) {
-                    console.error('Error:', xhr.responseText, status, error);
-                    alert(`Lỗi: ${xhr.status} - ${xhr.responseText}`);
+
+                    // This function will be called if there's an error with the request
+
+                    alert('Lỗi:', xhr.responseText);
+
+                    console.log(xhr);
+
                 }
+
             });
+
             getBills();
+
         }
 
         function getBillDetail(roomId) {
@@ -610,6 +631,13 @@
         }
         function renderBillDetail(data) {
             let html = '';
+            let total = 0;
+
+            // if (data.length > 0) {
+
+            //     $("#buildingName").text(`Tên trọ: ${data[0].room?.name || "Không xác định"}`);
+
+            // }
             for (var item of data) {                
                 let formattedPrice = item.price.toLocaleString('vi-VN');
                 html += `                   
@@ -618,8 +646,10 @@
                         <strong>${item.name}</strong>
                         <span>${formattedPrice} VND</span>
                     </div>`;
+                total += item.price;
             }
             $("#bill-detail").html(html);
+            $("#totalPrice").text(`TỔNG CỘNG: ${total.toLocaleString('vi-VN')} VND`);
         }
         function getUserIdFromToken(token) {
             try {

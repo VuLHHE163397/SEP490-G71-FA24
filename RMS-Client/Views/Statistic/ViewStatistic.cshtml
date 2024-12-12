@@ -179,7 +179,7 @@
                             <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
                                 <i class="ti ti-menu-2"></i>
                             </a>
-                        </li>                       
+                        </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
@@ -229,7 +229,7 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script>
         const apiBaseUrl = "https://localhost:7056/api"; // Đặt URL gốc của API
-       
+
         // Gọi API để lấy dữ liệu
         $(document).ready(function () {
             loadBuilding();
@@ -292,12 +292,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                        <li class="sidebar-subitem">
-                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                            </a>
-                        </li>
-                    `);
+                                <li class="sidebar-subitem">
+                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                    </a>
+                                </li>
+                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -310,8 +310,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                    `);
+                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                            `);
         }
         async function fetchRoomStats() {
             try {
@@ -391,11 +391,6 @@
         // Gọi hàm fetch dữ liệu khi load trang
         document.addEventListener('DOMContentLoaded', fetchRoomStats);
 
-        function toggleSubmenu(event) {
-            event.preventDefault();
-            var submenu = event.currentTarget.nextElementSibling;
-            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
-        }
         function GetUserNameById() {
             const token = getCookie('AuthToken');
             const userId = getUserIdFromToken(token);
