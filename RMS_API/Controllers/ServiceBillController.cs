@@ -41,7 +41,8 @@ namespace RMS_API.Controllers
                     };
                 });
                 return Ok(response);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -54,7 +55,7 @@ namespace RMS_API.Controllers
                 var today = DateTime.Now;
                 var addedServiceBills = await context.ServicesBills.Where(e => e.RoomId == RoomId && e.Date.Month == today.Month && e.Date.Year == today.Year)
                     .ToListAsync();
-                if(addedServiceBills.Count <= 1)
+                if (addedServiceBills.Count <= 1)
                 {
                     var services = context.Services
 
@@ -86,10 +87,12 @@ namespace RMS_API.Controllers
                     });
                     await context.SaveChangesAsync();
                 }
-                return Ok("Success");
-            } catch (Exception ex)
+
+                return Ok(new { message = "Tính phí dịch vụ thành công" });
+            }
+            catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { error = ex.Message });
             }
         }
         [HttpGet("Detail")]
@@ -122,7 +125,8 @@ namespace RMS_API.Controllers
                     Price = (decimal)room?.Price,
                 });
                 return Ok(serviceBills);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

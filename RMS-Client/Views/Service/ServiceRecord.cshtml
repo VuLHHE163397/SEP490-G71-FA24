@@ -221,7 +221,7 @@
                             <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
                                 <i class="ti ti-menu-2"></i>
                             </a>
-                        </li>                        
+                        </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
@@ -331,15 +331,17 @@
 
 
         var totalRecord = 0;
+        loadBuilding();
         $(document).ready(function () {
-            loadBuilding();
-            loadRoom();
+            var buildingId = $("#BuildingId").val();
+            var roomId = $("#RoomId").val();
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
             setData();
             getElectricRecord();
-            const token = getCookie('AuthToken');
-            //Lấy user id
-            const userId = getUserIdFromToken(token);
             GetUserNameById();
+
+
 
         })
         function onSelectBuilding() {
@@ -363,72 +365,139 @@
         //////////////////////////////////////////////////
 
         function loadBuilding() {
+
             const token = getCookie('AuthToken');
+
             if (!token) {
+
                 alert('Bạn chưa đăng nhập. Xin hãy quay lại trang login.');
+
                 window.location.href = "/Auth/login";
+
                 return;
+
             }
+
             var userId = getUserIdFromToken(token);
+
             $.ajax({
+
                 url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
+
                 type: 'GET',
+
                 dataType: 'json',
+
                 beforeSend: function (xhr) {
+
                     xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+
                 },
+
                 success: function (response) {
+
                     renderBuilding(response);
+
                     displayBuildings(response); //Thêm cái này nữa
+
                 },
+
                 error: function (xhr, status, error) {
+
                     console.error("Có lỗi xảy ra:", error);
+
                 }
+
             });
+
         }
+
+
 
         function renderBuilding(data) {
+
             var urlParams = new URLSearchParams(window.location.search);
+
             var buildingId = urlParams.get('buildingId');
-            let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Chọn</option>`;
+
+            let html = '';
+
             for (var item of data) {
+
                 html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
+
             }
+
             $("#BuildingId").html(html);
 
+            loadRoom();
+
         }
+
+
+
 
 
         ///////////////////////////////////////////////////////
 
+
+
         function loadRoom() {
+
             const token = getCookie('AuthToken');
+
             var buildingId = $("#BuildingId").val();
-            console.log("buildingId = " + buildingId)
+
+            console.log("buildingId = " + buildingId);
+
             const userId = getUserIdFromToken(token);
+
             $.ajax({
+
                 url: buildingId && buildingId > 0 ? `https://localhost:7056/api/Room/GetRoomByBuilding/${buildingId}` : `https://localhost:7056/api/Room/GetAllRoom/${userId}`,
+
                 type: 'GET',
+
                 dataType: 'json',
+
                 headers: {
+
                     "Authorization": `Bearer ${token}`
+
                 },
+
                 success: function (response) {
+
                     renderRoom(response);
+
                 },
+
                 error: function (xhr, status, error) {
+
                     console.error("Có lỗi xảy ra:", error);
+
                 }
+
             });
+
         }
+
         function renderRoom(data) {
+
             var urlParams = new URLSearchParams(window.location.search);
-            var roomId = urlParams.get('roomId');
+
+            var roomId = $("#RoomId").val();
+
             let html = `<option value="-1" ${roomId <= 0 ? 'selected' : ''}>Chọn</option>`;
+
             for (var item of data) {
+
                 html += `<option value="${item.id}" ${roomId == item.id ? 'selected' : ''}>${item.roomNumber}</option>`
+
             }
+
             $("#RoomId").html(html);
+
         }
         //Hàm lấy list building theo UserId
         //-------------------------------------------------------
@@ -442,12 +511,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                                <li class="sidebar-subitem">
-                                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                                    </a>
-                                                                                                </li>
-                                                                                            `);
+                                                                                                        <li class="sidebar-subitem">
+                                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                                            </a>
+                                                                                                        </li>
+                                                                                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -460,8 +529,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                                    `);
+                                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                                            `);
         }
 
         function setData() {
@@ -514,20 +583,20 @@
                 html += `<td>${item.roomNumber}</td>`;
                 //html += `<td class="recordDate">${item.recordDate.split("T")[0]}</td>`;
                 html += `<td>
-                                            <input type="date" class="recordDate form-control" value="${item.recordDate.split("T")[0]}"/>
-                                        </td>`;
-                html += `<td>
-                                                <input type="text" value="${item.oldMeter}" class="form-control" id="oldMeter-${item.roomId}" onchange="calculate(${item.roomId})"/>
-                                        </td>`;
-                html += `<td>
-                                                     <input type="text" value="${item.newMeter}" class="form-control" id="newMeter-${item.roomId}" onchange="calculate(${item.roomId})"/>
+                                                    <input type="date" class="recordDate form-control" value="${item.recordDate.split("T")[0]}"/>
                                                 </td>`;
                 html += `<td>
-                                                     <input type="text" value="${item.totalMeter}" class="form-control" id="totalMeter-${item.roomId}" readonly/>
+                                                        <input type="text" value="${item.oldMeter}" class="form-control" id="oldMeter-${item.roomId}" onchange="calculate(${item.roomId})"/>
                                                 </td>`;
                 html += `<td>
-                                            <button class="btn btn-primary" onclick="addServiceRecord(${item.roomId}, ${item.buildingId})">Lưu</button>
-                                        </td>`
+                                                             <input type="text" value="${item.newMeter}" class="form-control" id="newMeter-${item.roomId}" onchange="calculate(${item.roomId})"/>
+                                                        </td>`;
+                html += `<td>
+                                                             <input type="text" value="${item.totalMeter}" class="form-control" id="totalMeter-${item.roomId}" readonly/>
+                                                        </td>`;
+                html += `<td>
+                                                    <button class="btn btn-primary" onclick="addServiceRecord(${item.roomId}, ${item.buildingId})">Lưu</button>
+                                                </td>`
                 html += '</tr>'
             }
             $("#electrics").html(html);
@@ -539,6 +608,49 @@
             $(`#totalMeter-${id}`).val(newMeter - oldMeter);
         }
         function addServiceRecord(roomId, buildingId) {
+            // Lấy giá trị từ các trường input
+            var oldMeter = $(`#oldMeter-${roomId}`).val();
+            var newMeter = $(`#newMeter-${roomId}`).val();
+            var totalMeter = $(`#totalMeter-${roomId}`).val();
+            var numberRegex = /^[0-9]+(\.[0-9]+)?$/;
+
+            // Validate dữ liệu
+            if (!oldMeter || !numberRegex.test(oldMeter) || parseFloat(oldMeter) < 0) {
+                alert("Chỉ số điện cũ không hợp lệ. Không được chứa ký tự đặc biệt hoặc chữ cái.");
+                return;
+            }
+
+            if (!newMeter || !numberRegex.test(newMeter) || parseFloat(newMeter) < 0) {
+                alert("Chỉ số điện mới không hợp lệ. Không được chứa ký tự đặc biệt hoặc chữ cái.");
+                return;
+            }
+
+            if (!oldMeter) {
+                alert("Chỉ số điện cũ không được để trống. Vui lòng nhập giá trị.");
+                return;
+            }
+            if (!newMeter) {
+                alert("Chỉ số điện mới không được để trống. Vui lòng nhập giá trị.");
+                return;
+            }
+
+            // Validate dữ liệu
+            if (!oldMeter || isNaN(oldMeter) || parseFloat(oldMeter) < 0) {
+                alert("Chỉ số điện cũ không hợp lệ. Vui lòng nhập số lớn hơn hoặc bằng 0.");
+                return;
+            }
+
+            if (!newMeter || isNaN(newMeter) || parseFloat(newMeter) < 0) {
+                alert("Chỉ số điện mới không hợp lệ. Vui lòng nhập số lớn hơn hoặc bằng 0.");
+                return;
+            }
+
+            if (parseFloat(newMeter) < parseFloat(oldMeter)) {
+                alert("Chỉ số điện mới phải lớn hơn hoặc bằng chỉ số điện cũ.");
+                return;
+            }
+
+            // Nếu mọi thứ đều hợp lệ, tiến hành tạo object
             var electricRecord = {
                 buildingId: buildingId,
                 roomId: roomId,
@@ -564,6 +676,11 @@
                     alert(xhr.responseText);
                 }
             });
+        }
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            var submenu = event.currentTarget.nextElementSibling;
+            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
         }
 
         function GetUserNameById() {

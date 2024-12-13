@@ -14,6 +14,7 @@
     <link href="~/images/logos/house.png" rel="icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha384-nogqaROfyJYW/smNUVkE6g+hObePpHCo9uMFoO2SBKW9SWF3lSwFw+WrpJ+KBeNw" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -230,8 +231,21 @@
 
                             <!-- Thông tin chi tiết phòng -->
                             <p><strong>Chủ nhà:</strong> @Model.OwnerName</p>
-                            <p><strong>Số điện thoại:</strong> @Model.OwnerPhone</p>
-                            <p><strong>Facebook:</strong> @Model.Facebook</p>
+                            <p>
+                                <strong>Số điện thoại:</strong>
+                                <span id="phone-number">*********</span>
+                                <button id="toggle-phone-btn" onclick="togglePhone()" style="border: none; background: none; cursor: pointer;">
+                                    <i id="eye-icon" class="fa fa-eye"></i>
+                                </button>
+                            </p>
+                            <p>
+                                <strong>Facebook:</strong>
+                                <a href="@Model.Facebook" target="_blank" style="text-decoration: none; display: inline-flex; align-items: center; color: inherit;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 20px; height: 20px; fill: #1877F2; margin-left: 8px;">                                      
+                                        <path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z" />
+                                    </svg>
+                                </a>
+                            </p>
                             <p><strong>Zalo:</strong> @Model.Zalo</p>
                             <p><strong>Địa chỉ phòng:</strong> @Model.FullAddress</p>
                             @{
@@ -391,6 +405,27 @@
         function navigateToDetail(url) {
             window.open(url, '_blank'); // Mở trang trong tab mới
         }
+        const fullPhoneNumber = "@Model.OwnerPhone"; // Thay thế bằng số điện thoại thực tế
+
+        function togglePhone() {
+            const phoneElement = document.getElementById('phone-number');
+            const eyeIcon = document.getElementById('eye-icon');
+
+            if (eyeIcon.classList.contains('fa-eye')) {
+                // Hiện số điện thoại đầy đủ
+                phoneElement.innerText = fullPhoneNumber;
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash'); // Thay biểu tượng bằng "ẩn"
+            } else {
+                // Ẩn một phần số điện thoại
+                phoneElement.innerText = fullPhoneNumber.slice(0, 6) + '****';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye'); // Thay biểu tượng bằng "hiện"
+            }
+        }
+
+        // Khởi tạo trạng thái ẩn
+        document.getElementById('phone-number').innerText = fullPhoneNumber.slice(0, 6) + '****';
     </script>
 </body>
 </html>

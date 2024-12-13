@@ -111,6 +111,7 @@ namespace RMS_API.Controllers
                 }
                 serviceDb.Name = serviceDTO.Name;
                 serviceDb.Price = serviceDTO.Price;
+                serviceDb.Type = serviceDTO.type;
                 _context.Services.Update(serviceDb);
                 await _context.SaveChangesAsync();
                 return Ok(serviceDb);

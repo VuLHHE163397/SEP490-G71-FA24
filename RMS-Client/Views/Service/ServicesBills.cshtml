@@ -277,8 +277,6 @@
                         </style>
                         <div class="d-flex align-items-center btn-spacing">
                             <button class="btn btn-warning">Xuất file Excel</button>
-                            <button class="btn btn-secondary">In danh sách</button>
-                            
                             <a href="/Service/ListService" class="btn btn-info"> <i class="fa-solid fa-rotate-left" style="color: #FFD43B;"></i> Quay về</a>
                         </div>
                     </div>
@@ -336,7 +334,7 @@
                         </tbody>
                     </table>
 
-                    
+
                 </div>
             </div>
         </div>
@@ -350,6 +348,7 @@
                 <!-- Modal Header -->
                 <div class="modal-header d-flex justify-content-center align-items-center position-relative">
                     <!-- Centered Title -->
+                    <div id="buildingName"></div>
                     <h5 class="modal-title mx-auto" id="detailModalLabel">Hóa đơn tiền nhà</h5>
                     <!-- Close Button (Aligned to Right) -->
                     <button type="button" class="btn-close position-absolute end-0 me-2" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -359,10 +358,11 @@
                 <div class="modal-body" id="bill-detail">
                 </div>
 
-                <!-- Modal Footer -->
-                @* <div class="modal-footer">
-                    <h5 id="totalPrice">TỔNG CỘNG: 0 VND</h5>
-                </div> *@
+                <div class="modal-footer">
+
+                    <h5 id="totalPrice"></h5>
+
+                </div>
             </div>
         </div>
     </div>
@@ -380,7 +380,7 @@
         $(document).ready(function () {
             var buildingId = $("#BuildingId").val();
             var roomId = $("#RoomId").val();
-            const token = getCookie('AuthToken');            
+            const token = getCookie('AuthToken');
             const userId = getUserIdFromToken(token);
             getBills();
             GetUserNameById();
@@ -448,7 +448,7 @@
         function loadRoom() {
             const token = getCookie('AuthToken');
             var buildingId = $("#BuildingId").val();
-            console.log("buildingId = " + buildingId);            
+            console.log("buildingId = " + buildingId);
             const userId = getUserIdFromToken(token);
             $.ajax({
                 url: buildingId && buildingId > 0 ? `https://localhost:7056/api/Room/GetRoomByBuilding/${buildingId}` : `https://localhost:7056/api/Room/GetAllRoom/${userId}`,
@@ -487,12 +487,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                        <li class="sidebar-subitem">
-                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                            </a>
-                                                                        </li>
-                                                                    `);
+                                                                                <li class="sidebar-subitem">
+                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                    </a>
+                                                                                </li>
+                                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -505,8 +505,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                            `);
+                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                    `);
         }
 
         function getBills() {
@@ -545,53 +545,75 @@
             let index = 1;
             for (var item of data) {
                 html += `
-                                            <tr>
-                                                <td>${index++}</td>
-                                                <td>${item.buildingName}</td>
-                                                <td>${item.roomNumber}</td>
-                                                        <td>${item.totalPrice.toLocaleString('vi-VN')} VND</td>
-                                                        <td>${item.remainingPrice.toLocaleString('vi-VN')} VND</td>
-                                                <td class="action-icons">
-                                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="getBillDetail(${item.roomId})">
-                                                        <i class="fa-solid fa-eye"></i>
-                                                    </button>
+                                                    <tr>
+                                                        <td>${index++}</td>
+                                                        <td>${item.buildingName}</td>
+                                                        <td>${item.roomNumber}</td>
+                                                                <td>${item.totalPrice.toLocaleString('vi-VN')} VND</td>
+                                                                <td>${item.remainingPrice.toLocaleString('vi-VN')} VND</td>
+                                                        <td class="action-icons">
+                                                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="getBillDetail(${item.roomId})">
+                                                                <i class="fa-solid fa-eye"></i>
+                                                            </button>
 
-                                                    <button class="btn btn-danger">
-                                                        <i class="fa-solid fa-calculator" onclick="calculate(${item.roomId})" ></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                `
+                                                            <button class="btn btn-danger">
+                                                                <i class="fa-solid fa-calculator" onclick="calculate(${item.roomId})" ></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                        `
             }
             $("#bills").html(html);
         }
         function calculate(roomId) {
+
             console.log('calculate execute')
+
             const token = getCookie('AuthToken');
+
             const userId = getUserIdFromToken(token);
+
             $.ajax({
+
                 url: `https://localhost:7056/api/ServiceBill?RoomId=${roomId}`, // The URL of the API you want to request data from
+
                 type: 'POST', // HTTP method (GET for retrieving data)
+
                 headers: {
+
                     "Authorization": `Bearer ${token}`
+
                 },
+
                 dataType: 'json', // Data type expected from the server (JSON in this case)
+
                 success: function (response) {
+
                     alert('Tính phí dịch vụ thành công')
+
                 },
+
                 error: function (xhr, status, error) {
+
                     // This function will be called if there's an error with the request
+
                     alert('Lỗi:', xhr.responseText);
+
                     console.log(xhr);
+
                 }
+
             });
+
             getBills();
+
         }
+
         function getBillDetail(roomId) {
             var date = $("#monthYear").val() + "-01";
-            //var formattedDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + (date.getDay() + 1)           
+            //var formattedDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + (date.getDay() + 1)
             $.ajax({
-                url: `https://localhost:7056/api/ServiceBill/Detail?RoomId=${roomId}&date=${date}`, 
+                url: `https://localhost:7056/api/ServiceBill/Detail?RoomId=${roomId}&date=${date}`,
                 type: 'GET', // HTTP method (GET for retrieving data)
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -609,16 +631,25 @@
         }
         function renderBillDetail(data) {
             let html = '';
-            for (var item of data) {                
-                let formattedPrice = item.price.toLocaleString('vi-VN');
-                html += `                   
+            let total = 0;
 
-                    <div class="bill-item">
-                        <strong>${item.name}</strong>
-                        <span>${formattedPrice} VND</span>
-                    </div>`;
+            // if (data.length > 0) {
+
+            //     $("#buildingName").text(`Tên trọ: ${data[0].room?.name || "Không xác định"}`);
+
+            // }
+            for (var item of data) {
+                let formattedPrice = item.price.toLocaleString('vi-VN');
+                html += `
+
+                            <div class="bill-item">
+                                <strong>${item.name}</strong>
+                                <span>${formattedPrice} VND</span>
+                            </div>`;
+                total += item.price;
             }
             $("#bill-detail").html(html);
+            $("#totalPrice").text(`TỔNG CỘNG: ${total.toLocaleString('vi-VN')} VND`);
         }
         function getUserIdFromToken(token) {
             try {
@@ -629,6 +660,11 @@
                 console.error("Không mã hóa đc token:", error);
                 return null;
             }
+        }
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            var submenu = event.currentTarget.nextElementSibling;
+            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
         }
 
         function GetUserNameById() {

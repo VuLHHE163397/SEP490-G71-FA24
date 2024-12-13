@@ -7,12 +7,6 @@
     <title>RMS</title>
     <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
-    <style>
-        #welcome-message {
-            position: relative;
-            font-weight: bold;
-        }
-    </style>
 </head>
 
 <body>
@@ -40,7 +34,7 @@
     </script>
 
 
-    
+
 
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -157,13 +151,16 @@
                             <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
                                 <i class="ti ti-menu-2"></i>
                             </a>
-                        </li>                        
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
+                                <i class="ti ti-bell-ringing"></i>
+                                <div class="notification bg-primary rounded-circle"></div>
+                            </a>
+                        </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                            <li class="nav-item me-3">
-                                <span id="welcome-message" class="fw-bold text-primary"></span>
-                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -282,8 +279,6 @@
             var urlParams = new URLSearchParams(window.location.search);
             var id = urlParams.get('id');
             getDetail(id);
-            GetUserNameById();
-
         })
         function getDetail(id) {
             const token = getCookie('AuthToken');
@@ -299,6 +294,8 @@
                     $("#ServiceName").val(response.name);
                     $("#Price").val(response.price);
                     $("#BuildingId").val(response.buildingId);
+                    // Set the default selected value for the #type dropdown
+                    $("#type").val(response.type).change();
 
                 },
                 error: function (xhr, status, error) {
@@ -315,7 +312,7 @@
                 name: $("#ServiceName").val(),
                 price: $("#Price").val(),
                 buildingId: $("#BuildingId").val(),
-                type: $("type").val(),
+                type: $("#type").val(),
             }
             $.ajax({
                 url: "https://localhost:7056/api/Service",
@@ -399,12 +396,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                        <li class="sidebar-subitem">
-                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                            </a>
-                                                                                        </li>
-                                                                                    `);
+                                                                                                <li class="sidebar-subitem">
+                                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                                    </a>
+                                                                                                </li>
+                                                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -417,8 +414,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                            `);
+                                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                                    `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -432,24 +429,7 @@
             }
         }
 
-        function GetUserNameById() {
-            const token = getCookie('AuthToken');
-            const userId = getUserIdFromToken(token);
-            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
 
-            $.ajax({
-                url: url,
-                type: 'GET',
-                success: function (response) {
-                    if (response && response.fullName) {
-                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
-                    }
-                },
-                error: function (xhr) {
-                    console.error('Error fetching user profile:', xhr.responseText);
-                }
-            });
-        }
 
     </script>
 </body>

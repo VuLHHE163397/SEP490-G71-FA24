@@ -408,7 +408,6 @@ namespace RMS_API.Controllers
             }
         }
 
-
         [HttpPost("upload-image/{roomId}")]
         public async Task<IActionResult> UploadImage(IFormFile file, int roomId)
         {
@@ -636,7 +635,7 @@ namespace RMS_API.Controllers
             {
                 Building = room.Building.Name,
                 RoomNumber = room.RoomNumber,
-                Facebook = room.Building?.User.FacebookUrl ?? "Chưa có link Facebook",
+                Facebook = room.Building?.User.FacebookUrl,
                 Zalo = room.Building?.User.ZaloUrl ?? "Chưa có thông tin Zalo",
                 FullAddress = $"{room.Building?.Address?.Information ?? "Chưa có địa chỉ chi tiết"}, " +
                                $"{room.Building?.Ward?.Name ?? "Chưa có phường"}, " +
