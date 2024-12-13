@@ -298,7 +298,7 @@
                         <div class="row g-3 align-items-center mb-3">
                             <div class="col-md-3">
                                 <label for="monthYear" class="form-label">Ngày/Tháng/năm</label>
-                                <input type="date" class="form-control" id="monthYear" value="2024-11" onchange="getBills()">
+                                <input type="date" class="form-control" id="monthYear" onchange="getBills()">
                             </div>
 
                             <div class="col-md-3">
@@ -378,6 +378,8 @@
         var totalRecord = 0;
         loadBuilding();
         $(document).ready(function () {
+            var today = new Date();
+            $("#monthYear").val(`${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`)
             var buildingId = $("#BuildingId").val();
             var roomId = $("#RoomId").val();
             const token = getCookie('AuthToken');            
@@ -510,7 +512,7 @@
         }
 
         function getBills() {
-            var date = $("#monthYear").val() + "-01";
+            var date = $("#monthYear").val();
             const token = getCookie('AuthToken');
             const userId = getUserIdFromToken(token);
             var url = `https://localhost:7056/api/ServiceBill?userId=${userId}&date=${date}`

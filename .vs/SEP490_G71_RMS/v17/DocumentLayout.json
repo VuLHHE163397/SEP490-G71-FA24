@@ -3,12 +3,32 @@
   "WorkspaceRootPath": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms_api\\controllers\\servicebillcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\controllers\\servicebillcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms-client\\views\\facility\\addfacility.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\facility\\addfacility.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms_api\\controllers\\facilitycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\controllers\\facilitycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms_api\\dtos\\facilitydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\dtos\\facilitydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms-client\\views\\service\\servicesbills.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\service\\servicesbills.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms-client\\views\\service\\servicerecord.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\service\\servicerecord.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms_api\\controllers\\electricrecordcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B68143CA-0469-46DB-923A-A4848C1A7CB3}|RMS_API\\RMS_API.csproj|solutionrelative:rms_api\\controllers\\electricrecordcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|d:\\prj_\u0111\u1ED3 \u00E1n\\sep490-g71-fa24\\rms-client\\views\\facility\\listfacility.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{77C76508-FBB5-4DA4-AC11-1671EB7C45FE}|RMS-Client\\RMS_Client.csproj|solutionrelative:rms-client\\views\\facility\\listfacility.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,32 +38,97 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ServiceBillController.cs",
-              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\Controllers\\ServiceBillController.cs",
-              "RelativeDocumentMoniker": "RMS_API\\Controllers\\ServiceBillController.cs",
-              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\Controllers\\ServiceBillController.cs",
-              "RelativeToolTip": "RMS_API\\Controllers\\ServiceBillController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAEsAAAAVAAAA",
+              "DocumentIndex": 1,
+              "Title": "FacilityController.cs",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\Controllers\\FacilityController.cs",
+              "RelativeDocumentMoniker": "RMS_API\\Controllers\\FacilityController.cs",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\Controllers\\FacilityController.cs",
+              "RelativeToolTip": "RMS_API\\Controllers\\FacilityController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAGwAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-12T04:21:31.786Z",
+              "WhenOpened": "2024-12-13T07:31:41.092Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
+              "Title": "FacilityDTO.cs",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\DTOs\\FacilityDTO.cs",
+              "RelativeDocumentMoniker": "RMS_API\\DTOs\\FacilityDTO.cs",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\DTOs\\FacilityDTO.cs",
+              "RelativeToolTip": "RMS_API\\DTOs\\FacilityDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAArAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-13T07:25:44.359Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AddFacility.cshtml",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Facility\\AddFacility.cshtml",
+              "RelativeDocumentMoniker": "RMS-Client\\Views\\Facility\\AddFacility.cshtml",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Facility\\AddFacility.cshtml",
+              "RelativeToolTip": "RMS-Client\\Views\\Facility\\AddFacility.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-12-13T07:09:05.232Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ServiceRecord.cshtml",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\ServiceRecord.cshtml",
+              "RelativeDocumentMoniker": "RMS-Client\\Views\\Service\\ServiceRecord.cshtml",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\ServiceRecord.cshtml",
+              "RelativeToolTip": "RMS-Client\\Views\\Service\\ServiceRecord.cshtml",
+              "ViewState": "AQIAAJ8CAAAAAAAAAAAiwLwCAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-12-13T07:02:22.97Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "ServicesBills.cshtml",
               "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\ServicesBills.cshtml",
               "RelativeDocumentMoniker": "RMS-Client\\Views\\Service\\ServicesBills.cshtml",
               "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Service\\ServicesBills.cshtml",
               "RelativeToolTip": "RMS-Client\\Views\\Service\\ServicesBills.cshtml",
-              "ViewState": "AQIAAEUCAAAAAAAAAAAAAE8CAAA4AAAA",
+              "ViewState": "AQIAAE8AAAAAAAAAAAAAAKsCAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-12T03:37:50.739Z"
+              "WhenOpened": "2024-12-12T16:41:23.982Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ElectricRecordController.cs",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\Controllers\\ElectricRecordController.cs",
+              "RelativeDocumentMoniker": "RMS_API\\Controllers\\ElectricRecordController.cs",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS_API\\Controllers\\ElectricRecordController.cs",
+              "RelativeToolTip": "RMS_API\\Controllers\\ElectricRecordController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAApAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-12T16:15:49.741Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ListFacility.cshtml",
+              "DocumentMoniker": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Facility\\ListFacility.cshtml",
+              "RelativeDocumentMoniker": "RMS-Client\\Views\\Facility\\ListFacility.cshtml",
+              "ToolTip": "D:\\PRJ_\u0110\u1ED3 \u00C1n\\SEP490-G71-FA24\\RMS-Client\\Views\\Facility\\ListFacility.cshtml",
+              "RelativeToolTip": "RMS-Client\\Views\\Facility\\ListFacility.cshtml",
+              "ViewState": "AQIAAGMBAAAAAAAAAAAAAHUBAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-12-12T15:56:11.784Z"
             }
           ]
         }

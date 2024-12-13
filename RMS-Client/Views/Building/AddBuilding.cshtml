@@ -446,97 +446,95 @@
 
             <script>
                 // Kiểm tra giá trị nhập vào của các trường ngay khi người dùng gõ
-                document.getElementById('TotalFloors').addEventListener('input', function () {
-                    validateTotalFloors();
-                });
-
-                document.getElementById('NumberOfRooms').addEventListener('input', function () {
-                    validateNumberOfRooms();
-                });
-
-                document.getElementById('Distance').addEventListener('input', function () {
-                    validateDistance();
-                });
+                document.getElementById('TotalFloors').addEventListener('input', validateForm);
+                document.getElementById('NumberOfRooms').addEventListener('input', validateForm);
+                document.getElementById('Distance').addEventListener('input', validateForm);
 
                 const submitError = document.getElementById('submitError');
+                const saveButton = document.getElementById('saveButton');
 
                 function validateTotalFloors() {
                     const specialCharPattern = /[^a-zA-Z0-9]/;
                     const floor = document.getElementById('TotalFloors').value;
                     const totalFloorsError = document.getElementById('totalFloorsError');
-                    const saveButton = document.getElementById('saveButton');
 
                     if (floor === "") {
                         totalFloorsError.textContent = "Số tầng của tòa nhà không được để trống";
                         totalFloorsError.style.display = 'inline';
-                        document.getElementById('buttonSave').disabled = true;
-                        submitError.style.display = 'inline';
+                        return false;
                     }
-                    // Kiểm tra giá trị không hợp lệ (bao gồm ký tự đặc biệt hoặc giá trị nhỏ hơn hoặc bằng 0)
-                    else if (specialCharPattern.test(floor) || parseFloat(floor) <= 0 || parseFloat(floor) > 50) {
+                    // Kiểm tra giá trị không hợp lệ
+                    if (specialCharPattern.test(floor) || parseFloat(floor) <= 0 || parseFloat(floor) > 50) {
                         totalFloorsError.textContent = "Số tầng phải là số nguyên dương và không quá 50 và không chứa kí tự đặc biệt";
                         totalFloorsError.style.display = 'inline';
-                        saveButton.disabled = true;
-                        submitError.style.display = 'inline';
-                    } else {
-                        totalFloorsError.style.display = 'none';
-                        saveButton.disabled = false;
+                        return false;
                     }
+                    totalFloorsError.style.display = 'none';
+                    return true;
                 }
 
                 function validateNumberOfRooms() {
                     const specialCharPattern = /[^a-zA-Z0-9]/;
                     const room = document.getElementById('NumberOfRooms').value;
                     const numberOfRoomsError = document.getElementById('numberOfRoomsError');
-                    const saveButton = document.getElementById('saveButton');
 
                     if (room === "") {
                         numberOfRoomsError.textContent = "Số phòng của tòa nhà không được để trống";
                         numberOfRoomsError.style.display = 'inline';
-                        document.getElementById('buttonSave').disabled = true;
-                        submitError.style.display = 'inline';
+                        return false;
                     }
-                    // Kiểm tra giá trị không hợp lệ (bao gồm ký tự đặc biệt, giá trị nhỏ hơn hoặc bằng 0, hoặc lớn hơn 100)
-                    else if (specialCharPattern.test(room) || parseFloat(room) <= 0 || parseFloat(room) > 100) {
+                    // Kiểm tra giá trị không hợp lệ
+                    if (specialCharPattern.test(room) || parseFloat(room) <= 0 || parseFloat(room) > 100) {
                         numberOfRoomsError.textContent = "Số phòng phải là số nguyên dương và không quá 100 và không chứa kí tự đặc biệt";
                         numberOfRoomsError.style.display = 'inline';
-                        saveButton.disabled = true;
-                    } else {
-                        numberOfRoomsError.style.display = 'none';
-                        saveButton.disabled = false;
+                        return false;
                     }
+                    numberOfRoomsError.style.display = 'none';
+                    return true;
                 }
 
                 function validateDistance() {
                     const specialCharPattern = /[^0-9.]/;
                     const distance = document.getElementById('Distance').value.trim();
                     const distanceError = document.getElementById('distanceError');
-                    const saveButton = document.getElementById('saveButton');
 
                     if (distance === "") {
                         distanceError.textContent = "Khoảng cách không được để trống";
                         distanceError.style.display = 'inline';
-                        document.getElementById('buttonSave').disabled = true;
-                        submitError.style.display = 'inline';
+                        return false;
                     }
-                    // Kiểm tra giá trị không hợp lệ (bao gồm ký tự đặc biệt, không phải số, hoặc giá trị nhỏ hơn hoặc bằng 0)
-                    else if (specialCharPattern.test(distance) || isNaN(distance) || parseFloat(distance) <= 0) {
+                    // Kiểm tra giá trị không hợp lệ
+                    if (specialCharPattern.test(distance) || isNaN(distance) || parseFloat(distance) <= 0) {
                         distanceError.textContent = "Khoảng cách phải là số dương và không chứa kí tự đặc biệt";
                         distanceError.style.display = 'inline';
-                        saveButton.disabled = true;
-                    } else {
-                        distanceError.style.display = 'none';
+                        return false;
+                    }
+                    distanceError.style.display = 'none';
+                    return true;
+                }
+
+                function validateForm() {
+                    // Gọi từng hàm validate và kiểm tra tất cả
+                    const isTotalFloorsValid = validateTotalFloors();
+                    const isNumberOfRoomsValid = validateNumberOfRooms();
+                    const isDistanceValid = validateDistance();
+
+                    // Nếu tất cả đều hợp lệ, bật nút submit, nếu không thì tắt
+                    if (isTotalFloorsValid && isNumberOfRoomsValid && isDistanceValid) {
                         saveButton.disabled = false;
+                        submitError.style.display = 'none';
+                    } else {
+                        saveButton.disabled = true;
+                        submitError.style.display = 'inline';
                     }
                 }
+
                 // Xử lý form khi gửi
                 document.getElementById('addBuildingForm').addEventListener('submit', function (event) {
-                    validateDistance();
-                    validateNumberOfRooms();
-                    validateTotalFloors();
+                    validateForm();
 
                     // Nếu có lỗi, ngăn form gửi
-                    if (document.querySelectorAll('.error-message[style="display: inline;"]').length > 0) {
+                    if (saveButton.disabled) {
                         event.preventDefault();
                     }
                 });

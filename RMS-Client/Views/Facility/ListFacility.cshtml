@@ -355,25 +355,23 @@
     <script>
         
         var totalRecord = 0;
-        loadBuilding();
-        // loadRoom();
-        setKeyword();
-        loadPaging();
-        loadStatus();
         $(document).ready(function () {
             GetUserNameById();
-            var buildingId = $("#buildings").val();
-            var roomId = $("#rooms").val();
-            var statusId = $("#status").val();
-            var keyword = $("#keyword").val();
-            
-            const token = getCookie('AuthToken');
-            //Lấy user id
-            
-            const userId = getUserIdFromToken(token);
-            getFacility(userId, 1, 10, keyword, roomId, buildingId, statusId);
-            
-            
+            loadBuilding();
+            // loadRoom();
+            setKeyword();
+            loadPaging();
+            loadStatus();
+            setTimeout(() => {
+                var buildingId = $("#buildings").val();
+                var roomId = $("#rooms").val();
+                var statusId = $("#status").val();
+                var keyword = $("#keyword").val();
+                const token = getCookie('AuthToken');
+                //Lấy user id
+                const userId = getUserIdFromToken(token);
+                getFacility(userId, 1, 10, keyword, roomId, buildingId, statusId);
+            }, 200);
         })
         //////////////////////////////////////////////
         function onSelectPageSize() {

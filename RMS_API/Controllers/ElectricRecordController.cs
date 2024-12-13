@@ -18,6 +18,8 @@ namespace RMS_API.Controllers
             {
                 var rooms = context.Rooms
                     .Include(e => e.Building)
+                    .Include(e => e.Services)
+                    .Where(e => e.Services.Any(s => s.Type == 1))
                     .Where(e => filter.RoomId == null || filter.RoomId <= 0 || e.Id == filter.RoomId)
                     .Where(e => filter.BuildingId == null || filter.BuildingId <= 0 || e.BuildingId == filter.BuildingId)
                     .Where(e => e.UserId == filter.UserId)
