@@ -37,7 +37,7 @@
             window.location.href = "/Auth/Login";
         }
 
-    </script>    
+    </script>
 
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -78,23 +78,23 @@
                             </a>
                             <ul class="sidebar-submenu" style="display: block; list-style-type: none; padding-left: 20px;">
                                 @* @{
-                                    var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
+                                var buildingsss = ViewBag.Buildings as List<RMS_API.Models.Building>;
                                 }
                                 @if (buildingsss != null && buildingsss.Any())
                                 {
-                                    foreach (var buildingss in buildingsss)
-                                    {
-                                        <li class="sidebar-subitem">
-                                            <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
-                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
-                                                @buildingss.Name
-                                            </a>
-                                        </li>
-                                    }
+                                foreach (var buildingss in buildingsss)
+                                {
+                                <li class="sidebar-subitem">
+                                <a asp-controller="Room" asp-action="ListRoom" asp-route-buildingId="@buildingss.Id" class="sidebar-sublink">
+                                <i class="fa-solid fa-house" style="color: #0672e5;"></i>
+                                @buildingss.Name
+                                </a>
+                                </li>
+                                }
                                 }
                                 else
                                 {
-                                    <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
                                 } *@
                             </ul>
                         </li>
@@ -155,7 +155,7 @@
                             <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
                                 <i class="ti ti-menu-2"></i>
                             </a>
-                        </li>                        
+                        </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
@@ -192,7 +192,7 @@
                         <h2>Thêm dịch vụ</h2>
                         <div>
                             <a href="/Service/ListService" class="btn btn-warning">Quay về</a>
-                            <button type"submit" class="btn btn-success" onclick="AddService()">Lưu</button>
+                            <button type"submit" id="saveButton" class="btn btn-success" onclick="AddService()">Lưu</button>
                         </div>
                     </div>
                     <hr />
@@ -201,11 +201,12 @@
                             <!-- Tên dịch vụ -->
                             <div class="col-md-8">
                                 <div class="form-group">
-                                    <label for="ServiceName">Tên <span class="text-danger">*</span></label>
+                                    <label for="ServiceName">Tên dịch vụ <span class="text-danger">*</span></label>
                                     <input type="text" id="ServiceName" name="ServiceName" class="form-control" required />
+                                    <!-- Vị trí hiển thị thông báo lỗi -->
+                                    <div id="name-error" class="text-danger mt-1" style="display: none;"></div>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="row mb-3">
@@ -217,6 +218,8 @@
                                         <input type="number" id="Price" name="Price" class="form-control" value="0" required />
                                         <span class="input-group-text">VNĐ</span>
                                     </div>
+                                    <!-- Vị trí hiển thị thông báo lỗi -->
+                                    <div id="price-error" class="text-danger mt-1" style="display: none;"></div>
                                 </div>
                             </div>
                         </div>
@@ -249,7 +252,7 @@
                             </div>
                         </div>
 
-                        <p class="text-danger">(*): Thông tin bắt buộc</p>
+                        <p class="text-danger">(*): Thông tin không bắt buộc</p>
                     </form>
                 </div>
 
@@ -343,12 +346,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                <li class="sidebar-subitem">
-                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                    </a>
-                                                                                </li>
-                                                                            `);
+                                                                                        <li class="sidebar-subitem">
+                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                            </a>
+                                                                                        </li>
+                                                                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -361,8 +364,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                    `);
+                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                            `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -376,6 +379,61 @@
             }
         }
         //////////////////////////////////////////////
+        $(document).ready(function () {
+            const maxPrice = 100000000; // Giá trị tối đa
+            const errorMessage = "Giá trị không được vượt quá 100,000,000 VNĐ.";
+            const errorElement = $("#price-error");
+            const saveButton = $("#saveButton");
+
+            // Sự kiện kiểm tra giá trị
+            $("#Price").on("input", function () {
+                const price = $(this).val();
+
+                // Kiểm tra giá trị nhập
+                if (price > maxPrice) {
+                    errorElement.text(errorMessage); // Hiển thị lỗi
+                    errorElement.show();            // Hiển thị thông báo lỗi
+                    saveButton.prop("disabled", true); // Khóa nút Lưu
+                } else {
+                    errorElement.hide();            // Ẩn thông báo lỗi
+                    saveButton.prop("disabled", false); // Mở khóa nút Lưu
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            const nameErrorElement = $("#name-error");
+            const saveButton = $("#saveButton");
+
+            // Kiểm tra tính hợp lệ của tên dịch vụ
+            $("#ServiceName").on("input", function () {
+                const name = $(this).val().trim();
+                let errorMessage = "";
+
+                // Kiểm tra từng trường hợp
+                if (name === "") {
+                    errorMessage = "Tên dịch vụ không được để trống.";
+                } else if (name.length < 2) {
+                    errorMessage = "Tên dịch vụ phải có ít nhất 2 ký tự.";
+                } else if (name.length > 20) {
+                    errorMessage = "Tên dịch vụ không được vượt quá 20 ký tự.";
+                } else if (/\d/.test(name)) { // Kiểm tra ký tự số
+                    errorMessage = "Tên dịch vụ không được chứa ký tự số.";
+                }
+
+
+
+                // Hiển thị hoặc ẩn thông báo lỗi
+                if (errorMessage) {
+                    nameErrorElement.text(errorMessage); // Cập nhật nội dung lỗi
+                    nameErrorElement.show();            // Hiển thị thông báo lỗi
+                    saveButton.prop("disabled", true);  // Khóa nút Lưu
+                } else {
+                    nameErrorElement.hide();            // Ẩn thông báo lỗi
+                    saveButton.prop("disabled", false); // Mở khóa nút Lưu nếu tất cả hợp lệ
+                }
+            });
+        });
 
 
         function AddService() {
@@ -406,6 +464,11 @@
                     alert("Thêm dịch vụ không hợp lệ, vui lòng thử lại!");
                 }
             })
+        }
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            var submenu = event.currentTarget.nextElementSibling;
+            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
         }
         function GetUserNameById() {
             const token = getCookie('AuthToken');

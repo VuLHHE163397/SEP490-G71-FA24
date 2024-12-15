@@ -9,5 +9,6 @@
         public int ServiceId { get; set; }
         public int? ServiceRecordId { get; set; }
         public int? RoomId { get; set; }
+        public int? ServiceType { get; set; }
     }
 }

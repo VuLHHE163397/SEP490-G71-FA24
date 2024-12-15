@@ -121,18 +121,22 @@
                                 <a href="#" class="logo-img text-center d-block py-3 w-100">
                                     <img src="~/images/logo.jpg" alt="Logo" class="logo-img">
                                 </a>
+                                <h4 class="mb-3" style="font-weight: 600; color: dodgerblue;margin-left:100px">ĐĂNG KÍ LÀM CHỦ NHÀ</h4>
                                 <form id="registerForm" style="max-width: 1000px; margin: auto;">
                                     <div class="mb-3">
                                         <label class="form-label">Họ và Tên</label>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" required id="lastName" placeholder="Họ">
+                                                <span id="lastNameError" class="error-message" style="color: red; display: none;">Họ không được để trống.</span>
                                             </div>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" required id="midName" placeholder="Tên đệm">
+                                                <span id="midNameError" class="error-message" style="color: red; display: none;">Họ không được để trống.</span>
                                             </div>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" required id="firstName" placeholder="Tên">
+                                                <span id="firstNameError" class="error-message" style="color: red; display: none;">Họ không được để trống.</span>
                                             </div>
                                         </div>
                                     </div>
@@ -143,15 +147,20 @@
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email</label>
                                         <input type="email" class="form-control" required pattern="^[^@@\s]+@@[^@@\s]+\.[^@@\s]+$" id="email" placeholder="example@@gmail.com">
+                                        <span id="emailError" class="error-message" style="color: red; display: none;">Email không được để trống.</span>
+
                                     </div>
                                     <div class="mb-4">
                                         <label for="password" class="form-label">Mật khẩu</label>
                                         <input type="password" class="form-control" required id="password" placeholder="Độ dài từ 6-32 ký tự">
+                                        <span id="passwordError" class="error-message" style="color: red; display: none;">Password không được để trống.</span>
+
                                     </div>
                                     <div class="mb-4">
                                         <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
-                                        <input type="password" class="form-control" required id="confirmPassword" >
-                                    </div>                                   
+                                        <input type="password" class="form-control" required id="confirmPassword" placeholder="Độ dài từ 6-32 ký tự">
+                                        <span id="confirmPasswordError" class="error-message" style="color: red; display: none;">Password không được để trống.</span>
+                                    </div>
                                     <a onclick="sendVerificationCode()" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng ký</a>
                                     <div class="d-flex align-items-center justify-content-center">
                                         <p class="fs-4 mb-0 fw-bold">Bạn đã có tài khoản?</p>
@@ -192,6 +201,71 @@
             alert("Mã xác nhận đã được gửi tới email của bạn!");
         }
 
+
+        $('#lastName').blur(function () {
+            const lastName = $(this).val().trim();
+            if (!lastName) {
+                $('#lastNameError').show().text('Xin hãy điền họ.');
+            } else {
+                $('#lastNameError').hide();
+            }
+        });
+
+        $('#midName').blur(function () {
+            const lastName = $(this).val().trim();
+            if (!lastName) {
+                $('#midNameError').show().text('Xin hãy điền tên đệm.');
+            } else {
+                $('#midNameError').hide();
+            }
+        });
+
+        $('#firstName').blur(function () {
+            const lastName = $(this).val().trim();
+            if (!lastName) {
+                $('#firstNameError').show().text('Xin hãy điền tên.');
+            } else {
+                $('#firstNameError').hide();
+            }
+        });
+
+        $('#email').blur(function () {
+            const email = $(this).val().trim();
+            const emailRegex = /^[^@@\s]+@@[^@@\s]+\.[^@@\s]+$/;
+            if (!email) {
+                $('#emailError').show().text('Email không được để trống.');
+            } else if (!emailRegex.test(email)) {
+                $('#emailError').show().text('Email không hợp lệ!');
+            } else {
+                $('#emailError').hide();
+            }
+        });
+
+
+        $('#password').blur(function () {
+            const password = $('#password').val().trim();
+
+            if (!password) {
+                $('#passwordError').show().text('Mật khẩu không được để trống.');
+            } else if (password.length < 6 || password.length > 32) {
+                $('#passwordError').show().text('Mật khẩu phải từ 6 đến 32 ký tự.');
+            } else {
+                $('#passwordError').hide();
+            }
+        });
+
+        $('#confirmPassword').blur(function () {
+            const password = $('#password').val().trim();
+            const confirmPassword = $('#confirmPassword').val().trim();
+
+            if (!confirmPassword) {
+                $('#confirmPasswordError').show().text('Mật khẩu xác nhận không được để trống.');
+            } else if (confirmPassword && confirmPassword !== password) {
+                $('#confirmPasswordError').show().text('Mật khẩu xác nhận không khớp.');
+            } else {
+                $('#confirmPasswordError').hide();
+            }
+        });
 
 
         function sendVerificationCode() {

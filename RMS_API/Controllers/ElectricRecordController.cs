@@ -18,11 +18,13 @@ namespace RMS_API.Controllers
             {
                 var rooms = context.Rooms
                     .Include(e => e.Building)
+                    .Include(e => e.Services)
+                    .Where(e => e.Services.Any(s => s.Type == 1))
                     .Where(e => filter.RoomId == null || filter.RoomId <= 0 || e.Id == filter.RoomId)
                     .Where(e => filter.BuildingId == null || filter.BuildingId <= 0 || e.BuildingId == filter.BuildingId)
                     .Where(e => e.UserId == filter.UserId)
-                    .Where(e => (e.StartedDate == null) ||  (filter.SignedDate.Date >= e.StartedDate.Value.Date))
-                    .Where(e => (e.ExpiredDate == null) ||  (filter.SignedDate.Date <= e.ExpiredDate.Value.Date))
+                    .Where(e => (e.StartedDate == null) || (filter.SignedDate.Date >= e.StartedDate.Value.Date))
+                    .Where(e => (e.ExpiredDate == null) || (filter.SignedDate.Date <= e.ExpiredDate.Value.Date))
                     .ToList();
                 var roomIds = rooms.Select(e => e.Id).ToList();
                 var serviceRecords = context.ServicesRecords
@@ -45,7 +47,8 @@ namespace RMS_API.Controllers
                     };
                 }).ToList();
                 return Ok(response);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -66,14 +69,14 @@ namespace RMS_API.Controllers
                 var serviceRecords = context.ServicesRecords.Where(e => e.RoomId == dto.RoomId)
                     .OrderByDescending(e => e.NewMeter)
                     .FirstOrDefault();
-                if(serviceBill != null)
+                if (serviceBill != null)
                 {
                     if (serviceBill.Date.Date > dto.RecordDate.Date)
                     {
                         throw new Exception("Ngày chốt sổ gần nhất là " + serviceBill.Date.ToString("dd/MM/yyyy") + ". Ngày chốt sổ mới phải lớn hơn ngày chốt sổ gần nhất");
                     }
                 }
-                if(serviceRecords != null)
+                if (serviceRecords != null)
                 {
                     if (serviceRecords.NewMeter != dto.OldMeter)
                     {
@@ -84,7 +87,7 @@ namespace RMS_API.Controllers
                 {
                     throw new Exception("Số điện mới phải lớn hoặc bằng số điện cũ");
                 }
-                if(serviceBill != null && serviceBill.Date.Date == dto.RecordDate.Date)
+                if (serviceBill != null && serviceBill.Date.Date == dto.RecordDate.Date)
                 {
                     serviceBill.ServiceRecord.NewMeter = dto.NewMeter;
                     serviceBill.ServiceRecord.TotalMeter = dto.NewMeter - serviceBill.ServiceRecord.OldMeter;
