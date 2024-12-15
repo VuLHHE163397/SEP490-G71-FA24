@@ -261,17 +261,33 @@ namespace RMS_API.Controllers
         public async Task<IActionResult> LoginByGoogles([FromBody] LoginByGoogle model)
         {
 
-
             if (model.Email == null || model.Name == null)
                 return Unauthorized("Xin mời nhập tài khoản và mật khẩu");
 
             var user = await _context.Users
-        .Include(u => u.Role)
-        .SingleOrDefaultAsync(u => u.Email == model.Email);
+                .Include(u => u.Role)
+                .SingleOrDefaultAsync(u => u.Email == model.Email);
+
+            //if (user.UserStatusId == 3)
+            //{
+            //    return Unauthorized("Tài khoản đã bị cấm. Vui lòng dùng tài khoản khác!");
+            //}
+
             var (firstName, middleName, lastName) = SplitName(model.Name);
+
             if (user == null)
             {
-                var User = new User
+                // Tìm kiếm role đã tồn tại với RoleId = 2
+                var landlordRole = await _context.Roles.SingleOrDefaultAsync(r => r.Id == 2);
+
+                // Nếu không tìm thấy role với RoleId = 2, bạn có thể xử lý hoặc thông báo lỗi
+                if (landlordRole == null)
+                {
+                    return Unauthorized("Role Landlord không tồn tại.");
+                }
+
+                // Tạo người dùng mới với role đã có
+                var newUser = new User
                 {
                     Phone = "0123456789",
                     Password = BCrypt.Net.BCrypt.HashPassword("123456"),
@@ -280,17 +296,15 @@ namespace RMS_API.Controllers
                     FirstName = firstName,
                     MidName = middleName,
                     LastName = lastName,
-                    RoleId = 2,
-                    Role = new Role { Name = "Landlord" }
+                    RoleId = landlordRole.Id, // Sử dụng RoleId = 2 đã tồn tại
+                    Role = landlordRole // Gán role vào người dùng
                 };
-                _context.Users.Add(User);
-                _context.SaveChanges();
-                user = User;
 
+                _context.Users.Add(newUser);
+                await _context.SaveChangesAsync(); // Đảm bảo gọi SaveChangesAsync() để lưu dữ liệu
+
+                user = newUser;
             }
-
-
-
 
             var token = GenerateJwtToken(user);
 
@@ -311,9 +325,6 @@ namespace RMS_API.Controllers
 
             return Ok(new { token });
         }
-
-
-
 
         //Gen token for jwt
         private string GenerateJwtToken(User userInfo)

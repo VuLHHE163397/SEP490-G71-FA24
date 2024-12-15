@@ -335,12 +335,10 @@
                             <span class="error-message" id="roomNumberError" style="color: red; display: none;">Tên phòng đã tồn tại trong tòa nhà này.</span>
                         </div>
 
-
-
                         <div class="form-group row">
                             <label for="Price">Giá Phòng</label>
                             <input step="0.01" class="form-control" id="Price" name="Price" required />
-                            <span class="error-message" id="priceError" style="color: red; display: none;">Giá Phòng phải là một số dương</span>
+                            <span class="error-message" id="priceError" style="color: red; display: none;">Giá Phòng phải là số lớn hơn 0 và nhỏ hơn 10.000.000 VND</span>
                         </div>
 
                         <div class="form-group row">
@@ -352,7 +350,7 @@
                         <div class="form-group row">
                             <label for="Area">Diện Tích</label>
                             <input step="0.01" class="form-control" id="Area" name="Area" required />
-                            <span class="error-message" id="areaError" style="color: red; display: none;">Diện tích phải là một số dương.</span>
+                            <span class="error-message" id="areaError" style="color: red; display: none;">Diện tích phải là một số lớn hơn 0 và nhỏ hơn 100 m²</span>
                         </div>
 
                         <div class="form-group row">
@@ -400,53 +398,66 @@
             </div>
         </div>
     </div>
+    <!-- Thêm Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="~/lib/simplebar/dist/simplebar.js"></script>
-    <script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+    <link href="~/lib/simplebar/dist/simplebar.css" rel="stylesheet">
 
-        // Thiết lập BuildingId mặc định
+    <!-- Thêm jQuery và Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/simplebar/dist/simplebar.js"></script>
+
+    <script>
+        // ------------------------------------------------------
+        // 1. Thiết lập giá trị mặc định
+        // ------------------------------------------------------
+        let maxFloors = 0;
         document.getElementById("BuildingId").value = '@ViewBag.SelectedBuildingId';
 
-        // Kiểm tra giá trị nhập vào của các trường ngay khi người dùng gõ
-        document.getElementById('Price').addEventListener('input', function () {
-            validatePrice();
-        });
+        // Lấy BuildingId từ ViewBag đã được gán từ controller
+        const buildingId = '@ViewBag.SelectedBuildingId';
+        if (buildingId && buildingId > 0) {
+            // Gọi API để lấy số tầng tối đa khi trang tải
+            fetch(`/api/Room/GetTotalFloorByBuildingId/${buildingId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Không thể lấy số tầng của tòa nhà");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    maxFloors = data || 0; // Cập nhật số tầng tối đa
+                    validateFloor(); // Kiểm tra lại giá trị tầng nếu cần
+                })
+                .catch(error => {
+                    console.error("Lỗi khi lấy số tầng tối đa:", error);
+                    maxFloors = 0; // Đặt giá trị mặc định khi có lỗi
+                });
+        }
 
-        document.getElementById('Floor').addEventListener('input', function () {
-            validateFloor();
-        });
-
-        document.getElementById('Area').addEventListener('input', function () {
-            validateArea();
-        });
-
-        document.getElementById('StartedDate').addEventListener('imput', validateDate);
+        // ------------------------------------------------------
+        // 2. Xử lý validate input khi người dùng nhập
+        // ------------------------------------------------------
+        document.getElementById('Price').addEventListener('input', validatePrice);
+        document.getElementById('Floor').addEventListener('input', validateFloor);
+        document.getElementById('Area').addEventListener('input', validateArea);
+        document.getElementById('StartedDate').addEventListener('input', validateDate);
         document.getElementById('ExpiredDate').addEventListener('input', validateDate);
 
+        // ------------------------------------------------------
+        // 3. Hàm validate cho từng trường
+        // ------------------------------------------------------
         const submitError = document.getElementById('submitError');
 
-        // Hàm validate cho từng trường
         function validatePrice() {
             const price = document.getElementById('Price').value.trim();
             const priceError = document.getElementById('priceError');
-
-            if (price === "") {
-                priceError.textContent = "Giá phòng không được để trống";
-                priceError.style.display = 'inline';
-                document.getElementById('buttonSave').disabled = true;
-                submitError.style.display = 'inline';
-            }
-            else if (isNaN(price) || parseFloat(price) <= 0) {
-                priceError.style.display = 'inline';
-                document.getElementById('buttonSave').disabled = true;
-                submitError.style.display = 'inline';
+            if (isNaN(price) || parseFloat(price) <= 0 || parseFloat(price) > 10000000) {
+                showError(priceError);
             } else {
-                priceError.style.display = 'none';
-                document.getElementById('buttonSave').disabled = false;
-                submitError.style.display = 'none';
+                hideError(priceError);
             }
         }
 
@@ -454,99 +465,83 @@
             const floor = document.getElementById('Floor').value.trim();
             const floorError = document.getElementById('floorError');
             if (floor === "") {
-                floorError.textContent = "Tầng không được để trống";
-                floorError.style.display = 'inline';
-                document.getElementById('buttonSave').disabled = true;
-                submitError.style.display = 'inline';
+                hideError(floorError);
+            } else if (isNaN(floor) || parseInt(floor) <= 0 || !Number.isInteger(parseFloat(floor))) {
+                showError(floorError);
             }
-            else if (isNaN(floor) || parseInt(floor) <= 0 || !Number.isInteger(parseFloat(floor))) {
-                floorError.style.display = 'inline';
-                document.getElementById('buttonSave').disabled = true;
-                submitError.style.display = 'inline';
-            } else {
-                floorError.style.display = 'none';
-                document.getElementById('buttonSave').disabled = false;
-                submitError.style.display = 'none';
+            else if (maxFloors > 0 && parseInt(floor) > maxFloors) {
+                showError(floorError, `Tầng phải nhỏ hơn hoặc bằng ${maxFloors}`);
+            }
+            else {
+                hideError(floorError);
             }
         }
 
         function validateArea() {
             const area = document.getElementById('Area').value.trim();
             const areaError = document.getElementById('areaError');
-            if (area === "") {
-                areaError.textContent = "Diện tích không được để trống";
-                areaError.style.display = 'inline';
-                document.getElementById('buttonSave').disabled = true;
-                submitError.style.display = 'inline';
-            }
-            else if (isNaN(area) || parseFloat(area) <= 0) {
-                areaError.style.display = 'inline';
-                document.getElementById('buttonSave').disabled = true;
-                submitError.style.display = 'inline';
+            if (isNaN(area) || parseFloat(area) <= 0 || parseFloat(area) > 100) {
+                showError(areaError);
             } else {
-                areaError.style.display = 'none';
-                document.getElementById('buttonSave').disabled = false;
-                submitError.style.display = 'none';
+                hideError(areaError);
             }
         }
 
         function validateDate() {
             const startedDate = document.getElementById('StartedDate').value;
             const expiredDate = document.getElementById('ExpiredDate').value;
-
             const dateError1 = document.getElementById('dateError1');
             const dateError2 = document.getElementById('dateError2');
-            const submitButton = document.getElementById('buttonSave');
 
-            if (startedDate && expiredDate) {
+            // Kiểm tra nếu ExpiredDate có giá trị mà StartedDate lại trống
+            if (expiredDate && !startedDate) {
+                showError(dateError1, 'Hãy nhập ngày bắt đầu');
+                hideError(dateError2); // Ẩn lỗi cho ExpiredDate vì chỉ cần cảnh báo StartedDate
+            } else if (startedDate && expiredDate) {
                 if (new Date(expiredDate) <= new Date(startedDate)) {
-                    dateError1.style.display = 'inline';
-                    dateError2.style.display = 'inline';
-                    submitButton.disabled = true;
+                    showError(dateError1);
+                    showError(dateError2);
                 } else {
-                    dateError1.style.display = 'none';
-                    dateError2.style.display = 'none';
-                    submitButton.disabled = false;
+                    hideError(dateError1);
+                    hideError(dateError2);
                 }
             } else {
-                // Nếu chưa điền đủ ngày, không hiển thị lỗi nhưng vẫn khóa nút
-                dateError1.style.display = 'none';
-                dateError2.style.display = 'none';
-                submitButton.disabled = true;
+                hideError(dateError1);
+                hideError(dateError2);
             }
         }
 
-        // Kiểm tra RoomNumber ngay khi người dùng nhập xong và rời khỏi trường input
-        document.getElementById('RoomNumber').addEventListener('blur', async function () {
+        // ------------------------------------------------------
+        // 4. Kiểm tra RoomNumber ngay khi người dùng nhập
+        // ------------------------------------------------------
+        document.getElementById('RoomNumber').addEventListener('input', debounce(async function () {
             const roomName = this.value.trim();
+            if (!roomName) return; // Nếu trống, không cần kiểm tra
             const buildingId = '@ViewBag.SelectedBuildingId';
             const roomNumberError = document.getElementById('roomNumberError');
-
-            // Kiểm tra nếu để trống
-            if (roomName === "") {
-                roomNumberError.style.display = 'inline';
-                roomNumberError.textContent = 'Tên Phòng không được để trống';
-                document.getElementById('buttonSave').disabled = true;
-                return;
-            }
 
             const response = await fetch(`/api/Room/CheckRoomNameExists?roomName=${roomName}&buildingId=${buildingId}`);
             const roomExists = await response.json();
 
             if (roomExists) {
-                roomNumberError.style.display = 'inline';
-                roomNumberError.textContent = 'Tên Phòng đã tồn tại trong tòa nhà này';
-                document.getElementById('buttonSave').disabled = true;
-                submitError.style.display = 'inline';
-                return;
+                showError(roomNumberError, 'Tên Phòng đã tồn tại trong tòa nhà này');
             } else {
-                roomNumberError.style.display = 'none';
-                document.getElementById('buttonSave').disabled = false;
-                submitError.style.display = 'none';
+                hideError(roomNumberError);
             }
-        });
+        }, 300)); // Thêm debounce để tránh gửi quá nhiều request
 
-        // Kiểm tra khi submit form
+        function debounce(func, delay) {
+            let timer;
+            return function (...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+
+        // ------------------------------------------------------
+        // 5. Kiểm tra form khi submit
+        // ------------------------------------------------------
         document.getElementById('createRoomForm').addEventListener('submit', function (event) {
             validatePrice();
             validateFloor();
@@ -559,27 +554,16 @@
             }
         });
 
+        // ------------------------------------------------------
+        // 6. Hiển thị danh sách tòa nhà
+        // ------------------------------------------------------
         $(document).ready(function () {
             loadBuilding();
             const token = getCookie('AuthToken');
             const userId = getUserIdFromToken(token);
             $("#UserId").val(userId);
             GetUserNameById();
-        })
-
-        //---------------------------------------------------------------
-        //Lấy List Building ở Left Side
-        //Lấy UserId
-        function getUserIdFromToken(token) {
-            try {
-                const tokenParts = token.split('.');
-                const payload = JSON.parse(atob(tokenParts[1]));
-                return payload.UserId;
-            } catch (error) {
-                console.error("Không mã hóa đc token:", error);
-                return null;
-            }
-        }
+        });
 
         function loadBuilding() {
             const token = getCookie('AuthToken');
@@ -588,9 +572,9 @@
                 window.location.href = "/Auth/login";
                 return;
             }
-            var userId = getUserIdFromToken(token);
+            const userId = getUserIdFromToken(token);
             $.ajax({
-                url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,// Sửa api lấy all building thành api này
+                url: `https://localhost:7056/api/Building/GetBuildingsByUserId/${userId}`,
                 type: 'GET',
                 dataType: 'json',
                 beforeSend: function (xhr) {
@@ -598,7 +582,7 @@
                 },
                 success: function (response) {
                     renderBuilding(response);
-                    displayBuildings(response); //Thêm cái này nữa
+                    displayBuildings(response);
                 },
                 error: function (xhr, status, error) {
                     console.error("Có lỗi xảy ra:", error);
@@ -607,54 +591,44 @@
         }
 
         function renderBuilding(data) {
-            var urlParams = new URLSearchParams(window.location.search);
-            var buildingId = urlParams.get('buildingId');
+            const urlParams = new URLSearchParams(window.location.search);
+            const buildingId = urlParams.get('buildingId');
             let html = `<option value="-1" ${buildingId <= 0 ? 'selected' : ''}>Tất cả</option>`;
-            for (var item of data) {
-                html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
+            for (const item of data) {
+                html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`;
             }
             $("#buildings").html(html);
         }
 
         function displayBuildings(buildings) {
             const sidebarContainer = $('.sidebar-submenu');
-
-            // Clear previous content
             sidebarContainer.empty();
 
             if (buildings && buildings.length > 0) {
-                // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                                                        <li class="sidebar-subitem">
-                                                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                                                            </a>
-                                                                                                                        </li>
-                                                                                                                    `);
+                            <li class="sidebar-subitem">
+                               <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                               <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                             </a>
+                           </li>
+                           `);
                 });
             } else {
-                displayNoBuildingsMessage();
+                sidebarContainer.append('<li class="sidebar-subitem">Không có tòa nhà nào</li>');
             }
         }
-        function displayNoBuildingsMessage() {
-            const sidebarContainer = $('.sidebar-submenu');
-            const tableContainer = $('#buildingsContainer');
 
-            // Notify in Sidebar
-            sidebarContainer.empty();
-            sidebarContainer.append(`
-                                                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                                                            `);
-        }
-        //Lấy UserId
+        // ------------------------------------------------------
+        // 7. Utility Functions
+        // ------------------------------------------------------
         function getUserIdFromToken(token) {
             try {
                 const tokenParts = token.split('.');
                 const payload = JSON.parse(atob(tokenParts[1]));
                 return payload.UserId;
             } catch (error) {
-                console.error("Không mã hóa đc token:", error);
+                console.error("Không mã hóa được token:", error);
                 return null;
             }
         }
@@ -678,18 +652,20 @@
             });
         }
 
+        function showError(element, message = '') {
+            if (message) element.textContent = message;
+            element.style.display = 'inline';
+            document.getElementById('buttonSave').disabled = true;
+            submitError.style.display = 'inline';
+        }
+
+        function hideError(element) {
+            element.style.display = 'none';
+            document.getElementById('buttonSave').disabled = false;
+            submitError.style.display = 'none';
+        }
     </script>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Thêm Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Thêm jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Thêm Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

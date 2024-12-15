@@ -37,7 +37,7 @@
             document.cookie = "AuthToken=; path=/; expires=Sun, 01 Jan 1111 00:00:00 UTC; SameSite=None; Secure";
             window.location.href = "/Auth/Login";
         }
-    </script>    
+    </script>
 
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -210,7 +210,7 @@
                             <a href="/Facility/ListFacility" class="btn btn-warning mr-2">
                                 Quay về
                             </a>
-                            <button type"submit" class="btn btn-success" onclick="AddFacility()">Lưu</button>
+                            <button type"submit" id="saveButton" class="btn btn-success" onclick="AddFacility()">Lưu</button>
                         </div>
                     </div>
                     <hr />
@@ -223,42 +223,46 @@
                                 <div class="form-group">
                                     <label for="FacilityName" class="form-label">Tên tài sản <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="FacilityName" id="FacilityName" required>
+                                    <!-- Vị trí hiển thị thông báo lỗi -->
+                                    <div id="name-error" class="text-danger mt-1" style="display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <!-- Nhà -->
+                            <div class="form-group col-md-6">
+                                <label for="BuildingId" class="form-label">Nhà</label>
+                                <select id="BuildingId" class="form-control custom-select" onchange="loadRoom()">
+                                </select>
+                            </div>
+
+                            <div class="row mb-3">
+                                <!-- Số Phòng -->
+                                <div class="form-group col-md-3">
+                                    <label for="RoomId" class="form-label">Phòng</label>
+                                    <select id="RoomId" class="form-control custom-select">
+                                    </select>
                                 </div>
 
                                 <div class="row mb-3">
-                                    <!-- Nhà -->
-                                    <div class="form-group col-md-6">
-                                        <label for="BuildingId" class="form-label">Nhà</label>
-                                        <select id="BuildingId" class="form-control custom-select" onchange="loadRoom()">
+                                    <!-- Tình trạng -->
+                                    <div class="form-group col-md-3">
+                                        <label for="FacilityStatusId" class="form-label">Tình trạng</label>
+                                        <select id="FacilityStatusId" class="form-control custom-select">
                                         </select>
                                     </div>
-
-                                    <div class="row mb-3">
-                                        <!-- Số Phòng -->
-                                        <div class="form-group col-md-3">
-                                            <label for="RoomId" class="form-label">Phòng</label>
-                                            <select id="RoomId" class="form-control custom-select">
-                                            </select>
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- Ghi chú -->
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="Notes">Ghi chú</label>
+                                            <textarea id="Notes" name="Notes" class="form-control" rows="3"></textarea>
                                         </div>
-
-                                        <div class="row mb-3">
-                                            <!-- Tình trạng -->
-                                            <div class="form-group col-md-3">
-                                                <label for="FacilityStatusId" class="form-label">Tình trạng</label>
-                                                <select id="FacilityStatusId" class="form-control custom-select">
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <!-- Ghi chú -->
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="Notes">Ghi chú</label>
-                                                    <textarea id="Notes" name="Notes" class="form-control" rows="3"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <p class="text-danger">(*): Thông tin bắt buộc</p>
+                                    </div>
+                                </div>
+                                <p class="text-danger">(*): Thông tin không bắt buộc</p>
                     </form>
                 </div>
             </div>
@@ -280,7 +284,7 @@
         var totalRecord = 0;
         $(document).ready(function () {
             loadBuilding();
-            // loadRoom();                  
+            // loadRoom();
             loadStatus();
             const token = getCookie('AuthToken');
             //Lấy user id
@@ -402,7 +406,7 @@
             $("#FacilityStatusId").html(html);
         }
 
-        
+
 
         //Hàm lấy list building theo UserId
         //-------------------------------------------------------
@@ -416,12 +420,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                        <li class="sidebar-subitem">
-                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                            </a>
-                                                                        </li>
-                                                                    `);
+                                                                                <li class="sidebar-subitem">
+                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                    </a>
+                                                                                </li>
+                                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -434,8 +438,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                            `);
+                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                    `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -448,6 +452,40 @@
                 return null;
             }
         }
+
+        $(document).ready(function () {
+            const nameErrorElement = $("#name-error");
+            const saveButton = $("#saveButton");
+
+            // Kiểm tra tính hợp lệ của tên cơ sở vạt chất
+            $("#FacilityName").on("input", function () {
+                const name = $(this).val().trim();
+                let errorMessage = "";
+
+                // Kiểm tra từng trường hợp
+                if (name === "") {
+                    errorMessage = "Tên cơ sở vật chất không được để trống.";
+                } else if (name.length < 2) {
+                    errorMessage = "Tên cơ sở vật chất phải có ít nhất 2 ký tự.";
+                } else if (name.length > 20) {
+                    errorMessage = "Tên cơ sở vật chất không được vượt quá 20 ký tự.";
+                } else if (/\d/.test(name)) { // Kiểm tra ký tự số
+                    errorMessage = "Tên cơ sở vật chất không được chứa ký tự số.";
+                }
+
+
+
+                // Hiển thị hoặc ẩn thông báo lỗi
+                if (errorMessage) {
+                    nameErrorElement.text(errorMessage); // Cập nhật nội dung lỗi
+                    nameErrorElement.show();            // Hiển thị thông báo lỗi
+                    saveButton.prop("disabled", true);  // Khóa nút Lưu
+                } else {
+                    nameErrorElement.hide();            // Ẩn thông báo lỗi
+                    saveButton.prop("disabled", false); // Mở khóa nút Lưu nếu tất cả hợp lệ
+                }
+            });
+        });
 
         function AddFacility() {
             const token = getCookie('AuthToken');
@@ -481,11 +519,16 @@
 
                         })
                     });
-                    alert("Lỗi khi thêm tài sản");
+                    alert("Lỗi khi thêm cơ sở vật chất");
                 }
             })
         }
-        
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            var submenu = event.currentTarget.nextElementSibling;
+            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
+        }
+
         function GetUserNameById() {
             const token = getCookie('AuthToken');
             const userId = getUserIdFromToken(token);

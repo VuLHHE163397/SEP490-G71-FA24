@@ -287,7 +287,7 @@
                                     <div class="modal-body">
                                         <div>
                                             <input type="file" id="fileInput" />
-                                            <button id="importButton" class="btn btn-primary mt-2">Import Rooms</button>
+                                            <button id="importButton" class="btn btn-primary mt-2">Nhập Phòng</button>
                                             <div id="importMessage" style="margin-top: 10px; color: green;"></div>
                                         </div>
                                     </div>
@@ -434,12 +434,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                                <li class="sidebar-subitem">
-                                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                                    </a>
-                                                                                                </li>
-                                                                                            `);
+                                                                                                                                        <li class="sidebar-subitem">
+                                                                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                                                                            </a>
+                                                                                                                                        </li>
+                                                                                                                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -452,8 +452,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                                    `);
+                                                                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                                                                            `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -515,8 +515,8 @@
             // Tạo FormData để gửi file
             const formData = new FormData();
             formData.append("file", file);
-
-            const apiUrl = `https://localhost:7056/api/Room/ImportRooms/${buildingId}`;
+            var userId = getUserIdFromToken(token);
+            const apiUrl = `https://localhost:7056/api/Room/ImportRooms/${buildingId}/${userId}`;
 
             try {
                 // Gửi request POST đến API
@@ -528,10 +528,17 @@
                 // Xử lý kết quả
                 if (response.ok) {
                     const result = await response.json();
-                    importMessage.textContent = `${result.message} Số phòng đã nhập vào: ${result.roomsCount}`;
-                    importMessage.style.color = "green";
-                    window.location.reload();
-                } else {
+                    if (result.buildingFull) {
+                        importMessage.textContent = result.message;
+                        importMessage.style.color = "orange"; // Thông báo bằng màu khác
+                    } else {
+                        importMessage.textContent = `${result.message} Số phòng đã nhập vào: ${result.newRoomsCount}`;
+                        importMessage.style.color = "green";
+                        window.location.reload();
+                    }
+
+                }
+                else {
                     const error = await response.text();
                     importMessage.textContent = `Xảy ra lỗi khi nhập phòng, vui lòng kiểm tra lại file excel`;
                     importMessage.style.color = "red";
@@ -568,38 +575,38 @@
         }
 
 
-        // Gửi file lên server
-        document.getElementById("importRoomsBtn").addEventListener("click", function () {
-            var formData = new FormData();
-            var fileInput = document.getElementById("excelFile");
+        // // Gửi file lên server
+        // document.getElementById("importRoomsBtn").addEventListener("click", function () {
+        //     var formData = new FormData();
+        //     var fileInput = document.getElementById("excelFile");
 
-            if (fileInput.files.length === 0) {
-                alert("Vui lòng chọn một file Excel.");
-                return;
-            }
+        //     if (fileInput.files.length === 0) {
+        //         alert("Vui lòng chọn một file Excel.");
+        //         return;
+        //     }
 
-            formData.append("file", fileInput.files[0]);
-            formData.append("buildingId", @buildingId); // Truyền buildingId vào formData
+        //     formData.append("file", fileInput.files[0]);
+        //     formData.append("buildingId", @buildingId); // Truyền buildingId vào formData
 
-            // Gửi yêu cầu POST lên API để nhập phòng
-            fetch('/api/Room/ImportRooms/' + @buildingId, {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message) {
-                        alert(data.message); // Thông báo thành công
-                        $('#importRoomModal').modal('hide'); // Đóng modal
-                    } else {
-                        alert("Có lỗi xảy ra khi nhập phòng.");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert("Có lỗi xảy ra.");
-                });
-        });
+        //     // Gửi yêu cầu POST lên API để nhập phòng
+        //     fetch('/api/Room/ImportRooms/' + @buildingId, {
+        //         method: 'POST',
+        //         body: formData
+        //     })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (data.message) {
+        //                 alert(data.message); // Thông báo thành công
+        //                 $('#importRoomModal').modal('hide'); // Đóng modal
+        //             } else {
+        //                 alert("Có lỗi xảy ra khi nhập phòng.");
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error("Error:", error);
+        //             alert("Có lỗi xảy ra.");
+        //         });
+        // });
 
         function GetUserNameById() {
             const token = getCookie('AuthToken');
@@ -619,6 +626,7 @@
                 }
             });
         }
+
 
     </script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">

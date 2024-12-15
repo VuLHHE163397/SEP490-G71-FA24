@@ -7,12 +7,6 @@
     <title>RMS</title>
     <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
-    <style>
-        #welcome-message {
-            position: relative;
-            font-weight: bold;
-        }
-    </style>
 </head>
 
 <body>
@@ -40,7 +34,7 @@
     </script>
 
 
-    
+
 
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
@@ -157,13 +151,16 @@
                             <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
                                 <i class="ti ti-menu-2"></i>
                             </a>
-                        </li>                        
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-icon-hover" href="javascript:void(0)">
+                                <i class="ti ti-bell-ringing"></i>
+                                <div class="notification bg-primary rounded-circle"></div>
+                            </a>
+                        </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                            <li class="nav-item me-3">
-                                <span id="welcome-message" class="fw-bold text-primary"></span>
-                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -198,7 +195,7 @@
                         <h2>Sửa dịch vụ</h2>
                         <div>
                             <a href="/Service/ListService" class="btn btn-warning">Quay về</a>
-                            <button type="submit" class="btn btn-success" onclick="UpdateService()">Lưu</button>
+                            <button type="submit" id="saveButton" class="btn btn-success" onclick="UpdateService()">Lưu</button>
                         </div>
                     </div>
                     <hr />
@@ -209,20 +206,23 @@
                                 <div class="form-group">
                                     <label for="ServiceName">Tên <span class="text-danger">*</span></label>
                                     <input type="text" id="ServiceName" name="ServiceName" class="form-control" required />
+                                    <!-- Vị trí hiển thị thông báo lỗi -->
+                                    <div id="name-error" class="text-danger mt-1" style="display: none;"></div>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="row mb-3">
                             <!-- Đơn giá -->
                             <div class="col-md-8">
                                 <div class="form-group">
-                                    <label for="Price">Đơn giá <span class="text-danger">*</span> (VNĐ)</label>
+                                    <label for="Price">Đơn giá <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <input type="number" id="Price" name="Price" class="form-control" required />
+                                        <input type="number" id="Price" name="Price" class="form-control" value="0" required />
                                         <span class="input-group-text">VNĐ</span>
                                     </div>
+                                    <!-- Vị trí hiển thị thông báo lỗi -->
+                                    <div id="price-error" class="text-danger mt-1" style="display: none;"></div>
                                 </div>
                             </div>
                         </div>
@@ -256,7 +256,7 @@
                                 </div>
                             </div>
 
-                            <p class="text-danger">(*): Thông tin bắt buộc</p>
+                            <p class="text-danger">(*): Thông tin không bắt buộc</p>
                     </form>
                 </div>
             </div>
@@ -282,8 +282,6 @@
             var urlParams = new URLSearchParams(window.location.search);
             var id = urlParams.get('id');
             getDetail(id);
-            GetUserNameById();
-
         })
         function getDetail(id) {
             const token = getCookie('AuthToken');
@@ -299,6 +297,8 @@
                     $("#ServiceName").val(response.name);
                     $("#Price").val(response.price);
                     $("#BuildingId").val(response.buildingId);
+                    // Set the default selected value for the #type dropdown
+                    $("#type").val(response.type).change();
 
                 },
                 error: function (xhr, status, error) {
@@ -306,6 +306,61 @@
                 }
             })
         }
+
+        $(document).ready(function () {
+            const maxPrice = 100000000; // Giá trị tối đa
+            const errorMessage = "Giá trị không được vượt quá 100,000,000 VNĐ.";
+            const errorElement = $("#price-error");
+            const saveButton = $("#saveButton");
+
+            // Sự kiện kiểm tra giá trị
+            $("#Price").on("input", function () {
+                const price = $(this).val();
+
+                // Kiểm tra giá trị nhập
+                if (price > maxPrice) {
+                    errorElement.text(errorMessage); // Hiển thị lỗi
+                    errorElement.show();            // Hiển thị thông báo lỗi
+                    saveButton.prop("disabled", true); // Khóa nút Lưu
+                } else {
+                    errorElement.hide();            // Ẩn thông báo lỗi
+                    saveButton.prop("disabled", false); // Mở khóa nút Lưu
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            const nameErrorElement = $("#name-error");
+            const saveButton = $("#saveButton");
+
+            // Kiểm tra tính hợp lệ của tên dịch vụ
+            $("#ServiceName").on("input", function () {
+                const name = $(this).val().trim();
+                let errorMessage = "";
+
+                // Kiểm tra từng trường hợp
+                if (name === "") {
+                    errorMessage = "Tên dịch vụ không được để trống.";
+                } else if (name.length < 2) {
+                    errorMessage = "Tên dịch vụ phải có ít nhất 2 ký tự.";
+                } else if (name.length > 20) {
+                    errorMessage = "Tên dịch vụ không được vượt quá 20 ký tự.";
+                } else if (/\d/.test(name)) { // Kiểm tra ký tự số
+                    errorMessage = "Tên dịch vụ không được chứa ký tự số.";
+                }
+
+                // Hiển thị hoặc ẩn thông báo lỗi
+                if (errorMessage) {
+                    nameErrorElement.text(errorMessage); // Cập nhật nội dung lỗi
+                    nameErrorElement.show();            // Hiển thị thông báo lỗi
+                    saveButton.prop("disabled", true);  // Khóa nút Lưu
+                } else {
+                    nameErrorElement.hide();            // Ẩn thông báo lỗi
+                    saveButton.prop("disabled", false); // Mở khóa nút Lưu nếu tất cả hợp lệ
+                }
+            });
+        });
+
         function UpdateService() {
             var urlParams = new URLSearchParams(window.location.search);
             var id = urlParams.get('id');
@@ -315,7 +370,7 @@
                 name: $("#ServiceName").val(),
                 price: $("#Price").val(),
                 buildingId: $("#BuildingId").val(),
-                type: $("type").val(),
+                type: $("#type").val(),
             }
             $.ajax({
                 url: "https://localhost:7056/api/Service",
@@ -399,12 +454,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                                        <li class="sidebar-subitem">
-                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                                            </a>
-                                                                                        </li>
-                                                                                    `);
+                                                                                                        <li class="sidebar-subitem">
+                                                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                                            </a>
+                                                                                                        </li>
+                                                                                                    `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -417,8 +472,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                                            `);
+                                                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                                            `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -431,25 +486,13 @@
                 return null;
             }
         }
-
-        function GetUserNameById() {
-            const token = getCookie('AuthToken');
-            const userId = getUserIdFromToken(token);
-            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
-
-            $.ajax({
-                url: url,
-                type: 'GET',
-                success: function (response) {
-                    if (response && response.fullName) {
-                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
-                    }
-                },
-                error: function (xhr) {
-                    console.error('Error fetching user profile:', xhr.responseText);
-                }
-            });
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            var submenu = event.currentTarget.nextElementSibling;
+            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
         }
+
+
 
     </script>
 </body>

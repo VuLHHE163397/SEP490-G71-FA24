@@ -194,7 +194,7 @@
                         <h2>Sửa cơ sở vật chất</h2>
                         <div>
                             <a href="/Facility/ListFacility" class="btn btn-warning">Quay về</a>
-                            <button type="submit" class="btn btn-success" onclick="UpdateFacility()">Lưu</button>
+                            <button type="submit" id="saveButton" class="btn btn-success" onclick="UpdateFacility()">Lưu</button>
                         </div>
                     </div>
                     <hr />
@@ -204,10 +204,11 @@
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <label for="FacilityName">Tên <span class="text-danger">*</span></label>
-                                    <input type="text" id="FacilityName" name="FacilityName" class="form-control" required/>
+                                    <input type="text" id="FacilityName" name="FacilityName" class="form-control" required />
+                                    <!-- Vị trí hiển thị thông báo lỗi -->
+                                    <div id="name-error" class="text-danger mt-1" style="display: none;"></div>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="row mb-3">
@@ -218,35 +219,35 @@
                                 </select>
                             </div>
 
-                        <div class="row mb-3">
-                            <!-- Số Phòng -->
-                            <div class="form-group col-md-3">
-                                <label for="RoomId" class="form-label">Số phòng</label>
+                            <div class="row mb-3">
+                                <!-- Số Phòng -->
+                                <div class="form-group col-md-3">
+                                    <label for="RoomId" class="form-label">Số phòng</label>
                                     <select id="RoomId" class="form-control custom-select" disabled>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <!-- Tình trạng -->
-                            <div class="form-group col-md-3">
-                                <label for="FacilityStatusId" class="form-label">Tình trạng</label>
-                                <select id="FacilityStatusId" class="form-control custom-select">
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <!-- Ghi chú -->
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="Notes">Ghi chú</label>
-                                    <textarea id="Notes" name="Notes" class="form-control" rows="3"></textarea>
+                                    </select>
                                 </div>
                             </div>
-                        </div>
 
-                        <p class="text-danger">(*): Thông tin bắt buộc</p>
+                            <div class="row mb-3">
+                                <!-- Tình trạng -->
+                                <div class="form-group col-md-3">
+                                    <label for="FacilityStatusId" class="form-label">Tình trạng</label>
+                                    <select id="FacilityStatusId" class="form-control custom-select">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <!-- Ghi chú -->
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="Notes">Ghi chú</label>
+                                        <textarea id="Notes" name="Notes" class="form-control" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="text-danger">(*): Thông tin không bắt buộc</p>
                     </form>
                 </div>
             </div>
@@ -262,7 +263,7 @@
     <script src="~/lib/simplebar/dist/simplebar.js"></script>
     <script src="~/js/dashboard.js"></script>
     <script>
-        
+
         var totalRecord = 0;
         loadBuilding();
         loadRoom();
@@ -297,9 +298,43 @@
                 }
             })
         }
+
+        $(document).ready(function () {
+            const nameErrorElement = $("#name-error");
+            const saveButton = $("#saveButton");
+
+            // Kiểm tra tính hợp lệ của tên dịch vụ
+            $("#FacilityName").on("input", function () {
+                const name = $(this).val().trim();
+                let errorMessage = "";
+
+                // Kiểm tra từng trường hợp
+                if (name === "") {
+                    errorMessage = "Tên cơ sở vật chất không được để trống.";
+                } else if (name.length < 2) {
+                    errorMessage = "Tên cơ sở vật chất phải có ít nhất 2 ký tự.";
+                } else if (name.length > 20) {
+                    errorMessage = "Tên cơ sở vật chất không được vượt quá 20 ký tự.";
+                } else if (/\d/.test(name)) { // Kiểm tra ký tự số
+                    errorMessage = "Tên cơ sở vật chất không được chứa ký tự số.";
+                }
+
+
+
+                // Hiển thị hoặc ẩn thông báo lỗi
+                if (errorMessage) {
+                    nameErrorElement.text(errorMessage); // Cập nhật nội dung lỗi
+                    nameErrorElement.show();            // Hiển thị thông báo lỗi
+                    saveButton.prop("disabled", true);  // Khóa nút Lưu
+                } else {
+                    nameErrorElement.hide();            // Ẩn thông báo lỗi
+                    saveButton.prop("disabled", false); // Mở khóa nút Lưu nếu tất cả hợp lệ
+                }
+            });
+        });
         ///////////////////////////////////////////////////////
         function UpdateFacility() {
-            
+
             var urlParams = new URLSearchParams(window.location.search);
             var id = urlParams.get('id');
             const token = getCookie('AuthToken');
@@ -370,7 +405,7 @@
                 html += `<option value="${item.id}" ${buildingId == item.id ? 'selected' : ''}>${item.name}</option>`
             }
             $("#BuildingId").html(html);
-           
+
         }
         /////////////////////////////////////
         function loadRoom() {
@@ -439,12 +474,12 @@
                 // Update Sidebar
                 buildings.forEach(building => {
                     sidebarContainer.append(`
-                                                                        <li class="sidebar-subitem">
-                                                                            <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
-                                                                                        <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
-                                                                            </a>
-                                                                        </li>
-                                                                    `);
+                                                                                <li class="sidebar-subitem">
+                                                                                    <a href="/Room/ListRoom?buildingId=${building.id}" class="sidebar-sublink">
+                                                                                                <i class="fa-solid fa-house" style="color: #0672e5;"></i> ${building.name}
+                                                                                    </a>
+                                                                                </li>
+                                                                            `);
                 });
             } else {
                 displayNoBuildingsMessage();
@@ -457,8 +492,8 @@
             // Notify in Sidebar
             sidebarContainer.empty();
             sidebarContainer.append(`
-                                                                <li class="sidebar-subitem">Không có tòa nhà nào</li>
-                                                            `);
+                                                                        <li class="sidebar-subitem">Không có tòa nhà nào</li>
+                                                                    `);
         }
         //Lấy UserId
         function getUserIdFromToken(token) {
@@ -470,6 +505,30 @@
                 console.error("Không mã hóa đc token:", error);
                 return null;
             }
+        }
+        function toggleSubmenu(event) {
+            event.preventDefault();
+            var submenu = event.currentTarget.nextElementSibling;
+            submenu.style.display = submenu.style.display === "none" ? "block" : "none";
+        }
+
+        function GetUserNameById() {
+            const token = getCookie('AuthToken');
+            const userId = getUserIdFromToken(token);
+            const url = `https://localhost:7056/api/User/GetUserNameById?id=${userId}`;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    if (response && response.fullName) {
+                        $('#welcome-message').text(`Xin chào ${response.fullName}`);
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Error fetching user profile:', xhr.responseText);
+                }
+            });
         }
     </script>
 
